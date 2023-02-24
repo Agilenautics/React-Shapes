@@ -1,0 +1,98 @@
+# ! Interfaces only work on relationships!
+
+type flowNode {
+  id: ID! @id
+  timeStamp: DateTime! @timestamp
+  draggable: Boolean!
+  flowchart: String!
+  type: String!
+  hasdataNodedata: nodeData @relationship(type: "hasData", direction: OUT)
+  haspositionPosition: position
+    @relationship(type: "hasPosition", direction: OUT)
+  connectedbyFlowedge: flowEdge
+    @relationship(type: "connectedBy", direction: OUT)
+  linkedtoFlownode: flowNode @relationship(type: "linkedTo", direction: OUT)
+  flownodeLinkedto: flowNode @relationship(type: "linkedTo", direction: IN)
+  hasTasks: tasks @relationship(type: "has", direction: OUT)
+  flowedgeConnectedto: flowEdge
+    @relationship(type: "connectedTo", direction: IN)
+}
+
+type nodeData {
+  label: String!
+  shape: String!
+  description: String
+  flownodeHasdata: flowNode @relationship(type: "hasData", direction: IN)
+}
+
+type position {
+  x: Int!
+  y: Int!
+  flownodeHasposition: flowNode
+    @relationship(type: "hasPosition", direction: IN)
+}
+
+type edgeData {
+  label: String
+  pathCSS: String!
+  boxCSS: String!
+  bidirectional: Boolean!
+  flowedgeHasedgedata: flowEdge
+    @relationship(type: "hasEdgeData", direction: IN)
+}
+
+type flowEdge {
+  id: ID! @id
+  timeStamp: DateTime! @timestamp
+  source: String!
+  target: String!
+  sourceHandle: String!
+  targetHandle: String!
+  selected: Boolean!
+  # * Connections below
+  flownodeConnectedby: flowNode
+    @relationship(type: "connectedBy", direction: IN)
+  connectedtoFlownode: flowNode
+    @relationship(type: "connectedTo", direction: OUT)
+  hasedgedataEdgedata: edgeData
+    @relationship(type: "hasEdgeData", direction: OUT)
+}
+
+type tasks {
+  id: ID! @id
+  timeStamp: DateTime! @timestamp
+  flownodeHas: flowNode @relationship(type: "has", direction: IN)
+}
+
+# ? Mutation to create a node
+
+# ? Mutation to create edges
+# mutation CreateFlowEdges($input: [flowEdgeCreateInput!]!) {
+#   createFlowEdges(input: $input) {
+#     flowEdges {
+#       selected
+#       source
+#       sourceHandle
+#       target
+#       targetHandle
+
+#       hasedgedataEdgedata {
+#         bidirectional
+#         boxCSS
+#         label
+#         pathCSS
+#       }
+#       flownodeConnectedby {
+#         hasdataNodedata {
+#           color
+#         }
+#       }
+#       connectedtoFlownode {
+#         hasdataNodedata {
+#           color
+#         }
+#       }
+
+#     }
+#   }
+# }
