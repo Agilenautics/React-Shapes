@@ -5,10 +5,11 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Node } from "react-flow-renderer";
+import { Node, updateEdge } from "react-flow-renderer";
+import { allEdges, getEdges } from "../Edges/gqlEdges";
 
 const allNodes = gql`
-  query Query($where: flowNodeWhere) {
+  query getAllNodes($where: flowNodeWhere) {
     flowNodes(where: $where) {
       id
       timeStamp
@@ -49,7 +50,7 @@ const getNode = gql`
   }
 `;
 
-const newNode = gql`
+ const newNode = gql`
   mutation CreateFlowNodes($input: [flowNodeCreateInput!]!) {
     createFlowNodes(input: $input) {
       flowNodes {
@@ -62,6 +63,7 @@ const newNode = gql`
           label
         }
         haspositionPosition {
+          name
           x
           y
         }
@@ -92,6 +94,7 @@ async function findNode(
       // @ts-ignore
       nodes = JSON.parse(nodes2);
     });
+
   return nodes;
 }
 
@@ -100,7 +103,6 @@ async function getNodes(
   flowchart: string
 ) {
   var nodes: Array<Node> = [];
-
   await client
     .query({
       query: customQuery,
@@ -116,12 +118,15 @@ async function getNodes(
       // @ts-ignore
       nodes = JSON.parse(nodes2);
     });
+
   return nodes;
 }
 
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  flowchart: string
+  flowchart: string,
+  updateNode: any,
+  loading: any
 ) {
   await client.mutate({
     mutation: mutation,
@@ -143,6 +148,7 @@ async function createNode(
           haspositionPosition: {
             create: {
               node: {
+                name: "position",
                 x: 100,
                 y: -150,
               },
@@ -151,7 +157,33 @@ async function createNode(
         },
       ],
     },
+    refetchQueries: [
+      { query: allNodes },
+      // "getAllNode"
+    ],
+    // update(cach, result) {
+    //   console.log("catch", cach.watch, "result", result.data.createFlowNodes.flowNodes)
+    //   // updateNode(result.data.createFlowNodes.flowNodes)
+    // },
+    async onQueryUpdated(observableQuery) {
+      const respon = await observableQuery.result()
+      console.log(respon.data.flowNodes)
+      const a = respon.data.flowNodes.filter((value: any) => {
+        return value.flowchart === flowchart
+      })
+      console.log(a)
+      // updateNode(a)
+    },
+    //
   });
+
+
+
+
+  //  getNodes(allNodes,flowchart).then((res)=>{
+  //   return updateNode(res)
+  //  })
+
 }
 
 const delNode = gql`
@@ -162,14 +194,26 @@ const delNode = gql`
   }
 `;
 
-async function deleteNodeBackend(nodeID: string) {
+async function deleteNodeBackend(nodeID: string,flowchart:string,updateNode:any) {
   await client.mutate({
     mutation: delNode,
     variables: {
       where: {
         id: nodeID,
       },
+
     },
+    refetchQueries: () => [
+      { query: allNodes },
+    ],
+    onQueryUpdated:(observableQuery)=>{
+      console.log()
+      observableQuery.result().then((res)=>{
+        let newData = res.data.flowNodes.filter((value:any)=>value.flowchart=== flowchart )
+       console.log(newData)
+      })
+
+    }
   });
 }
 
