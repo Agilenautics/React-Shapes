@@ -1,6 +1,6 @@
-import create from "zustand";
+import { create } from "zustand";
 import { Node } from "react-flow-renderer";
-import { getNodes,findNode, allNodes } from "./gqlNodes" ;
+import { getNodes, findNode, allNodes } from "./gqlNodes";
 
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
@@ -15,9 +15,18 @@ interface NodeState {
   updateNodeType: (id: string, newType: string) => void;
   updateLinks: (id: string, newLink: Object, flowchart: string) => void;
   toggleDraggable: (id: string, draggable: boolean) => void;
+  loading: any;
+  setLoading: (loading: any) => void;
 }
 
+
 const nodeStore = create<NodeState>((set) => ({
+  loading: false,
+  setLoading: ((loading) => {
+    set((state) => ({
+      loading: state.loading
+    }))
+  }),
   nodes: [
     {
       id: "1",
@@ -33,13 +42,15 @@ const nodeStore = create<NodeState>((set) => ({
       draggable: false,
     },
   ],
+
   addNode: (newNode) =>
     set((state) => ({
       nodes: [
         ...state.nodes,
         { ...newNode, id: Math.floor(Math.random() * 1000 + 1).toString() },
       ],
-    })),
+    })
+    ),
   updateNodes: (nodes) =>
     set((state) => {
       // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
@@ -50,6 +61,13 @@ const nodeStore = create<NodeState>((set) => ({
       const updated_nodes = state.nodes.filter((item) => item.id !== node.id);
       return { nodes: updated_nodes };
     }),
+  // allNodesData: (node) => {
+  //   set((state) => {
+
+
+  //   })
+
+  // }
   updateLabel: (id: string, newLabel: string) =>
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
@@ -81,14 +99,14 @@ const nodeStore = create<NodeState>((set) => ({
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateLinks: async (id, newLink, flowchart) =>  // add flowchart variable
-    {
-      //find data of new node
-      const node_to_be= await findNode(allNodes, flowchart, id);
-      console.log(node_to_be[0]);
-      //save data of new node
-      const new_node=node_to_be[0];
-      //add the saved data to the node to be replaced
-      set((state) => {
+  {
+    //find data of new node
+    const node_to_be = await findNode(allNodes, flowchart, id);
+    console.log(node_to_be[0]);
+    //save data of new node
+    const new_node = node_to_be[0];
+    //add the saved data to the node to be replaced
+    set((state): any => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       //const [node_to_be]= await async findNode(allNodes, flowchart, id);
       console.log(state);//only works with the flowchart we are on - does not work with a different flowchart
@@ -96,13 +114,15 @@ const nodeStore = create<NodeState>((set) => ({
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       console.log(state.nodes.filter((item) => item.data.flowchart === "Flowchart 1"));//only works with the flowchart we are on - does not work with a different flowchart
       //@ts-ignore
-      const updated_node = {...new_node,
+      const updated_node = {
+        ...new_node,
         data: { ...new_node.data, links: newLink },
       };
       console.log({ nodes: [...to_be_updated, updated_node] });
       //newNodes={ nodes: [...to_be_updated, updated_node] }
       return Object.entries({ nodes: [...to_be_updated, updated_node] });
-    })},
+    })
+  },
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];

@@ -5,7 +5,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Edge } from "react-flow-renderer";
+import { Edge, updateEdge } from "react-flow-renderer";
 
 const allEdges = gql`
   query Query($where: flowEdgeWhere) {
@@ -34,6 +34,68 @@ const allEdges = gql`
   }
 `;
 
+// create Edge mutation
+
+const createEdgeMutation = gql`
+mutation CreateFlowEdges($input: [flowEdgeCreateInput!]!) {
+  createFlowEdges(input: $input) {
+     flowEdges {
+      selected
+      source
+      sourceHandle
+      target
+      targetHandle
+       hasedgedataEdgedata {
+        id
+        bidirectional
+        boxCSS
+        label
+        pathCSS
+      }
+        flownodeConnectedby {
+          flowchart
+          id
+        }
+      connectedtoFlownode {
+        flowchart
+        id
+      }
+    }
+  }
+}
+`
+
+// delete Edge 
+
+const deleteEdgeMutation = gql`
+mutation DeleteFlowEdges($where: flowEdgeWhere) {
+  deleteFlowEdges(where: $where) {
+    nodesDeleted
+    relationshipsDeleted
+  }
+}
+`
+
+
+// delete edge method
+
+
+const deleteEdge = async (edgeId: string) => {
+  await client.mutate({
+    mutation: deleteEdgeMutation,
+    variables: {
+      where: {
+        id: edgeId
+      }
+    }
+  })
+
+ await client.resetStore()
+
+}
+
+
+
 async function getEdges(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   flowchart: string
@@ -61,44 +123,68 @@ async function getEdges(
       //   delete edge.flownodeCo
       //   edge.target = edge.connectedtoFlownode.id;
       // });
-      console.log(edges);
     });
   return edges;
 }
 
-async function createNode(
-  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  flowchart: string
-) {
+
+
+//methode for creating edge
+const createFlowEdge = async (newEdge: any, flowchart: string, updateEdges: any) => {
   await client.mutate({
-    mutation: mutation,
+    mutation: createEdgeMutation,
     variables: {
-      input: [
-        {
-          draggable: true,
-          flowchart: flowchart,
-          type: "blueNode",
-          hasdataNodedata: {
-            create: {
-              node: {
-                label: "New Node",
-                shape: "rectangle",
-                description: "",
-              },
-            },
-          },
-          haspositionPosition: {
-            create: {
-              node: {
-                x: 100,
-                y: -150,
-              },
-            },
-          },
+      input: {
+        name: "newEdge",
+        selected: true,
+        source: newEdge.source,
+        sourceHandle: newEdge.sourceHandle,
+        target: newEdge.target,
+        targetHandle: newEdge.targetHandle,
+        hasedgedataEdgedata: {
+          create: {
+            node: {
+              bidirectional: newEdge.data.bidirectional,
+              boxCSS: newEdge.data.boxCSS,
+              label: newEdge.data.label,
+              pathCSS: newEdge.data.pathCSS
+            }
+          }
         },
-      ],
+        flownodeConnectedby: {
+          connect: {
+            where: {
+              node: {
+                id: newEdge.source,
+                flowchart: flowchart
+              }
+            }
+          }
+        },
+        connectedtoFlownode: {
+          connect: {
+            where: {
+              node: {
+                id: newEdge.target,
+                flowchart: flowchart
+              }
+            }
+          }
+        }
+      }
     },
-  });
+  })
+  if (flowchart) {
+    client.resetStore().then(() => {
+      console.log('Cache reset successfully.');
+      getEdges(allEdges, flowchart).then((res: any) => {
+        updateEdges(res)
+      })
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
 }
 
-export { allEdges, getEdges, createNode };
+export { allEdges, getEdges, createFlowEdge, deleteEdge }

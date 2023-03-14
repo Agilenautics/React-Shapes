@@ -123,7 +123,6 @@ export const TreeNode = ({
         getNodes(allNodes, data.name).then((result) => {
           // @ts-ignore
           updateNodes(result);
-          console.log(result);
         });
         getEdges(allEdges, data.name).then((result) => {
           // @ts-ignore

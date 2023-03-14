@@ -50,7 +50,7 @@ const getNode = gql`
   }
 `;
 
- const newNode = gql`
+const newNode = gql`
   mutation CreateFlowNodes($input: [flowNodeCreateInput!]!) {
     createFlowNodes(input: $input) {
       flowNodes {
@@ -71,6 +71,26 @@ const getNode = gql`
     }
   }
 `;
+
+//updete position mutation 
+
+const updatePositionMutation = gql`
+mutation updatePosition($update: positionUpdateInput, $where: positionWhere) {
+  updatePositions(update: $update, where: $where) {
+    positions {
+      x
+      y
+      flownodeHasposition {
+        id
+      }
+    }
+    
+  }
+}
+`
+
+
+
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -126,7 +146,6 @@ async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   flowchart: string,
   updateNode: any,
-  loading: any
 ) {
   await client.mutate({
     mutation: mutation,
@@ -157,32 +176,19 @@ async function createNode(
         },
       ],
     },
-    refetchQueries: [
-      { query: allNodes },
-      // "getAllNode"
-    ],
-    // update(cach, result) {
-    //   console.log("catch", cach.watch, "result", result.data.createFlowNodes.flowNodes)
-    //   // updateNode(result.data.createFlowNodes.flowNodes)
-    // },
-    async onQueryUpdated(observableQuery) {
-      const respon = await observableQuery.result()
-      console.log(respon.data.flowNodes)
-      const a = respon.data.flowNodes.filter((value: any) => {
-        return value.flowchart === flowchart
-      })
-      console.log(a)
-      // updateNode(a)
-    },
-    //
   });
 
 
+  if (flowchart) {
+    client.resetStore().then(() => {
+      getNodes(allNodes, flowchart).then((res) => {
+        return updateNode(res)
+      })
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
 
-
-  //  getNodes(allNodes,flowchart).then((res)=>{
-  //   return updateNode(res)
-  //  })
 
 }
 
@@ -194,27 +200,39 @@ const delNode = gql`
   }
 `;
 
-async function deleteNodeBackend(nodeID: string,flowchart:string,updateNode:any) {
+async function deleteNodeBackend(nodeID: string) {
   await client.mutate({
     mutation: delNode,
     variables: {
       where: {
         id: nodeID,
       },
-
     },
-    refetchQueries: () => [
-      { query: allNodes },
-    ],
-    onQueryUpdated:(observableQuery)=>{
-      console.log()
-      observableQuery.result().then((res)=>{
-        let newData = res.data.flowNodes.filter((value:any)=>value.flowchart=== flowchart )
-       console.log(newData)
-      })
-
-    }
   });
+  client.resetStore().then((res) => {
+    console.log("cache restoring.......")
+  }).catch((error) => {
+    console.log(error)
+  })
 }
 
-export { allNodes, newNode, findNode, getNodes, createNode, deleteNodeBackend };
+// here iam parforming update node position methode
+
+const updatePosition = async (node: any) => {
+  await client.mutate({
+    mutation: updatePositionMutation,
+    variables: {
+      update: {
+        x: node.position.x,
+        y: node.position.y
+      },
+      where: {
+        flownodeHasposition: {
+          id: node.id
+        }
+      }
+    }
+  })
+  await client.resetStore()
+}
+export { allNodes, newNode, findNode, getNodes, createNode, deleteNodeBackend, updatePosition };

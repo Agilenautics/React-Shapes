@@ -26,13 +26,15 @@ type nodeData {
 }
 
 type position {
-  x: Int!
-  y: Int!
+  name:String!
+  x:Float!
+  y:Float!
   flownodeHasposition: flowNode
     @relationship(type: "hasPosition", direction: IN)
 }
 
 type edgeData {
+  id:ID! @id
   label: String
   pathCSS: String!
   boxCSS: String!
@@ -43,6 +45,7 @@ type edgeData {
 
 type flowEdge {
   id: ID! @id
+  name:String!
   timeStamp: DateTime! @timestamp
   source: String!
   target: String!
@@ -92,7 +95,6 @@ type tasks {
 #           color
 #         }
 #       }
-
 #     }
 #   }
 # }
