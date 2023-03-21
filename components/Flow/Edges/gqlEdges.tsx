@@ -5,7 +5,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Edge, updateEdge } from "react-flow-renderer";
+import { Edge } from "react-flow-renderer";
 
 const allEdges = gql`
   query Query($where: flowEdgeWhere) {
@@ -68,8 +68,8 @@ mutation CreateFlowEdges($input: [flowEdgeCreateInput!]!) {
 // delete Edge 
 
 const deleteEdgeMutation = gql`
-mutation DeleteFlowEdges($where: flowEdgeWhere) {
-  deleteFlowEdges(where: $where) {
+mutation deleteFlowEdges($where: flowEdgeWhere, $delete: flowEdgeDeleteInput) {
+  deleteFlowEdges(where: $where, delete: $delete) {
     nodesDeleted
     relationshipsDeleted
   }
@@ -78,21 +78,34 @@ mutation DeleteFlowEdges($where: flowEdgeWhere) {
 
 
 // delete edge method
-
-
-const deleteEdge = async (edgeId: string) => {
+const deleteEdge = async (edgeId: string, label: string) => {
   await client.mutate({
     mutation: deleteEdgeMutation,
     variables: {
-      where: {
-        id: edgeId
+      "where": {
+        "id": edgeId
+      },
+      delete: {
+        hasedgedataEdgedata: {
+          where: {
+            node: {
+              label
+            }
+          }
+
+        }
+
+
       }
+
     }
   })
 
- await client.resetStore()
+  await client.resetStore()
 
 }
+
+
 
 
 
@@ -126,6 +139,7 @@ async function getEdges(
     });
   return edges;
 }
+
 
 
 
@@ -178,7 +192,7 @@ const createFlowEdge = async (newEdge: any, flowchart: string, updateEdges: any)
     client.resetStore().then(() => {
       console.log('Cache reset successfully.');
       getEdges(allEdges, flowchart).then((res: any) => {
-        updateEdges(res)
+        return updateEdges(res)
       })
     }).catch((error) => {
       console.error(error);
@@ -187,4 +201,47 @@ const createFlowEdge = async (newEdge: any, flowchart: string, updateEdges: any)
 
 }
 
-export { allEdges, getEdges, createFlowEdge, deleteEdge }
+//update Edge mutation
+
+const updateEdgeMutation = gql`
+mutation updateEdge($where: flowEdgeWhere, $update: flowEdgeUpdateInput) {
+  updateFlowEdges(where: $where, update: $update) {
+    flowEdges {
+      hasedgedataEdgedata {
+        label
+        bidirectional
+        boxCSS
+      }
+    }
+  }
+}
+`
+
+// update edge method
+const updateEdgeBackend = async (
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  edgeData: any
+) => {
+  await client.mutate({
+    mutation: mutation,
+    variables: {
+      "where": {
+        "id": edgeData.id
+      },
+      "update": {
+        "hasedgedataEdgedata": {
+          "update": {
+            "node": {
+              "label": edgeData.data.label,
+              "bidirectional": edgeData.data.bidirectional,
+              "boxCSS": edgeData.data.boxCSS,
+              "pathCSS": edgeData.data.pathCSS
+            }
+          }
+        }
+      }
+    }
+  })
+}
+
+export { allEdges, getEdges, createFlowEdge, deleteEdge, updateEdgeBackend, updateEdgeMutation }

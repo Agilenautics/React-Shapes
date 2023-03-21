@@ -193,11 +193,12 @@ async function createNode(
 }
 
 const delNode = gql`
-  mutation Mutation($where: flowNodeWhere) {
-    deleteFlowNodes(where: $where) {
-      nodesDeleted
-    }
+mutation deleteNode($where: flowNodeWhere, $delete: flowNodeDeleteInput) {
+  deleteFlowNodes(where: $where, delete: $delete) {
+    nodesDeleted
+    relationshipsDeleted
   }
+}
 `;
 
 async function deleteNodeBackend(nodeID: string) {
@@ -205,9 +206,23 @@ async function deleteNodeBackend(nodeID: string) {
     mutation: delNode,
     variables: {
       where: {
-        id: nodeID,
+        id: nodeID
       },
-    },
+      delete: {
+        hasdataNodedata: {},
+        haspositionPosition: {},
+        connectedbyFlowedge: {
+          delete: {
+            hasedgedataEdgedata: {}
+          }
+        },
+        flowedgeConnectedto: {
+          delete: {
+            hasedgedataEdgedata: {}
+          }
+        }
+      }
+    }
   });
   client.resetStore().then((res) => {
     console.log("cache restoring.......")
@@ -235,4 +250,49 @@ const updatePosition = async (node: any) => {
   })
   await client.resetStore()
 }
-export { allNodes, newNode, findNode, getNodes, createNode, deleteNodeBackend, updatePosition };
+
+
+const updateNodesMutation = gql`
+mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
+  updateFlowNodes(where: $where, update: $update) {
+    flowNodes {
+      draggable
+      type
+      hasdataNodedata {
+        label
+        shape
+        description
+      }
+     
+    }
+    
+  }
+}
+`
+
+const updateNodeBackend = async (nodeData: any, flowchart: string) => {
+  await client.mutate({
+    mutation: updateNodesMutation,
+    variables: {
+      where: {
+        id: nodeData.id
+      },
+      update: {
+        type: nodeData.type,
+        draggable: true,
+        hasdataNodedata: {
+          update: {
+            node: {
+              label: nodeData.data.label,
+              shape: nodeData.data.shape,
+              description: nodeData.data.description
+            }
+          }
+        }
+      }
+    }
+  })
+}
+
+
+export { allNodes, newNode, findNode, getNodes, createNode, deleteNodeBackend, updatePosition, updateNodeBackend };

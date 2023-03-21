@@ -108,7 +108,7 @@ export const TreeNode = ({
   );
   // ! This code below is called every frame, which is annoying but works for now
   if (state.isSelected) {
-    updateCurrentFlowchart(name,Id);
+    updateCurrentFlowchart(name, Id);
   }
 
   function loadNewFlow(
@@ -126,12 +126,11 @@ export const TreeNode = ({
         });
         getEdges(allEdges, data.name).then((result) => {
           // @ts-ignore
-          // console.log(result);
-          updateEdges(result);
+          return updateEdges(result);
         });
       }
     };
-    
+
   }
   return (
     <div

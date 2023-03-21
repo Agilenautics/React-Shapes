@@ -11,8 +11,8 @@ type flowNode {
     @relationship(type: "hasPosition", direction: OUT)
   connectedbyFlowedge: flowEdge
     @relationship(type: "connectedBy", direction: OUT)
-  linkedtoFlownode: flowNode @relationship(type: "linkedTo", direction: OUT)
-  flownodeLinkedto: flowNode @relationship(type: "linkedTo", direction: IN)
+    #linkedtoFlownode: flowNode @relationship(type: "linkedTo", direction: OUT)
+  #flownodeLinkedto: flowNode @relationship(type: "linkedTo", direction: IN)
   hasTasks: tasks @relationship(type: "has", direction: OUT)
   flowedgeConnectedto: flowEdge
     @relationship(type: "connectedTo", direction: IN)

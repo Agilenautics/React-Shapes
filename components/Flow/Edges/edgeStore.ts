@@ -22,7 +22,11 @@ const edgeStore = create<EdgeState>((set) => ({
     "fill-node-orange-200",
     "fill-node-purple-200",
   ],
-  updateEdges: (edges) => set((state) => ({ edges: edges })),
+  updateEdges: (edges) =>
+    set((state): any => {
+      // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
+      return { edges: edges };
+    }),
   updateEdgeCSS: (id, CSS) =>
     set((state) => {
       const old_edge = state.edges.filter((item) => item.id === id)[0];

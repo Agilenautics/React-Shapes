@@ -47,8 +47,9 @@ const initData = {
               id: "80",
               name: "Flowchart 3",
               flowchart: {
-                nodes: [],
-                edges: [],
+                // here iam changing empty array to calling get all edges and nodes
+                nodes:await getNodes(allNodes,"Flowchart 3"),
+                edges:await getEdges(allEdges, "Flowchart 3") ,
               },
             },
           ],
