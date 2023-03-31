@@ -145,7 +145,6 @@ async function getNodes(
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes2);
-      console.log(nodes);
     });
 
   return nodes;
@@ -162,7 +161,7 @@ async function createNode(
     mutation: mutation,
     variables: {
       where: {
-        id
+        id,
       },
       update: {
         hasflowchart: {
@@ -210,7 +209,6 @@ async function createNode(
       .resetStore()
       .then(() => {
         getNodes(allNodes, id).then((res) => {
-          console.log("create node", res);
           return updateNode(res);
         });
       })
@@ -253,13 +251,13 @@ async function deleteNodeBackend(nodeID: string) {
     },
   });
   // client
-    // .resetStore()
-    // .then((res) => {
-    //   console.log("cache restoring.......");
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
+  // .resetStore()
+  // .then((res) => {
+  //   console.log("cache restoring.......");
+  // })
+  // .catch((error) => {
+  //   console.log(error);
+  // });
 }
 
 // here iam parforming update node position methode

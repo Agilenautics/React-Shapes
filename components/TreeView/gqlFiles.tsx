@@ -306,26 +306,13 @@ async function getTreeNode(
       query: customQuery,
     })
     .then((result) => {
-      // const newObj = Object.keys(obj).reduce((acc, key) => {
-      //   acc[newKeys[key] || key] = obj[key];
-      //   return acc;
-      // }, {});
-
-      // console.log(newObj); // {hello: 'bar', world: 'qux'}
       const nodes1 = JSON.stringify(result.data.mains)
         .replaceAll('"hasContainsFolder":', '"children":')
         .replaceAll('"hasFolder":', '"children":')
         .replaceAll('"hasFile":', '"children":')
         .replaceAll('"hasFlownodes":', '"flowchart":');
-      // .replaceAll('')
-      // console.log(result.data.mains.hasContainsFolder)
       nodes = JSON.parse(nodes1);
-
-      nodes.reduce((acc, key): any => {
-        console.log(acc, key);
-      });
     });
-  console.log(nodes);
   return nodes;
 }
 

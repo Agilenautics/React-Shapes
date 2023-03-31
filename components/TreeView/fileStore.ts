@@ -6,10 +6,21 @@ import nodes2 from "../Flow/Nodes/flowchart2";
 import edges1 from "../Flow/Edges/flowchart1";
 import edges2 from "../Flow/Edges/flowchart2";
 import { findNode, allNodes, getNodes } from "../Flow/Nodes/gqlNodes";
-import { allEdges, getEdges } from "../Flow/Edges/gqlEdges"; 
-import { createFolderInMain, newFolderInMain,createFolderInFolder,newFolderInFolder,
-  getInitData,getTreeNode,createFileInFolder,newFileInFolder, deleteFileBackend, deleteFolderBackend, 
-  createFileInMain,newFileInMain } from "./gqlFiles";
+import { allEdges, getEdges } from "../Flow/Edges/gqlEdges";
+import {
+  createFolderInMain,
+  newFolderInMain,
+  createFolderInFolder,
+  newFolderInFolder,
+  getInitData,
+  getTreeNode,
+  createFileInFolder,
+  newFileInFolder,
+  deleteFileBackend,
+  deleteFolderBackend,
+  createFileInMain,
+  newFileInMain,
+} from "./gqlFiles";
 
 const initData = await getTreeNode(getInitData);
 // {
@@ -109,39 +120,32 @@ const fileStore = create<files>((set) => ({
   linkNodes: { nodes: {}, fileID: "" },
   updateLinkNodes: (nodes) =>
     set((state) => {
-      console.log(nodes)
+      console.log(nodes);
       return { linkNodes: { nodes: nodes, fileID: state.linkNodes.fileID } };
     }),
   add_file: () =>
     set((state) => {
-      
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
-      console.log(root,"root");
+      console.log(root, "root");
       let node = findById(root, parentId);
-      console.log(node)
-      console.log(node?.model)
-      // console.log("Type of node.model : ", typeof(node?.model))
+
       let data_chk = node?.model;
-      // console.log("Type of data_chk : ", typeof(data_chk))
-      // console.log(state.data.children);
-      console.log(node?.model.type)
+
+      console.log(node?.model.type);
       console.log(parentId);
       if (node?.model.type === "folder") {
-       createFileInFolder(newFileInFolder,parentId);
-      
-      }
-      else {
+        createFileInFolder(newFileInFolder, parentId);
+      } else {
         console.log(parentId);
-        createFileInMain(newFileInMain,parentId);
-      };
-      
+        createFileInMain(newFileInMain, parentId);
+      }
+
       return { data: state.data };
     }),
-  
+
   add_folder: () =>
     set((state) => {
-       
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       let node = findById(root, parentId);
@@ -149,20 +153,11 @@ const fileStore = create<files>((set) => ({
       let data_chk = node?.model.type;
       console.log(data_chk);
       if (node?.model.type === "folder") {
-        
-        console.log(state.data.id);
-        console.log("in folder",parentId)
-        createFolderInFolder(newFolderInFolder,parentId);
-        
+        createFolderInFolder(newFolderInFolder, parentId);
+      } else {
+        createFolderInMain(newFolderInMain, parentId);
       }
-      else {
-        console.log(parentId);
-        createFolderInMain(newFolderInMain,parentId);
-       
-      };
 
-
-      
       return { data: state.data };
     }),
 
@@ -175,10 +170,9 @@ const fileStore = create<files>((set) => ({
       const x = searchTree(state.data, "1");
       console.log(x);
       // ? Figure out how to make this work
-      // const nodes = nodeStore((state) => state.nodes);
-      // console.log(nodes);
+
       deleteFileBackend(id);
-       deleteFolderBackend(id);
+      deleteFolderBackend(id);
       return { data: state.data };
     }),
   find_file: (id: string) => {
