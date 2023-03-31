@@ -46,7 +46,7 @@ export function useBackend() {
   console.log(root.model);
   useEffect(() =>{
     setData(initData);
-    update();
+    update;
    },[initData,update]);
   return {
     data,
