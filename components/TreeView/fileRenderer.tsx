@@ -9,6 +9,7 @@ import { useBackend } from "./backend";
 
 export function FileTree() {
   const backend = useBackend();
+  console.log(backend.data);
   return (
     <AutoSize>
       {(props: any) => (
@@ -20,8 +21,9 @@ export function FileTree() {
           }}
           data={backend.data}
           getChildren="children"
+         
           isOpen="isOpen"
-          hideRoot
+          //hideRoot
           indent={24}
           onMove={backend.onMove}
           onToggle={backend.onToggle}
@@ -39,6 +41,7 @@ export function FileTree() {
 
 export function LinkTree() {
   const backend = useBackend();
+
   return (
     <AutoSize>
       {(props: any) => (
@@ -60,7 +63,7 @@ export function LinkTree() {
           width={props.width}
           height={props.height}
         >
-          {TreeNode2} 
+          {TreeNode2}
         </Tree>
       )}
     </AutoSize>

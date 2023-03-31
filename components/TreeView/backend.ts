@@ -1,3 +1,4 @@
+import { Console } from "console";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
@@ -35,16 +36,18 @@ export type MyData = {
  */
 export function useBackend() {
   const initData = fileStore((state) => state.data);
+  console.log(initData,"initdata");
 
   const [data, setData] = useState<MyData>(initData as MyData);
   const root = useMemo(() => new TreeModel().parse(data), [data]);
+  console.log(root,"root");
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
-
+  console.log(root.model);
   useEffect(() =>{
     setData(initData);
     update();
-   });
+   },[initData,update]);
   return {
     data,
     onMove: (

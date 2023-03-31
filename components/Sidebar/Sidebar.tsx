@@ -5,6 +5,7 @@ import { AiFillFolderAdd, AiFillFileAdd } from "react-icons/ai";
 import DarkModeToggleButton from "./DarkModeToggleButton";
 import fileStore from "../TreeView/fileStore";
 import BreadCrumbs from "./BreadCrumbs";
+//import {createFolder,newFolder } from "../TreeView/gqlFiles";
 
 
 //class based & function based

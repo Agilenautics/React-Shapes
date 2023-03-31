@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { updateEdge, useReactFlow } from "react-flow-renderer";
 import { MdOutlineAdd } from "react-icons/md";
-import { newNode, createNode, getNodes, allNodes } from "../Flow/Nodes/gqlNodes";
+import { newNode, createNode } from "../Flow/Nodes/gqlNodes";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import fileStore from "../TreeView/fileStore";
 /**
@@ -10,6 +10,8 @@ import fileStore from "../TreeView/fileStore";
  */
 function AddNodeButton() {
   const currentFlowchart = fileStore((state) => state.currentFlowchart);
+  const currentId = fileStore((state)=> state.Id);
+  console.log (currentId,"file id");
   const updateNode = nodeStore((state)=>state.updateNodes)
 
   return (
@@ -18,7 +20,7 @@ function AddNodeButton() {
         type="button"
         className="inline-flex items-center rounded-3xl bg-blue-600 p-2.5 text-center text-sm
          text-white shadow-lg shadow-blue-300 transition-all hover:bg-blue-700 focus:outline-none dark:shadow-blue-800"
-        onClick={()=>createNode(newNode,currentFlowchart,updateNode)} 
+        onClick={()=>createNode(newNode,currentId,currentFlowchart,updateNode)} 
       >
         <MdOutlineAdd className="h-10 w-10" />
       </button>

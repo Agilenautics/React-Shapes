@@ -9,29 +9,32 @@ import { Node, updateEdge } from "react-flow-renderer";
 import { allEdges, getEdges } from "../Edges/gqlEdges";
 
 const allNodes = gql`
-  query getAllNodes($where: flowNodeWhere) {
-    flowNodes(where: $where) {
-      id
-      timeStamp
-      draggable
-      flowchart
-      type
-      hasdataNodedata {
-        shape
-        description
-        label
-      }
-      haspositionPosition {
-        x
-        y
+  query Query($where: flowchartWhere) {
+    flowcharts(where: $where) {
+      name
+      nodes {
+        id
+        draggable
+        flowchart
+        type
+        timeStamp
+        hasdataNodedata {
+          label
+          shape
+          description
+        }
+        haspositionPosition {
+          x
+          y
+        }
       }
     }
   }
 `;
 
 const getNode = gql`
-  query Query($where: flowNodeWhere) {
-    flowNodes(where: $where) {
+  query Query($where: fileWhere) {
+    flowNodes {
       id
       timeStamp
       draggable
@@ -51,46 +54,45 @@ const getNode = gql`
 `;
 
 const newNode = gql`
-  mutation CreateFlowNodes($input: [flowNodeCreateInput!]!) {
-    createFlowNodes(input: $input) {
-      flowNodes {
-        draggable
-        flowchart
-        type
-        hasdataNodedata {
-          shape
-          description
-          label
-        }
-        haspositionPosition {
+  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
+    updateFiles(where: $where, update: $update) {
+      files {
+        name
+        hasflowchart {
           name
-          x
-          y
+          nodes {
+            draggable
+            flowchart
+            hasdataNodedata {
+              label
+              shape
+            }
+            haspositionPosition {
+              x
+              y
+            }
+          }
         }
       }
     }
   }
 `;
 
-//updete position mutation 
+//updete position mutation
 
 const updatePositionMutation = gql`
-mutation updatePosition($update: positionUpdateInput, $where: positionWhere) {
-  updatePositions(update: $update, where: $where) {
-    positions {
-      x
-      y
-      flownodeHasposition {
-        id
+  mutation updatePosition($update: positionUpdateInput, $where: positionWhere) {
+    updatePositions(update: $update, where: $where) {
+      positions {
+        x
+        y
+        flownodeHasposition {
+          id
+        }
       }
     }
-    
   }
-}
-`
-
-
-
+`;
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -120,23 +122,30 @@ async function findNode(
 
 async function getNodes(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  flowchart: string
+  id: string
 ) {
   var nodes: Array<Node> = [];
   await client
     .query({
       query: customQuery,
       variables: {
-        where: { flowchart: flowchart },
+        where: {
+          hasFile: {
+            id: id,
+          },
+        },
       },
     })
     .then((result) => {
-      const nodes1 = JSON.stringify(result.data.flowNodes);
+      //console.log(result.data.flowcharts[0]);
+      const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
+
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
         .replaceAll('"haspositionPosition":', '"position":');
-      // @ts-ignore
+      //@ts-ignore
       nodes = JSON.parse(nodes2);
+      console.log(nodes);
     });
 
   return nodes;
@@ -144,61 +153,80 @@ async function getNodes(
 
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  id: string,
   flowchart: string,
-  updateNode: any,
+
+  updateNode: any
 ) {
   await client.mutate({
     mutation: mutation,
     variables: {
-      input: [
-        {
-          draggable: true,
-          flowchart: flowchart,
-          type: "blueNode",
-          hasdataNodedata: {
-            create: {
-              node: {
-                label: "New Node",
-                shape: "rectangle",
-                description: "",
-              },
-            },
-          },
-          haspositionPosition: {
-            create: {
-              node: {
-                name: "position",
-                x: 100,
-                y: -150,
-              },
+      where: {
+        id
+      },
+      update: {
+        hasflowchart: {
+          update: {
+            node: {
+              nodes: [
+                {
+                  create: [
+                    {
+                      node: {
+                        flowchart: flowchart,
+                        draggable: true,
+                        type: "blueNode",
+                        hasdataNodedata: {
+                          create: {
+                            node: {
+                              label: flowchart,
+                              shape: "rectangle",
+                            },
+                          },
+                        },
+                        haspositionPosition: {
+                          create: {
+                            node: {
+                              name: "pos",
+                              x: 200,
+                              y: 200,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
+                },
+              ],
             },
           },
         },
-      ],
+      },
     },
   });
 
-
   if (flowchart) {
-    client.resetStore().then(() => {
-      getNodes(allNodes, flowchart).then((res) => {
-        return updateNode(res)
+    client
+      .resetStore()
+      .then(() => {
+        getNodes(allNodes, id).then((res) => {
+          console.log("create node", res);
+          return updateNode(res);
+        });
       })
-    }).catch((error) => {
-      console.error(error);
-    });
+      .catch((error) => {
+        console.error(error);
+      });
   }
-
-
 }
 
 const delNode = gql`
-mutation deleteNode($where: flowNodeWhere, $delete: flowNodeDeleteInput) {
-  deleteFlowNodes(where: $where, delete: $delete) {
-    nodesDeleted
-    relationshipsDeleted
+  mutation deleteNode($where: flowNodeWhere, $delete: flowNodeDeleteInput) {
+    deleteFlowNodes(where: $where, delete: $delete) {
+      nodesDeleted
+      relationshipsDeleted
+    }
   }
-}
 `;
 
 async function deleteNodeBackend(nodeID: string) {
@@ -206,29 +234,32 @@ async function deleteNodeBackend(nodeID: string) {
     mutation: delNode,
     variables: {
       where: {
-        id: nodeID
+        id: nodeID,
       },
       delete: {
         hasdataNodedata: {},
         haspositionPosition: {},
         connectedbyFlowedge: {
           delete: {
-            hasedgedataEdgedata: {}
-          }
+            hasedgedataEdgedata: {},
+          },
         },
         flowedgeConnectedto: {
           delete: {
-            hasedgedataEdgedata: {}
-          }
-        }
-      }
-    }
+            hasedgedataEdgedata: {},
+          },
+        },
+      },
+    },
   });
-  client.resetStore().then((res) => {
-    console.log("cache restoring.......")
-  }).catch((error) => {
-    console.log(error)
-  })
+  // client
+    // .resetStore()
+    // .then((res) => {
+    //   console.log("cache restoring.......");
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    // });
 }
 
 // here iam parforming update node position methode
@@ -239,43 +270,40 @@ const updatePosition = async (node: any) => {
     variables: {
       update: {
         x: node.position.x,
-        y: node.position.y
+        y: node.position.y,
       },
       where: {
         flownodeHasposition: {
-          id: node.id
+          id: node.id,
+        },
+      },
+    },
+  });
+  await client.resetStore();
+};
+
+const updateNodesMutation = gql`
+  mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
+    updateFlowNodes(where: $where, update: $update) {
+      flowNodes {
+        draggable
+        type
+        hasdataNodedata {
+          label
+          shape
+          description
         }
       }
     }
-  })
-  await client.resetStore()
-}
-
-
-const updateNodesMutation = gql`
-mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
-  updateFlowNodes(where: $where, update: $update) {
-    flowNodes {
-      draggable
-      type
-      hasdataNodedata {
-        label
-        shape
-        description
-      }
-     
-    }
-    
   }
-}
-`
+`;
 
 const updateNodeBackend = async (nodeData: any, flowchart: string) => {
   await client.mutate({
     mutation: updateNodesMutation,
     variables: {
       where: {
-        id: nodeData.id
+        id: nodeData.id,
       },
       update: {
         type: nodeData.type,
@@ -285,14 +313,22 @@ const updateNodeBackend = async (nodeData: any, flowchart: string) => {
             node: {
               label: nodeData.data.label,
               shape: nodeData.data.shape,
-              description: nodeData.data.description
-            }
-          }
-        }
-      }
-    }
-  })
-}
+              description: nodeData.data.description,
+            },
+          },
+        },
+      },
+    },
+  });
+};
 
-
-export { allNodes, newNode, findNode, getNodes, createNode, deleteNodeBackend, updatePosition, updateNodeBackend };
+export {
+  allNodes,
+  newNode,
+  findNode,
+  getNodes,
+  createNode,
+  deleteNodeBackend,
+  updatePosition,
+  updateNodeBackend,
+};
