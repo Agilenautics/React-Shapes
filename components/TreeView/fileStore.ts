@@ -98,6 +98,7 @@ function searchTree(element: any, matchingTitle: any): any {
 interface files {
   data: MyData;
   Id: string;
+  name:string;
   // updateCurrentId: (Id: string) => void;
   currentFlowchart: string;
   updateCurrentFlowchart: (currentFlowchart: string, Id: string) => void;
@@ -181,6 +182,7 @@ const fileStore = create<files>((set) => ({
       // ? Replace this function with findById when I implement any database
       const targetNode = searchTree(state.data, id);
       x = targetNode;
+      console.log("targetnode",x);
       return {};
     });
     return x as MyData;

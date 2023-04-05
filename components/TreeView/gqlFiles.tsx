@@ -285,7 +285,7 @@ async function createFileInFolder(
               hasflowchart: {
                 create: {
                   node: {
-                    name: "New File",
+                    name: "Flowchart",
                   },
                 },
               },

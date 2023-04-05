@@ -66,6 +66,9 @@ const newNode = gql`
             hasdataNodedata {
               label
               shape
+              links{
+                label
+              }
             }
             haspositionPosition {
               x
@@ -172,7 +175,7 @@ async function createNode(
                   create: [
                     {
                       node: {
-                        flowchart: flowchart,
+                        flowchart: "flowNode",
                         draggable: true,
                         type: "blueNode",
                         hasdataNodedata: {
@@ -180,6 +183,11 @@ async function createNode(
                             node: {
                               label: flowchart,
                               shape: "rectangle",
+                              links:{
+                                create:{
+                                  node:{},
+                                },
+                              },
                             },
                           },
                         },

@@ -101,7 +101,7 @@ const deleteEdge = async (edgeId: string, label: string) => {
     }
   })
 
-  await client.resetStore()
+  //await client.resetStore()
 
 }
 

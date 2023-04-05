@@ -111,8 +111,7 @@ export const TreeNode = ({
   if (state.isSelected) {
     
     updateCurrentFlowchart(name, Id);
-    updateFileBackend(Id,name);
-    updateFolderBackend(Id,name);
+    
     console.log("treenode editing",Id,name);
   }
 

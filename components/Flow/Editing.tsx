@@ -215,8 +215,10 @@ export function Editing({
               <div>
                 <div className="absolute top-5 left-1 text-black">
                   <button
+                  type="button"
                     className="absolute right-2 -top-[19px] flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5"
                     onClick={() => {
+                      console.log("hi");
                       updateLinkNodes({});
                     }}
                   >
