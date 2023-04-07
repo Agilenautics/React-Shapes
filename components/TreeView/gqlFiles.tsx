@@ -52,7 +52,25 @@ const getInitData = gql`
             name
             hasflowchart {
               nodes {
+                id
                 type
+                draggable
+                flowchart
+                hasdataNodedata{
+                  label
+                  shape
+                  description
+                  links{
+                    label
+                    id
+                    flag
+                  }
+                }
+                haspositionPosition{
+                  name
+                  x
+                  y
+                }
               }
             }
           }
@@ -71,11 +89,18 @@ const getInitData = gql`
                 label
                 shape
                 description
+                links{
+                  label
+                  id
+                  flag
+                }
               }
-              haspositionPosition {
+              haspositionPosition{
+                name
                 x
                 y
               }
+             
             }
           }
         }
@@ -329,7 +354,11 @@ async function deleteFileBackend(fileID: string) {
             nodes: [
               {
                 delete: {
-                  hasdataNodedata: {},
+                  hasdataNodedata: {
+                    delete:{
+                     links:{}
+                    },
+                  },
                   haspositionPosition: {},
                 },
               },
@@ -364,7 +393,9 @@ async function deleteFolderBackend(folderID: string) {
                   nodes: [
                     {
                       delete: {
-                        hasdataNodedata: {},
+                        hasdataNodedata: {
+                          links:{},
+                        },
                         haspositionPosition: {},
                       },
                     },

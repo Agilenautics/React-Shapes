@@ -39,6 +39,7 @@ const defaultEdgeOptions = {
  */
 
 function Flow() {
+  
   const snapGrid: [number, number] = [10, 10];
   const { getNodes, getEdges } = useReactFlow();
   const defaultNodes = nodeStore((state) => state.nodes);
@@ -49,7 +50,7 @@ function Flow() {
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const currentFlowchart = fileStore((state) => state.currentFlowchart)
-
+  const fileId=fileStore((state)=>state.Id);
 
   const [nodeId, setNodeId] = useState([])
 
@@ -102,7 +103,8 @@ function Flow() {
   const onConnect = useCallback(
     (newEdge: Connection) =>
       setEdges((eds) => {
-        createFlowEdge(newEdge, currentFlowchart, updateEdges)
+        console.log(currentFlowchart,fileId,"currentFlowchart");
+        createFlowEdge(newEdge, fileId, updateEdges)
         updateEdges(getEdges());
         return addEdge(newEdge, eds);
       }),

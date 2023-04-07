@@ -129,7 +129,7 @@ export const TreeNode = ({
           // @ts-ignore
           updateNodes(result);
         });
-        getEdges(allEdges, data.name).then((result) => {
+        getEdges(allEdges, data.id).then((result) => {
           // @ts-ignore
           return updateEdges(result);
         });

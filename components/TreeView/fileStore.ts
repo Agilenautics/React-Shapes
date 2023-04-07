@@ -154,7 +154,7 @@ const fileStore = create<files>((set) => ({
       let data_chk = node?.model.type;
       console.log(data_chk);
       if (node?.model.type === "folder") {
-        createFolderInFolder(newFolderInFolder, parentId);
+       createFolderInFolder(newFolderInFolder, parentId);
       } else {
         createFolderInMain(newFolderInMain, parentId);
       }
@@ -167,13 +167,14 @@ const fileStore = create<files>((set) => ({
     set((state) => {
       const root = new TreeModel().parse(state.data);
       const node = findById(root, id);
+      deleteFileBackend(id);
+      deleteFolderBackend(id);
       node?.drop();
       const x = searchTree(state.data, "1");
       console.log(x);
       // ? Figure out how to make this work
 
-      deleteFileBackend(id);
-      deleteFolderBackend(id);
+      
       return { data: state.data };
     }),
   find_file: (id: string) => {

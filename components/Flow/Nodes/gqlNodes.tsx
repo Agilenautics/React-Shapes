@@ -22,6 +22,11 @@ const allNodes = gql`
           label
           shape
           description
+          links{
+            label
+            id
+            flag
+          }
         }
         haspositionPosition {
           x
@@ -44,6 +49,11 @@ const getNode = gql`
         shape
         description
         label
+        links{
+          id
+          label
+          flag
+        }
       }
       haspositionPosition {
         x
@@ -68,6 +78,8 @@ const newNode = gql`
               shape
               links{
                 label
+                id
+                flag
               }
             }
             haspositionPosition {
@@ -87,6 +99,7 @@ const updatePositionMutation = gql`
   mutation updatePosition($update: positionUpdateInput, $where: positionWhere) {
     updatePositions(update: $update, where: $where) {
       positions {
+        name
         x
         y
         flownodeHasposition {
@@ -115,9 +128,11 @@ async function findNode(
       const nodes1 = JSON.stringify(result.data.flowNodes);
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
+        //.replaceAll('"links":','"link":');
         .replaceAll('"haspositionPosition":', '"position":');
       // @ts-ignore
       nodes = JSON.parse(nodes2);
+      
     });
 
   return nodes;
@@ -145,9 +160,11 @@ async function getNodes(
 
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
+        
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes2);
+      //console.log("getNodes",nodes);
     });
 
   return nodes;
@@ -183,9 +200,14 @@ async function createNode(
                             node: {
                               label: flowchart,
                               shape: "rectangle",
+                              description:"",
                               links:{
                                 create:{
-                                  node:{},
+                                  node:{
+                                    label:"",
+                                    id:"",
+                                    flag:false,
+                                  },
                                 },
                               },
                             },
@@ -243,7 +265,11 @@ async function deleteNodeBackend(nodeID: string) {
         id: nodeID,
       },
       delete: {
-        hasdataNodedata: {},
+        hasdataNodedata: {
+          delete:{
+          links:{}
+          }
+        },
         haspositionPosition: {},
         connectedbyFlowedge: {
           delete: {
@@ -285,7 +311,7 @@ const updatePosition = async (node: any) => {
       },
     },
   });
-  await client.resetStore();
+  //await client.resetStore();
 };
 
 const updateNodesMutation = gql`
@@ -298,6 +324,11 @@ const updateNodesMutation = gql`
           label
           shape
           description
+          links{
+            label
+            id
+            flag
+          }
         }
       }
     }
@@ -320,6 +351,9 @@ const updateNodeBackend = async (nodeData: any, flowchart: string) => {
               label: nodeData.data.label,
               shape: nodeData.data.shape,
               description: nodeData.data.description,
+              // links:{
+              //  label:
+              // }
             },
           },
         },
