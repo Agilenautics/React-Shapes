@@ -51,7 +51,6 @@ type flowNode {
   connectedbyFlowedge: [flowEdge!]!
     @relationship(type: "connectedBy", direction: OUT)
   flowNodeHas: file @relationship(type: "hasFile", direction: IN)
- 
   hasTasks: tasks @relationship(type: "hasTasks", direction: OUT)
   flowedgeConnectedto: [flowEdge!]!
     @relationship(type: "connectedTo", direction: IN)
