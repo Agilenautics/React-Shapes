@@ -129,17 +129,34 @@ const fileStore = create<files>((set) => ({
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       console.log(root, "root");
+      console.log(root.getIndex,"index");
       let node = findById(root, parentId);
 
       let data_chk = node?.model;
-
-      console.log(node?.model.type);
-      console.log(parentId);
+      
       if (node?.model.type === "folder") {
-        createFileInFolder(newFileInFolder, parentId);
+        createFileInFolder(newFileInFolder, parentId).then((result)=>{
+         console.log(result);
+      
+       node?.model.children?.push({
+       name:result.name,
+       id:result.id,
+       type:result.type,
+        } );
+        });
       } else {
-        console.log(parentId);
-        createFileInMain(newFileInMain, parentId);
+        parentId=root.model.id;
+      createFileInMain(newFileInMain, parentId).then((result) => {
+        // @ts-ignore
+        console.log(result);
+        console.log(root.model.children);
+       root.model.children?.push({
+          name:result.name,
+          id:result.id,
+          type:result.type,
+        });
+      });
+        
       }
 
       return { data: state.data };
@@ -154,9 +171,31 @@ const fileStore = create<files>((set) => ({
       let data_chk = node?.model.type;
       console.log(data_chk);
       if (node?.model.type === "folder") {
-       createFolderInFolder(newFolderInFolder, parentId);
+     createFolderInFolder(newFolderInFolder, parentId).then((result)=>{
+      node?.model.children?.push({
+        id:result.id,
+        name:result.name,
+        type:result.type,
+        isOpen:result.isOpen,
+        children: [],
+      });
+     });
+      
       } else {
-        createFolderInMain(newFolderInMain, parentId);
+        parentId=root.model.id;
+        createFolderInMain(newFolderInMain, parentId).then((result)=>{
+          console.log(result);
+          console.log(node?.parent.model);
+          root.model.children?.push({
+            id:result.id,
+            name:result.name,
+            type:result.type,
+            isOpen:result.isOpen,
+            children: [],
+          });
+
+        });
+        
       }
 
       return { data: state.data };
@@ -167,13 +206,23 @@ const fileStore = create<files>((set) => ({
     set((state) => {
       const root = new TreeModel().parse(state.data);
       const node = findById(root, id);
-      deleteFileBackend(id);
-      deleteFolderBackend(id);
-      node?.drop();
+      if (node?.model.type === "folder") {
+        deleteFolderBackend(id).then(()=>{
+          node?.drop();
+
+        });
+       } else if(node?.model.type==="file"){
+        deleteFileBackend(id).then(()=>{
+          node?.drop();
+              })
+       }
+ 
+     
+      
       const x = searchTree(state.data, "1");
       console.log(x);
       // ? Figure out how to make this work
-
+     // node?.drop();
       
       return { data: state.data };
     }),

@@ -7,6 +7,7 @@ import {
 import client from "../../../apollo-client";
 import { Node, updateEdge } from "react-flow-renderer";
 import { allEdges, getEdges } from "../Edges/gqlEdges";
+import addNode from "./nodeStore";
 
 const allNodes = gql`
   query Query($where: flowchartWhere) {
@@ -22,13 +23,21 @@ const allNodes = gql`
           label
           shape
           description
-          links{
+          links {
             label
             id
+            flag
+            fileId
+          }
+          linkedBy {
+            label
+            id
+            fileId
             flag
           }
         }
         haspositionPosition {
+          name
           x
           y
         }
@@ -49,13 +58,21 @@ const getNode = gql`
         shape
         description
         label
-        links{
+        links {
           id
+          fileId
           label
+          flag
+        }
+        linkedBy {
+          label
+          id
+          fileId
           flag
         }
       }
       haspositionPosition {
+        name
         x
         y
       }
@@ -71,18 +88,30 @@ const newNode = gql`
         hasflowchart {
           name
           nodes {
+            id
+            timeStamp
             draggable
             flowchart
+            type
             hasdataNodedata {
               label
               shape
-              links{
+              description
+              links {
                 label
                 id
+                fileId
+                flag
+              }
+              linkedBy {
+                label
+                id
+                fileId
                 flag
               }
             }
             haspositionPosition {
+              name
               x
               y
             }
@@ -132,7 +161,6 @@ async function findNode(
         .replaceAll('"haspositionPosition":', '"position":');
       // @ts-ignore
       nodes = JSON.parse(nodes2);
-      
     });
 
   return nodes;
@@ -160,7 +188,7 @@ async function getNodes(
 
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
-        
+
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes2);
@@ -177,75 +205,116 @@ async function createNode(
 
   updateNode: any
 ) {
-  await client.mutate({
-    mutation: mutation,
-    variables: {
-      where: {
-        id,
-      },
-      update: {
-        hasflowchart: {
-          update: {
-            node: {
-              nodes: [
-                {
-                  create: [
-                    {
-                      node: {
-                        flowchart: "flowNode",
-                        draggable: true,
-                        type: "blueNode",
-                        hasdataNodedata: {
-                          create: {
-                            node: {
-                              label: flowchart,
-                              shape: "rectangle",
-                              description:"",
-                              links:{
-                                create:{
-                                  node:{
-                                    label:"",
-                                    id:"",
-                                    flag:false,
+  var nodes: Array<Node> = [];
+  await client
+    .mutate({
+      mutation: mutation,
+      variables: {
+        where: {
+          id,
+        },
+        update: {
+          hasflowchart: {
+            update: {
+              node: {
+                nodes: [
+                  {
+                    create: [
+                      {
+                        node: {
+                          flowchart: "flowNode",
+                          draggable: true,
+                          type: "blueNode",
+                          hasdataNodedata: {
+                            create: {
+                              node: {
+                                label: "Server node3",
+                                shape: "rectangle",
+                                description: "",
+                                links: {
+                                  create: {
+                                    node: {
+                                      label: "",
+                                      id: "",
+                                      flag: false,
+                                      fileId: "",
+                                    },
+                                  },
+                                },
+                                linkedBy: {
+                                  create: {
+                                    node: {
+                                      label: "",
+                                      id: "",
+                                      fileId: "",
+                                      flag:false,
+                                    },
                                   },
                                 },
                               },
                             },
                           },
-                        },
-                        haspositionPosition: {
-                          create: {
-                            node: {
-                              name: "pos",
-                              x: 200,
-                              y: 200,
+                          haspositionPosition: {
+                            create: {
+                              node: {
+                                name: "pos",
+                                x: 200,
+                                y: 200,
+                              },
                             },
                           },
                         },
                       },
-                    },
-                  ],
-                },
-              ],
+                    ],
+                  },
+                ],
+              },
             },
           },
         },
       },
-    },
-  });
+      //update:(client.cache,{})
+      // refetchQueries: [{ query: allNodes }],
+    
+    })
 
-  if (flowchart) {
-    client
-      .resetStore()
-      .then(() => {
-        getNodes(allNodes, id).then((res) => {
-          return updateNode(res);
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+    .then((result) => {
+      console.log(
+        result.data.updateFiles.files[0].hasflowchart.nodes,
+        "create node"
+      );
+      const nodes1 = JSON.stringify(
+        result.data.updateFiles.files[0].hasflowchart.nodes
+      )
+        .replaceAll('"hasdataNodedata":', '"data":')
+        .replaceAll('"haspositionPosition":', '"position":');
+      //@ts-ignore
+      nodes = JSON.parse(nodes1);
+      //client.cache.writeQuery({newNode,nodes});
+      //console.log(newlyCreatedNode,"newnode");
+
+      //getNodes(allNodes, id).then((res) => {
+      //console.log(res,"getnodes");
+      return updateNode(nodes);
+      //});
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+client.clearStore();
+  // if (flowchart) {
+  //   client
+  //     .resetStore()
+  //     .then(() => {
+  //       getNodes(allNodes, id).then((res) => {
+  //         return updateNode(res);
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }
 }
 
 const delNode = gql`
@@ -266,9 +335,10 @@ async function deleteNodeBackend(nodeID: string) {
       },
       delete: {
         hasdataNodedata: {
-          delete:{
-          links:{}
-          }
+          delete: {
+            links: {},
+            linkedBy: {},
+          },
         },
         haspositionPosition: {},
         connectedbyFlowedge: {
@@ -283,6 +353,7 @@ async function deleteNodeBackend(nodeID: string) {
         },
       },
     },
+    // refetchQueries:[{query:allNodes}],
   });
   // client
   // .resetStore()
@@ -292,6 +363,7 @@ async function deleteNodeBackend(nodeID: string) {
   // .catch((error) => {
   //   console.log(error);
   // });
+ // client.clearStore();
 }
 
 // here iam parforming update node position methode
@@ -310,8 +382,8 @@ const updatePosition = async (node: any) => {
         },
       },
     },
+    // refetchQueries:[{query:allNodes}],
   });
-  //await client.resetStore();
 };
 
 const updateNodesMutation = gql`
@@ -324,9 +396,16 @@ const updateNodesMutation = gql`
           label
           shape
           description
-          links{
+          links {
             label
             id
+            fileId
+            flag
+          }
+          linkedBy {
+            label
+            id
+            fileId
             flag
           }
         }

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Node } from "react-flow-renderer";
-import { getNodes, findNode, allNodes } from "./gqlNodes";
+import { getNodes, findNode, allNodes, newNode } from "./gqlNodes";
 
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
@@ -19,7 +19,7 @@ interface NodeState {
   setLoading: (loading: any) => void;
 }
 
-
+console.log(newNode,"newNode");
 const nodeStore = create<NodeState>((set) => ({
   loading: false,
   setLoading: ((loading) => {
@@ -45,11 +45,12 @@ const nodeStore = create<NodeState>((set) => ({
 
   addNode: (newNode) =>
     set((state) => ({
+      
       nodes: [
         ...state.nodes,
-        { ...newNode, id: Math.floor(Math.random() * 1000 + 1).toString() },
+        { ...newNode ,id:newNode.id},
       ],
-    })
+    }) 
     ),
   updateNodes: (nodes) =>
     set((state) => {

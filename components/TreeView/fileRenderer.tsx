@@ -23,7 +23,7 @@ export function FileTree() {
           getChildren="children"
          
           isOpen="isOpen"
-          //hideRoot
+          hideRoot
           indent={24}
           onMove={backend.onMove}
           onToggle={backend.onToggle}

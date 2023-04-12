@@ -5,31 +5,6 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../apollo-client";
-const newFileInFolder = gql`
-  mutation UpdateFolders($where: folderWhere, $create: folderRelationInput) {
-    updateFolders(where: $where, create: $create) {
-      folders {
-        name
-        hasFile {
-          name
-        }
-      }
-    }
-  }
-`;
-// const getInitData=gql`
-// query Query($where: mainWhere) {
-//   mains(where: $where) {
-//     mainHasChildren {
-//       hasContainsFolder {
-//         name
-//       }
-//       hasContainsFile {
-//         name
-//       }
-//     }
-//   }
-// }`
 
 const getInitData = gql`
   query Mains {
@@ -40,6 +15,7 @@ const getInitData = gql`
       hasContainsFile {
         name
         id
+        type
       }
       hasContainsFolder {
         id
@@ -48,28 +24,63 @@ const getInitData = gql`
         name
         hasFolder {
           name
+          id
+          type
+          isOpen
           hasFile {
             name
+            id
+            type
             hasflowchart {
+              name
               nodes {
                 id
                 type
                 draggable
                 flowchart
-                hasdataNodedata{
+                hasdataNodedata {
                   label
                   shape
                   description
-                  links{
+                  links {
+                    label
+                    id
+                    fileId
+                    flag
+                  }
+                  linkedBy {
                     label
                     id
                     flag
+                    fileId
                   }
                 }
-                haspositionPosition{
+                haspositionPosition {
                   name
                   x
                   y
+                }
+              }
+              edges {
+                selected
+                source
+                sourceHandle
+                target
+                targetHandle
+                hasedgedataEdgedata {
+                  id
+                  bidirectional
+                  boxCSS
+                  label
+                  pathCSS
+                }
+                flownodeConnectedby {
+                  flowchart
+                  id
+                }
+                connectedtoFlownode {
+                  flowchart
+                  id
                 }
               }
             }
@@ -79,7 +90,9 @@ const getInitData = gql`
           type
           id
           name
+
           hasflowchart {
+            name
             nodes {
               id
               draggable
@@ -89,18 +102,46 @@ const getInitData = gql`
                 label
                 shape
                 description
-                links{
+                links {
                   label
                   id
+                  fileId
+                  flag
+                }
+                linkedBy {
+                  label
+                  id
+                  fileId
                   flag
                 }
               }
-              haspositionPosition{
+              haspositionPosition {
                 name
                 x
                 y
               }
-             
+            }
+            edges {
+              selected
+              source
+              sourceHandle
+              target
+              targetHandle
+              hasedgedataEdgedata {
+                id
+                bidirectional
+                boxCSS
+                label
+                pathCSS
+              }
+              flownodeConnectedby {
+                flowchart
+                id
+              }
+              connectedtoFlownode {
+                flowchart
+                id
+              }
             }
           }
         }
@@ -130,6 +171,9 @@ const newFolderInFolder = gql`
         name
         hasFolder {
           name
+          id
+          type
+          isOpen
         }
       }
     }
@@ -140,6 +184,7 @@ const newFolderInMain = gql`
   mutation Mutation($input: [folderCreateInput!]!) {
     createFolders(input: $input) {
       folders {
+        id
         isOpen
         name
         type
@@ -157,6 +202,23 @@ const newFileInMain = gql`
       mains {
         name
         hasContainsFile {
+          id
+          name
+          type
+          hasflowchart {
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+const newFileInFolder = gql`
+  mutation UpdateFolders($where: folderWhere, $create: folderRelationInput) {
+    updateFolders(where: $where, create: $create) {
+      folders {
+        name
+        hasFile {
           id
           name
           type
@@ -188,98 +250,85 @@ const updateFolders = gql`
     }
   }
 `;
+const connectToFolderOnMove = gql`
+  mutation Mutation($where: folderWhere, $connect: folderConnectInput) {
+    updateFolders(where: $where, connect: $connect) {
+      folders {
+        name
+        hasFile {
+          name
+        }
+      }
+    }
+  }
+`;
+const disconnectFromFolderOnMove=gql`
+mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
+  updateFolders(where: $where, disconnect: $disconnect) {
+   folders {
+     name
+     hasFile {
+       name
+     }
+   } 
+  }
+}`;
 
 async function createFolderInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string
 ) {
-  await client.mutate({
-    mutation: mutation,
-    variables: {
-      where: {
-        id: parentId,
-      },
-      create: {
-        hasFolder: [
-          {
-            node: {
-              type: "folder",
-              isOpen: false,
-              name: "FolderInFolder",
+  var node: any;
+  await client
+    .mutate({
+      mutation: mutation,
+      variables: {
+        where: {
+          id: parentId,
+        },
+        create: {
+          hasFolder: [
+            {
+              node: {
+                type: "folder",
+                isOpen: false,
+                name: "FolderInFolder",
+              },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
-  });
+    })
 
-  // if (flowchart) {
-  //   client.resetStore().then(() => {
-  //     getNodes(allNodes, flowchart).then((res) => {
-  //       console.log("create node",res);
-  //       return updateNode(res)
-  //     })
-  //   }).catch((error) => {
-
-  //     console.error(error);
-  //   });
-  // }
+    .then((result) => {
+      console.log(result.data.updateFolders.folders[0]);
+      const newFolder = JSON.stringify(
+        result.data.updateFolders.folders[0]
+      ).replaceAll('"hasFolder":', '"folder":');
+      const nodes1 = JSON.parse(newFolder);
+      node = nodes1.folder[0];
+    });
+  return node;
 }
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string
 ) {
-  await client.mutate({
-    mutation: mutation,
-    variables: {
-      input: [
-        {
-          type: "folder",
-          isOpen: false,
-          name: "New Folder",
-          mainHas: {
-            connect: {
-              where: {
-                node: {
-                  id: parentId,
-                },
-              },
-            },
-          },
-        },
-      ],
-    },
-  });
-  // client
-  // .resetStore()
-  // .then((res) => {
-  //   console.log("cache restoring.......");
-  //   getTreeNode(getInitData);
-  // })
-  // .catch((error) => {
-  //   console.log(error);
-  // });
-}
-async function createFileInMain(
-  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  parentId: string
-) {
-  await client.mutate({
-    mutation: mutation,
-    variables: {
-      where: {
-        id: parentId,
-      },
-      create: {
-        hasContainsFile: [
+  var node: any;
+  await client
+    .mutate({
+      mutation: mutation,
+      variables: {
+        input: [
           {
-            node: {
-              type: "file",
-              name: "FileInMain2",
-              hasflowchart: {
-                create: {
+            type: "folder",
+            isOpen: false,
+            name: "New Folder",
+            mainHas: {
+              connect: {
+                where: {
                   node: {
-                    name: "flowchart",
+                    id: parentId,
                   },
                 },
               },
@@ -287,39 +336,99 @@ async function createFileInMain(
           },
         ],
       },
-    },
-  });
+    })
+    .then((result) => {
+      node = result.data.createFolders.folders[0];
+      // const newFolder = JSON.stringify(
+      //   result.data.createFolders.folders)
+      // .replaceAll('"mainHas":', '"folder":');
+      // const nodes1 = JSON.parse(newFolder);
+      // node = nodes1.folder[0];
+    });
+  return node;
+}
+async function createFileInMain(
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  parentId: string
+) {
+  var node: any;
+  await client
+    .mutate({
+      mutation: mutation,
+      variables: {
+        where: {
+          id: parentId,
+        },
+        create: {
+          hasContainsFile: [
+            {
+              node: {
+                type: "file",
+                name: "FileInMain2",
+                hasflowchart: {
+                  create: {
+                    node: {
+                      name: "flowchart",
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    })
+    .then((result) => {
+      console.log(result.data.updateMains.mains);
+      const newFile1 = JSON.stringify(
+        result.data.updateMains.mains[0]
+      ).replaceAll('"hasContainsFile":', '"file":');
+      const nodes1 = JSON.parse(newFile1);
+      node = nodes1.file[0];
+    });
+  return node;
 }
 
 async function createFileInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string
 ) {
-  await client.mutate({
-    mutation: mutation,
-    variables: {
-      where: {
-        id: parentId,
-      },
-      create: {
-        hasFile: [
-          {
-            node: {
-              type: "file",
-              name: "New File",
-              hasflowchart: {
-                create: {
-                  node: {
-                    name: "Flowchart",
+  var node: any;
+  await client
+    .mutate({
+      mutation: mutation,
+      variables: {
+        where: {
+          id: parentId,
+        },
+        create: {
+          hasFile: [
+            {
+              node: {
+                type: "file",
+                name: "New File",
+                hasflowchart: {
+                  create: {
+                    node: {
+                      name: "Flowchart",
+                    },
                   },
                 },
               },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
-  });
+    })
+    .then((result) => {
+      console.log(result.data.updateFolders.folders[0]);
+      const newFile1 = JSON.stringify(
+        result.data.updateFolders.folders[0]
+      ).replaceAll('"hasFile":', '"file":');
+      const nodes1 = JSON.parse(newFile1);
+      node = nodes1.file[0];
+    });
+  return node;
 }
 
 async function getTreeNode(
@@ -331,12 +440,15 @@ async function getTreeNode(
       query: customQuery,
     })
     .then((result) => {
+      console.log(result.data.mains, "before");
       const nodes1 = JSON.stringify(result.data.mains)
         .replaceAll('"hasContainsFolder":', '"children":')
         .replaceAll('"hasFolder":', '"children":')
         .replaceAll('"hasFile":', '"children":')
         .replaceAll('"hasFlownodes":', '"flowchart":');
+
       nodes = JSON.parse(nodes1);
+      console.log(nodes);
     });
   return nodes;
 }
@@ -355,8 +467,9 @@ async function deleteFileBackend(fileID: string) {
               {
                 delete: {
                   hasdataNodedata: {
-                    delete:{
-                     links:{}
+                    delete: {
+                      links: {},
+                      linkedBy: {},
                     },
                   },
                   haspositionPosition: {},
@@ -394,7 +507,10 @@ async function deleteFolderBackend(folderID: string) {
                     {
                       delete: {
                         hasdataNodedata: {
-                          links:{},
+                          delete: {
+                            links: {},
+                            linkedBy: {},
+                          },
                         },
                         haspositionPosition: {},
                       },
@@ -430,6 +546,47 @@ const updateFolderBackend = async (folderId: string, name: string) => {
     },
   });
 };
+const connectToFolderBackendOnMove = async (folderId: any, fileId: string) => {
+  await client.mutate({
+    mutation: connectToFolderOnMove,
+    variables: {
+      where: {
+        id: folderId,
+      },
+      connect: {
+        hasFile: [
+          {
+            where: {
+              node: {
+                id: fileId,
+              },
+            },
+          },
+        ],
+      },
+    },
+  });
+};
+const disconnectFromFolderBackendOnMove = async (fileId: string) => {
+  await client.mutate({
+    mutation: disconnectFromFolderOnMove,
+    variables: {
+      
+        "where": {
+          "hasFile_SINGLE": {
+            "id":fileId,
+          }
+        },
+        "disconnect": {
+          "hasFile": [
+            {
+              "disconnect": {}
+            }
+          ]
+        }
+      }
+  });
+};
 
 const updateFileBackend = async (fileId: string, flowchart: string) => {
   await client.mutate({
@@ -460,4 +617,6 @@ export {
   deleteFolderBackend,
   createFileInMain,
   newFileInMain,
+  disconnectFromFolderBackendOnMove,
+  connectToFolderBackendOnMove
 };

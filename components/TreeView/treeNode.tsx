@@ -112,7 +112,7 @@ export const TreeNode = ({
     
     updateCurrentFlowchart(name, Id);
     
-    console.log("treenode editing",Id,name);
+    //console.log("treenode editing",Id,name);
   }
 
   function loadNewFlow(
@@ -131,7 +131,7 @@ export const TreeNode = ({
         });
         getEdges(allEdges, data.id).then((result) => {
           // @ts-ignore
-          return updateEdges(result);
+           updateEdges(result);
         });
       }
     };

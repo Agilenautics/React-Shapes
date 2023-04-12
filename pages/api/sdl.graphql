@@ -61,14 +61,23 @@ type nodeData {
   shape: String!
   description: String
   links: link @relationship(type:"hasLink",direction:OUT)
+  linkedBy:linked @relationship(type:"hasLinkedBy",direction:OUT)
   flownodeHasdata: flowNode @relationship(type: "hasData", direction: IN)
 }
 
 type link{
 label:String
 id:ID
-flag:Boolean
+flag:Boolean!
+fileId:String
 hasLink:nodeData @relationship(type: "hasLink", direction:IN)
+}
+type linked{
+label:String
+id:ID
+flag:Boolean!
+fileId:String
+hasLinked:nodeData @relationship(type: "hasLinkedBy", direction:IN)
 }
 
 type position {

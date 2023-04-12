@@ -115,7 +115,7 @@ function Flow() {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
       console.log(element.data.label);
-      deleteNodeBackend(element.id);
+      deleteNodeBackend(element.id)
       deleteNode(element);
     }
   }

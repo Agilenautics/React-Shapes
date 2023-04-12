@@ -26,7 +26,8 @@ function PrototypicalNode(css_props: string, data: object, id: string) {
   const shapeCSS = nodeShapeMap[data.shape];
   // @ts-ignore
   const description = data.description;
-
+//const Id=id;
+console.log (id,"node id");
   return (
     <div>
       <div className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group`}>
@@ -49,6 +50,7 @@ function PrototypicalNode(css_props: string, data: object, id: string) {
             editing ? "cursor-default" : ""
           }`}
           onDoubleClick={() => {
+            //console.log(id);
             setEditing(true);
             toggleDraggable(id, false);
           }}
