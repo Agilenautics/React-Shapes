@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Node } from "react-flow-renderer";
-import { getNodes, findNode, allNodes, newNode } from "./gqlNodes";
+import { getNodes, findNode, allNodes, newNode, getNode, updateLinkedByMethod, updateLinkedBy } from "./gqlNodes";
+import { getFileByNode } from "../../TreeView/gqlFiles";
 
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
@@ -13,13 +14,13 @@ interface NodeState {
   updateLabel: (id: string, newLabel: string) => void;
   updateShape: (id: string, newShape: string) => void;
   updateNodeType: (id: string, newType: string) => void;
-  updateLinks: (id: string, newLink: Object, flowchart: string) => void;
+  updateLinks: (id: string, newLink: Object) => void;
   toggleDraggable: (id: string, draggable: boolean) => void;
   loading: any;
   setLoading: (loading: any) => void;
+  updateLinkedBy: (id: string, LinkedBy: Object, getNodeQuery: any) => void;
 }
 
-console.log(newNode,"newNode");
 const nodeStore = create<NodeState>((set) => ({
   loading: false,
   setLoading: ((loading) => {
@@ -45,12 +46,12 @@ const nodeStore = create<NodeState>((set) => ({
 
   addNode: (newNode) =>
     set((state) => ({
-      
+
       nodes: [
         ...state.nodes,
-        { ...newNode ,id:newNode.id},
+        { ...newNode, id: newNode.id },
       ],
-    }) 
+    })
     ),
   updateNodes: (nodes) =>
     set((state) => {
@@ -99,29 +100,60 @@ const nodeStore = create<NodeState>((set) => ({
       const updated_node = { ...old_node, type: newType };
       return { nodes: [...to_be_updated, updated_node] };
     }),
-  updateLinks: async (id, newLink, flowchart) =>  // add flowchart variable
+  updateLinks: async (id, newLink) =>  // add flowchart variable
   {
     //find data of new node
-    const node_to_be = await findNode(allNodes, flowchart, id);
-    console.log(node_to_be[0]);
+    const node_to_be = await findNode(getNode, id);
     //save data of new node
     const new_node = node_to_be[0];
     //add the saved data to the node to be replaced
     set((state): any => {
-      const old_node = state.nodes.filter((item) => item.id === id)[0];
+      // const old_node = state.nodes.filter((item) => item.id === id)[0];
       //const [node_to_be]= await async findNode(allNodes, flowchart, id);
-      console.log(state);//only works with the flowchart we are on - does not work with a different flowchart
 
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      console.log(state.nodes.filter((item) => item.data.flowchart === "Flowchart 1"));//only works with the flowchart we are on - does not work with a different flowchart
+      // console.log(state.nodes.filter((item) => item.data.flowchart === "Flowchart 1"));//only works with the flowchart we are on - does not work with a different flowchart
       //@ts-ignore
+      // const updated_node = {
+      //   ...old_node,
+      //   data: { ...old_node.data, links: newLink },
+      // };
       const updated_node = {
         ...new_node,
-        data: { ...new_node.data, links: newLink },
+        data: { ...new_node.data, links: newLink, id },
       };
-      console.log({ nodes: [...to_be_updated, updated_node] });
-      //newNodes={ nodes: [...to_be_updated, updated_node] }
+      // newNodes={ nodes: [...to_be_updated, updated_node] }
+      return { nodes: [...to_be_updated, updated_node] };
+    })
+  },
+  updateLinkedBy: async (id: string, linkedBy: any, getNodeQuery: any) => {
+    const node_to_be = await findNode(getNode, id);
+    //save data of new node
+
+    const { data } = await getFileByNode(id, getNodeQuery)
+    const nodes = JSON.stringify(data.files[0].hasflowchart.nodes)
+      .replaceAll('"hasdataNodedata":', '"data":')
+      .replaceAll('"haspositionPosition":', '"position":');
+    const nodesData = JSON.parse(nodes)
+    const new_node = node_to_be[0];
+    //add the saved data to the node to be replaced
+
+    const to_be_updated = nodesData.filter((item: any) => item.id !== id);
+
+    const updated_node = {
+      ...new_node,
+      data: { ...new_node.data, linkedBy: linkedBy },
+    };
+    await updateLinkedByMethod(updated_node,updateLinkedBy)
+    set((state): any => {
+      // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
+
+      // const updated_node = {
+      //   ...new_node,
+      //   data: { ...new_node.data, linkedBy: linkedBy },
+      // };
       return Object.entries({ nodes: [...to_be_updated, updated_node] });
+      // return { nodes: [...to_be_updated, updated_node] }
     })
   },
   toggleDraggable: (id: string, draggable: boolean) =>

@@ -9,7 +9,6 @@ import { useBackend } from "./backend";
 
 export function FileTree() {
   const backend = useBackend();
-  console.log(backend.data);
   return (
     <AutoSize>
       {(props: any) => (

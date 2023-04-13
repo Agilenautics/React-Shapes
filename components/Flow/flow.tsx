@@ -51,6 +51,7 @@ function Flow() {
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const currentFlowchart = fileStore((state) => state.currentFlowchart)
   const fileId=fileStore((state)=>state.Id);
+  const updateLinkNodeId = fileStore((state)=>state.updateLinkNodeId)
 
   const [nodeId, setNodeId] = useState([])
 
@@ -134,6 +135,11 @@ function Flow() {
       deleteEdge(CurEle.id, CurEle.data.label)
     })
   }
+
+  const onNodeClick = (e:any,nodeData: any) => {
+    updateLinkNodeId(nodeData.id)
+    // updateNodeBackend(nodeId,nodeData)
+  }
   return (
     <div className="absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
@@ -165,6 +171,7 @@ function Flow() {
         onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
         // onNodeDrag={onDrag}
         onEdgeClick={onEdgeClick}
+        onNodeClick={onNodeClick}
       >
         <MiniMap />
         <CustomControls />

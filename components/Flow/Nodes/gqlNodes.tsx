@@ -47,37 +47,35 @@ const allNodes = gql`
 `;
 
 const getNode = gql`
-  query Query($where: fileWhere) {
-    flowNodes {
-      id
-      timeStamp
-      draggable
-      flowchart
-      type
-      hasdataNodedata {
-        shape
-        description
+ query FlowNodes($where: flowNodeWhere) {
+  flowNodes(where: $where) {
+    draggable
+    flowchart
+    type
+    id
+    hasdataNodedata {
+      shape
+      label
+      description
+      links {
+        fileId
+        flag
+        id
         label
-        links {
-          id
-          fileId
-          label
-          flag
-        }
-        linkedBy {
-          label
-          id
-          fileId
-          flag
-        }
       }
-      haspositionPosition {
-        name
-        x
-        y
+      linkedBy {
+        fileId
+        flag
+        label
+        id
       }
     }
+    haspositionPosition {
+      x
+      y
+    }
   }
+}
 `;
 
 const newNode = gql`
@@ -141,7 +139,6 @@ const updatePositionMutation = gql`
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  flowchart: string,
   id: string
 ) {
   var nodes: Array<Node> = [];
@@ -150,7 +147,7 @@ async function findNode(
     .query({
       query: customQuery,
       variables: {
-        where: { id: id, flowchart: flowchart },
+        where: { id: id },
       },
     })
     .then((result) => {
@@ -228,7 +225,7 @@ async function createNode(
                           hasdataNodedata: {
                             create: {
                               node: {
-                                label: "Server node3",
+                                label: "New Node",
                                 shape: "rectangle",
                                 description: "",
                                 links: {
@@ -247,7 +244,7 @@ async function createNode(
                                       label: "",
                                       id: "",
                                       fileId: "",
-                                      flag:false,
+                                      flag: false,
                                     },
                                   },
                                 },
@@ -275,7 +272,7 @@ async function createNode(
       },
       //update:(client.cache,{})
       // refetchQueries: [{ query: allNodes }],
-    
+
     })
 
     .then((result) => {
@@ -302,7 +299,7 @@ async function createNode(
     .catch((error) => {
       console.error(error);
     });
-client.clearStore();
+  client.clearStore();
   // if (flowchart) {
   //   client
   //     .resetStore()
@@ -363,7 +360,7 @@ async function deleteNodeBackend(nodeID: string) {
   // .catch((error) => {
   //   console.log(error);
   // });
- // client.clearStore();
+  // client.clearStore();
 }
 
 // here iam parforming update node position methode
@@ -441,6 +438,94 @@ const updateNodeBackend = async (nodeData: any, flowchart: string) => {
   });
 };
 
+
+const updateLinkedBy = gql`
+  mutation UpdateLinkeds($where: linkedWhere, $update: linkedUpdateInput) {
+  updateLinkeds(where: $where, update: $update) {
+    linkeds {
+      fileId
+      flag
+      id
+      label
+    }
+  }
+}
+`
+
+const updateLinkedByMethod = async (nodeData: any, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation: mutations,
+    variables: {
+      where: {
+        hasLinked: {
+          flownodeHasdata: {
+            id: nodeData.id
+          }
+        }
+      },
+      update: {
+        fileId: nodeData.data.linkedBy.fileId,
+        flag: nodeData.data.linkedBy.flag,
+        id: nodeData.data.linkedBy.id,
+        label: nodeData.data.linkedBy.label
+      }
+    }
+  })
+}
+
+
+//updateNodes links and data
+
+const updateLinksMutation = gql`
+mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
+  updateNodeData(where: $where, update: $update) {
+    nodeData {
+      label
+      description
+      shape
+      links {
+        label
+        id
+        fileId
+        flag
+      }
+    }
+  }
+}
+`
+
+const updateNodeData = async (nodaData: any,id:string, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  console.log(id,nodaData)
+  await client.mutate({
+    mutation: mutations,
+    variables: {
+      "where": {
+        "flownodeHasdata": {
+          "id": id
+        },
+      },
+      "update": {
+        "description":nodaData.description,
+        "shape": nodaData.shape,
+        "label":nodaData.label,
+        "links": {
+          "update": {
+            "node": {
+              "fileId":nodaData.links.fileId,
+              "flag":nodaData.links.flag,
+              "id":nodaData.links.id,
+              "label":nodaData.links.label
+            }
+          }
+        },
+      }
+    }
+  })
+
+}
+
+
+
 export {
   allNodes,
   newNode,
@@ -450,4 +535,9 @@ export {
   deleteNodeBackend,
   updatePosition,
   updateNodeBackend,
+  getNode,
+  updateLinkedByMethod,
+  updateLinkedBy,
+  updateLinksMutation,
+  updateNodeData
 };

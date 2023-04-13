@@ -124,7 +124,6 @@ export const TreeNode = ({
       if (data.children == null) {
         //updateNodes(data.flowchart.nodes);
         //updateEdges(data.flowchart.edges);
-        console.log(data.id);
         getNodes(allNodes, data.id).then((result) => {
           // @ts-ignore
           updateNodes(result);
@@ -199,9 +198,9 @@ export const TreeNode2 = ({
   ) {
     return (e: SyntheticEvent) => {
       handlers.select(e);
-      // if (data.children == null) {
-      //   updateLinkNodes(data.flowchart.nodes);
-      // }
+      if (data.children == null) {
+        updateLinkNodes(data.hasflowchart.nodes,data.id);
+      }
     };
   }
   return (

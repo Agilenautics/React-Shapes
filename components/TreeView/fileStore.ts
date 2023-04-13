@@ -1,10 +1,7 @@
 import create from "zustand";
+// @ts-ignore
 import TreeModel from "tree-model-improved";
 import { MyData, findById } from "./backend";
-import nodes1 from "../Flow/Nodes/flowchart1";
-import nodes2 from "../Flow/Nodes/flowchart2";
-import edges1 from "../Flow/Edges/flowchart1";
-import edges2 from "../Flow/Edges/flowchart2";
 import { findNode, allNodes, getNodes } from "../Flow/Nodes/gqlNodes";
 import { allEdges, getEdges } from "../Flow/Edges/gqlEdges";
 import {
@@ -97,13 +94,15 @@ function searchTree(element: any, matchingTitle: any): any {
 
 interface files {
   data: MyData;
+  linkNodeId: string;
+  updateLinkNodeId: (nodeId: string) => void;
   Id: string;
-  name:string;
+  name: string;
   // updateCurrentId: (Id: string) => void;
   currentFlowchart: string;
   updateCurrentFlowchart: (currentFlowchart: string, Id: string) => void;
   linkNodes: { nodes: any; fileID: string };
-  updateLinkNodes: (nodes: Object) => void;
+  updateLinkNodes: (nodes: Object, fileID: string) => void;
   add_file: () => void;
   add_folder: () => void;
   delete_item: (id: string) => void;
@@ -112,6 +111,7 @@ interface files {
 const fileStore = create<files>((set) => ({
   // @ts-ignore
   data: initData[0],
+  linkNodeId: "",
   // Id: "",
   currentFlowchart: "",
   updateCurrentFlowchart: (currentFlowchart, Id) =>
@@ -119,44 +119,48 @@ const fileStore = create<files>((set) => ({
       return { currentFlowchart: currentFlowchart, Id: Id };
     }),
   linkNodes: { nodes: {}, fileID: "" },
-  updateLinkNodes: (nodes) =>
+  updateLinkNodes: (nodes, id) =>
     set((state) => {
-      console.log(nodes);
-      return { linkNodes: { nodes: nodes, fileID: state.linkNodes.fileID } };
+      return { linkNodes: { nodes: nodes, fileID: id } };
     }),
+  updateLinkNodeId(nodeId) {
+    set((state) => {
+      return { linkNodeId: nodeId }
+    })
+  },
   add_file: () =>
     set((state) => {
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       console.log(root, "root");
-      console.log(root.getIndex,"index");
+      console.log(root.getIndex, "index");
       let node = findById(root, parentId);
 
       let data_chk = node?.model;
-      
+
       if (node?.model.type === "folder") {
-        createFileInFolder(newFileInFolder, parentId).then((result)=>{
-         console.log(result);
-      
-       node?.model.children?.push({
-       name:result.name,
-       id:result.id,
-       type:result.type,
-        } );
+        createFileInFolder(newFileInFolder, parentId).then((result) => {
+          console.log(result);
+
+          node?.model.children?.push({
+            name: result.name,
+            id: result.id,
+            type: result.type,
+          });
         });
       } else {
-        parentId=root.model.id;
-      createFileInMain(newFileInMain, parentId).then((result) => {
-        // @ts-ignore
-        console.log(result);
-        console.log(root.model.children);
-       root.model.children?.push({
-          name:result.name,
-          id:result.id,
-          type:result.type,
+        parentId = root.model.id;
+        createFileInMain(newFileInMain, parentId).then((result) => {
+          // @ts-ignore
+          console.log(result);
+          console.log(root.model.children);
+          root.model.children?.push({
+            name: result.name,
+            id: result.id,
+            type: result.type,
+          });
         });
-      });
-        
+
       }
 
       return { data: state.data };
@@ -171,31 +175,31 @@ const fileStore = create<files>((set) => ({
       let data_chk = node?.model.type;
       console.log(data_chk);
       if (node?.model.type === "folder") {
-     createFolderInFolder(newFolderInFolder, parentId).then((result)=>{
-      node?.model.children?.push({
-        id:result.id,
-        name:result.name,
-        type:result.type,
-        isOpen:result.isOpen,
-        children: [],
-      });
-     });
-      
+        createFolderInFolder(newFolderInFolder, parentId).then((result) => {
+          node?.model.children?.push({
+            id: result.id,
+            name: result.name,
+            type: result.type,
+            isOpen: result.isOpen,
+            children: [],
+          });
+        });
+
       } else {
-        parentId=root.model.id;
-        createFolderInMain(newFolderInMain, parentId).then((result)=>{
+        parentId = root.model.id;
+        createFolderInMain(newFolderInMain, parentId).then((result) => {
           console.log(result);
           console.log(node?.parent.model);
           root.model.children?.push({
-            id:result.id,
-            name:result.name,
-            type:result.type,
-            isOpen:result.isOpen,
+            id: result.id,
+            name: result.name,
+            type: result.type,
+            isOpen: result.isOpen,
             children: [],
           });
 
         });
-        
+
       }
 
       return { data: state.data };
@@ -207,23 +211,23 @@ const fileStore = create<files>((set) => ({
       const root = new TreeModel().parse(state.data);
       const node = findById(root, id);
       if (node?.model.type === "folder") {
-        deleteFolderBackend(id).then(()=>{
+        deleteFolderBackend(id).then(() => {
           node?.drop();
 
         });
-       } else if(node?.model.type==="file"){
-        deleteFileBackend(id).then(()=>{
+      } else if (node?.model.type === "file") {
+        deleteFileBackend(id).then(() => {
           node?.drop();
-              })
-       }
- 
-     
-      
+        })
+      }
+
+
+
       const x = searchTree(state.data, "1");
       console.log(x);
       // ? Figure out how to make this work
-     // node?.drop();
-      
+      // node?.drop();
+
       return { data: state.data };
     }),
   find_file: (id: string) => {
@@ -232,7 +236,7 @@ const fileStore = create<files>((set) => ({
       // ? Replace this function with findById when I implement any database
       const targetNode = searchTree(state.data, id);
       x = targetNode;
-      console.log("targetnode",x);
+      console.log("targetnode", x);
       return {};
     });
     return x as MyData;

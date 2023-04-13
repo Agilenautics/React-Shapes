@@ -6,6 +6,8 @@ import edgeStore from "./Edges/edgeStore";
 import { LinkTree } from "../TreeView/fileRenderer";
 import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
+import { findNode, getNode } from "./Nodes/gqlNodes";
+import { getFile, getFileByNode } from "../TreeView/gqlFiles";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter
 /**
@@ -31,16 +33,14 @@ function ExpandableChip({
   const [isCollapsed, setCollapsed] = useState(true);
   return (
     <div
-      className={`absolute overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
-        isCollapsed ? expTrue : expFalse
-      } ${positioningCSS} dark:bg-neutral-900 `}
+      className={`absolute overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${isCollapsed ? expTrue : expFalse
+        } ${positioningCSS} dark:bg-neutral-900 `}
     >
       <div className="ml-1 mt-[1px] flex text-black dark:text-white">
         <div className="flex-none">{title}</div>
         <FiChevronRight
-          className={`-mt-[2px] h-5 w-5 flex-none cursor-pointer stroke-slate-800 transition-transform dark:stroke-slate-200 ${
-            isCollapsed ? "" : "rotate-90"
-          }`}
+          className={`-mt-[2px] h-5 w-5 flex-none cursor-pointer stroke-slate-800 transition-transform dark:stroke-slate-200 ${isCollapsed ? "" : "rotate-90"
+            }`}
           onClick={() => {
             setCollapsed(!isCollapsed);
           }}
@@ -91,6 +91,29 @@ export function Editing({
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
   const updateLinks = nodeStore((state) => state.updateLinks);
+  const linkNodeId = fileStore((state) => state.linkNodeId)
+  const updateLinkedBy = nodeStore((state) => state.updateLinkedBy)
+
+
+
+
+  const addLinkMethod = async (key: string) => {
+    //id of the current node 
+    const id = linkNodes.nodes[key].id;
+
+    // finding the node to collect the label of the node 
+    let nodeData = await findNode(getNode, linkNodeId)
+
+    // getting the current file data 
+    const { data } = await getFileByNode(linkNodeId, getFile)
+
+    updateLinks(linkNodeId, { label: linkNodes.nodes[key].hasdataNodedata.label, flag: true, id, fileId: linkNodes.fileID })
+
+    updateLinkedBy(id, { label: nodeData[0].data.label, id: linkNodeId, fileId: data.files[0].id, flag: true }, getFile)
+  }
+
+
+
   return (
     <div>
       <ExpandableChip
@@ -105,7 +128,7 @@ export function Editing({
             ${
               // @ts-ignore
               isEdge ? CSSMap[key][1] : CSSMap[key]
-            }`}
+              }`}
             id={key}
             onClick={() => {
               toggleDraggable(id, true);
@@ -215,18 +238,18 @@ export function Editing({
               <div>
                 <div className="absolute top-5 left-1 text-black">
                   <button
-                  type="button"
+                    type="button"
                     className="absolute right-2 -top-[19px] flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5"
                     onClick={() => {
                       console.log("hi");
-                      updateLinkNodes({});
+                      updateLinkNodes({}, linkNodes.fileID);
                     }}
                   >
                     <BsArrowLeft className="h-4 w-4 pt-0" />
                     Back
                   </button>
                   {linkNodes.nodes &&
-                  Object.keys(linkNodes.nodes).length !== 0 ? (
+                    Object.keys(linkNodes.nodes).length !== 0 ? (
                     <div className="h-32 overflow-y-scroll">
                       {
                         // ? Loop to generate tiles for the nodes
@@ -235,23 +258,18 @@ export function Editing({
                             key={key}
                             id={key}
                             type="button"
-                            onClick={(e) =>
+                            onClick={(e) => addLinkMethod(key)
                               // ? Fix this ID issue - Fixed(Achintya)
-                              { //console.log(linkNodes.nodes[key].flowchart);
-                                id=linkNodes.nodes[key].id;
-                                //flowchart=linkNodes.nodes[key].flowchart;
-                                updateLinks(id, {id:linkNodes.nodes[key].data.label},linkNodes.nodes[key].flowchart)
-                              }
-                              // updateLinks(linkNodes.nodes[key].id, {
-                              //   "3": linkNodes.nodes[key].data.label,
-                              // })
+                              // { //console.log(linkNodes.nodes[key].flowchart);
+                              //   
+                              // }
                             }
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600
                               dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500"
                           >
-                            {linkNodes.nodes[key].data.label}
+                            {linkNodes.nodes[key].hasdataNodedata.label}
                           </button>
                         ))
                       }

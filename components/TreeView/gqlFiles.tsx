@@ -421,7 +421,6 @@ async function createFileInFolder(
       },
     })
     .then((result) => {
-      console.log(result.data.updateFolders.folders[0]);
       const newFile1 = JSON.stringify(
         result.data.updateFolders.folders[0]
       ).replaceAll('"hasFile":', '"file":');
@@ -440,15 +439,12 @@ async function getTreeNode(
       query: customQuery,
     })
     .then((result) => {
-      console.log(result.data.mains, "before");
       const nodes1 = JSON.stringify(result.data.mains)
         .replaceAll('"hasContainsFolder":', '"children":')
         .replaceAll('"hasFolder":', '"children":')
         .replaceAll('"hasFile":', '"children":')
         .replaceAll('"hasFlownodes":', '"flowchart":');
-
       nodes = JSON.parse(nodes1);
-      console.log(nodes);
     });
   return nodes;
 }
@@ -602,6 +598,64 @@ const updateFileBackend = async (fileId: string, flowchart: string) => {
   });
 };
 
+const getFile = gql`
+ query Query($where: fileWhere) {
+  files(where: $where) {
+    name
+    id
+    type
+    hasflowchart {
+      name
+      nodes {
+        draggable
+        flowchart
+        id
+        hasdataNodedata {
+          label
+          shape
+          description
+          links {
+            fileId
+             flag
+             id
+             label
+          }
+          linkedBy {
+            id
+            fileId
+            flag
+            label
+          }
+        }
+        haspositionPosition {
+          x
+          y
+        }
+      }
+    }
+  }
+}
+`
+
+const getFileByNode = async (nodeId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  let file: any
+  await client.query({
+    query: customQuery,
+    variables: {
+      "where": {
+        "hasflowchart": {
+          "nodes_SINGLE": {
+            "id": nodeId
+          }
+        }
+      }
+    }
+  }).then((result) => {
+    file = result
+  })
+  return file
+}
+
 export {
   createFolderInMain,
   newFolderInMain,
@@ -618,5 +672,7 @@ export {
   createFileInMain,
   newFileInMain,
   disconnectFromFolderBackendOnMove,
-  connectToFolderBackendOnMove
+  connectToFolderBackendOnMove,
+  getFile,
+  getFileByNode
 };

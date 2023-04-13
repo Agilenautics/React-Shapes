@@ -37,8 +37,6 @@ export type MyData = {
  */
 export function useBackend() {
   const initData = fileStore((state) => state.data);
-  console.log(initData,"initdata");
-
   const [data, setData] = useState<MyData>(initData as MyData);
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   //console.log(root,"root");
