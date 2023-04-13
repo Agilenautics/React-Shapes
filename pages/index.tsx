@@ -33,7 +33,7 @@ const Home: NextPage = () => {
     <>
       <Sidebar />
       <ReactFlowProvider>
-        <Flow />
+        <Flow/>
       </ReactFlowProvider>
       <AddNodeButton />
       {/* <Tags /> */}

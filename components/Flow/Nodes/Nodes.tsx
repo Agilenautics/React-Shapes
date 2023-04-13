@@ -1,5 +1,5 @@
 import { Editing } from "../Editing";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
@@ -7,9 +7,12 @@ import fileStore from "../../TreeView/fileStore";
 import edgeStore from "../Edges/edgeStore";
 import Tags from "./Tags";
 import Progress from "./Progress";
+import { BiArrowToRight, BiArrowBack } from 'react-icons/bi'
+import { updateLinksMutation,updateNodeData } from "./gqlNodes";
+
 
 /* This is the custom node component that is used */
-function PrototypicalNode(css_props: string, data: object, id: string) {
+function PrototypicalNode(css_props: string, data: any, id: string) {
   const [editing, setEditing] = useState(false);
   const handlePositions: { [id: string]: Position } = {
     a: Position.Left,
@@ -20,13 +23,29 @@ function PrototypicalNode(css_props: string, data: object, id: string) {
   const updateLabel = nodeStore((state) => state.updateLabel);
   const updateNodeType = nodeStore((state) => state.updateNodeType);
   const toggleDraggable = nodeStore((state) => state.toggleDraggable);
+  const updateNodes = nodeStore((state) => state.updateNodes);
+  const findFile = fileStore((state)=>state.find_file)
+  const linkNodeId = fileStore((state) => state.linkNodeId)
+  
   // @ts-ignore
   const label = data.label;
   // @ts-ignore
   const shapeCSS = nodeShapeMap[data.shape];
   // @ts-ignore
   const description = data.description;
+  //const Id=id;
 
+ 
+  const updateNodeData_Links = async()=>{
+    if(linkNodeId===id){
+      return await updateNodeData(data,id,updateLinksMutation)
+    }
+  }
+  
+  useEffect(()=>{
+    updateNodeData_Links()
+  },[updateNodeData_Links])
+  
   return (
     <div>
       <div className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group`}>
@@ -43,11 +62,9 @@ function PrototypicalNode(css_props: string, data: object, id: string) {
           ))
         }
         <div
-          className={`${css_props} font-sans ${
-            shapeCSS[1]
-          } mx-1 flex h-8 items-center justify-center border-b-2 border-r-2 text-xs font-normal shadow-md ${
-            editing ? "cursor-default" : ""
-          }`}
+          className={`${css_props} font-sans ${shapeCSS[1]
+            } mx-1 flex h-8 items-center justify-center border-b-2 border-r-2 text-xs font-normal shadow-md ${editing ? "cursor-default" : ""
+            }`}
           onDoubleClick={() => {
             setEditing(true);
             toggleDraggable(id, false);
@@ -70,11 +87,67 @@ function PrototypicalNode(css_props: string, data: object, id: string) {
             ) : (
               <p>{label}</p>
             )}
+            {
+
+              // @ts-ignore
+              data.links.flag ? (
+                <div
+                  className="absolute min-w-max top-12 left-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-white "
+                  onClick={() => {
+                    // @ts-ignore
+                    const x = findFile(data.links.fileId);
+                    // @ts-ignore
+                    const nodes = x.hasflowchart.nodes
+                    const nodeData = JSON.stringify(nodes)
+                      .replaceAll('"hasdataNodedata":', '"data":')
+                      .replaceAll('"haspositionPosition":', '"position":');
+                    if (x.children == null) {
+                      // updateEdges(x.hasflowchart.edges);
+                      updateNodes(JSON.parse(nodeData));
+                    }
+                  }}
+                >
+                  <div className="text-xs"> {data.links.label} </div>
+                  <div>  <BiArrowToRight className="w-4 h-4" /> </div>
+                </div>
+              ) : (
+                <></>
+              )
+            }
+
+
+             {/* linked by node  */}
+             {
+              // @ts-ignore
+              data.linkedBy.flag ? (
+                <div
+                  className="absolute min-w-max top-12 right-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-white "
+                  onClick={() => {
+                    // @ts-ignore
+                    const x = findFile(data.linkedBy.fileId);
+                    // @ts-ignore
+                    const nodes = x.hasflowchart.nodes
+                    const nodeData = JSON.stringify(nodes)
+                      .replaceAll('"hasdataNodedata":', '"data":')
+                      .replaceAll('"haspositionPosition":', '"position":');
+                    if (x.children == null) {
+                      // updateEdges(x.hasflowchart.edges);
+                      updateNodes(JSON.parse(nodeData));
+                    }
+                  }}
+                >
+                  <div className="text-xs"> {data.linkedBy.label} </div>
+                  <div>  <BiArrowBack className="w-4 h-4" /> </div>
+                </div>
+              ) : (
+                <></>
+              )
+            }
           </div>
         </div>
       </div>
       {/* <Tags /> */}
-      <Progress progress={0} />
+      {/* <Progress progress={0} /> */}
     </div>
   );
 }

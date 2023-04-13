@@ -12,6 +12,7 @@ import nodeStore from "../Flow/Nodes/nodeStore";
 import edgeStore from "../Flow/Edges/edgeStore";
 import { allNodes, getNodes } from "../Flow/Nodes/gqlNodes";
 import { allEdges, getEdges } from "../Flow/Edges/gqlEdges";
+import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -108,7 +109,10 @@ export const TreeNode = ({
   );
   // ! This code below is called every frame, which is annoying but works for now
   if (state.isSelected) {
-    updateCurrentFlowchart(name,Id);
+    
+    updateCurrentFlowchart(name, Id);
+    
+    //console.log("treenode editing",Id,name);
   }
 
   function loadNewFlow(
@@ -120,19 +124,17 @@ export const TreeNode = ({
       if (data.children == null) {
         //updateNodes(data.flowchart.nodes);
         //updateEdges(data.flowchart.edges);
-        getNodes(allNodes, data.name).then((result) => {
+        getNodes(allNodes, data.id).then((result) => {
           // @ts-ignore
           updateNodes(result);
-          console.log(result);
         });
-        getEdges(allEdges, data.name).then((result) => {
+        getEdges(allEdges, data.id).then((result) => {
           // @ts-ignore
-          // console.log(result);
-          updateEdges(result);
+           updateEdges(result);
         });
       }
     };
-    
+
   }
   return (
     <div
@@ -196,9 +198,9 @@ export const TreeNode2 = ({
   ) {
     return (e: SyntheticEvent) => {
       handlers.select(e);
-      // if (data.children == null) {
-      //   updateLinkNodes(data.flowchart.nodes);
-      // }
+      if (data.children == null) {
+        updateLinkNodes(data.hasflowchart.nodes,data.id);
+      }
     };
   }
   return (

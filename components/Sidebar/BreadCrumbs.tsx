@@ -27,7 +27,9 @@ function BreadCrumbs() {
       <nav className="flex " aria-label="Breadcrumb">
         <ol className="flex space-x-3 py-2 pr-2">
           {tiles.map((value, index) => {
-            return BCTile(value, index == 0);
+            return  (
+              <div key={index}> { BCTile(value, index == 0)}  </div>
+            ) 
           })}
         </ol>
       </nav>

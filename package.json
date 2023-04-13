@@ -11,6 +11,8 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@neo4j/graphql": "^3.5.1",
+    "@reactflow/core": "^11.5.5",
+    "@reactflow/node-resizer": "^2.0.1",
     "@types/react-virtualized-auto-sizer": "^1.0.1",
     "apollo-server-micro": "^3.10.0",
     "classnames": "^2.3.1",
@@ -26,14 +28,14 @@
     "react-arborist": "^1.1.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
-    "react-flow-renderer": "^10.3.10",
+    "react-flow-renderer": "^10.3.17",
     "react-icons": "^4.4.0",
     "react-select": "^5.4.0",
     "react-tag-input": "^6.8.0",
     "react-virtualized-auto-sizer": "^1.0.6",
     "sharp": "^0.30.7",
     "tree-model-improved": "^2.0.1",
-    "zustand": "^4.0.0-rc.1"
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@types/node": "^18.0.4",

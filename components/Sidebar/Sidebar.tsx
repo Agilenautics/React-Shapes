@@ -5,7 +5,7 @@ import { AiFillFolderAdd, AiFillFileAdd } from "react-icons/ai";
 import DarkModeToggleButton from "./DarkModeToggleButton";
 import fileStore from "../TreeView/fileStore";
 import BreadCrumbs from "./BreadCrumbs";
-
+//import {createFolder,newFolder } from "../TreeView/gqlFiles";
 
 //class based & function based
 /**
@@ -17,10 +17,10 @@ const Sidebar = () => {
   const [showSidebar, setShowSidebar] = useState(false); //local state
   const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
   const [menuOpen, setMenuOpen] = useState("h-0 overflow-hidden");
-  
+
   const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
-  
+
   function toggleMenu() {
     setMenuOpen(menuOpen == "h-fit" ? "h-0 overflow-hidden" : "h-fit");
     setShowSidebar(!showSidebar);

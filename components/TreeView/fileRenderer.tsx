@@ -20,6 +20,7 @@ export function FileTree() {
           }}
           data={backend.data}
           getChildren="children"
+         
           isOpen="isOpen"
           hideRoot
           indent={24}
@@ -39,6 +40,7 @@ export function FileTree() {
 
 export function LinkTree() {
   const backend = useBackend();
+
   return (
     <AutoSize>
       {(props: any) => (
@@ -60,7 +62,7 @@ export function LinkTree() {
           width={props.width}
           height={props.height}
         >
-          {TreeNode2} 
+          {TreeNode2}
         </Tree>
       )}
     </AutoSize>

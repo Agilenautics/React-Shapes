@@ -32,6 +32,7 @@ export default function CustomEdge({
   sourcePosition: Position;
   targetPosition: Position;
   data: {
+    id:string;
     label: string;
     pathCSS: string;
     boxCSS: string;
@@ -66,7 +67,7 @@ export default function CustomEdge({
     <>
       <defs>
         {[...markerFill].map((x, i) => (
-          <>
+          <div key={i}>
             <marker
               key={"circle" + x}
               id={"circle" + x}
@@ -92,7 +93,7 @@ export default function CustomEdge({
             >
               <path d="M0,-5L10,0L0,5"></path>
             </marker>
-          </>
+          </div>
         ))}
       </defs>
       <path

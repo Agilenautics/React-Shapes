@@ -1,4 +1,43 @@
 # ! Interfaces only work on relationships!
+type main {
+  id: ID! @id
+  timeStamp: DateTime! @timestamp
+  name: String!
+  isOpen: Boolean!
+  hasContainsFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
+  hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
+}
+
+type folder {
+  id: ID! @id
+  #parentId: ID! @id
+  type: String!
+  isOpen: Boolean!
+  timeStamp: DateTime @timestamp
+  name: String!
+  mainHas: main @relationship(type: "hasFolder", direction: IN)
+  hasFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
+  hasFile: [file!]! @relationship(type: "hasFile", direction: OUT)
+}
+
+type file {
+  id: ID! @id
+  #parentId: ID! @id
+  timeStamp: DateTime! @timestamp
+  type: String!
+  name: String!
+  hasflowchart: flowchart @relationship(type: "hasFlowchart", direction: OUT)
+  folderHas: folder @relationship(type: "hasFolder", direction: IN)
+  #hasFlownodes: [flowNode!]! @relationship (type:"hasFlownodes", direction:OUT)
+  mainHas: main @relationship(type: "hasFile", direction: IN)
+}
+
+type flowchart {
+  name: String!
+  hasFile: file @relationship(type: "hasFlowchart", direction: IN)
+  nodes: [flowNode!]! @relationship(type: "hasFlownodes", direction: OUT)
+  edges: [flowEdge!]! @relationship(type: "hasFlowedges", direction: OUT)
+}
 
 type flowNode {
   id: ID! @id
@@ -9,12 +48,11 @@ type flowNode {
   hasdataNodedata: nodeData @relationship(type: "hasData", direction: OUT)
   haspositionPosition: position
     @relationship(type: "hasPosition", direction: OUT)
-  connectedbyFlowedge: flowEdge
+  connectedbyFlowedge: [flowEdge!]!
     @relationship(type: "connectedBy", direction: OUT)
-  linkedtoFlownode: flowNode @relationship(type: "linkedTo", direction: OUT)
-  flownodeLinkedto: flowNode @relationship(type: "linkedTo", direction: IN)
-  hasTasks: tasks @relationship(type: "has", direction: OUT)
-  flowedgeConnectedto: flowEdge
+  flowNodeHas: file @relationship(type: "hasFile", direction: IN)
+  hasTasks: tasks @relationship(type: "hasTasks", direction: OUT)
+  flowedgeConnectedto: [flowEdge!]!
     @relationship(type: "connectedTo", direction: IN)
 }
 
@@ -22,17 +60,36 @@ type nodeData {
   label: String!
   shape: String!
   description: String
+  links: link @relationship(type:"hasLink",direction:OUT)
+  linkedBy:linked @relationship(type:"hasLinkedBy",direction:OUT)
   flownodeHasdata: flowNode @relationship(type: "hasData", direction: IN)
 }
 
+type link{
+label:String
+id:ID
+flag:Boolean!
+fileId:String
+hasLink:nodeData @relationship(type: "hasLink", direction:IN)
+}
+type linked{
+label:String
+id:ID
+flag:Boolean!
+fileId:String
+hasLinked:nodeData @relationship(type: "hasLinkedBy", direction:IN)
+}
+
 type position {
-  x: Int!
-  y: Int!
+  name: String!
+  x: Float!
+  y: Float!
   flownodeHasposition: flowNode
     @relationship(type: "hasPosition", direction: IN)
 }
 
 type edgeData {
+  id: ID! @id
   label: String
   pathCSS: String!
   boxCSS: String!
@@ -43,6 +100,7 @@ type edgeData {
 
 type flowEdge {
   id: ID! @id
+  name: String!
   timeStamp: DateTime! @timestamp
   source: String!
   target: String!
@@ -61,38 +119,5 @@ type flowEdge {
 type tasks {
   id: ID! @id
   timeStamp: DateTime! @timestamp
-  flownodeHas: flowNode @relationship(type: "has", direction: IN)
+  flownodeHastask: flowNode @relationship(type: "hasTasks", direction: IN)
 }
-
-# ? Mutation to create a node
-
-# ? Mutation to create edges
-# mutation CreateFlowEdges($input: [flowEdgeCreateInput!]!) {
-#   createFlowEdges(input: $input) {
-#     flowEdges {
-#       selected
-#       source
-#       sourceHandle
-#       target
-#       targetHandle
-
-#       hasedgedataEdgedata {
-#         bidirectional
-#         boxCSS
-#         label
-#         pathCSS
-#       }
-#       flownodeConnectedby {
-#         hasdataNodedata {
-#           color
-#         }
-#       }
-#       connectedtoFlownode {
-#         hasdataNodedata {
-#           color
-#         }
-#       }
-
-#     }
-#   }
-# }

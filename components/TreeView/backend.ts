@@ -1,6 +1,8 @@
+import { Console } from "console";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
+import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend,updateFolderBackend } from "./gqlFiles";
 
 /**
  * It returns the first node in the tree that has a model with an id property that matches the id
@@ -35,16 +37,16 @@ export type MyData = {
  */
 export function useBackend() {
   const initData = fileStore((state) => state.data);
-
   const [data, setData] = useState<MyData>(initData as MyData);
   const root = useMemo(() => new TreeModel().parse(data), [data]);
+  //console.log(root,"root");
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
-
+  //console.log(root.model);
   useEffect(() =>{
     setData(initData);
-    update();
-   });
+    update;
+   },[initData,update]);
   return {
     data,
     onMove: (
@@ -58,6 +60,9 @@ export function useBackend() {
         if (!src || !dstParent) return;
         const newItem = new TreeModel().parse(src.model);
         dstParent.addChildAtIndex(newItem, dstIndex);
+        console.log("fileid",srcId,"folderid",dstParentId,"index",dstIndex);
+        disconnectFromFolderBackendOnMove(srcId);
+        connectToFolderBackendOnMove(dstParentId,srcId);
         src.drop();
       }
       update();
@@ -71,12 +76,21 @@ export function useBackend() {
       }
     },
 
-    onEdit: (id: string, name: string) => {
+    onEdit: (id: string, name: string ) => {
       const node = find(id);
+      console.log(node,"node");
+     
       if (node) {
         node.model.name = name;
+        console.log("hi",id,name);
+        // updateFileBackend(id,name);
+        // updateFolderBackend(id,name);
         update();
       }
+      const {type} = node?.model
+      if (type==="folder")
+      { updateFolderBackend(id,name);}
+      else if(type==="file") {updateFileBackend(id,name);}
     },
   };
 }
