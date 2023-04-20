@@ -61,7 +61,8 @@ export function Editing({
   updateLabel,
   label,
   CSSMap = {},
-  description = "",
+  description,
+  // updateDescription,
   bidirectionalArrows = false,
 }: {
   isEdge: boolean;
@@ -93,6 +94,8 @@ export function Editing({
   const updateLinks = nodeStore((state) => state.updateLinks);
   const linkNodeId = fileStore((state) => state.linkNodeId)
   const updateLinkedBy = nodeStore((state) => state.updateLinkedBy)
+
+
 
 
 
@@ -221,11 +224,13 @@ export function Editing({
                 }}
               >
                 <textarea
-                  className={`h-14 w-full resize-none bg-transparent pl-1 text-center text-[10px] leading-[10px] text-black`}
-                  name="label" //@ts-ignore
+                  className={`h-14 w-full  bg-transparent pl-1 text-center border text-[10px] leading-[10px] text-black`}
+                  name="description" //@ts-ignore
                   defaultValue={description}
                   placeholder="Enter a description for the node"
                 />
+
+
               </form>
             }
           />
@@ -241,7 +246,6 @@ export function Editing({
                     type="button"
                     className="absolute right-2 -top-[19px] flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5"
                     onClick={() => {
-                      console.log("hi");
                       updateLinkNodes({}, linkNodes.fileID);
                     }}
                   >

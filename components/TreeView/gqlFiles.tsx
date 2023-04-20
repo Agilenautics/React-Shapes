@@ -262,7 +262,7 @@ const connectToFolderOnMove = gql`
     }
   }
 `;
-const disconnectFromFolderOnMove=gql`
+const disconnectFromFolderOnMove = gql`
 mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
   updateFolders(where: $where, disconnect: $disconnect) {
    folders {
@@ -301,7 +301,6 @@ async function createFolderInFolder(
     })
 
     .then((result) => {
-      console.log(result.data.updateFolders.folders[0]);
       const newFolder = JSON.stringify(
         result.data.updateFolders.folders[0]
       ).replaceAll('"hasFolder":', '"folder":');
@@ -439,6 +438,11 @@ async function getTreeNode(
       query: customQuery,
     })
     .then((result) => {
+      const mainData = result.data.mains
+      const data = mainData.map((value: any) => {
+       const {hasContainsFile,hasContainsFolder,...rest} = value
+       return {...rest,children:hasContainsFolder}
+      })
       const nodes1 = JSON.stringify(result.data.mains)
         .replaceAll('"hasContainsFolder":', '"children":')
         .replaceAll('"hasFolder":', '"children":')
@@ -567,20 +571,20 @@ const disconnectFromFolderBackendOnMove = async (fileId: string) => {
   await client.mutate({
     mutation: disconnectFromFolderOnMove,
     variables: {
-      
-        "where": {
-          "hasFile_SINGLE": {
-            "id":fileId,
-          }
-        },
-        "disconnect": {
-          "hasFile": [
-            {
-              "disconnect": {}
-            }
-          ]
+
+      "where": {
+        "hasFile_SINGLE": {
+          "id": fileId,
         }
+      },
+      "disconnect": {
+        "hasFile": [
+          {
+            "disconnect": {}
+          }
+        ]
       }
+    }
   });
 };
 

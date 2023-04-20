@@ -1,5 +1,5 @@
 import { Editing } from "../Editing";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
@@ -8,7 +8,7 @@ import edgeStore from "../Edges/edgeStore";
 import Tags from "./Tags";
 import Progress from "./Progress";
 import { BiArrowToRight, BiArrowBack } from 'react-icons/bi'
-import { updateLinksMutation,updateNodeData } from "./gqlNodes";
+import { updateLinksMutation, updateNodeData } from "./gqlNodes";
 
 
 /* This is the custom node component that is used */
@@ -24,9 +24,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const updateNodeType = nodeStore((state) => state.updateNodeType);
   const toggleDraggable = nodeStore((state) => state.toggleDraggable);
   const updateNodes = nodeStore((state) => state.updateNodes);
-  const findFile = fileStore((state)=>state.find_file)
+  const findFile = fileStore((state) => state.find_file)
   const linkNodeId = fileStore((state) => state.linkNodeId)
-  
+  const updateEdges = edgeStore((state) => state.updateEdges)
+
   // @ts-ignore
   const label = data.label;
   // @ts-ignore
@@ -35,17 +36,17 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const description = data.description;
   //const Id=id;
 
- 
-  const updateNodeData_Links = async()=>{
-    if(linkNodeId===id){
-      return await updateNodeData(data,id,updateLinksMutation)
+
+  const updateNodeData_Links = async () => {
+    if (linkNodeId === id) {
+      return await updateNodeData(data, id, updateLinksMutation)
     }
   }
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     updateNodeData_Links()
-  },[updateNodeData_Links])
-  
+  }, [updateNodeData_Links])
+
   return (
     <div>
       <div className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group`}>
@@ -101,8 +102,13 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                     const nodeData = JSON.stringify(nodes)
                       .replaceAll('"hasdataNodedata":', '"data":')
                       .replaceAll('"haspositionPosition":', '"position":');
+                    // @ts-ignore
+                    const edges = x.hasflowchart.edges
+                    const edgeData = JSON.stringify(edges)
+                      .replaceAll('"hasedgedataEdgedata":', '"data":');
                     if (x.children == null) {
-                      // updateEdges(x.hasflowchart.edges);
+                      // @ts-ignore
+                      updateEdges(JSON.parse(edgeData));
                       updateNodes(JSON.parse(nodeData));
                     }
                   }}
@@ -116,8 +122,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             }
 
 
-             {/* linked by node  */}
-             {
+            {/* linked by node  */}
+            {
               // @ts-ignore
               data.linkedBy.flag ? (
                 <div
@@ -130,8 +136,12 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                     const nodeData = JSON.stringify(nodes)
                       .replaceAll('"hasdataNodedata":', '"data":')
                       .replaceAll('"haspositionPosition":', '"position":');
+                    // @ts-ignore
+                    const edges = x.hasflowchart.edges
+                    const edgeData = JSON.stringify(edges)
+                      .replaceAll('"hasedgedataEdgedata":', '"data":');
                     if (x.children == null) {
-                      // updateEdges(x.hasflowchart.edges);
+                      updateEdges(JSON.parse(edgeData));
                       updateNodes(JSON.parse(nodeData));
                     }
                   }}
@@ -147,7 +157,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         </div>
       </div>
       {/* <Tags /> */}
-      {/* <Progress progress={0} /> */}
+      <Progress progress={11} />
     </div>
   );
 }

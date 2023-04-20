@@ -16,18 +16,12 @@ interface NodeState {
   updateNodeType: (id: string, newType: string) => void;
   updateLinks: (id: string, newLink: Object) => void;
   toggleDraggable: (id: string, draggable: boolean) => void;
-  loading: any;
-  setLoading: (loading: any) => void;
   updateLinkedBy: (id: string, LinkedBy: Object, getNodeQuery: any) => void;
+  breadCrumbs: Array<Node>;
+  updateBreadCrumbs: (breadCrumbs: Object, id: string) => void
 }
 
 const nodeStore = create<NodeState>((set) => ({
-  loading: false,
-  setLoading: ((loading) => {
-    set((state) => ({
-      loading: state.loading
-    }))
-  }),
   nodes: [
     {
       id: "1",
@@ -43,7 +37,14 @@ const nodeStore = create<NodeState>((set) => ({
       draggable: false,
     },
   ],
-
+  breadCrumbs: [],
+  updateBreadCrumbs: (data: any, id: any) => {
+    set((state) => {
+      const breadCrumbs = [data.name]
+      const uniqueValue = new Set(breadCrumbs)
+      return { breadCrumbs: [...uniqueValue] }
+    })
+  },
   addNode: (newNode) =>
     set((state) => ({
 
@@ -144,7 +145,7 @@ const nodeStore = create<NodeState>((set) => ({
       ...new_node,
       data: { ...new_node.data, linkedBy: linkedBy },
     };
-    await updateLinkedByMethod(updated_node,updateLinkedBy)
+    await updateLinkedByMethod(updated_node, updateLinkedBy)
     set((state): any => {
       // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
 

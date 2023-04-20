@@ -55,6 +55,7 @@ export default function CustomEdge({
     targetY,
   });
 
+
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
   const updateLabel = edgeStore((state) => state.updateLabel);

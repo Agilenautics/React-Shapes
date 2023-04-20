@@ -495,7 +495,6 @@ mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
 `
 
 const updateNodeData = async (nodaData: any,id:string, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  console.log(id,nodaData)
   await client.mutate({
     mutation: mutations,
     variables: {

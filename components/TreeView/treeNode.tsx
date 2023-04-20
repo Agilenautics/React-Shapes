@@ -107,12 +107,14 @@ export const TreeNode = ({
   const updateCurrentFlowchart = fileStore(
     (state) => state.updateCurrentFlowchart
   );
+  const updateBreadCrumbs = nodeStore((state)=>state.updateBreadCrumbs)
   // ! This code below is called every frame, which is annoying but works for now
   if (state.isSelected) {
-    
     updateCurrentFlowchart(name, Id);
-    
-    //console.log("treenode editing",Id,name);
+    if(data.type==="file"){
+      updateBreadCrumbs(data,Id)
+    }
+
   }
 
   function loadNewFlow(

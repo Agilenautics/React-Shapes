@@ -87,7 +87,7 @@ function Flow() {
     if(nodeId.length!==0){
       updateNodeBackend(nodeId,currentFlowchart)
     }
-  },[defaultEdges, edgeId,nodeId,defaultNodes])
+  },[defaultEdges, edgeId,nodeId,defaultNodes,updateNodeBackend])
 
 
 
