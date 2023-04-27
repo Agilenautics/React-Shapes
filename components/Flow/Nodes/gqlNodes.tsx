@@ -421,18 +421,6 @@ const updateNodeBackend = async (nodeData: any, flowchart: string) => {
       update: {
         type: nodeData.type,
         draggable: true,
-        hasdataNodedata: {
-          update: {
-            node: {
-              label: nodeData.data.label,
-              shape: nodeData.data.shape,
-              description: nodeData.data.description,
-              // links:{
-              //  label:
-              // }
-            },
-          },
-        },
       },
     },
   });

@@ -236,7 +236,6 @@ const fileStore = create<files>((set) => ({
       // ? Replace this function with findById when I implement any database
       const targetNode = searchTree(state.data, id);
       x = targetNode;
-      console.log("targetnode", x);
       return {};
     });
     return x as MyData;

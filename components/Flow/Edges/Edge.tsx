@@ -11,6 +11,7 @@ const fOHeight = fO;
 const fOWidth = fO + 100;
 
 import { edgeCSSMap } from "./edgeTypes";
+import nodeStore from "../Nodes/nodeStore";
 // ! The label placement needs to be improved
 /* This is the custom node component that is used */
 export default function CustomEdge({
@@ -61,6 +62,7 @@ export default function CustomEdge({
   const updateLabel = edgeStore((state) => state.updateLabel);
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
   const markerFill = edgeStore((state) => state.markerFill);
+  const updateDescription = nodeStore((state)=>state.updateDescription)
   const markerStart = data.bidirectional
     ? `url(#arrow${data.pathCSS.split(" ")[2]})`
     : `url(#circle${data.pathCSS.split(" ")[2]})`;
@@ -140,6 +142,7 @@ export default function CustomEdge({
                     updateNodeType={updateEdgeType}
                     setEditing={setEditing}
                     updateLabel={updateLabel}
+                    updateDescription={updateDescription}
                     label={data.label}
                     CSSMap={edgeCSSMap}
                     description=""

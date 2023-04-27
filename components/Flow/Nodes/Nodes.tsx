@@ -27,6 +27,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const findFile = fileStore((state) => state.find_file)
   const linkNodeId = fileStore((state) => state.linkNodeId)
   const updateEdges = edgeStore((state) => state.updateEdges)
+  const updateDescription = nodeStore((state) => state.updateDescription)
+  const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs)
 
   // @ts-ignore
   const label = data.label;
@@ -34,6 +36,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const shapeCSS = nodeShapeMap[data.shape];
   // @ts-ignore
   const description = data.description;
+
+
+
   //const Id=id;
 
 
@@ -47,9 +52,51 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     updateNodeData_Links()
   }, [updateNodeData_Links])
 
+
+  const linkedTo = () => {
+    const x = findFile(data.links.fileId);
+    // @ts-ignore
+    const nodes = x.hasflowchart.nodes
+    const nodeData = JSON.stringify(nodes)
+      .replaceAll('"hasdataNodedata":', '"data":')
+      .replaceAll('"haspositionPosition":', '"position":');
+    // @ts-ignore
+    const edges = x.hasflowchart.edges
+    const edgeData = JSON.stringify(edges)
+      .replaceAll('"hasedgedataEdgedata":', '"data":');
+    if (x.children == null) {
+      // @ts-ignore
+      updateEdges(JSON.parse(edgeData));
+      updateNodes(JSON.parse(nodeData));
+    }
+  }
+
+  const linkedBy = () => {
+    const x = findFile(data.linkedBy.fileId);
+    // @ts-ignore
+    const nodes = x.hasflowchart.nodes
+    const nodeData = JSON.stringify(nodes)
+      .replaceAll('"hasdataNodedata":', '"data":')
+      .replaceAll('"haspositionPosition":', '"position":');
+    // @ts-ignore
+    const edges = x.hasflowchart.edges
+    const edgeData = JSON.stringify(edges)
+      .replaceAll('"hasedgedataEdgedata":', '"data":');
+    if (x.children == null) {
+      updateEdges(JSON.parse(edgeData));
+      updateNodes(JSON.parse(nodeData));
+    }
+    updateBreadCrumbs(x, x.id)
+  }
+
+
+
+
+
+
   return (
     <div>
-      <div className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group`}>
+      <div className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group`}  >
         {
           // ? Loop to generate 4 handles
           Object.keys(handlePositions).map((key, _) => (
@@ -62,6 +109,13 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             />
           ))
         }
+        {/* here iam performing toolTip of description */}
+        {
+          description ?
+            (<div className="invisible absolute group-hover:visible  transition top-full mt-2 text-xs font-extralight bg-slate-50 border rounded p-1 whitespace-nowrap z-10">{description}</div>) :
+            null
+        }
+
         <div
           className={`${css_props} font-sans ${shapeCSS[1]
             } mx-1 flex h-8 items-center justify-center border-b-2 border-r-2 text-xs font-normal shadow-md ${editing ? "cursor-default" : ""
@@ -83,35 +137,18 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                 label={label}
                 CSSMap={nodeCSSMap}
                 description={description}
+                updateDescription={updateDescription}
                 bidirectionalArrows={false}
               />
             ) : (
               <p>{label}</p>
             )}
+            {/* LinkedTo */}
             {
-
-              // @ts-ignore
               data.links.flag ? (
                 <div
                   className="absolute min-w-max top-12 left-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-white "
-                  onClick={() => {
-                    // @ts-ignore
-                    const x = findFile(data.links.fileId);
-                    // @ts-ignore
-                    const nodes = x.hasflowchart.nodes
-                    const nodeData = JSON.stringify(nodes)
-                      .replaceAll('"hasdataNodedata":', '"data":')
-                      .replaceAll('"haspositionPosition":', '"position":');
-                    // @ts-ignore
-                    const edges = x.hasflowchart.edges
-                    const edgeData = JSON.stringify(edges)
-                      .replaceAll('"hasedgedataEdgedata":', '"data":');
-                    if (x.children == null) {
-                      // @ts-ignore
-                      updateEdges(JSON.parse(edgeData));
-                      updateNodes(JSON.parse(nodeData));
-                    }
-                  }}
+                  onClick={linkedTo}
                 >
                   <div className="text-xs"> {data.links.label} </div>
                   <div>  <BiArrowToRight className="w-4 h-4" /> </div>
@@ -128,23 +165,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               data.linkedBy.flag ? (
                 <div
                   className="absolute min-w-max top-12 right-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-white "
-                  onClick={() => {
-                    // @ts-ignore
-                    const x = findFile(data.linkedBy.fileId);
-                    // @ts-ignore
-                    const nodes = x.hasflowchart.nodes
-                    const nodeData = JSON.stringify(nodes)
-                      .replaceAll('"hasdataNodedata":', '"data":')
-                      .replaceAll('"haspositionPosition":', '"position":');
-                    // @ts-ignore
-                    const edges = x.hasflowchart.edges
-                    const edgeData = JSON.stringify(edges)
-                      .replaceAll('"hasedgedataEdgedata":', '"data":');
-                    if (x.children == null) {
-                      updateEdges(JSON.parse(edgeData));
-                      updateNodes(JSON.parse(nodeData));
-                    }
-                  }}
+                  onClick={linkedBy}
                 >
                   <div className="text-xs"> {data.linkedBy.label} </div>
                   <div>  <BiArrowBack className="w-4 h-4" /> </div>
