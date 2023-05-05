@@ -303,7 +303,7 @@ async function createFolderInFolder(
     .then((result) => {
       const newFolder = JSON.stringify(
         result.data.updateFolders.folders[0]
-      ).replaceAll('"hasFolder":', '"folder":');
+      ).replace('"hasFolder":', '"folder":');
       const nodes1 = JSON.parse(newFolder);
       node = nodes1.folder[0];
     });
@@ -340,7 +340,7 @@ async function createFolderInMain(
       node = result.data.createFolders.folders[0];
       // const newFolder = JSON.stringify(
       //   result.data.createFolders.folders)
-      // .replaceAll('"mainHas":', '"folder":');
+      // .replace('"mainHas":', '"folder":');
       // const nodes1 = JSON.parse(newFolder);
       // node = nodes1.folder[0];
     });
@@ -381,7 +381,7 @@ async function createFileInMain(
       console.log(result.data.updateMains.mains);
       const newFile1 = JSON.stringify(
         result.data.updateMains.mains[0]
-      ).replaceAll('"hasContainsFile":', '"file":');
+      ).replace('"hasContainsFile":', '"file":');
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
     });
@@ -422,12 +422,89 @@ async function createFileInFolder(
     .then((result) => {
       const newFile1 = JSON.stringify(
         result.data.updateFolders.folders[0]
-      ).replaceAll('"hasFile":', '"file":');
+      ).replace('"hasFile":', '"file":');
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
     });
   return node;
 }
+
+interface File {
+  name: string;
+  id: string;
+  type: 'file';
+  __typename: 'file';
+}
+
+interface Folder {
+  id: string;
+  type: 'folder';
+  isOpen: boolean;
+  name: string;
+  hasFolder: Folder[];
+  hasFile: File[];
+  __typename: 'folder';
+}
+
+interface Main {
+  name: string;
+  isOpen: boolean;
+  id: string;
+  hasContainsFile: File[];
+  hasContainsFolder: Folder[];
+  __typename: 'main';
+}
+
+interface Data {
+  mains: Main[];
+}
+
+interface RootObject {
+  data: Data;
+}
+
+function transformObject(root: RootObject): RootObject {
+  const transformMain = (main: Main): Main => ({
+    ...main,
+    children: [
+      ...(Array.isArray(main.hasContainsFolder) ? main.hasContainsFolder.map(transformFolder) : []),
+      ...(main.hasContainsFile || [])
+    ].map((item) => {
+      if (item.type === 'file') {
+        return item;
+      }
+      return transformFolder(item);
+    }),
+    hasContainsFolder: main.hasContainsFolder.map(folder =>
+      transformFolder(folder)
+    ),
+  });
+
+  const transformFolder = (folder: Folder): Folder => ({
+    ...folder,
+    hasFolder: folder.hasFolder ? folder.hasFolder.map(f => transformFolder(f)) : [],
+    children: [
+      ...(Array.isArray(folder.hasFolder) ? folder.hasFolder : []),
+      ...(folder.hasFile || [])
+    ].map(item => {
+      if (item.type === 'file') {
+        return item;
+      }
+      return transformFolder(item);
+    }),
+  });
+
+  const transformData = (data: Data): Data => ({
+    ...data,
+    mains: data.mains.map(main => transformMain(main)),
+  });
+
+  return {
+    ...root,
+    data: transformData(root.data),
+  };
+}
+
 
 async function getTreeNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -444,11 +521,15 @@ async function getTreeNode(
        return {...rest,children:hasContainsFolder}
       })
       const nodes1 = JSON.stringify(result.data.mains)
-        .replaceAll('"hasContainsFolder":', '"children":')
-        .replaceAll('"hasFolder":', '"children":')
-        .replaceAll('"hasFile":', '"children":')
-        .replaceAll('"hasFlownodes":', '"flowchart":');
-      nodes = JSON.parse(nodes1);
+        .replace('"hasContainsFolder":', '"children":')
+        .replace('"hasFolder":', '"children":')
+        .replace('"hasFile":', '"children":')
+        .replace('"hasflowchart":', '"flowchart":');
+      // nodes = JSON.parse(nodes1);
+
+      const res_updated = transformObject(result);
+      nodes = res_updated.data.mains;
+
     });
   return nodes;
 }

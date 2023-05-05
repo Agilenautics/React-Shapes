@@ -1,4 +1,4 @@
-import create from "zustand";
+import {create} from "zustand";
 // @ts-ignore
 import TreeModel from "tree-model-improved";
 import { MyData, findById } from "./backend";

@@ -1,4 +1,4 @@
-import create from "zustand";
+import {create} from "zustand";
 import { Edge } from "react-flow-renderer";
 import edges from "./flowchart1";
 
