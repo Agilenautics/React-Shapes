@@ -432,6 +432,8 @@ async function createFileInFolder(
 interface File {
   name: string;
   id: string;
+  hasflowchart: any;
+  flowchart: any;
   type: 'file';
   __typename: 'file';
 }
@@ -443,6 +445,7 @@ interface Folder {
   name: string;
   hasFolder: Folder[];
   hasFile: File[];
+  children: (Folder | File)[];
   __typename: 'folder';
 }
 
@@ -452,6 +455,7 @@ interface Main {
   id: string;
   hasContainsFile: File[];
   hasContainsFolder: Folder[];
+  children: (Folder | File)[];
   __typename: 'main';
 }
 
@@ -488,7 +492,10 @@ function transformObject(root: RootObject): RootObject {
       ...(folder.hasFile || [])
     ].map(item => {
       if (item.type === 'file') {
-        return item;
+        return {
+          ...item,
+          flowchart: item.hasflowchart
+        };
       }
       return transformFolder(item);
     }),
@@ -509,7 +516,7 @@ function transformObject(root: RootObject): RootObject {
 async function getTreeNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) {
-  var nodes: Array<Node> = [];
+  var nodes: Main[] = [];
   await client
     .query({
       query: customQuery,
@@ -520,11 +527,11 @@ async function getTreeNode(
        const {hasContainsFile,hasContainsFolder,...rest} = value
        return {...rest,children:hasContainsFolder}
       })
-      const nodes1 = JSON.stringify(result.data.mains)
-        .replace('"hasContainsFolder":', '"children":')
-        .replace('"hasFolder":', '"children":')
-        .replace('"hasFile":', '"children":')
-        .replace('"hasflowchart":', '"flowchart":');
+      // const nodes1 = JSON.stringify(result.data.mains)
+      //   .replace('"hasContainsFolder":', '"children":')
+      //   .replace('"hasFolder":', '"children":')
+      //   .replace('"hasFile":', '"children":')
+      //   .replace('"hasflowchart":', '"flowchart":');
       // nodes = JSON.parse(nodes1);
 
       const res_updated = transformObject(result);
