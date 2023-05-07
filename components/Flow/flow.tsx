@@ -78,7 +78,7 @@ function Flow() {
 
 
   useEffect(() => {
-    if (edgeId.length !== 0) {
+    if (edgeId && edgeId.length !== 0) {
       const newEdgeData = defaultEdges.filter((value: any) => value.id === edgeId)
       newEdgeData.map((curEle) => {
         updateEdgeBackend(updateEdgeMutation, curEle)

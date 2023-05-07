@@ -55,6 +55,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
   const linkedTo = () => {
     const x = findFile(data.links.fileId);
+    console.log('x: ', x);
     // @ts-ignore
     const nodes = x.hasflowchart.nodes
     const nodeData = JSON.stringify(nodes)
@@ -69,10 +70,12 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
       updateEdges(JSON.parse(edgeData));
       updateNodes(JSON.parse(nodeData));
     }
+    updateBreadCrumbs(x, x.id, 'push')
   }
 
   const linkedBy = () => {
     const x = findFile(data.linkedBy.fileId);
+    console.log('x: ', x);
     // @ts-ignore
     const nodes = x.hasflowchart.nodes
     const nodeData = JSON.stringify(nodes)
@@ -86,7 +89,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
       updateEdges(JSON.parse(edgeData));
       updateNodes(JSON.parse(nodeData));
     }
-    updateBreadCrumbs(x, x.id)
+    updateBreadCrumbs(x, x.id, 'new')
   }
 
 

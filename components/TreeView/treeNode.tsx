@@ -107,12 +107,12 @@ export const TreeNode = ({
   const updateCurrentFlowchart = fileStore(
     (state) => state.updateCurrentFlowchart
   );
-  const updateBreadCrumbs = nodeStore((state)=>state.updateBreadCrumbs)
+  const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs)
   // ! This code below is called every frame, which is annoying but works for now
   if (state.isSelected) {
     updateCurrentFlowchart(name, Id);
-    if(data.type==="file"){
-      updateBreadCrumbs(data,Id)
+    if (data.type === "file") {
+      updateBreadCrumbs(data, Id, 'new')
     }
 
   }
@@ -132,7 +132,7 @@ export const TreeNode = ({
         });
         getEdges(allEdges, data.id).then((result) => {
           // @ts-ignore
-           updateEdges(result);
+          updateEdges(result);
         });
       }
     };
@@ -201,7 +201,7 @@ export const TreeNode2 = ({
     return (e: SyntheticEvent) => {
       handlers.select(e);
       if (data.children == null) {
-        updateLinkNodes(data.hasflowchart.nodes,data.id);
+        updateLinkNodes(data.hasflowchart.nodes, data.id);
       }
     };
   }
