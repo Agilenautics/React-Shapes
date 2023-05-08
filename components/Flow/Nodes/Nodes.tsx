@@ -112,7 +112,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         {/* here iam performing toolTip of description */}
         {
           description ?
-            (<div className="invisible absolute group-hover:visible  transition top-full mt-2 text-xs font-extralight bg-slate-50 border rounded p-1 whitespace-nowrap z-10">{description}</div>) :
+            (<div className="invisible absolute group-hover:visible  transition top-full mt-2 text-xs font-extralight bg-slate-50 border rounded p-1 whitespace-nowrap  dark:text-black z-10">{description}</div>) :
             null
         }
 
@@ -147,7 +147,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             {
               data.links.flag ? (
                 <div
-                  className="absolute min-w-max top-12 left-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-white "
+                  className="absolute min-w-max top-12 left-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-black "
                   onClick={linkedTo}
                 >
                   <div className="text-xs"> {data.links.label} </div>
@@ -164,7 +164,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               // @ts-ignore
               data.linkedBy.flag ? (
                 <div
-                  className="absolute min-w-max top-12 right-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-white "
+                  className="absolute min-w-max top-12 right-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-black "
                   onClick={linkedBy}
                 >
                   <div className="text-xs"> {data.linkedBy.label} </div>
@@ -178,7 +178,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         </div>
       </div>
       {/* <Tags /> */}
-      <Progress progress={11} />
+      {/* <Progress progress={11} /> */}
     </div>
   );
 }

@@ -43,7 +43,7 @@ const nodeStore = create<NodeState>((set) => ({
   breadCrumbs: [],
   updateBreadCrumbs: (data: any, id: any) => {
     set((state) => {
-      const breadCrumbs = [...state.breadCrumbs, data.name]
+      const breadCrumbs = [ data.name]
       const uniqueValue = new Set(breadCrumbs)
       if (state.fileId !== id) {
         const datas = [[breadCrumbs, ...uniqueValue]]
