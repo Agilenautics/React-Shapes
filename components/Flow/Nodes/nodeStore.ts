@@ -18,7 +18,7 @@ interface NodeState {
   toggleDraggable: (id: string, draggable: boolean) => void;
   updateLinkedBy: (id: string, LinkedBy: Object, getNodeQuery: any) => void;
   breadCrumbs: Array<Node>;
-  updateBreadCrumbs: (breadCrumbs: Object, id: string) => void;
+  updateBreadCrumbs: (breadCrumbs: Object, id: string, action: string) => void;
   updateDescription: (id: string, description: string) => void;
   fileId: string
 }
@@ -41,15 +41,26 @@ const nodeStore = create<NodeState>((set) => ({
   ],
   fileId: "",
   breadCrumbs: [],
-  updateBreadCrumbs: (data: any, id: any) => {
-    set((state) => {
-      const breadCrumbs = [ data.name]
-      const uniqueValue = new Set(breadCrumbs)
-      if (state.fileId !== id) {
-        const datas = [[breadCrumbs, ...uniqueValue]]
-      }
-      return { breadCrumbs: [...uniqueValue], fileId: id }
-    })
+  updateBreadCrumbs: (data: any, id: any, action: string) => {
+    switch(action) {
+      case 'new':
+        set((state) => {
+          return { breadCrumbs: [data.name] }
+        })
+      case 'push':
+        set((state) => {
+          const breadCrumbs = [...state.breadCrumbs, data.name]
+          const uniqueValue = new Set(breadCrumbs)
+          if (state.fileId !== id) {
+            const datas = [[breadCrumbs, ...uniqueValue]]
+          }
+          return { breadCrumbs: [...uniqueValue], fileId: id }
+        })
+      default:
+        set((state) => {
+          return { breadCrumbs: state.breadCrumbs }
+        })
+    }
   },
   addNode: (newNode) =>
     set((state) => ({
