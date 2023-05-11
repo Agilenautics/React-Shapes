@@ -1,4 +1,9 @@
 # ! Interfaces only work on relationships!
+type user{
+  userName: String!
+  emailId: String!
+  active: Boolean
+  }
 type main {
   id: ID! @id
   timeStamp: DateTime! @timestamp

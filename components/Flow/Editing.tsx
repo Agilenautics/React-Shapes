@@ -61,7 +61,8 @@ export function Editing({
   updateLabel,
   label,
   CSSMap = {},
-  description = "",
+  description,
+  updateDescription,
   bidirectionalArrows = false,
 }: {
   isEdge: boolean;
@@ -73,6 +74,7 @@ export function Editing({
   label: string;
   CSSMap: object;
   description: string;
+  updateDescription: Function
   bidirectionalArrows: boolean;
 }) {
   const pEtrue = isEdge ? "w-14 h-5 top-10" : "w-14 h-5 -top-5";
@@ -97,6 +99,8 @@ export function Editing({
 
 
 
+
+
   const addLinkMethod = async (key: string) => {
     //id of the current node 
     const id = linkNodes.nodes[key].id;
@@ -110,6 +114,15 @@ export function Editing({
     updateLinks(linkNodeId, { label: linkNodes.nodes[key].hasdataNodedata.label, flag: true, id, fileId: linkNodes.fileID })
 
     updateLinkedBy(id, { label: nodeData[0].data.label, id: linkNodeId, fileId: data.files[0].id, flag: true }, getFile)
+  }
+
+  const handleSubmit = (event:any) =>{
+    event.preventDefault()
+    updateDescription(id,event.target.description.value)
+  }
+
+  const handleChanges = (event:any) =>{
+    if(event.keyCode==13) updateDescription(id,event.target.value)
   }
 
 
@@ -216,19 +229,20 @@ export function Editing({
             positioningCSS={"left-1 -top-12"}
             objects={
               <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                }}
+              onSubmit={(e)=>handleSubmit(e)}
+                autoComplete="off"
               >
                 <textarea
-                  className={`h-14 w-full resize-none bg-transparent pl-1 text-center text-[10px] leading-[10px] text-black`}
-                  name="label" //@ts-ignore
+                  className={`h-14 w-full  bg-transparent pl-1 text-center border text-[10px] leading-[10px] text-black`}
+                  name="description" //@ts-ignore
                   defaultValue={description}
                   placeholder="Enter a description for the node"
+                  onKeyDown={handleChanges}
                 />
               </form>
             }
           />
+         
           <ExpandableChip
             title="Add Link"
             expTrue={Ltrue}
@@ -241,7 +255,6 @@ export function Editing({
                     type="button"
                     className="absolute right-2 -top-[19px] flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5"
                     onClick={() => {
-                      console.log("hi");
                       updateLinkNodes({}, linkNodes.fileID);
                     }}
                   >
@@ -258,12 +271,7 @@ export function Editing({
                             key={key}
                             id={key}
                             type="button"
-                            onClick={(e) => addLinkMethod(key)
-                              // ? Fix this ID issue - Fixed(Achintya)
-                              // { //console.log(linkNodes.nodes[key].flowchart);
-                              //   
-                              // }
-                            }
+                            onClick={(e) => addLinkMethod(key)}
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600

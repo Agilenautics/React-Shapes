@@ -1,10 +1,24 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import fetch from 'cross-fetch';
+
+const API_URL = 'http://localhost:3000/api/graphql';
+
+const link = createHttpLink({
+  uri: API_URL,
+  fetch,
+});
+
+// const client = new ApolloClient({
+//   //ssrMode:true,
+//   uri: "http://localhost:3000/api/graphql",
+//   cache: new InMemoryCache(),
+
+// });
 
 const client = new ApolloClient({
-  //ssrMode:true,
-  uri: "http://localhost:3000/api/graphql",
   cache: new InMemoryCache(),
-
+  uri: API_URL,
+  link,
 });
 
 export default client;

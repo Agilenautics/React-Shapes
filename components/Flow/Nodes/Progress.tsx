@@ -33,7 +33,7 @@ function Progress({ progress }: { progress: number }) {
     }
   }
   return (
-    <div className="group absolute -left-1 -top-1 cursor-default">
+    <div className="group absolute right-3 top-3 cursor-default">
       {evaluateSwitch()}
     </div>
   );

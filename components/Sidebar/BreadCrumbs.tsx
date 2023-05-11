@@ -1,4 +1,5 @@
 import { MdOutlineArrowForwardIos } from "react-icons/md";
+import nodeStore from "../Flow/Nodes/nodeStore";
 
 /**
  * It creates a breadcrumb tile
@@ -21,12 +22,12 @@ function BCTile(name: string, isFirst: boolean = false) {
 
 /* This function manages the actual breadcrumb tiles */
 function BreadCrumbs() {
-  const tiles = ["AWS", "Azure", "Lambda Functions"];
+  const breadCrumbs = nodeStore((state)=>state.breadCrumbs)
   return (
     <div className="relative left-[26vw] top-5">
       <nav className="flex " aria-label="Breadcrumb">
         <ol className="flex space-x-3 py-2 pr-2">
-          {tiles.map((value, index) => {
+          {breadCrumbs.map((value:any, index) => {
             return  (
               <div key={index}> { BCTile(value, index == 0)}  </div>
             ) 

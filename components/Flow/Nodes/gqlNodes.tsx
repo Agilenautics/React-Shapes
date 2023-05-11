@@ -421,18 +421,6 @@ const updateNodeBackend = async (nodeData: any, flowchart: string) => {
       update: {
         type: nodeData.type,
         draggable: true,
-        hasdataNodedata: {
-          update: {
-            node: {
-              label: nodeData.data.label,
-              shape: nodeData.data.shape,
-              description: nodeData.data.description,
-              // links:{
-              //  label:
-              // }
-            },
-          },
-        },
       },
     },
   });
@@ -495,7 +483,6 @@ mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
 `
 
 const updateNodeData = async (nodaData: any,id:string, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  console.log(id,nodaData)
   await client.mutate({
     mutation: mutations,
     variables: {

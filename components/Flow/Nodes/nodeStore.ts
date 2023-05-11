@@ -16,18 +16,14 @@ interface NodeState {
   updateNodeType: (id: string, newType: string) => void;
   updateLinks: (id: string, newLink: Object) => void;
   toggleDraggable: (id: string, draggable: boolean) => void;
-  loading: any;
-  setLoading: (loading: any) => void;
   updateLinkedBy: (id: string, LinkedBy: Object, getNodeQuery: any) => void;
+  breadCrumbs: Array<Node>;
+  updateBreadCrumbs: (breadCrumbs: Object, id: string, action: string) => void;
+  updateDescription: (id: string, description: string) => void;
+  fileId: string
 }
 
 const nodeStore = create<NodeState>((set) => ({
-  loading: false,
-  setLoading: ((loading) => {
-    set((state) => ({
-      loading: state.loading
-    }))
-  }),
   nodes: [
     {
       id: "1",
@@ -43,10 +39,31 @@ const nodeStore = create<NodeState>((set) => ({
       draggable: false,
     },
   ],
-
+  fileId: "",
+  breadCrumbs: [],
+  updateBreadCrumbs: (data: any, id: any, action: string) => {
+    switch(action) {
+      case 'new':
+        set((state) => {
+          return { breadCrumbs: [data.name] }
+        })
+      case 'push':
+        set((state) => {
+          const breadCrumbs = [...state.breadCrumbs, data.name]
+          const uniqueValue = new Set(breadCrumbs)
+          if (state.fileId !== id) {
+            const datas = [[breadCrumbs, ...uniqueValue]]
+          }
+          return { breadCrumbs: [...uniqueValue], fileId: id }
+        })
+      default:
+        set((state) => {
+          return { breadCrumbs: state.breadCrumbs }
+        })
+    }
+  },
   addNode: (newNode) =>
     set((state) => ({
-
       nodes: [
         ...state.nodes,
         { ...newNode, id: newNode.id },
@@ -63,6 +80,18 @@ const nodeStore = create<NodeState>((set) => ({
       const updated_nodes = state.nodes.filter((item) => item.id !== node.id);
       return { nodes: updated_nodes };
     }),
+  updateDescription: (id: string, newDescription: string) => {
+    set((state) => {
+      const old_node = state.nodes.filter((item) => item.id === id)[0];
+      const to_be_updated = state.nodes.filter((item) => item.id !== id);
+      const updated_node = {
+        ...old_node,
+        data: { ...old_node.data, description: newDescription },
+      };
+
+      return { nodes: [...to_be_updated, updated_node] };
+    })
+  },
   // allNodesData: (node) => {
   //   set((state) => {
 
@@ -144,7 +173,7 @@ const nodeStore = create<NodeState>((set) => ({
       ...new_node,
       data: { ...new_node.data, linkedBy: linkedBy },
     };
-    await updateLinkedByMethod(updated_node,updateLinkedBy)
+    await updateLinkedByMethod(updated_node, updateLinkedBy)
     set((state): any => {
       // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
 
