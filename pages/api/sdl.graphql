@@ -7,6 +7,7 @@ type user{
 type main {
   id: ID! @id
   timeStamp: DateTime! @timestamp
+  userName: String!
   name: String!
   isOpen: Boolean!
   hasContainsFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)

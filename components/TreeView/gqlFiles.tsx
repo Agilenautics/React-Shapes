@@ -6,38 +6,113 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 
-const getInitData = gql`
-  query Mains {
-    mains {
-      name
-      isOpen
-      id
-      hasContainsFile {
-        name
+// Creating root folder for new user
+const createMain = gql`
+  mutation Mutation($input: [mainCreateInput!]!) {
+    createMains(input: $input) {
+      mains {
         id
-        type
-      }
-      hasContainsFolder {
-        id
-        type
         isOpen
+        timeStamp
+        userName
+      }
+    }
+  }
+`;
+//Get root using unique userName(UID)
+const getMainByUser = gql`
+  query Query($where: mainWhere) {
+    mains(where: $where) {
+     
         name
-        hasFolder {
+        isOpen
+        id
+        hasContainsFile {
           name
           id
           type
+        }
+        hasContainsFolder {
+          id
+          type
           isOpen
-          hasFile {
+          name
+          hasFolder {
             name
             id
             type
+            isOpen
+            hasFile {
+              name
+              id
+              type
+              hasflowchart {
+                name
+                nodes {
+                  id
+                  type
+                  draggable
+                  flowchart
+                  hasdataNodedata {
+                    label
+                    shape
+                    description
+                    links {
+                      label
+                      id
+                      fileId
+                      flag
+                    }
+                    linkedBy {
+                      label
+                      id
+                      flag
+                      fileId
+                    }
+                  }
+                  haspositionPosition {
+                    name
+                    x
+                    y
+                  }
+                }
+                edges {
+                  selected
+                  source
+                  sourceHandle
+                  target
+                  targetHandle
+                  hasedgedataEdgedata {
+                    id
+                    bidirectional
+                    boxCSS
+                    label
+                    pathCSS
+                  }
+                  flownodeConnectedby {
+                    flowchart
+                    id
+                  }
+                  connectedtoFlownode {
+                    flowchart
+                    id
+                  }
+                }
+              }
+            }
+          }
+          hasFile {
+            type
+            id
+            name
+  
             hasflowchart {
               name
               nodes {
                 id
-                type
                 draggable
                 flowchart
+                type
                 hasdataNodedata {
                   label
                   shape
@@ -51,8 +126,8 @@ const getInitData = gql`
                   linkedBy {
                     label
                     id
-                    flag
                     fileId
+                    flag
                   }
                 }
                 haspositionPosition {
@@ -86,69 +161,152 @@ const getInitData = gql`
             }
           }
         }
-        hasFile {
-          type
-          id
-          name
-
-          hasflowchart {
-            name
-            nodes {
-              id
-              draggable
-              flowchart
-              type
-              hasdataNodedata {
-                label
-                shape
-                description
-                links {
-                  label
-                  id
-                  fileId
-                  flag
-                }
-                linkedBy {
-                  label
-                  id
-                  fileId
-                  flag
-                }
-              }
-              haspositionPosition {
-                name
-                x
-                y
-              }
-            }
-            edges {
-              selected
-              source
-              sourceHandle
-              target
-              targetHandle
-              hasedgedataEdgedata {
-                id
-                bidirectional
-                boxCSS
-                label
-                pathCSS
-              }
-              flownodeConnectedby {
-                flowchart
-                id
-              }
-              connectedtoFlownode {
-                flowchart
-                id
-              }
-            }
-          }
-        }
       }
     }
-  }
 `;
+// const getInitData = gql`
+//   query Mains {
+//     mains {
+//       name
+//       isOpen
+//       id
+//       hasContainsFile {
+//         name
+//         id
+//         type
+//       }
+//       hasContainsFolder {
+//         id
+//         type
+//         isOpen
+//         name
+//         hasFolder {
+//           name
+//           id
+//           type
+//           isOpen
+//           hasFile {
+//             name
+//             id
+//             type
+//             hasflowchart {
+//               name
+//               nodes {
+//                 id
+//                 type
+//                 draggable
+//                 flowchart
+//                 hasdataNodedata {
+//                   label
+//                   shape
+//                   description
+//                   links {
+//                     label
+//                     id
+//                     fileId
+//                     flag
+//                   }
+//                   linkedBy {
+//                     label
+//                     id
+//                     flag
+//                     fileId
+//                   }
+//                 }
+//                 haspositionPosition {
+//                   name
+//                   x
+//                   y
+//                 }
+//               }
+//               edges {
+//                 selected
+//                 source
+//                 sourceHandle
+//                 target
+//                 targetHandle
+//                 hasedgedataEdgedata {
+//                   id
+//                   bidirectional
+//                   boxCSS
+//                   label
+//                   pathCSS
+//                 }
+//                 flownodeConnectedby {
+//                   flowchart
+//                   id
+//                 }
+//                 connectedtoFlownode {
+//                   flowchart
+//                   id
+//                 }
+//               }
+//             }
+//           }
+//         }
+//         hasFile {
+//           type
+//           id
+//           name
+
+//           hasflowchart {
+//             name
+//             nodes {
+//               id
+//               draggable
+//               flowchart
+//               type
+//               hasdataNodedata {
+//                 label
+//                 shape
+//                 description
+//                 links {
+//                   label
+//                   id
+//                   fileId
+//                   flag
+//                 }
+//                 linkedBy {
+//                   label
+//                   id
+//                   fileId
+//                   flag
+//                 }
+//               }
+//               haspositionPosition {
+//                 name
+//                 x
+//                 y
+//               }
+//             }
+//             edges {
+//               selected
+//               source
+//               sourceHandle
+//               target
+//               targetHandle
+//               hasedgedataEdgedata {
+//                 id
+//                 bidirectional
+//                 boxCSS
+//                 label
+//                 pathCSS
+//               }
+//               flownodeConnectedby {
+//                 flowchart
+//                 id
+//               }
+//               connectedtoFlownode {
+//                 flowchart
+//                 id
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
 const deleteFolders = gql`
   mutation DeleteFolders($where: folderWhere, $delete: folderDeleteInput) {
     deleteFolders(where: $where, delete: $delete) {
@@ -273,7 +431,23 @@ mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
    } 
   }
 }`;
-
+async function createMainNewUser(
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  userName: string
+) {
+  await client.mutate({
+    mutation: mutation,
+    variables: {
+      create: {
+        node: {
+          userName: "Anitha",
+          name: "Anitha s Main",
+          isOpen: false,
+        },
+      },
+    },
+  });
+}
 async function createFolderInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string
@@ -511,22 +685,28 @@ function transformObject(root: RootObject): RootObject {
     data: transformData(root.data),
   };
 }
-
-
-async function getTreeNode(
-  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+async function getTreeNodeByUser(
+  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  userName: string
 ) {
   var nodes: Main[] = [];
+
   await client
     .query({
       query: customQuery,
+      variables: {
+        where: {
+          userName
+        },
+      },
     })
     .then((result) => {
-      const mainData = result.data.mains
+      const mainData = result.data.mains;
+      console.log("main",mainData);
       const data = mainData.map((value: any) => {
-       const {hasContainsFile,hasContainsFolder,...rest} = value
-       return {...rest,children:hasContainsFolder}
-      })
+        const { hasContainsFile, hasContainsFolder, ...rest } = value;
+        return { ...rest, children: hasContainsFolder };
+      });
       // const nodes1 = JSON.stringify(result.data.mains)
       //   .replace('"hasContainsFolder":', '"children":')
       //   .replace('"hasFolder":', '"children":')
@@ -536,10 +716,37 @@ async function getTreeNode(
 
       const res_updated = transformObject(result);
       nodes = res_updated.data.mains;
-
     });
   return nodes;
 }
+
+// async function getTreeNode(
+//   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+// ) {
+//   var nodes: Main[] = [];
+//   await client
+//     .query({
+//       query: customQuery,
+//     })
+//     .then((result) => {
+//       const mainData = result.data.mains
+//       const data = mainData.map((value: any) => {
+//        const {hasContainsFile,hasContainsFolder,...rest} = value
+//        return {...rest,children:hasContainsFolder}
+//       })
+//       // const nodes1 = JSON.stringify(result.data.mains)
+//       //   .replace('"hasContainsFolder":', '"children":')
+//       //   .replace('"hasFolder":', '"children":')
+//       //   .replace('"hasFile":', '"children":')
+//       //   .replace('"hasflowchart":', '"flowchart":');
+//       // nodes = JSON.parse(nodes1);
+
+//       const res_updated = transformObject(result);
+//       nodes = res_updated.data.mains;
+
+//     });
+//   return nodes;
+// }
 
 async function deleteFileBackend(fileID: string) {
   await client.mutate({
@@ -753,8 +960,8 @@ export {
   newFolderInMain,
   createFolderInFolder,
   newFolderInFolder,
-  getInitData,
-  getTreeNode,
+  // getInitData,
+  // getTreeNode,
   createFileInFolder,
   newFileInFolder,
   deleteFileBackend,
@@ -766,5 +973,7 @@ export {
   disconnectFromFolderBackendOnMove,
   connectToFolderBackendOnMove,
   getFile,
-  getFileByNode
+  getFileByNode,
+  getTreeNodeByUser,
+  getMainByUser,
 };

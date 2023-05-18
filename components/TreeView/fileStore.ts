@@ -9,17 +9,19 @@ import {
   newFolderInMain,
   createFolderInFolder,
   newFolderInFolder,
-  getInitData,
-  getTreeNode,
+  // getInitData,
+  // getTreeNode,
   createFileInFolder,
   newFileInFolder,
   deleteFileBackend,
   deleteFolderBackend,
   createFileInMain,
   newFileInMain,
+  getTreeNodeByUser,
+  getMainByUser
 } from "./gqlFiles";
-
-const initData = await getTreeNode(getInitData);
+const userName= "Admin";
+const initData = await getTreeNodeByUser(getMainByUser,userName);
 // {
 //   id: "ROOT",
 //   name: "ROOT",
