@@ -7,7 +7,7 @@ import {
 import client from "../../apollo-client";
 
 // Creating root folder for new user
-const createMain = gql`
+const createProject = gql`
   mutation Mutation($input: [mainCreateInput!]!) {
     createMains(input: $input) {
       mains {
@@ -19,6 +19,32 @@ const createMain = gql`
     }
   }
 `;
+// Update project name and description
+const updateProject =gql`
+mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
+  updateMains(where: $where, update: $update) {
+   mains {
+     id
+     name
+     description
+     userName
+   } 
+  }
+}`
+//------------------------------------------------------
+//for update project function
+// {
+//   "where": {
+//     "id": "af767e7d-6001-4efa-9c6b-9fb1a97bbabd"
+//   },
+//   "update": {
+//     "userName":"Anitha",
+//     "description": "This is a React flow project",
+//     "name": "React flow"
+//   }
+// }
+//-------------------------------------------------------
+
 //Get root using unique userName(UID)
 const getMainByUser = gql`
   query Query($where: mainWhere) {
@@ -431,7 +457,7 @@ mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
    } 
   }
 }`;
-async function createMainNewUser(
+async function createProjectNewUser(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   userName: string
 ) {
