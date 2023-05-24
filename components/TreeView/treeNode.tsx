@@ -13,6 +13,9 @@ import edgeStore from "../Flow/Edges/edgeStore";
 import { allNodes, getNodes } from "../Flow/Nodes/gqlNodes";
 import { allEdges, getEdges } from "../Flow/Edges/gqlEdges";
 import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
+import { getFileByNode } from "./gqlFiles";
+import { gql } from "graphql-tag";
+import styles from "../Flow/Nodes/styles.module.css";
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -107,14 +110,15 @@ export const TreeNode = ({
   const updateCurrentFlowchart = fileStore(
     (state) => state.updateCurrentFlowchart
   );
-  const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs)
-  // ! This code below is called every frame, which is annoying but works for now
+  const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
+
+  // This code below is called every frame, which is annoying but works for now
   if (state.isSelected) {
     updateCurrentFlowchart(name, Id);
     if (data.type === "file") {
-      updateBreadCrumbs(data, Id, 'new')
+      updateBreadCrumbs(data, Id, "new");
+      console.log("Selected File ID:", Id); // Console log the file's ID
     }
-
   }
 
   function loadNewFlow(
@@ -124,8 +128,6 @@ export const TreeNode = ({
     return (e: SyntheticEvent) => {
       handlers.select(e);
       if (data.children == null) {
-        //updateNodes(data.flowchart.nodes);
-        //updateEdges(data.flowchart.edges);
         getNodes(allNodes, data.id).then((result) => {
           // @ts-ignore
           updateNodes(result);
@@ -136,8 +138,8 @@ export const TreeNode = ({
         });
       }
     };
-
   }
+
   return (
     <div
       ref={innerRef}
@@ -182,6 +184,7 @@ export const TreeNode = ({
   );
 };
 
+
 export const TreeNode2 = ({
   innerRef,
   data,
@@ -193,23 +196,58 @@ export const TreeNode2 = ({
   const folder = Array.isArray(data.children);
   const open = state.isOpen;
   const name = data.name;
+  const id = data.id;
+  //console.log(data);  
+  var selectedNodeId: string;
+  
+  if (state.isSelected) {
+    selectedNodeId = data.id!;
+    console.log("S:", selectedNodeId);
+  }
+  const customQuery = gql`
+  query FindFileById($nodeId: String!) {
+    files(where: { hasflowchart: { nodes: { id: { equals: $nodeId } } } }) {
+      id
+    }
+  }
+`;
+  let result: any; 
+  async function getfileId() {
+    try {
+      result = await getFileByNode(selectedNodeId, customQuery);
+      console.log("R=", result);
+    } catch (error) {
+      console.error("Error retrieving file ID:", error);
+    }
+  }
+
+  const fileId = nodeStore((state) => state.fileId);
+  const currentFileId = fileId;//'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
+
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
-  function loadFlowNodes(
-    handlers: NodeRendererProps<MyData>,
-    data: NodeRendererProps<MyData>
-  ) {
+
+  function loadFlowNodes(handlers: NodeRendererProps<MyData>, data: NodeRendererProps<MyData>) {
     return (e: SyntheticEvent) => {
+      if (data.id === currentFileId) {
+        e.stopPropagation(); // Prevent event propagation for the current file's node
+        return; // Disable click for the current file's node
+      }
       handlers.select(e);
       if (data.children == null) {
         updateLinkNodes(data.hasflowchart.nodes, data.id);
       }
     };
   }
+
+  const isCurrentFile = data.id === currentFileId;
+  const nodeStyles = isCurrentFile ? { pointerEvents: 'none', opacity: 0.5 } : {};
+  const disabledCursorClass = isCurrentFile ? styles.disabledCursor : '';
+
   return (
     <div
       ref={innerRef}
-      style={styles.row}
-      className={classNames("row", state)}
+      style={{ ...styles.row, ...nodeStyles }}
+      className={classNames('row', state, disabledCursorClass)}
       onClick={loadFlowNodes(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -223,7 +261,7 @@ export const TreeNode2 = ({
           <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
         {state.isEditing ? (
-          <RenameForm defaultValue={name} {...handlers} />
+          <RenameForm defaultValue={name} {...handlers} disabled={isCurrentFile} />
         ) : (
           <span className="flex flex-row">
             {name} {state.isSelected}
