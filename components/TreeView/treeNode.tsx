@@ -234,7 +234,7 @@ export const TreeNode2 = ({
       }
       handlers.select(e);
       if (data.children == null) {
-        updateLinkNodes(data.hasflowchart.nodes, data.id);
+       return updateLinkNodes(data.hasflowchart.nodes, data.id);
       }
     };
   }

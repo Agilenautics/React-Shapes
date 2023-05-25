@@ -8,6 +8,8 @@ import nodeStore from "../components/Flow/Nodes/nodeStore";
 import { allEdges, getEdges } from "../components/Flow/Edges/gqlEdges";
 import edgeStore from "../components/Flow/Edges/edgeStore";
 import Tags from "../components/Flow/Nodes/Tags";
+import { createProject,createProjectMutation } from "../components/TreeView/gqlFiles";
+
 
 /**
  * This is the root of the application.
@@ -36,6 +38,8 @@ const Home: NextPage = () => {
         <Flow/>
       </ReactFlowProvider>
       <AddNodeButton />
+      {/* <button className="border-1 p-1 " onClick={()=>createProject({name:"",description:""}, createProjectMutation)} >create project</button> */}
+
       {/* <Tags /> */}
     </>
   );

@@ -6,11 +6,44 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 
-// Creating root folder for new user
-const createProject = gql`
-  mutation Mutation($input: [mainCreateInput!]!) {
-    createMains(input: $input) {
-      mains {
+
+const createProjectMutation = gql`
+ mutation createProject($input: [mainCreateInput!]!) {
+  createMains(input: $input) {
+    mains {
+      name
+      description
+      isOpen
+      userName
+      id
+    }
+  }
+}
+`;
+// create project methode
+const createProject = async (data: any, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  console.log(data)
+  await client.mutate({
+    mutation: mutations,
+    variables: {
+      input: {
+        "name": data.name,
+        "description": data.description,
+        "userName": "",
+        "isOpen": true
+      }
+    }
+  })
+}
+
+const getInitData = gql`
+  query Mains {
+    mains {
+      name
+      isOpen
+      id
+      hasContainsFile {
+        name
         id
         isOpen
         timeStamp
@@ -1000,6 +1033,8 @@ export {
   connectToFolderBackendOnMove,
   getFile,
   getFileByNode,
-  getTreeNodeByUser,
+  createProject,
+  createProjectMutation,
   getMainByUser,
+  getTreeNodeByUser
 };

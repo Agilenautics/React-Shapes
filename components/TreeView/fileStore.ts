@@ -20,7 +20,7 @@ import {
   getTreeNodeByUser,
   getMainByUser
 } from "./gqlFiles";
-const userName= "Admin";
+const userName= "";
 const initData = await getTreeNodeByUser(getMainByUser,userName);
 // {
 //   id: "ROOT",

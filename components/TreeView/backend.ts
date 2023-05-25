@@ -1,4 +1,3 @@
-import { Console } from "console";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
