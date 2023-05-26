@@ -761,7 +761,6 @@ async function getTreeNodeByUser(
     })
     .then((result) => {
       const mainData = result.data.mains;
-      console.log("main",mainData);
       const data = mainData.map((value: any) => {
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
         return { ...rest, children: hasContainsFolder };

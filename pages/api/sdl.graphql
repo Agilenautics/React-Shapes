@@ -15,6 +15,17 @@ type main {
   hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
 }
 
+type Mutation{
+ createProject(newProject:projectInput!):main
+}
+
+input projectInput{
+ name:String!
+ description:String
+ userName:String!
+ isOpen: Boolean!
+}
+
 type folder {
   id: ID! @id
   #parentId: ID! @id
