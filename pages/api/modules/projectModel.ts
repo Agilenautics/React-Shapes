@@ -1,13 +1,13 @@
-import { OGM } from "@neo4j/graphql-ogm";
 import driver from "../dbConnection";
 import { loadFile } from "graphql-import-files";
+import { OGM } from '@neo4j/graphql-ogm'
 
 
 
 const typeDefs = loadFile("pages/api/sdl.graphql");
 
 
-const ogm = new OGM({typeDefs,driver});
+const ogm = new OGM({ typeDefs, driver });
 ogm.init()
 const Project = ogm.model("main")
 

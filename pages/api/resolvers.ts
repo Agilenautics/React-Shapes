@@ -1,9 +1,8 @@
-import Project from "./models/projectModel"
+import Project from "./modules/projectModel"
 
 const resolvers = {
     Query: {
         projects: async (parent: any, args: any, { db }: any) => {
-            console.log(parent,args,db)
             return await Project.find({})
         },
     },

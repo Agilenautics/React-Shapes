@@ -6,6 +6,8 @@ import { AiOutlineArrowDown } from "react-icons/ai";
 import { updateProjectName, deleteProject } from "./ProjectUtils";
 import ProjectOverlay from "./ProjectOverlay";
 import { ProjectsList } from "./ProjectsList";
+import { GET_PROJECTS } from "./gqlProject";
+import { useQuery } from "@apollo/client";
 
 interface Project {
   id: string;
@@ -17,6 +19,7 @@ function Projects() {
   const accessLevel: string = "suser";
   const isButtonDisabled: boolean = accessLevel === "user";
 
+  const { data, error, loading } = useQuery(GET_PROJECTS)
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -79,6 +82,10 @@ function Projects() {
     setProjects(sortedProjects);
   };
 
+  if (loading) {
+    return <div>....Loading</div>
+  }
+
   return (
     <div>
       <div className="ml-6 flex items-center">
@@ -90,12 +97,11 @@ function Projects() {
         <h2 className="inline-block text-xl font-semibold">Projects</h2>
         <p className="ml-8 inline-block">Total</p>
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {projects.length}
+          {data.projects.length}
         </div>
         <button
-          className={`text-md  ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`text-md  ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
@@ -104,7 +110,7 @@ function Projects() {
         </button>
       </div>
       <div className="relative overflow-x-auto sm:rounded-lg">
-        <table className="ml-8 mt-4 rounded-lg text-left text-sm">
+        <table className="ml-8 mt-4 rounded-lg text-left text-sm w-11/12">
           <thead className="bg-gray-200 text-xs">
             <tr>
               <th scope="col" className="w-16 px-2 py-3">
@@ -117,9 +123,8 @@ function Projects() {
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
+                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
+                      }`}
                   />
                 </div>
               </th>
@@ -132,7 +137,7 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project: Project) => (
+            {data.projects.map((project: Project) => (
               <tr key={project.id} className="border-b bg-white">
                 <td className="px-2 py-4">
                   <input type="checkbox" className="m-2" />
@@ -149,7 +154,10 @@ function Projects() {
                     project.name
                   )}
                 </td>
-                <td className="px-6 py-4">{project.desc}</td>
+                <td className="px-6 py-4">{
+                  // @ts-ignore
+                  project.description
+                }</td>
                 <td className="px-6 py-4">
                   {projectId === project.id ? (
                     <button

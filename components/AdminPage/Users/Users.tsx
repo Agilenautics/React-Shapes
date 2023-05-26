@@ -5,7 +5,6 @@ import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
-import { RxCross2 } from "react-icons/rx";
 interface User {
   id: string;
   name: string;
@@ -177,7 +176,8 @@ function Users() {
                         className="text-gray-500 px-3"
                         onClick={handleCancelDelete}
                       >
-                        <RxCross2 />
+                        {/* <RxCross2 /> */}
+                        x
                       </button>
                     </div>
                   ) : (
