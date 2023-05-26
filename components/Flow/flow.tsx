@@ -6,13 +6,11 @@ import ReactFlow, {
   applyEdgeChanges,
   Node,
   Edge,
-  NodeChange,
   EdgeChange,
   Connection,
   MiniMap,
   ConnectionMode,
   useReactFlow,
-  useEdges,
 } from "react-flow-renderer";
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
@@ -20,7 +18,7 @@ import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import { allNodes, deleteNodeBackend, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
+import { deleteNodeBackend, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
 import { createFlowEdge, deleteEdge, updateEdgeBackend, updateEdgeMutation } from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
 
@@ -39,7 +37,7 @@ const defaultEdgeOptions = {
  */
 
 function Flow() {
-  
+
   const snapGrid: [number, number] = [10, 10];
   const { getNodes, getEdges } = useReactFlow();
   const defaultNodes = nodeStore((state) => state.nodes);
@@ -50,8 +48,8 @@ function Flow() {
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const currentFlowchart = fileStore((state) => state.currentFlowchart)
-  const fileId=fileStore((state)=>state.Id);
-  const updateLinkNodeId = fileStore((state)=>state.updateLinkNodeId)
+  const fileId = fileStore((state) => state.Id);
+  const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId)
 
   const [nodeId, setNodeId] = useState([])
 
@@ -61,13 +59,13 @@ function Flow() {
     (changes: any) =>
       setNodes((nds) => {
         const nodeData = defaultNodes.filter((value) => value.id === changes[0].id)
-        nodeData.map((curEle:any) => {
+        nodeData.map((curEle: any) => {
           setNodeId(curEle)
         })
         return applyNodeChanges(changes, nds)
       }
       ),
-    [defaultNodes,setNodes,updateNodes,currentFlowchart]
+    [defaultNodes, setNodes, updateNodes, currentFlowchart]
   );
 
   const [edgeId, setEdgeId] = useState([])
@@ -84,10 +82,10 @@ function Flow() {
         updateEdgeBackend(updateEdgeMutation, curEle)
       })
     }
-    if(nodeId.length!==0){
-      updateNodeBackend(nodeId,currentFlowchart)
-    }
-  },[defaultEdges, edgeId,nodeId,defaultNodes,updateNodeBackend])
+    // if(nodeId.length!==0){
+    //   updateNodeBackend(nodeId,currentFlowchart)
+    // }
+  }, [defaultEdges, edgeId, nodeId, defaultNodes, updateNodeBackend])
 
 
   const onEdgesChange = useCallback(
@@ -100,7 +98,6 @@ function Flow() {
   const onConnect = useCallback(
     (newEdge: Connection) =>
       setEdges((eds) => {
-        console.log(currentFlowchart,fileId,"currentFlowchart");
         createFlowEdge(newEdge, fileId, updateEdges)
         updateEdges(getEdges());
         return addEdge(newEdge, eds);
@@ -111,7 +108,6 @@ function Flow() {
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
-      console.log(element.data.label);
       deleteNodeBackend(element.id)
       deleteNode(element);
     }
@@ -125,14 +121,13 @@ function Flow() {
 
 
   // here iam calling deleteEdge methode inside onDeleteEdge
-
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map((CurEle: any) => {
       deleteEdge(CurEle.id, CurEle.data.label)
     })
   }
 
-  const onNodeClick = (e:any,nodeData: any) => {
+  const onNodeClick = (e: any, nodeData: any) => {
     updateLinkNodeId(nodeData.id)
     // updateNodeBackend(nodeId,nodeData)
   }

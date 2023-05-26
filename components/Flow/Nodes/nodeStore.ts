@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Node } from "react-flow-renderer";
-import { getNodes, findNode, allNodes, newNode, getNode, updateLinkedByMethod, updateLinkedBy } from "./gqlNodes";
+import { findNode, getNode, updateLinkedByMethod, updateLinkedBy, updateNodeData, updateLinksMutation, updateNodeBackend } from "./gqlNodes";
 import { getFileByNode } from "../../TreeView/gqlFiles";
 
 
@@ -42,7 +42,7 @@ const nodeStore = create<NodeState>((set) => ({
   fileId: "",
   breadCrumbs: [],
   updateBreadCrumbs: (data: any, id: any, action: string) => {
-    switch(action) {
+    switch (action) {
       case 'new':
         set((state) => {
           return { breadCrumbs: [data.name] }
@@ -88,17 +88,10 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-
+      updateNodeData(updated_node, updateLinksMutation)
       return { nodes: [...to_be_updated, updated_node] };
     })
   },
-  // allNodesData: (node) => {
-  //   set((state) => {
-
-
-  //   })
-
-  // }
   updateLabel: (id: string, newLabel: string) =>
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
@@ -108,6 +101,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, label: newLabel },
       };
+      updateNodeData(updated_node, updateLinksMutation)
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateShape: (id: string, newShape: string) =>
@@ -119,6 +113,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, shape: newShape },
       };
+      updateNodeData(updated_node, updateLinksMutation)
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateNodeType: (id: string, newType: string) =>
@@ -127,6 +122,7 @@ const nodeStore = create<NodeState>((set) => ({
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       //@ts-ignore
       const updated_node = { ...old_node, type: newType };
+      updateNodeBackend(updated_node)
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateLinks: async (id, newLink) =>  // add flowchart variable
@@ -137,21 +133,12 @@ const nodeStore = create<NodeState>((set) => ({
     const new_node = node_to_be[0];
     //add the saved data to the node to be replaced
     set((state): any => {
-      // const old_node = state.nodes.filter((item) => item.id === id)[0];
-      //const [node_to_be]= await async findNode(allNodes, flowchart, id);
-
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      // console.log(state.nodes.filter((item) => item.data.flowchart === "Flowchart 1"));//only works with the flowchart we are on - does not work with a different flowchart
-      //@ts-ignore
-      // const updated_node = {
-      //   ...old_node,
-      //   data: { ...old_node.data, links: newLink },
-      // };
       const updated_node = {
         ...new_node,
         data: { ...new_node.data, links: newLink, id },
       };
-      // newNodes={ nodes: [...to_be_updated, updated_node] }
+      updateNodeData(updated_node, updateLinksMutation)
       return { nodes: [...to_be_updated, updated_node] };
     })
   },

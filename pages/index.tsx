@@ -11,6 +11,10 @@ import Tags from "../components/Flow/Nodes/Tags";
 import App from "./Admin";
 import Link from "next/link";
 import Router from "next/router";
+import {
+  createProject,
+  createProjectMutation,
+} from "../components/TreeView/gqlFiles";
 
 const Home: NextPage = () => {
   // const updateNodes = nodeStore((state) => state.updateNodes);
@@ -32,6 +36,8 @@ const Home: NextPage = () => {
         <Flow />
       </ReactFlowProvider>
       <AddNodeButton />
+      {/* <button className="border-1 p-1 " onClick={()=>createProject({name:"",description:""}, createProjectMutation)} >create project</button> */}
+
       {/* <Tags /> */}
     </>
   );

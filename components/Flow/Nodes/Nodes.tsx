@@ -39,18 +39,18 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
 
 
-  //const Id=id;
 
 
-  const updateNodeData_Links = async () => {
-    if (linkNodeId === id) {
-      return await updateNodeData(data, id, updateLinksMutation)
-    }
-  }
 
-  useEffect(() => {
-    updateNodeData_Links()
-  }, [updateNodeData_Links])
+  // const updateNodeData_Links = async () => {
+  //   if (linkNodeId === id) {
+  //     return await updateNodeData(data, id, updateLinksMutation)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   updateNodeData_Links()
+  // }, [updateNodeData_Links])
 
 
   const linkedTo = () => {
@@ -144,7 +144,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                 bidirectionalArrows={false}
               />
             ) : (
-              <p>{label}</p>
+             <p className="text-center py-1">{label}</p>
             )}
             {/* LinkedTo */}
             {

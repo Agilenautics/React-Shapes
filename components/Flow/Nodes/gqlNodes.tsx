@@ -5,9 +5,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Node, updateEdge } from "react-flow-renderer";
-import { allEdges, getEdges } from "../Edges/gqlEdges";
-import addNode from "./nodeStore";
+import { Node } from "react-flow-renderer";
 
 const allNodes = gql`
   query Query($where: flowchartWhere) {
@@ -180,16 +178,12 @@ async function getNodes(
       },
     })
     .then((result) => {
-      //console.log(result.data.flowcharts[0]);
       const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
-
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
-
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes2);
-      //console.log("getNodes",nodes);
     });
 
   return nodes;
@@ -270,9 +264,6 @@ async function createNode(
           },
         },
       },
-      //update:(client.cache,{})
-      // refetchQueries: [{ query: allNodes }],
-
     })
 
     .then((result) => {
@@ -287,31 +278,12 @@ async function createNode(
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes1);
-      //client.cache.writeQuery({newNode,nodes});
-      //console.log(newlyCreatedNode,"newnode");
-
-      //getNodes(allNodes, id).then((res) => {
-      //console.log(res,"getnodes");
       return updateNode(nodes);
-      //});
-
     })
     .catch((error) => {
       console.error(error);
     });
   client.clearStore();
-  // if (flowchart) {
-  //   client
-  //     .resetStore()
-  //     .then(() => {
-  //       getNodes(allNodes, id).then((res) => {
-  //         return updateNode(res);
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
 }
 
 const delNode = gql`
@@ -350,17 +322,7 @@ async function deleteNodeBackend(nodeID: string) {
         },
       },
     },
-    // refetchQueries:[{query:allNodes}],
   });
-  // client
-  // .resetStore()
-  // .then((res) => {
-  //   console.log("cache restoring.......");
-  // })
-  // .catch((error) => {
-  //   console.log(error);
-  // });
-  // client.clearStore();
 }
 
 // here iam parforming update node position methode
@@ -379,9 +341,16 @@ const updatePosition = async (node: any) => {
         },
       },
     },
-    // refetchQueries:[{query:allNodes}],
   });
 };
+
+//  12.2.2
+// "react-tag-input": "^6.8.0",
+// "react-virtualized-auto-sizer": "^1.0.6",
+// "@apollo/client": "^3.6.9",
+// "react": "^18.2.0",
+//  "react-arborist": "^1.1.0",
+// "react-dom": "^18.2.0",
 
 const updateNodesMutation = gql`
   mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
@@ -411,7 +380,7 @@ const updateNodesMutation = gql`
   }
 `;
 
-const updateNodeBackend = async (nodeData: any, flowchart: string) => {
+const updateNodeBackend = async (nodeData: any) => {
   await client.mutate({
     mutation: updateNodesMutation,
     variables: {
@@ -428,7 +397,7 @@ const updateNodeBackend = async (nodeData: any, flowchart: string) => {
 
 
 const updateLinkedBy = gql`
-  mutation UpdateLinkeds($where: linkedWhere, $update: linkedUpdateInput) {
+  mutation UpdateLinkedBy($where: linkedWhere, $update: linkedUpdateInput) {
   updateLinkeds(where: $where, update: $update) {
     linkeds {
       fileId
@@ -482,34 +451,34 @@ mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
 }
 `
 
-const updateNodeData = async (nodaData: any,id:string, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const updateNodeData = async (nodeData: any, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation: mutations,
     variables: {
       "where": {
         "flownodeHasdata": {
-          "id": id
+          "id": nodeData.id
         },
       },
       "update": {
-        "description":nodaData.description,
-        "shape": nodaData.shape,
-        "label":nodaData.label,
+        "description": nodeData.data.description,
+        "shape": nodeData.data.shape,
+        "label": nodeData.data.label,
         "links": {
           "update": {
             "node": {
-              "fileId":nodaData.links.fileId,
-              "flag":nodaData.links.flag,
-              "id":nodaData.links.id,
-              "label":nodaData.links.label
+              "fileId": nodeData.data.links.fileId,
+              "flag": nodeData.data.links.flag,
+              "id": nodeData.data.links.id,
+              "label": nodeData.data.links.label
             }
           }
         },
       }
     }
   })
-
 }
+
 
 
 
