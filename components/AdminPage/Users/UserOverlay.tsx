@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { usersList } from "./UsersList";
+import { ProjectsList } from "../Projects/ProjectsList";
+
+interface Project {
+  id: string;
+  name: string;
+  desc: string;
+}
 
 interface User {
   id: string;
   name: string;
   accessLevel: string;
+  projectId: string;
+  email: string;
   dateAdded: string;
 }
 
@@ -14,22 +22,28 @@ interface UserOverlayProps {
 }
 
 const UserOverlay: React.FC<UserOverlayProps> = ({ onClose, onAddUser }) => {
-  const [name, setName] = useState("");
-  const [accessLevel, setAccessLevel] = useState("User");
+  const [formData, setFormData] = useState<User>({
+    id: "",
+    name: "",
+    accessLevel: "",
+    projectId: "",
+    email: "",
+    dateAdded: "",
+  });
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const handleAccessLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setAccessLevel(e.target.value);
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
   const handleAddUser = () => {
     const newUser: User = {
-      id: String(usersList.length + 1),
-      name,
-      accessLevel,
+      ...formData,
       dateAdded: new Date().toLocaleDateString(),
     };
 
@@ -38,39 +52,58 @@ const UserOverlay: React.FC<UserOverlayProps> = ({ onClose, onAddUser }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg p-8">
-        <h2 className="text-lg font-semibold mb-4">Add User</h2>
+    <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="rounded-lg bg-white p-8">
+        <h2 className="mb-4 text-lg font-semibold">Add User</h2>
         <div className="mb-4">
-          <label className="block mb-1">Name</label>
+          <label className="mb-1 block">Email</label>
           <input
-            type="text"
-            value={name}
-            onChange={handleNameChange}
-            className="border border-gray-300 rounded-md p-1 w-full"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            className="w-full rounded-md border border-gray-300 p-1"
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-1">Access Level</label>
+          <label className="mb-1 block">Access Level</label>
           <select
-            value={accessLevel}
-            onChange={handleAccessLevelChange}
-            className="border border-gray-300 rounded-md p-1 w-full"
+            name="accessLevel"
+            value={formData.accessLevel}
+            onChange={handleInputChange}
+            className="w-full rounded-md border border-gray-300 p-1"
           >
+            <option value="">Select Access Level</option>
             <option value="User">User</option>
             <option value="Admin">Admin</option>
             <option value="Super User">Super User</option>
           </select>
         </div>
+        <div className="mb-4">
+          <label className="mb-1 block">Project</label>
+          <select
+            name="projectId"
+            value={formData.projectId}
+            onChange={handleInputChange}
+            className="w-full rounded-md border border-gray-300 p-1"
+          >
+            <option value="">Select Project</option>
+            {ProjectsList.map((project: Project) => (
+              <option key={project.id} value={project.id}>
+                {project.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="flex justify-end">
           <button
-            className="mr-2 px-4 py-2 text-sm bg-blue-500 text-white rounded-md"
+            className="mr-2 rounded-md bg-blue-500 px-4 py-2 text-sm text-white"
             onClick={handleAddUser}
           >
             Add User
           </button>
           <button
-            className="px-4 py-2 text-sm bg-gray-300 text-gray-700 rounded-md"
+            className="rounded-md bg-gray-300 px-4 py-2 text-sm text-gray-700"
             onClick={onClose}
           >
             Cancel
