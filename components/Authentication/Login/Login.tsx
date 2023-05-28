@@ -16,17 +16,17 @@ const Login: React.FC = () => {
 
     const verfiyAuthToken = async () => {
         onAuthStateChanged(auth, (user) => {
-          if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/auth.user
-            const uid = user.uid;
-            console.log("user", user)
-            router.push("/")
-            // ...
-          } else {
-          }
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/auth.user
+                const uid = user.uid;
+                console.log("user", user)
+                router.push("/")
+                // ...
+            } else {
+            }
         });
-      }
+    }
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();

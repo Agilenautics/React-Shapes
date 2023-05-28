@@ -1,12 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from "next/router";
 import { auth } from '../../../auth';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import './SignUp.module.css';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Signup: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
+    const router = useRouter();
+
+    useEffect(() => {
+        verfiyAuthToken()
+    }, [])
+
+    const verfiyAuthToken = async () => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/auth.user
+                const uid = user.uid;
+                console.log("user", user)
+                router.push("/")
+                // ...
+            } else {
+            }
+        });
+    }
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,6 +48,8 @@ const Signup: React.FC = () => {
                         // Store the tokens in cookies
                         document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
                         document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
+                        router.push("/")
+
                     });
                 })
                 .catch((error) => {
