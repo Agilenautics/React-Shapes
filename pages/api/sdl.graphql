@@ -21,6 +21,7 @@ projects:[main!]!
 
 type Mutation{
  createProject(newProject:projectInput!):main
+ updateProject(projectData:projectInput!):updateData
 }
 
 input projectInput{
@@ -28,6 +29,14 @@ input projectInput{
  description:String
  userName:String!
  isOpen: Boolean!
+}
+
+type updateData{
+id: ID!
+name:String!
+description:String!
+userName:String!
+isOpen:Boolean!
 }
 
 type folder {

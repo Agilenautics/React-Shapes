@@ -6,7 +6,7 @@ import { AiOutlineArrowDown } from "react-icons/ai";
 import { updateProjectName, deleteProject } from "./ProjectUtils";
 import ProjectOverlay from "./ProjectOverlay";
 import { ProjectsList } from "./ProjectsList";
-import { GET_PROJECTS } from "./gqlProject";
+import { DELETE_PROJECT, GET_PROJECTS, delete_Project } from "./gqlProject";
 import { useQuery } from "@apollo/client";
 
 interface Project {
@@ -37,16 +37,17 @@ function Projects() {
       projectName,
       projects
     );
+    console.log(projectId,projectName,projects)
 
     setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };
 
-  const handleDeleteButtonClick = (projectId: string) => {
-    const updatedProjectsList: Project[] = deleteProject(projectId, projects);
-
-    setProjects(updatedProjectsList);
+  const handleDelete_Project = (projectId: string) => {
+    // const updatedProjectsList: Project[] = deleteProject(projectId, projects);
+    delete_Project(projectId, DELETE_PROJECT)
+    // setProjects(updatedProjectsList);
   };
 
   const handleAddProjectClick = () => {
@@ -86,6 +87,10 @@ function Projects() {
     return <div>....Loading</div>;
   }
 
+  if (error) {
+    console.log(error.message)
+  }
+
   return (
     <div>
       <div className="ml-6 flex items-center">
@@ -100,9 +105,8 @@ function Projects() {
           {data.projects.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
@@ -121,9 +125,8 @@ function Projects() {
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
+                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
+                      }`}
                   />
                 </div>
               </th>
@@ -175,7 +178,7 @@ function Projects() {
                     </button>
                   )}
                   <button
-                    onClick={() => handleDeleteButtonClick(project.id)}
+                    onClick={() => handleDelete_Project(project.id)}
                     className="ml-2"
                   >
                     <MdDeleteOutline />

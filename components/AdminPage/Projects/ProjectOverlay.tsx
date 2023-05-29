@@ -1,4 +1,6 @@
+import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
+import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
@@ -11,12 +13,30 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
 
+  const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT)
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAddProject(formData.name, formData.desc);
+    const projectData = {
+      description: formData.desc,
+      name: formData.name,
+      isOpen: true,
+      userName: ""
+    }
+    // onAddProject(formData.name, formData.desc);
+    createProject({
+      variables: {
+        newProject: projectData
+      },
+      refetchQueries:[{query:GET_PROJECTS}]
+    })
     setFormData({ name: "", desc: "" });
     onClose();
   };
+
+  if(loading){
+    return <p>Loading...</p>
+  }
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -41,8 +61,8 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               value={formData.name}
               onChange={handleInputChange}
               className="w-full rounded-lg border px-3 py-2"
-              required
             />
+            {error && <div> {error.message} </div>}
           </div>
           <div className="mb-4">
             <label htmlFor="projectDesc" className="mb-2 block font-medium">
@@ -54,7 +74,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               value={formData.desc}
               onChange={handleInputChange}
               className="w-full rounded-lg border px-3 py-2"
-              required
             ></textarea>
           </div>
           <div className="flex justify-end">
