@@ -22,8 +22,8 @@ import {
 } from "./gqlFiles";
 import { auth } from "../../auth";
 
-const userName = auth.currentUser?.uid || "";
-const initData = await getTreeNodeByUser(getMainByUser, userName);
+const userEmail = auth.currentUser?.email || "";
+const initData = await getTreeNodeByUser(getMainByUser, userEmail);
 // {
 //   id: "ROOT",
 //   name: "ROOT",
