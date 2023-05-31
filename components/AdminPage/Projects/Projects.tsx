@@ -29,6 +29,7 @@ function Projects() {
   const handleEditButtonClick = (projectId: string, projectName: string) => {
     setProjectId(projectId);
     setProjectName(projectName);
+    
   };
 
   const handleSaveButtonClick = (projectId: string) => {
@@ -193,6 +194,7 @@ function Projects() {
         <ProjectOverlay
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
+          projectData = {data}
         />
       )}
     </div>

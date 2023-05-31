@@ -1,22 +1,36 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
+import { Project } from "react-flow-renderer";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
+  projectData:Array<Project>
 }
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onAddProject,
   onClose,
+  projectData
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
 
-  const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT)
+  
+
+  const [createProject, { data, loading }] = useMutation(ADD_PROJECT);
+  const [error,setError] = useState({})
+  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+
+    let formErrors = {};
+
+
+
+
     const projectData = {
       description: formData.desc,
       name: formData.name,
@@ -28,13 +42,14 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       variables: {
         newProject: projectData
       },
-      refetchQueries:[{query:GET_PROJECTS}]
+      refetchQueries: [{ query: GET_PROJECTS }]
     })
+
     setFormData({ name: "", desc: "" });
     onClose();
   };
 
-  if(loading){
+  if (loading) {
     return <p>Loading...</p>
   }
 
@@ -43,7 +58,20 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   ) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    setError((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+    const project = checkEmailExist(projectData)
+    console.log(project)
+    setSubmitButtonDisabled(false);
   };
+
+  const checkEmailExist = ({projects}:any) =>{
+    console.log(formData.name)
+    // @ts-ignore
+    console.log(projects.filter((value:Object)=>value.name===formData.name))
+  }
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -52,7 +80,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
         <form onSubmit={handleFormSubmit}>
           <div className="mb-4">
             <label htmlFor="projectName" className="mb-2 block font-medium">
-              Project Name
+              Project Name <span className="text-red-500 text-xl">*</span>
             </label>
             <input
               type="text"
@@ -61,8 +89,12 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               value={formData.name}
               onChange={handleInputChange}
               className="w-full rounded-lg border px-3 py-2"
+              required
             />
-            {error && <div> {error.message} </div>}
+           
+            {/* {error && <div> {error.message} </div>} */}
+          
+            {error.name && <span>{error.name}</span>}
           </div>
           <div className="mb-4">
             <label htmlFor="projectDesc" className="mb-2 block font-medium">
@@ -87,6 +119,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
             <button
               type="submit"
               className="rounded-lg bg-blue-500 px-4 py-2 text-white"
+              disabled = {submitButtonDisabled}
             >
               Add Project
             </button>
