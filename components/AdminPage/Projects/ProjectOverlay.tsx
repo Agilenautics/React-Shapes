@@ -69,6 +69,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
 
   const checkEmailExist = ({projects}:any) =>{
     console.log(formData.name)
+    
     // @ts-ignore
     console.log(projects.filter((value:Object)=>value.name===formData.name))
   }
