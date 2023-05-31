@@ -1,7 +1,11 @@
 # ! Interfaces only work on relationships!
 type user{
-  userName: String!
+  id:ID! @id
+  timeStamp:DateTime! @timestamp
+  userName: String
   emailId: String!
+  userType:String
+  hasProjects:[main!]! @relationship (type: "hasMain",direction: OUT)
   active: Boolean
   }
 type main {
@@ -11,6 +15,7 @@ type main {
   description:String
   name: String!
   isOpen: Boolean!
+  userHas: user @relationship (type: "hasMain", direction:IN)
   hasContainsFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
   hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
 }
@@ -21,6 +26,7 @@ projects:[main!]!
 
 type Mutation{
  createProject(newProject:projectInput!):main
+ updateProject(projectData:projectInput!):updateData
 }
 
 input projectInput{
@@ -28,6 +34,14 @@ input projectInput{
  description:String
  userName:String!
  isOpen: Boolean!
+}
+
+type updateData{
+id: ID!
+name:String!
+description:String!
+userName:String!
+isOpen:Boolean!
 }
 
 type folder {

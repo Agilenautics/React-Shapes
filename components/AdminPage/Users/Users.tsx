@@ -80,20 +80,20 @@ function Users() {
 
   return (
     <div>
-      <div className="flex ml-6 items-center">
-        <button className="px-5 mt-4 ml-4 h-10 text-md bg-blue-200 rounded-lg font-semibold">
+      <div className="ml-6 flex items-center">
+        <button className="text-md mt-4 ml-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
           Team Agile
         </button>
       </div>
       <div className="ml-10 mt-4 flex items-center">
-        <h2 className="text-xl font-semibold inline-block">Users</h2>
+        <h2 className="inline-block text-xl font-semibold">Users</h2>
         <p className="ml-8 inline-block">Total</p>
-        <div className="ml-2 mt-1 h-5 w-5 text-xs rounded-full bg-gray-300 flex justify-center items-center">
+        <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
           {users.length}
         </div>
         <button
-          className={`ml-auto mr-10 flex items-center text-md bg-blue-200 rounded-md p-2 ${
-            isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
+            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
           }`}
           disabled={isButtonDisabled}
           onClick={() => setShowAddUserPopup(true)}
@@ -103,24 +103,24 @@ function Users() {
         </button>
       </div>
       <div className="relative overflow-x-auto">
-        <table className="ml-10 mt-4 rounded-lg text-sm text-left">
-          <thead className="text-xs bg-gray-200">
+        <table className="ml-10 mt-4 rounded-lg text-left text-sm">
+          <thead className="bg-gray-200 text-xs">
             <tr>
               <th
                 scope="col"
-                className="px-6 py-3 w-60 ml-6 cursor-pointer"
+                className="ml-6 w-60 cursor-pointer px-6 py-3"
                 onClick={handleSortClick}
               >
                 <div className="flex items-center">
                   Name
                   {sortOrder === "asc" ? (
-                    <AiOutlineArrowUp className="ml-2 text-gray-600 transform rotate-180" />
+                    <AiOutlineArrowUp className="ml-2 rotate-180 transform text-gray-600" />
                   ) : (
                     <AiOutlineArrowUp className="ml-2 text-gray-600" />
                   )}
                 </div>
               </th>
-              <th scope="col" className="pl-60 pr-20 py-3">
+              <th scope="col" className="py-3 pl-60 pr-20">
                 Access Level
               </th>
               <th scope="col" className="px-16 py-3">
@@ -133,16 +133,16 @@ function Users() {
           </thead>
           <tbody>
             {users.map((user: User) => (
-              <tr key={user.id} className="bg-white border-b">
-                <td className="px-6 py-4 font-medium whitespace-nowrap text-right">
+              <tr key={user.id} className="border-b bg-white">
+                <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
-                    <div className="w-8 h-8 rounded-full flex justify-center items-center text-white font-semibold bg-slate-600">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
                       {getInitials(user.name)}
                     </div>
                     <span className="ml-2">{user.name}</span>
                   </div>
                 </td>
-                <td className="pl-60 pr-20 py-4">
+                <td className="py-4 pl-60 pr-20">
                   {editedUser?.id === user.id ? (
                     <select
                       value={editedUser.accessLevel}
@@ -152,7 +152,7 @@ function Users() {
                           accessLevel: e.target.value,
                         })
                       }
-                      className="p-1 border border-gray-300 rounded-md"
+                      className="rounded-md border border-gray-300 p-1"
                     >
                       <option value="User">User</option>
                       <option value="Admin">Admin</option>
@@ -173,11 +173,10 @@ function Users() {
                         <MdDelete />
                       </button>
                       <button
-                        className="text-gray-500 px-3"
+                        className="px-3 text-gray-500"
                         onClick={handleCancelDelete}
                       >
-                        {/* <RxCross2 /> */}
-                        x
+                        {/* <RxCross2 /> */}x
                       </button>
                     </div>
                   ) : (

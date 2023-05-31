@@ -7,17 +7,18 @@ const resolvers = {
         },
     },
     Mutation: {
-        createProject: async (_: Object, { newProject }: any) => {
+        // @ts-ignore
+        createProject: async (_: Object, { newProject }: Object) => {
             const { name, description, userName, isOpen } = newProject
             if (!name) {
                 throw new Error("field required.")
             }
-            const [existing] = await Project.find({
+            const [existingProject] = await Project.find({
                 where: {
                     name,
                 },
             });
-            if (existing) {
+            if (existingProject) {
                 throw new Error("project already exists.")
             }
 
@@ -33,6 +34,20 @@ const resolvers = {
                 ]
             })
             return newProject
+        },
+        // @ts-ignore
+        updateProject:async(_:Object,{projectData}:Object) =>{
+            const {name,description,id,userName,isOpen} = projectData
+            if(!name){
+                throw new Error("field required.")
+            }
+
+            const [existingProject] = await Project.update({
+                where:{
+                    name
+                }
+            })
+
         }
     }
 }

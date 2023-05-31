@@ -6,7 +6,7 @@ import { AiOutlineArrowDown } from "react-icons/ai";
 import { updateProjectName, deleteProject } from "./ProjectUtils";
 import ProjectOverlay from "./ProjectOverlay";
 import { ProjectsList } from "./ProjectsList";
-import { GET_PROJECTS } from "./gqlProject";
+import { DELETE_PROJECT, GET_PROJECTS, delete_Project } from "./gqlProject";
 import { useQuery } from "@apollo/client";
 
 interface Project {
@@ -19,7 +19,7 @@ function Projects() {
   const accessLevel: string = "suser";
   const isButtonDisabled: boolean = accessLevel === "user";
 
-  const { data, error, loading } = useQuery(GET_PROJECTS)
+  const { data, error, loading } = useQuery(GET_PROJECTS);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
   const [showForm, setShowForm] = useState(false);
@@ -29,6 +29,7 @@ function Projects() {
   const handleEditButtonClick = (projectId: string, projectName: string) => {
     setProjectId(projectId);
     setProjectName(projectName);
+    
   };
 
   const handleSaveButtonClick = (projectId: string) => {
@@ -37,16 +38,17 @@ function Projects() {
       projectName,
       projects
     );
+    console.log(projectId,projectName,projects)
 
     setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };
 
-  const handleDeleteButtonClick = (projectId: string) => {
-    const updatedProjectsList: Project[] = deleteProject(projectId, projects);
-
-    setProjects(updatedProjectsList);
+  const handleDelete_Project = (projectId: string) => {
+    // const updatedProjectsList: Project[] = deleteProject(projectId, projects);
+    delete_Project(projectId, DELETE_PROJECT)
+    // setProjects(updatedProjectsList);
   };
 
   const handleAddProjectClick = () => {
@@ -83,7 +85,11 @@ function Projects() {
   };
 
   if (loading) {
-    return <div>....Loading</div>
+    return <div>....Loading</div>;
+  }
+
+  if (error) {
+    console.log(error.message)
   }
 
   return (
@@ -100,23 +106,20 @@ function Projects() {
           {data.projects.length}
         </div>
         <button
-          className={`text-md  ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
             }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
           <GrAdd />
-          <div className="mx-x my-1 ">New Project</div>
+          <div className="mx-1 my-1">New Project</div>
         </button>
       </div>
       <div className="relative overflow-x-auto sm:rounded-lg">
-        <table className="ml-8 mt-4 rounded-lg text-left text-sm w-11/12">
+        <table className="ml-8 mt-4 w-11/12 rounded-lg text-left text-sm">
           <thead className="bg-gray-200 text-xs">
             <tr>
-              <th scope="col" className="w-16 px-2 py-3">
-                <input type="checkbox" className="m-2" />
-              </th>
-              <th scope="col" className="w-60 px-2 py-3">
+              <th scope="col" className="w-40 px-4 py-3 md:w-60">
                 <div
                   className="flex cursor-pointer items-center"
                   onClick={handleSortClick}
@@ -128,7 +131,7 @@ function Projects() {
                   />
                 </div>
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="hidden px-6 py-3 md:table-cell">
                 Description
               </th>
               <th scope="col" className="px-6 py-3">
@@ -139,10 +142,7 @@ function Projects() {
           <tbody>
             {data.projects.map((project: Project) => (
               <tr key={project.id} className="border-b bg-white">
-                <td className="px-2 py-4">
-                  <input type="checkbox" className="m-2" />
-                </td>
-                <td className="whitespace-nowrap px-2 py-4 font-medium">
+                <td className="whitespace-nowrap px-4 py-4 font-medium">
                   {projectId === project.id ? (
                     <input
                       type="text"
@@ -154,10 +154,12 @@ function Projects() {
                     project.name
                   )}
                 </td>
-                <td className="px-6 py-4">{
-                  // @ts-ignore
-                  project.description
-                }</td>
+                <td className="hidden px-6 py-4 md:table-cell">
+                  {
+                    // @ts-ignore
+                    project.description
+                  }
+                </td>
                 <td className="px-6 py-4">
                   {projectId === project.id ? (
                     <button
@@ -177,7 +179,7 @@ function Projects() {
                     </button>
                   )}
                   <button
-                    onClick={() => handleDeleteButtonClick(project.id)}
+                    onClick={() => handleDelete_Project(project.id)}
                     className="ml-2"
                   >
                     <MdDeleteOutline />
@@ -192,6 +194,7 @@ function Projects() {
         <ProjectOverlay
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
+          projectData = {data}
         />
       )}
     </div>
