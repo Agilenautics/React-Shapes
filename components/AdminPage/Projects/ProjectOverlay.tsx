@@ -6,51 +6,45 @@ import { Project } from "react-flow-renderer";
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
-  projectData:Array<Project>
+  projectData: Array<Project>;
 }
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onAddProject,
   onClose,
-  projectData
+  projectData,
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
 
-  
-
   const [createProject, { data, loading }] = useMutation(ADD_PROJECT);
-  const [error,setError] = useState({})
+  const [error, setError] = useState({});
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-
     let formErrors = {};
-
-
-
 
     const projectData = {
       description: formData.desc,
       name: formData.name,
       isOpen: true,
-      userName: ""
-    }
+      userName: "",
+    };
     // onAddProject(formData.name, formData.desc);
     createProject({
       variables: {
-        newProject: projectData
+        newProject: projectData,
       },
-      refetchQueries: [{ query: GET_PROJECTS }]
-    })
+      refetchQueries: [{ query: GET_PROJECTS }],
+    });
 
     setFormData({ name: "", desc: "" });
     onClose();
   };
 
   if (loading) {
-    return <p>Loading...</p>
+    return <p>Loading...</p>;
   }
 
   const handleInputChange = (
@@ -60,28 +54,21 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
     setError((prevErrors) => ({
       ...prevErrors,
-      [name]: '',
+      [name]: "",
     }));
-    const project = checkEmailExist(projectData)
-    console.log(project)
+    //const project = checkEmailExist(projectData)
+    //console.log(project)
     setSubmitButtonDisabled(false);
   };
 
-  const checkEmailExist = ({projects}:any) =>{
-    console.log(formData.name)
-    
-    // @ts-ignore
-    console.log(projects.filter((value:Object)=>value.name===formData.name))
-  }
-
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-96 rounded-lg bg-white p-8">
         <h2 className="mb-4 text-lg font-semibold">Add New Project</h2>
         <form onSubmit={handleFormSubmit}>
           <div className="mb-4">
             <label htmlFor="projectName" className="mb-2 block font-medium">
-              Project Name <span className="text-red-500 text-xl">*</span>
+              Project Name <span className="text-xl text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -92,10 +79,10 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               className="w-full rounded-lg border px-3 py-2"
               required
             />
-           
+
             {/* {error && <div> {error.message} </div>} */}
-          
-            {error.name && <span>{error.name}</span>}
+            {/*           
+            {error.name && <span>{error.name}</span>} */}
           </div>
           <div className="mb-4">
             <label htmlFor="projectDesc" className="mb-2 block font-medium">
@@ -120,7 +107,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
             <button
               type="submit"
               className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-              disabled = {submitButtonDisabled}
+              disabled={submitButtonDisabled}
             >
               Add Project
             </button>
