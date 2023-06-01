@@ -28,6 +28,7 @@ getUsers:[user!]!
 type Mutation{
  createProject(newProject:projectInput!):main
  updateProject(projectData:projectInput!):updateData
+ addUser(newUser:userInput!):user
 }
 
 input projectInput{
@@ -35,6 +36,13 @@ input projectInput{
  description:String
  userName:String!
  isOpen: Boolean!
+}
+
+input userInput{
+userName:String!
+emailId:String!
+userType:String
+active:Boolean!
 }
 
 type updateData{

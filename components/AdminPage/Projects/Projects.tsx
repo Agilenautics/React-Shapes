@@ -18,7 +18,6 @@ interface Project {
 function Projects() {
   const accessLevel: string = "suser";
   const isButtonDisabled: boolean = accessLevel === "user";
-
   const { data, error, loading } = useQuery(GET_PROJECTS);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
@@ -69,6 +68,7 @@ function Projects() {
     };
     const updatedProjectsList = [...projects, newProject];
     setProjects(updatedProjectsList);
+    console.log(newProject)
 
     setShowForm(false);
   };

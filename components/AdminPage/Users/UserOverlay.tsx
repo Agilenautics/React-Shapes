@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { usersList } from "./UsersList";
+import { useMutation } from "@apollo/client";
+import { ADD_USER, ALL_USERS } from "./gqlUsers";
 
 interface Project {
   id: string;
@@ -16,6 +18,7 @@ interface User {
   projects: string[];
   email: string;
   dateAdded: string;
+  active: Boolean
 }
 
 interface UserOverlayProps {
@@ -36,6 +39,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     projects: [],
     email: "",
     dateAdded: "",
+    active: false
   });
   const [isEmailValid, setIsEmailValid] = useState(false);
 
@@ -56,6 +60,10 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     }
   };
 
+  //mutation of add new user
+
+  const [createNewUser, { data, error, loading }] = useMutation(ADD_USER)
+
   const handleProjectSelect = (selectedOptions: any) => {
     const selectedProjects = selectedOptions.map((option: any) => option.value);
     setFormData((prevFormData) => ({
@@ -65,13 +73,20 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
   };
 
   const handleAddUser = () => {
-    const newUser: User = {
-      ...formData,
-      id: String(usersList.length + 1),
-      dateAdded: new Date().toLocaleDateString(),
+    const newUser = {
+      userName: "",
+      emailId: formData.email,
+      userType: formData.accessLevel,
+      active: formData.active
     };
-    console.log(formData);
-    onAddUser(newUser, formData.projects);
+    createNewUser({
+      variables: {
+        newUser
+      },
+      refetchQueries: [{ query: ALL_USERS }]
+    })
+
+    // onAddUser(newUser, formData.projects);
     onClose();
   };
 
