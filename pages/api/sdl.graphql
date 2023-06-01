@@ -7,7 +7,7 @@ type user{
   userType:String
   hasProjects:[main!]! @relationship (type: "hasMain",direction: OUT)
   active: Boolean
-  }
+}
 type main {
   id: ID! @id
   timeStamp: DateTime! @timestamp
@@ -22,11 +22,13 @@ type main {
 
 type Query{
 projects:[main!]!
+getUsers:[user!]!
 }
 
 type Mutation{
  createProject(newProject:projectInput!):main
  updateProject(projectData:projectInput!):updateData
+ addUser(newUser:userInput!):user
 }
 
 input projectInput{
@@ -34,6 +36,13 @@ input projectInput{
  description:String
  userName:String!
  isOpen: Boolean!
+}
+
+input userInput{
+userName:String!
+emailId:String!
+userType:String
+active:Boolean!
 }
 
 type updateData{

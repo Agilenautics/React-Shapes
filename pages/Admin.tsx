@@ -10,11 +10,12 @@ function App() {
 
   const handleLinkClick = (link: string) => {
     setActiveLink(link);
-    if (link === "Projects") {
-      router.push("/projects");
-    } else if (link === "Users") {
-      router.push("/users");
-    }
+    // if (link === "Projects") {
+    //   router.push("/projects");
+    // } else if (link === "Users") {
+    //   router.push("/users");
+    // }
+    router.push("/" + link.toLowerCase());
   };
 
   const renderPage = () => {

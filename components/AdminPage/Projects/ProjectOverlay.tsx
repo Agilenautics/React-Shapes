@@ -15,6 +15,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   projectData,
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const [createProject, { data, loading }] = useMutation(ADD_PROJECT);
   const [error, setError] = useState({});
@@ -56,9 +57,8 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       ...prevErrors,
       [name]: "",
     }));
-    //const project = checkEmailExist(projectData)
-    //console.log(project)
     setSubmitButtonDisabled(false);
+    setIsFormValid(formData.name.trim() !== "");
   };
 
   return (
@@ -79,10 +79,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               className="w-full rounded-lg border px-3 py-2"
               required
             />
-
-            {/* {error && <div> {error.message} </div>} */}
-            {/*           
-            {error.name && <span>{error.name}</span>} */}
           </div>
           <div className="mb-4">
             <label htmlFor="projectDesc" className="mb-2 block font-medium">
@@ -107,7 +103,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
             <button
               type="submit"
               className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-              disabled={submitButtonDisabled}
+              disabled={!isFormValid}
             >
               Add Project
             </button>

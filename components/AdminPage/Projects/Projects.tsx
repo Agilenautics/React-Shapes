@@ -18,18 +18,22 @@ interface Project {
 function Projects() {
   const accessLevel: string = "suser";
   const isButtonDisabled: boolean = accessLevel === "user";
-
   const { data, error, loading } = useQuery(GET_PROJECTS);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
+  const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [projects, setProjects] = useState<Project[]>(ProjectsList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  const handleEditButtonClick = (projectId: string, projectName: string) => {
+  const handleEditButtonClick = (
+    projectId: string,
+    projectName: string,
+    projectDesc: string
+  ) => {
     setProjectId(projectId);
     setProjectName(projectName);
-    
+    setProjectDesc(projectDesc);
   };
 
   const handleSaveButtonClick = (projectId: string) => {
@@ -38,7 +42,7 @@ function Projects() {
       projectName,
       projects
     );
-    console.log(projectId,projectName,projects)
+    console.log(projectId, projectName, projects);
 
     setProjects(updatedProjectsList);
     setProjectId(null);
@@ -47,7 +51,7 @@ function Projects() {
 
   const handleDelete_Project = (projectId: string) => {
     // const updatedProjectsList: Project[] = deleteProject(projectId, projects);
-    delete_Project(projectId, DELETE_PROJECT)
+    delete_Project(projectId, DELETE_PROJECT);
     // setProjects(updatedProjectsList);
   };
 
@@ -64,6 +68,7 @@ function Projects() {
     };
     const updatedProjectsList = [...projects, newProject];
     setProjects(updatedProjectsList);
+    console.log(newProject)
 
     setShowForm(false);
   };
@@ -89,13 +94,13 @@ function Projects() {
   }
 
   if (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
 
   return (
     <div>
       <div className="ml-6 flex items-center">
-        <button className="text-md mt-4 ml-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
+        <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
           Team Agile
         </button>
       </div>
@@ -106,8 +111,9 @@ function Projects() {
           {data.projects.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-            }`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
+            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
@@ -126,8 +132,9 @@ function Projects() {
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
-                      }`}
+                    className={`ml-1 text-sm ${
+                      sortOrder === "asc" ? "rotate-180 transform" : ""
+                    }`}
                   />
                 </div>
               </th>
@@ -155,10 +162,16 @@ function Projects() {
                   )}
                 </td>
                 <td className="hidden px-6 py-4 md:table-cell">
-                  {
-                    // @ts-ignore
-                    project.description
-                  }
+                  {projectId === project.id ? (
+                    <input
+                      type="text"
+                      value={projectDesc}
+                      onChange={(e) => setProjectDesc(e.target.value)}
+                      className="border-b focus:border-blue-500 focus:outline-none"
+                    />
+                  ) : (
+                    project.desc
+                  )}
                 </td>
                 <td className="px-6 py-4">
                   {projectId === project.id ? (
@@ -171,7 +184,11 @@ function Projects() {
                   ) : (
                     <button
                       onClick={() =>
-                        handleEditButtonClick(project.id, project.name)
+                        handleEditButtonClick(
+                          project.id,
+                          project.name,
+                          project.desc
+                        )
                       }
                       className="mr-2"
                     >
@@ -194,7 +211,7 @@ function Projects() {
         <ProjectOverlay
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
-          projectData = {data}
+          projectData={data}
         />
       )}
     </div>
