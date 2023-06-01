@@ -4,6 +4,7 @@ import makeAnimated from "react-select/animated";
 import { usersList } from "./UsersList";
 import { useMutation } from "@apollo/client";
 import { ADD_USER, ALL_USERS } from "./gqlUsers";
+import { sendLink } from "../../Authentication/SignInLink/sendLink";
 
 interface Project {
   id: string;
@@ -42,6 +43,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     active: false
   });
   const [isEmailValid, setIsEmailValid] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState({ msg: "", error: false })
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -79,15 +81,26 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
       userType: formData.accessLevel,
       active: formData.active
     };
-    createNewUser({
-      variables: {
-        newUser
-      },
-      refetchQueries: [{ query: ALL_USERS }]
-    })
-
-    // onAddUser(newUser, formData.projects);
-    onClose();
+  
+    sendLink(newUser.emailId)
+      .then((registerUser: any) => {
+        if (registerUser.success) {
+          setRegisterSuccess({ msg: registerUser.msg, error: false });
+          // createNewUser({
+          //   variables: {
+          //     newUser
+          //   },
+          //   refetchQueries: [{ query: ALL_USERS }]
+          // });
+          onClose();
+        } else {
+          setRegisterSuccess({ msg: registerUser.msg, error: true });
+        }
+      })
+      .catch((error) => {
+        // Handle any error during the sendLink process
+        console.log('Error:', error);
+      });
   };
 
   const animatedComponents = makeAnimated();
@@ -160,6 +173,9 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             </button>
           </div>
         </div>
+        {
+          registerSuccess.error && <div className='text-sm text-red-500'>{registerSuccess.msg}</div>
+        }
       </div>
     </div>
   );

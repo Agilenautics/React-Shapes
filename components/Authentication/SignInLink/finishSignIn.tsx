@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "next/router";
 import { auth } from '../../../auth';
-import { getAuth, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailLink, onAuthStateChanged } from "firebase/auth";
 
 const FinishSignIn: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -23,7 +23,7 @@ const FinishSignIn: React.FC = () => {
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
         console.log("user", user)
-        router.push("/")
+        router.push("/projects")
         // ...
       } else {
       }
@@ -31,20 +31,39 @@ const FinishSignIn: React.FC = () => {
   }
 
   const handleSignup = async (e: React.FormEvent) => {
-    // Confirm the link is a sign-in with email link.
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-      // The client SDK will parse the code from the link for you.
-      signInWithEmailLink(auth, email, window.location.href)
-        .then((result) => {
+    e.preventDefault();
+    if (password != repeatPassword) {
+        console.log("Error: Passwords do not match")
+    } else {
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const { user } = userCredential;
 
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log('errorMessage: ', errorMessage);
-        });
+                // Access the user's authentication tokens
+                user.getIdTokenResult().then((idTokenResult) => {
+                    // Retrieve the access token and refresh token
+                    const accessToken = idTokenResult.token;
+                    const refreshToken = user.refreshToken;
+
+                    // Store the tokens in cookies
+                    document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
+                    document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
+                    router.push("/projects")
+
+                });
+                // Add user to Database
+                // user.email
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                console.log('errorCode: ', errorCode);
+                const errorMessage = error.message;
+                console.log('errorMessage: ', errorMessage);
+                // ..
+            });
     }
-  }
+};
 
   return (
     <div style={{ textAlign: 'center' }}>

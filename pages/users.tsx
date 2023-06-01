@@ -24,7 +24,7 @@ function ProjectPage() {
         const urlParams = new URLSearchParams(queryString);
 
         if (window.location.pathname.includes("verify-email") && urlParams.has('email'))
-          router.push(`/verify-email?email=${urlParams.get('email')}`);
+          router.push(`/verify-email${window.location.search}`);
         else if (window.location.pathname.includes("signup"))
           router.push("/signup")
         else
