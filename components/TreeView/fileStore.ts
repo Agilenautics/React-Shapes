@@ -1,4 +1,4 @@
-import {create} from "zustand";
+import { create } from "zustand";
 // @ts-ignore
 import TreeModel from "tree-model-improved";
 import { MyData, findById } from "./backend";
@@ -20,8 +20,10 @@ import {
   getTreeNodeByUser,
   getMainByUser
 } from "./gqlFiles";
-const userName= "";
-const initData = await getTreeNodeByUser(getMainByUser,userName);
+import { auth } from "../../auth";
+
+const userEmail = auth.currentUser?.email || "";
+const initData = await getTreeNodeByUser(getMainByUser, userEmail);
 // {
 //   id: "ROOT",
 //   name: "ROOT",

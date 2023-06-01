@@ -31,7 +31,7 @@ const Sidebar = () => {
       {/* This is a custom hamburger menu button. Each line is defined and animated purely with CSS.
        When clicked, expands/collapses the sidebar. */}
       <div
-        className={`absolute left-8 top-8 z-50 rounded px-1 pt-1 duration-700 ease-in-out focus:outline-none ${
+        className={`absolute left-8 top-8 z-50 rounded px-1 duration-700 ease-in-out focus:outline-none ${
           showSidebar ? "bg-transparent" : "bg-white dark:bg-neutral-900"
         }`}
       >
@@ -67,6 +67,9 @@ const Sidebar = () => {
         <div
           id="sidebar-content"
           className="mt-10 flex flex-col items-center justify-center"
+          style={{
+            marginTop: "-75px"
+          }}
         >
           {/* Logo goes here */}
           <Image

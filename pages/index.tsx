@@ -15,6 +15,8 @@ import {
   createProject,
   createProjectMutation,
 } from "../components/TreeView/gqlFiles";
+import TopBar from "../components/TopBar/topbar";
+import Signout from "../components/Authentication/Signout/Signout";
 
 const Home: NextPage = () => {
   // const updateNodes = nodeStore((state) => state.updateNodes);
@@ -31,7 +33,21 @@ const Home: NextPage = () => {
   // });
   return (
     <>
-      <Sidebar />
+      <div style={{
+        backgroundColor: '#fff',
+        borderBottom: '2px solid #000',
+        width: '100vw',
+        height: 75,
+        padding: '0px 35px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        position: 'fixed',
+        top: 0
+      }}>
+        <Sidebar />
+        <Signout />
+      </div>
       <ReactFlowProvider>
         <Flow />
       </ReactFlowProvider>
