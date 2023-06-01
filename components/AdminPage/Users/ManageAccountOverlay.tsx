@@ -9,6 +9,7 @@ interface ManageAccountOverlayProps {
     name: string;
     accessLevel: string;
     dateAdded: string;
+    projects: string[];
   };
   onClose: () => void;
 }
@@ -19,24 +20,36 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   user,
   onClose,
 }) => {
-  const [selectedProject, setSelectedProject] = useState<{
-    value: string;
-    label: string;
-  } | null>(null);
+  const [selectedProjects, setSelectedProjects] = useState<
+    Array<{
+      value: string;
+      label: string;
+    } | null>
+  >(
+    user.projects.map((projectId) => {
+      const project = ProjectsList.find((p) => p.id === projectId);
+      return project ? { value: project.id, label: project.name } : null;
+    })
+  );
 
   const projectsList = ProjectsList.map((project) => ({
     value: project.id,
     label: project.name,
   }));
 
-  const handleProjectChange = (selectedOption: any) => {
-    setSelectedProject(selectedOption);
+  const handleProjectChange = (selectedOptions: any) => {
+    setSelectedProjects(selectedOptions);
   };
 
   const handleSave = () => {
-    // Perform save logic here with the selected project and user details
-    console.log("Selected Project:", selectedProject);
-    console.log("User:", user);
+    const editedUser = {
+      ...user,
+      projects: selectedProjects
+        .filter((project) => project !== null)
+        .map((project) => project!.value),
+    };
+
+    console.log("Edited User:", editedUser);
     onClose();
   };
 
@@ -59,19 +72,20 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
         <div className="mb-4">
           <Select
             id="projectSelect"
-            value={selectedProject}
+            value={selectedProjects}
             onChange={handleProjectChange}
             closeMenuOnSelect={false}
             components={animatedComponents}
             options={projectsList}
             isMulti
+            getOptionValue={(option) => option?.value || ""}
           />
         </div>
         <div className="flex justify-end">
           <button
             className="mr-2 rounded-md bg-blue-500 px-4 py-2 text-sm text-white"
             onClick={handleSave}
-            disabled={!selectedProject}
+            disabled={!selectedProjects || selectedProjects.length === 0}
           >
             Save
           </button>

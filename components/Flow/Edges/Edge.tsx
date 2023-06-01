@@ -33,7 +33,7 @@ export default function CustomEdge({
   sourcePosition: Position;
   targetPosition: Position;
   data: {
-    id:string;
+    id: string;
     label: string;
     pathCSS: string;
     boxCSS: string;
@@ -56,49 +56,52 @@ export default function CustomEdge({
     targetY,
   });
 
-
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
   const updateLabel = edgeStore((state) => state.updateLabel);
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
   const markerFill = edgeStore((state) => state.markerFill);
-  const updateDescription = nodeStore((state)=>state.updateDescription)
+
+  const updateDescription = nodeStore((state) => state.updateDescription);
   const markerStart = data.bidirectional
-    ? `url(#arrow${data.pathCSS.split(" ")[2]})`
-    : `url(#circle${data.pathCSS.split(" ")[2]})`;
+    ? `url(#arrow-${data.id})`
+    : `url(#circle-${data.id})`;
+  const markerEnd = `url(#arrow-${data.id})`;
+
   return (
     <>
       <defs>
-        {[...markerFill].map((x, i) => (
-          <div key={i}>
-            <marker
-              key={"circle" + x}
-              id={"circle" + x}
-              className={x}
-              viewBox="0 0 10 10"
-              refX="5"
-              refY="5"
-              markerWidth="3"
-              markerHeight="3"
-            >
-              <circle cx="5" cy="5" r="5" />
-            </marker>
-            <marker
-              key={"arrow" + x}
-              id={"arrow" + x}
-              className={x}
-              viewBox="0 -5 10 10"
-              refX="5"
-              refY="0"
-              markerWidth="5"
-              markerHeight="5"
-              orient="auto-start-reverse"
-            >
-              <path d="M0,-5L10,0L0,5"></path>
-            </marker>
-          </div>
+        {markerFill.map((fill, i) => (
+          <marker
+            key={`circle-${data.id}-${fill}`}
+            id={`circle-${data.id}`}
+            fill={fill}
+            viewBox="0 0 10 10"
+            refX="5"
+            refY="5"
+            markerWidth="3"
+            markerHeight="3"
+          >
+            <circle cx="5" cy="5" r="5" />
+          </marker>
+        ))}
+        {markerFill.map((fill, i) => (
+          <marker
+            key={`arrow-${data.id}-${fill}`}
+            id={`arrow-${data.id}`}
+            fill={fill}
+            viewBox="0 -5 10 10"
+            refX="5"
+            refY="0"
+            markerWidth="5"
+            markerHeight="5"
+            orient="auto-start-reverse"
+          >
+            <path d="M0,-5L10,0L0,5"></path>
+          </marker>
         ))}
       </defs>
+
       <path
         key={id}
         id={id}
@@ -108,7 +111,7 @@ export default function CustomEdge({
         }`}
         d={edgePath}
         markerStart={markerStart}
-        markerEnd={`url(#arrow${data.pathCSS.split(" ")[2]})`}
+        markerEnd={markerEnd}
         onClick={() => {
           setSelected(!selected);
         }}
@@ -116,6 +119,7 @@ export default function CustomEdge({
           setEditing(true);
         }}
       />
+
       <foreignObject
         // className="bg-red-200" // ? For debugging purposes
         width={fOWidth}

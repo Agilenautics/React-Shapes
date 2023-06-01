@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { GrAdd } from "react-icons/gr";
-import { MdDeleteOutline, MdDelete } from "react-icons/md";
+import { MdDeleteOutline, MdDelete, MdManageAccounts } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
 import { ALL_USERS } from "./gqlUsers";
 import { useQuery } from "@apollo/client";
+import ManageAccountOverlay from "./ManageAccountOverlay";
+import { ProjectsList } from "../Projects/ProjectsList";
+
 interface User {
   id: string;
   name: string;
   accessLevel: string;
   dateAdded: string;
+  projects: string[];
 }
 
 const accessLevel: string = "suser";
@@ -23,8 +27,10 @@ function Users() {
   const [users, setUsers] = useState<User[]>(usersList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [showManageAccountPopup, setShowManageAccountPopup] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const { data, error, loading } = useQuery(ALL_USERS)
+  const { data, error, loading } = useQuery(ALL_USERS);
 
   const handleEditClick = (user: User) => {
     setEditedUser(user);
@@ -44,15 +50,15 @@ function Users() {
     }
   };
 
-  const handleAddUser = (user: User) => {
+  const handleAddUser = (user: User, selectedProjects: string[]) => {
     const newUser: User = {
       ...user,
       id: String(usersList.length + 1),
       dateAdded: String(new Date().toLocaleDateString()),
+      projects: selectedProjects,
     };
-    const updatedUsersList = setUsers([...users, newUser]);
-    console.log(updatedUsersList);
 
+    setUsers([...users, newUser]);
     setShowAddUserPopup(false);
   };
 
@@ -82,11 +88,10 @@ function Users() {
     setConfirmDeleteId(null);
   };
 
-  if (loading) return <div>....Loading</div>
-
+  if (loading) return <div>....Loading</div>;
 
   if (error) {
-    return error && <div> {error.message} </div>
+    return error && <div> {error.message} </div>;
   }
 
   // console.log(new Date("2023-05-29T12:35:27.575Z"))
@@ -98,14 +103,18 @@ function Users() {
     return [date.getFullYear(), mnth, day].join("-");
   }
 
-  console.log(convert("2023-05-29T12:35:27.575Z"))
+  console.log(convert("2023-05-29T12:35:27.575Z"));
   //-> "2011-06-08"
 
+  const handleManageAccountClick = (user: User) => {
+    setSelectedUser(user);
+    setShowManageAccountPopup(true);
+  };
 
   return (
-    <div>
+    <div className="relative overflow-x-auto" style={{ overflowX: "hidden" }}>
       <div className="ml-6 flex items-center">
-        <button className="text-md mt-4 ml-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
+        <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
           Team Agile
         </button>
       </div>
@@ -116,8 +125,9 @@ function Users() {
           {users.length}
         </div>
         <button
-          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-            }`}
+          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
+            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
           disabled={isButtonDisabled}
           onClick={() => setShowAddUserPopup(true)}
         >
@@ -165,13 +175,16 @@ function Users() {
                         getInitials(user.emailId)
                       }
                     </div>
-                    <span className="ml-2">{
-                      // @ts-ignore
-                      getNameFromEmail(user.emailId)
-                    }</span>
+                    <span className="ml-2">
+                      {
+                        // @ts-ignore
+                        getNameFromEmail(user.emailId)
+                      }
+                    </span>
                   </div>
                 </td>
-                <td className="py-4 pl-60 pr-20">
+                {}
+                <td className="max-w-xs whitespace-nowrap py-4 pl-60 pr-20">
                   {editedUser?.id === user.id ? (
                     <select
                       value={editedUser.accessLevel}
@@ -192,10 +205,12 @@ function Users() {
                     user.userType
                   )}
                 </td>
-                <td className="px-16 py-4">{
-                  // @ts-ignore
-                  formatDate(user.timeStamp)
-                }</td>
+                <td className="px-16 py-4">
+                  {
+                    // @ts-ignore
+                    formatDate(user.timeStamp)
+                  }
+                </td>
                 <td className="px-10 py-4">
                   {confirmDeleteId === user.id ? (
                     <div className="flex items-center">
@@ -215,7 +230,10 @@ function Users() {
                   ) : (
                     <>
                       {editedUser?.id === user.id ? (
-                        <button className="" onClick={handleSaveClick}>
+                        <button
+                          className="rounded-md bg-red-600 px-2 py-1 font-semibold text-white"
+                          onClick={handleSaveClick}
+                        >
                           Save
                         </button>
                       ) : (
@@ -227,10 +245,17 @@ function Users() {
                         </button>
                       )}
                       <button
-                        className="ml-2"
+                        className="ml-2 "
                         onClick={() => handleDeleteClick(user.id)}
                       >
                         <MdDeleteOutline />
+                      </button>
+                      <button
+                        className="ml-2"
+                        type="button"
+                        onClick={() => handleManageAccountClick(user)}
+                      >
+                        <MdManageAccounts />
                       </button>
                     </>
                   )}
@@ -244,6 +269,13 @@ function Users() {
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
           onAddUser={handleAddUser}
+          projectData={ProjectsList}
+        />
+      )}
+      {showManageAccountPopup && selectedUser && (
+        <ManageAccountOverlay
+          user={selectedUser}
+          onClose={() => setShowManageAccountPopup(false)}
         />
       )}
     </div>
@@ -253,27 +285,25 @@ function Users() {
 export default Users;
 
 function getInitials(name: string) {
-  const nameArray = getNameFromEmail(name)
-  const initials = [nameArray].map((name) => name.charAt(0)).join('');
+  const nameArray = getNameFromEmail(name);
+  const initials = [nameArray].map((name) => name.charAt(0)).join("");
   return initials;
 }
 
 const getNameFromEmail = (email: string) => {
   let regex = /[^a-z]/gi;
-  const name = email.split("@")[0].toLocaleUpperCase()
-  return name.replace(regex, '');
-}
-
+  const name = email.split("@")[0].toLocaleUpperCase();
+  return name.replace(regex, "");
+};
 
 const formatDate = (date: string) => {
-  return new Date(date).toLocaleString('en-US', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
+  return new Date(date).toLocaleString("en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     // hour: '2-digit',
     // minute: '2-digit',
     // second: '2-digit',
     // timeZone: 'UTC'
-  })
-
-}
+  });
+};
