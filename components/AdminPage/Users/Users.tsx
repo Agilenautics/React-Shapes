@@ -5,6 +5,8 @@ import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
+import { ALL_USERS } from "./gqlUsers";
+import { useQuery } from "@apollo/client";
 interface User {
   id: string;
   name: string;
@@ -21,6 +23,8 @@ function Users() {
   const [users, setUsers] = useState<User[]>(usersList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+  const { data, error, loading } = useQuery(ALL_USERS)
 
   const handleEditClick = (user: User) => {
     setEditedUser(user);
@@ -78,6 +82,26 @@ function Users() {
     setConfirmDeleteId(null);
   };
 
+  if (loading) return <div>....Loading</div>
+
+
+  if (error) {
+    return error && <div> {error.message} </div>
+  }
+
+  // console.log(new Date("2023-05-29T12:35:27.575Z"))
+
+  function convert(str: string) {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  }
+
+  console.log(convert("2023-05-29T12:35:27.575Z"))
+  //-> "2011-06-08"
+
+
   return (
     <div>
       <div className="ml-6 flex items-center">
@@ -92,9 +116,8 @@ function Users() {
           {users.length}
         </div>
         <button
-          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={isButtonDisabled}
           onClick={() => setShowAddUserPopup(true)}
         >
@@ -132,14 +155,20 @@ function Users() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user: User) => (
+            {data.users.map((user: User) => (
               <tr key={user.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
-                      {getInitials(user.name)}
+                      {
+                        // @ts-ignore
+                        getInitials(user.emailId)
+                      }
                     </div>
-                    <span className="ml-2">{user.name}</span>
+                    <span className="ml-2">{
+                      // @ts-ignore
+                      getNameFromEmail(user.emailId)
+                    }</span>
                   </div>
                 </td>
                 <td className="py-4 pl-60 pr-20">
@@ -159,10 +188,14 @@ function Users() {
                       <option value="Super User">Super User</option>
                     </select>
                   ) : (
-                    user.accessLevel
+                    // @ts-ignore
+                    user.userType
                   )}
                 </td>
-                <td className="px-16 py-4">{user.dateAdded}</td>
+                <td className="px-16 py-4">{
+                  // @ts-ignore
+                  formatDate(user.timeStamp)
+                }</td>
                 <td className="px-10 py-4">
                   {confirmDeleteId === user.id ? (
                     <div className="flex items-center">
@@ -220,7 +253,27 @@ function Users() {
 export default Users;
 
 function getInitials(name: string) {
-  const nameArray = name.split(" ");
-  const initials = nameArray.map((name) => name.charAt(0)).join("");
+  const nameArray = getNameFromEmail(name)
+  const initials = [nameArray].map((name) => name.charAt(0)).join('');
   return initials;
+}
+
+const getNameFromEmail = (email: string) => {
+  let regex = /[^a-z]/gi;
+  const name = email.split("@")[0].toLocaleUpperCase()
+  return name.replace(regex, '');
+}
+
+
+const formatDate = (date: string) => {
+  return new Date(date).toLocaleString('en-US', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    // hour: '2-digit',
+    // minute: '2-digit',
+    // second: '2-digit',
+    // timeZone: 'UTC'
+  })
+
 }

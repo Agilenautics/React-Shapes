@@ -1,10 +1,14 @@
 import Project from "./modules/projectModel"
+import User from "./modules/usersModel"
 
 const resolvers = {
     Query: {
         projects: async (parent: any, args: any, { db }: any) => {
             return await Project.find({})
         },
+        getUsers:async()=>{
+            return await User.find({})
+        }
     },
     Mutation: {
         // @ts-ignore
