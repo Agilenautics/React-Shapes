@@ -122,8 +122,8 @@ export const TreeNode = ({
   }
 
   function loadNewFlow(
-    handlers: NodeRendererProps<MyData>,
-    data: NodeRendererProps<MyData>
+    handlers: any,
+    data: any
   ) {
     return (e: SyntheticEvent) => {
       handlers.select(e);
@@ -192,7 +192,7 @@ export const TreeNode2 = ({
   state,
   handlers,
   tree,
-}: NodeRendererProps<MyData>) => {
+}: any) => {
   const folder = Array.isArray(data.children);
   const open = state.isOpen;
   const name = data.name;
@@ -226,7 +226,7 @@ export const TreeNode2 = ({
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
 
-  function loadFlowNodes(handlers: NodeRendererProps<MyData>, data: NodeRendererProps<MyData>) {
+  function loadFlowNodes(handlers: any, data: any) {
     return (e: SyntheticEvent) => {
       if (data.id === currentFileId) {
         e.stopPropagation(); // Prevent event propagation for the current file's node

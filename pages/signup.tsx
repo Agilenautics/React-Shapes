@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Signup from "../components/Authentication/SignUp/SignUp";
 
 function SignupPage() {
-  const [activeLink, setActiveLink] = useState("Login");
+  const [activeLink, setActiveLink] = useState("Signup");
   const router = useRouter();
 
   useEffect(() => {

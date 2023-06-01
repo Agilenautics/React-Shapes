@@ -15,7 +15,7 @@ const Signout: React.FC = () => {
         });
     }
 
-    return <button onClick={handleSignOut}>Sign Out</button>
+    return <button style={{ padding: '5px 10px', backgroundColor: '#2563EB', color: 'white', border: 'none' }} onClick={handleSignOut}>Sign Out</button>
 }
 
 export default Signout;

@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { registerServiceWorker } from "../authServiceWorker";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
-import {auth} from '../auth';
+import { auth } from '../auth';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -21,13 +21,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid;
-        console.log("user", user)
-        // ...
       } else {
-        router.push("/login");
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        if (window.location.pathname.includes("verify-email") && urlParams.has('email'))
+          router.push(`/verify-email?email=${urlParams.get('email')}`);
+        else
+          router.push("/login");
       }
     });
   }
