@@ -22,7 +22,7 @@ const Signup: React.FC = () => {
                 // https://firebase.google.com/docs/reference/js/auth.user
                 const uid = user.uid;
                 console.log("user", user)
-                router.push("/")
+                router.push("/projects")
                 // ...
             } else {
             }
@@ -48,9 +48,11 @@ const Signup: React.FC = () => {
                         // Store the tokens in cookies
                         document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
                         document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
-                        router.push("/")
+                        router.push("/projects")
 
                     });
+                    // Add user to Database
+                    // user.email
                 })
                 .catch((error) => {
                     const errorCode = error.code;

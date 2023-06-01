@@ -46,6 +46,8 @@ const Login: React.FC = () => {
                     document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
                     router.push("/projects")
                 });
+                // User logged in 
+                // user.email
 
             })
             .catch((error) => {
@@ -55,10 +57,6 @@ const Login: React.FC = () => {
                 console.log('errorMessage: ', errorMessage);
             });
     };
-
-    const postIdTokenToSessionLogin = (url: string, idToken: any, csrfToken: any) => {
-
-    }
 
     return (
         <div style={{ textAlign: 'center', marginTop: 30 }}>

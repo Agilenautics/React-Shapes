@@ -1,3 +1,5 @@
+import Signout from "../Authentication/Signout/Signout";
+
 function TopBar() {
   return (
     <div className="h-14 border-b border-gray-300 flex items-center text-xl">
@@ -6,6 +8,9 @@ function TopBar() {
         <a className="hover:text-sky-700">Projects</a>
         <a className="hover:text-sky-700">Organizations</a>
         <a className="hover:text-sky-700">Policies</a>
+      </div>
+      <div className="mr-8">
+        <Signout />
       </div>
     </div>
   );

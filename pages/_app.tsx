@@ -28,6 +28,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         if (window.location.pathname.includes("verify-email") && urlParams.has('email'))
           router.push(`/verify-email?email=${urlParams.get('email')}`);
+        else if (window.location.pathname.includes("signup"))
+          router.push("/signup")
         else
           router.push("/login");
       }
