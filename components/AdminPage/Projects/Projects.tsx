@@ -16,14 +16,9 @@ interface Project {
 }
 
 function Projects() {
-<<<<<<< HEAD
   // Access Level controlled by the server-side or additional validation
   const accessLevel: string = "user";
 
-=======
-  const accessLevel: string = "suser";
-  const isButtonDisabled: boolean = accessLevel === "user";
->>>>>>> efcecf5281442a6208bec1825103eea6191f135c
   const { data, error, loading } = useQuery(GET_PROJECTS);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
@@ -71,7 +66,7 @@ function Projects() {
     };
     const updatedProjectsList = [...projects, newProject];
     setProjects(updatedProjectsList);
-    console.log(newProject)
+    console.log(newProject);
 
     setShowForm(false);
   };
