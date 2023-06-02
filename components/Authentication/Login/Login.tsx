@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/router";
 import styles from './Login.module.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { GET_USER, get_user_method } from '../../AdminPage/Projects/gqlProject';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -56,8 +57,8 @@ const Login: React.FC = () => {
                     router.push("/projects")
                 });
                 // User logged in 
-                // user.email
-
+                // @ts-ignore
+                // get_user_method(user.email, GET_USER)
             })
             .catch((error) => {
                 const errorCode = error.code;

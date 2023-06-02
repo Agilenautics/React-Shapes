@@ -35,7 +35,9 @@ function Projects() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // @ts-ignore
-        get_user_method(user.email, GET_USER)
+        get_user_method(user.email, GET_USER).then(res=>{
+          console.log(res)
+        })
       }
     })
   }
@@ -83,9 +85,10 @@ function Projects() {
     };
     const updatedProjectsList = [...projects, newProject];
     setProjects(updatedProjectsList);
-
     setShowForm(false);
   };
+
+  
 
   const handleCloseForm = () => {
     setShowForm(false);
