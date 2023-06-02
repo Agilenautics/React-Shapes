@@ -17,8 +17,9 @@ interface Project {
 }
 
 function Projects() {
-  const accessLevel: string = "suser";
-  const isButtonDisabled: boolean = accessLevel === "user";
+  // Access Level controlled by the server-side or additional validation
+  const accessLevel: string = "user";
+
   const { data, error, loading } = useQuery(GET_PROJECTS);
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
@@ -59,7 +60,6 @@ function Projects() {
       projectName,
       projects
     );
-    console.log(projectId, projectName, projects);
 
     setProjects(updatedProjectsList);
     setProjectId(null);
@@ -67,9 +67,7 @@ function Projects() {
   };
 
   const handleDelete_Project = (projectId: string) => {
-    // const updatedProjectsList: Project[] = deleteProject(projectId, projects);
     delete_Project(projectId, DELETE_PROJECT);
-    // setProjects(updatedProjectsList);
   };
 
   const handleAddProjectClick = () => {
@@ -113,11 +111,7 @@ function Projects() {
     console.log(error.message);
   }
 
-
-
-
-
-
+  const isButtonDisabled: boolean = accessLevel === "user";
 
   return (
     <div>
@@ -197,7 +191,8 @@ function Projects() {
                   {projectId === project.id ? (
                     <button
                       onClick={() => handleSaveButtonClick(project.id)}
-                      className="mr-2"
+                      className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                      disabled={isButtonDisabled}
                     >
                       Save
                     </button>
@@ -210,14 +205,16 @@ function Projects() {
                           project.desc
                         )
                       }
-                      className="mr-2"
+                      className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                      disabled={isButtonDisabled}
                     >
                       <BiRename />
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete_Project(project.id)}
-                    className="ml-2"
+                    className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                    disabled={isButtonDisabled}
                   >
                     <MdDeleteOutline />
                   </button>
