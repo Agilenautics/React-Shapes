@@ -8,6 +8,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loginError, setLoginError] = useState({
+        error: false,
+        msg: ''
+    })
     const router = useRouter();
 
     useEffect(() => {
@@ -35,6 +39,11 @@ const Login: React.FC = () => {
                 // Signed in 
                 const { user } = userCredential;
 
+                setLoginError({
+                    error: false,
+                    msg: ""
+                })
+
                 // Access the user's authentication tokens
                 user.getIdTokenResult().then((idTokenResult) => {
                     // Retrieve the access token and refresh token
@@ -55,6 +64,10 @@ const Login: React.FC = () => {
                 console.log('errorCode: ', errorCode);
                 const errorMessage = error.message;
                 console.log('errorMessage: ', errorMessage);
+                setLoginError({
+                    error: true,
+                    msg: "Incorrect credentials. Check your email and password and try again."
+                })
             });
     };
 
@@ -76,6 +89,9 @@ const Login: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     style={{ marginBottom: '10px', padding: '5px', border: '1px solid black', margin: '10px' }}
                 />
+                {
+                    loginError.error && <div className='text-sm text-red-500'>{loginError.msg}</div>
+                }
                 <button type="submit" style={{ padding: '5px 10px', backgroundColor: 'blue', color: 'white', border: 'none' }}>
                     Login
                 </button>

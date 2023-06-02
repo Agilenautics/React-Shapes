@@ -2,22 +2,25 @@ import { auth } from '../../../auth';
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 
 
-const sendLink = (email: string) => {
+export const sendLink = (email: string) => {
     const actionCodeSettings = {
-        // URL you want to redirect back to. The domain (www.example.com) for this
-        // URL must be in the authorized domains list in the Firebase Console.
-        url: `${window.location.origin}/finishSignUp?email=${email}`
+      url: `${window.location.origin}/verify-email?email=${email}`,
+      handleCodeInApp: true
     };
-
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+  
+    return new Promise((resolve, reject) => {
+      sendSignInLinkToEmail(auth, email, actionCodeSettings)
         .then(() => {
-            // The link was successfully sent. Inform the user.
-            console.log("Link sent successfully")
+          // The link was successfully sent. Inform the user.
+          const success = true;
+          const msg = "Sign-in link sent successfully to user";
+          resolve({ success, msg });
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log('errorMessage: ', errorMessage);
+          const success = false;
+          const msg = "Error sending sign-in link to user. Please try again.";
+          reject({ success, msg });
         });
-}
+    });
+  };
 
