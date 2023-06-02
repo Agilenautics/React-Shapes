@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GrAdd } from "react-icons/gr";
 import { BiRename } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
@@ -6,9 +6,10 @@ import { AiOutlineArrowDown } from "react-icons/ai";
 import { updateProjectName, deleteProject } from "./ProjectUtils";
 import ProjectOverlay from "./ProjectOverlay";
 import { ProjectsList } from "./ProjectsList";
-import { DELETE_PROJECT, GET_PROJECTS, delete_Project } from "./gqlProject";
+import { DELETE_PROJECT, GET_PROJECTS, GET_USER, delete_Project, get_user_method } from "./gqlProject";
 import { useQuery } from "@apollo/client";
-
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from '../../../auth';
 interface Project {
   id: string;
   name: string;
@@ -26,6 +27,24 @@ function Projects() {
   const [showForm, setShowForm] = useState(false);
   const [projects, setProjects] = useState<Project[]>(ProjectsList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+
+
+  //verifying token
+  const verfiyAuthToken = async () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // @ts-ignore
+        get_user_method(user.email, GET_USER).then(res=>{
+          console.log(res)
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    verfiyAuthToken()
+  }, [])
 
   const handleEditButtonClick = (
     projectId: string,
@@ -66,10 +85,10 @@ function Projects() {
     };
     const updatedProjectsList = [...projects, newProject];
     setProjects(updatedProjectsList);
-    console.log(newProject);
-
     setShowForm(false);
   };
+
+  
 
   const handleCloseForm = () => {
     setShowForm(false);
@@ -111,9 +130,8 @@ function Projects() {
           {data.projects.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
@@ -132,9 +150,8 @@ function Projects() {
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
+                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
+                      }`}
                   />
                 </div>
               </th>

@@ -8,6 +8,7 @@ import { usersList } from "./UsersList";
 import {
   ALL_USERS,
   DELETE_USER,
+  UPDATE_USER,
   handleUpdate_User,
   handleUser_Delete,
 } from "./gqlUsers";
@@ -49,6 +50,7 @@ function Users() {
         }
         return user;
       });
+      handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
 
       // handleUpdate_User()
 

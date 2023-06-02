@@ -57,19 +57,21 @@ mutation UpdateUsers($where: userWhere, $update: userUpdateInput) {
   }
 }
 `
-const handleUpdate_User = async(id:string,data:Object,mutation:DocumentNode|TypedDocumentNode<any, OperationVariables>,query:DocumentNode|TypedDocumentNode<any ,OperationVariables>) =>{
-await client.mutate({
-  mutation,
-  variables:{
-    where:{
-      id
+const handleUpdate_User = async (data: Object, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        // @ts-ignore
+        id: data.id
+      },
+      update: {
+        // @ts-ignore
+        userType: data.accessLevel
+      }
     },
-    update:{
-      userType:""
-    }
-  },
-  refetchQueries:[{query}]
-})
+    refetchQueries: [{ query }]
+  })
 }
 
-export { ALL_USERS, DELETE_USER, handleUser_Delete, ADD_USER,UPDATE_USER,handleUpdate_User }
+export { ALL_USERS, DELETE_USER, handleUser_Delete, ADD_USER, UPDATE_USER, handleUpdate_User }

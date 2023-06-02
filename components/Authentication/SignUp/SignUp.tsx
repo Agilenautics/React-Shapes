@@ -4,6 +4,7 @@ import { auth } from '../../../auth';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import './SignUp.module.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { CREATE_ADMIN, handle_add_admin } from './gqlAdmin';
 
 const Signup: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -38,12 +39,13 @@ const Signup: React.FC = () => {
                 .then((userCredential) => {
                     // Signed in 
                     const { user } = userCredential;
-
                     // Access the user's authentication tokens
                     user.getIdTokenResult().then((idTokenResult) => {
                         // Retrieve the access token and refresh token
                         const accessToken = idTokenResult.token;
                         const refreshToken = user.refreshToken;
+
+
 
                         // Store the tokens in cookies
                         document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
@@ -52,7 +54,8 @@ const Signup: React.FC = () => {
 
                     });
                     // Add user to Database
-                    // user.email
+                    // @ts-ignore
+                    // handle_add_admin(user.email,CREATE_ADMIN)
                 })
                 .catch((error) => {
                     const errorCode = error.code;

@@ -6,7 +6,7 @@ type user{
   emailId: String!
   userType:String
   hasProjects:[main!]! @relationship (type: "hasMain",direction: OUT)
-  active: Boolean
+  active: Boolean!
 }
 type main {
   id: ID! @id
@@ -29,6 +29,10 @@ type Mutation{
  createProject(newProject:projectInput!):main
  updateProject(projectData:projectInput!):updateData
  addUser(newUser:userInput!):user
+}
+
+input userEmail{
+email:String!
 }
 
 input projectInput{
