@@ -17,8 +17,8 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   const [formData, setFormData] = useState({ name: "", desc: "" });
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const [createProject, { data, loading }] = useMutation(ADD_PROJECT);
-  const [error, setError] = useState({});
+  const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT);
+  const [errors, setError] = useState({});
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -47,6 +47,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   if (loading) {
     return <p>Loading...</p>;
   }
+  
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -110,6 +111,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
           </div>
         </form>
       </div>
+    
     </div>
   );
 };

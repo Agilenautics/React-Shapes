@@ -21,6 +21,40 @@ mutation deleteProject($where: mainWhere) {
 }
 `
 
+const GET_USER = gql`
+query getUser($where: userWhere) {
+  users(where: $where) {
+    active
+    id
+    userName
+    userType
+    hasProjects {
+      id
+    }
+  }
+}
+`
+
+const get_user_method = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+
+  let admin = {}
+
+  await client.query({
+    query: customQuery,
+    variables: {
+      where: {
+        emailId: email
+      }
+    }
+  }).then((res)=>{
+    admin = res.data.users
+  })
+
+  return admin
+
+}
+
+
 const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation,
@@ -50,4 +84,4 @@ mutation addProject($newProject: projectInput!) {
 
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project,ADD_PROJECT }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER,get_user_method }

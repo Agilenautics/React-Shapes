@@ -5,7 +5,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
-import { ALL_USERS, DELETE_USER, handleUpdate_User, handleUser_Delete } from "./gqlUsers";
+import { ALL_USERS, DELETE_USER, UPDATE_USER, handleUpdate_User, handleUser_Delete } from "./gqlUsers";
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { ProjectsList } from "../Projects/ProjectsList";
@@ -44,6 +44,7 @@ function Users() {
         }
         return user;
       });
+      handleUpdate_User(editedUser,UPDATE_USER,ALL_USERS)
 
       // handleUpdate_User()
 

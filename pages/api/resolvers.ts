@@ -3,8 +3,10 @@ import User from "./modules/usersModel"
 
 const resolvers = {
     Query: {
-        projects: async (parent: any, args: any, { db }: any) => {
-            return await Project.find({})
+        // @ts-ignore
+        projects: async (parent: any, {email}:Object) => {
+            const projects = await Project.find({})
+            return projects
         },
         getUsers: async () => {
             return await User.find({})
@@ -56,9 +58,10 @@ const resolvers = {
             }
 
             const project = await Project.update({
-                where:{
+                where: {
                     id
                 },
+
             })
             // const project = await Project.update({
             //     where: {
