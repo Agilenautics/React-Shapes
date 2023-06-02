@@ -18,7 +18,7 @@ interface User {
   projects: string[];
 }
 
-const accessLevel: string = "suser";
+const accessLevel: string = "user";
 const isButtonDisabled: boolean = accessLevel === "user";
 
 function Users() {
@@ -217,12 +217,14 @@ function Users() {
                       <button
                         className="text-red-700"
                         onClick={() => handleConfirmDelete(user.id)}
+                        disabled={isButtonDisabled}
                       >
                         <MdDelete />
                       </button>
                       <button
                         className="px-3 text-gray-500"
                         onClick={handleCancelDelete}
+                        disabled={isButtonDisabled}
                       >
                         {/* <RxCross2 /> */}x
                       </button>
@@ -233,6 +235,7 @@ function Users() {
                         <button
                           className="rounded-md bg-red-600 px-2 py-1 font-semibold text-white"
                           onClick={handleSaveClick}
+                          disabled={isButtonDisabled}
                         >
                           Save
                         </button>
@@ -240,22 +243,31 @@ function Users() {
                         <button
                           className="ml-2 mr-2"
                           onClick={() => handleEditClick(user)}
+                          disabled={isButtonDisabled}
                         >
-                          <AiFillEdit />
+                          <AiFillEdit
+                            className={isButtonDisabled ? "opacity-50" : ""}
+                          />
                         </button>
                       )}
                       <button
                         className="ml-2 "
                         onClick={() => handleDeleteClick(user.id)}
+                        disabled={isButtonDisabled}
                       >
-                        <MdDeleteOutline />
+                        <MdDeleteOutline
+                          className={isButtonDisabled ? "opacity-50" : ""}
+                        />
                       </button>
                       <button
                         className="ml-2"
                         type="button"
                         onClick={() => handleManageAccountClick(user)}
+                        disabled={isButtonDisabled}
                       >
-                        <MdManageAccounts />
+                        <MdManageAccounts
+                          className={isButtonDisabled ? "opacity-50" : ""}
+                        />
                       </button>
                     </>
                   )}
@@ -301,9 +313,7 @@ const formatDate = (date: string) => {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-    // hour: '2-digit',
-    // minute: '2-digit',
-    // second: '2-digit',
-    // timeZone: 'UTC'
+    // hour: "2-digit",
+    // minute: "2-digit",
   });
 };
