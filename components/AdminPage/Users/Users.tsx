@@ -5,7 +5,12 @@ import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
-import { ALL_USERS, DELETE_USER, handleUpdate_User, handleUser_Delete } from "./gqlUsers";
+import {
+  ALL_USERS,
+  DELETE_USER,
+  handleUpdate_User,
+  handleUser_Delete,
+} from "./gqlUsers";
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { ProjectsList } from "../Projects/ProjectsList";
@@ -18,7 +23,7 @@ interface User {
   projects: string[];
 }
 
-const accessLevel: string = "user";
+const accessLevel: string = "suser";
 const isButtonDisabled: boolean = accessLevel === "user";
 
 function Users() {
@@ -82,7 +87,7 @@ function Users() {
 
   const handleConfirmDelete = (userId: string) => {
     const updatedUsers = users.filter((user) => user.id !== userId);
-    handleUser_Delete(userId,DELETE_USER,ALL_USERS)
+    handleUser_Delete(userId, DELETE_USER, ALL_USERS);
     setUsers(updatedUsers);
     setConfirmDeleteId(null);
   };
@@ -97,14 +102,12 @@ function Users() {
     return error && <div> {error.message} </div>;
   }
 
-
   // function convert(str: string) {
   //   var date = new Date(str),
   //     mnth = ("0" + (date.getMonth() + 1)).slice(-2),
   //     day = ("0" + date.getDate()).slice(-2);
   //   return [date.getFullYear(), mnth, day].join("-");
   // }
-
 
   const handleManageAccountClick = (user: User) => {
     setSelectedUser(user);

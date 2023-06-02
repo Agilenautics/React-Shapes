@@ -161,7 +161,7 @@ function Projects() {
                     project.name
                   )}
                 </td>
-                <td className="hidden px-6 py-4 md:table-cell">
+                <td className="px-6 py-4 md:table-cell">
                   {projectId === project.id ? (
                     <input
                       type="text"
