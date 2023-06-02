@@ -5,7 +5,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
-import { ALL_USERS } from "./gqlUsers";
+import { ALL_USERS, DELETE_USER, handleUpdate_User, handleUser_Delete } from "./gqlUsers";
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { ProjectsList } from "../Projects/ProjectsList";
@@ -45,6 +45,8 @@ function Users() {
         return user;
       });
 
+      // handleUpdate_User()
+
       setUsers(updatedUsers);
       setEditedUser(null);
     }
@@ -80,6 +82,7 @@ function Users() {
 
   const handleConfirmDelete = (userId: string) => {
     const updatedUsers = users.filter((user) => user.id !== userId);
+    handleUser_Delete(userId,DELETE_USER,ALL_USERS)
     setUsers(updatedUsers);
     setConfirmDeleteId(null);
   };
@@ -94,17 +97,14 @@ function Users() {
     return error && <div> {error.message} </div>;
   }
 
-  // console.log(new Date("2023-05-29T12:35:27.575Z"))
 
-  function convert(str: string) {
-    var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    return [date.getFullYear(), mnth, day].join("-");
-  }
+  // function convert(str: string) {
+  //   var date = new Date(str),
+  //     mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+  //     day = ("0" + date.getDate()).slice(-2);
+  //   return [date.getFullYear(), mnth, day].join("-");
+  // }
 
-  console.log(convert("2023-05-29T12:35:27.575Z"));
-  //-> "2011-06-08"
 
   const handleManageAccountClick = (user: User) => {
     setSelectedUser(user);

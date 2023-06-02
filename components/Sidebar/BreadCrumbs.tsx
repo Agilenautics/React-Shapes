@@ -24,7 +24,7 @@ function BCTile(name: string, isFirst: boolean = false) {
 function BreadCrumbs() {
   const breadCrumbs = nodeStore((state)=>state.breadCrumbs)
   return (
-    <div className="relative left-[26vw] top-5">
+    <div className="relative left-[26vw] top-5" style={{marginTop: 75}}>
       <nav className="flex " aria-label="Breadcrumb">
         <ol className="flex space-x-3 py-2 pr-2">
           {breadCrumbs.map((value:any, index) => {
