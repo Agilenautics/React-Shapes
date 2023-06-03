@@ -58,7 +58,7 @@ mutation CreateUsers($input: [userCreateInput!]!) {
       timeStamp
       hasProjects {
       name
-       }
+      }
     }
   }
 }

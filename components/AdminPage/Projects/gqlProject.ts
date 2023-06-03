@@ -30,6 +30,9 @@ query getUser($where: userWhere) {
     userType
     hasProjects {
       id
+      timeStamp
+      description
+      name
     }
   }
 }

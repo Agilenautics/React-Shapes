@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { GrAdd } from "react-icons/gr";
 import { MdDeleteOutline, MdDelete, MdManageAccounts } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
@@ -16,6 +16,9 @@ import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { ProjectsList } from "../Projects/ProjectsList";
 import LoadingIcon from "../../LoadingIcon";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../auth";
+import { GET_USER, get_user_method } from "../Projects/gqlProject";
 
 
 interface User {
@@ -38,7 +41,35 @@ function Users() {
   const [showManageAccountPopup, setShowManageAccountPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
+  const [userData, setUserData] = useState([])
+  const [projectData, setProjectData] = useState([])
+
+  //verifying token
+  const verfiyAuthToken = async () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // @ts-ignore
+        get_user_method(user.email, GET_USER).then(res => {
+          // @ts-ignore
+          setUserData(res)
+          // @ts-ignore
+          setProjectData(res[0].hasProjects)
+        })
+      }
+    })
+  }
+
+
+
+  useEffect(() => {
+    verfiyAuthToken()
+  }, [])
+
+
   const { data, error, loading } = useQuery(ALL_USERS);
+
+
+
 
   const handleEditClick = (user: User) => {
     setEditedUser(user);
@@ -123,6 +154,7 @@ function Users() {
     setShowManageAccountPopup(true);
   };
 
+
   return (
     <div className="relative overflow-x-auto" style={{ overflowX: "hidden" }}>
       <div className="ml-6 flex items-center">
@@ -137,9 +169,8 @@ function Users() {
           {users.length}
         </div>
         <button
-          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={isButtonDisabled}
           onClick={() => setShowAddUserPopup(true)}
         >
@@ -195,7 +226,7 @@ function Users() {
                     </span>
                   </div>
                 </td>
-                {}
+                { }
                 <td className="max-w-xs whitespace-nowrap py-4 pl-60 pr-20">
                   {editedUser?.id === user.id ? (
                     <select
@@ -293,11 +324,12 @@ function Users() {
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
           onAddUser={handleAddUser}
-          projectData={ProjectsList}
+          projectData={projectData}
         />
       )}
       {showManageAccountPopup && selectedUser && (
         <ManageAccountOverlay
+        // @ts-ignore
           user={selectedUser}
           onClose={() => setShowManageAccountPopup(false)}
         />

@@ -7,9 +7,9 @@ interface ManageAccountOverlayProps {
   user: {
     id: string;
     name: string;
-    accessLevel: string;
+    userType: string;
     dateAdded: string;
-    projects: string[];
+    hasProjects: string[];
   };
   onClose: () => void;
 }
@@ -20,19 +20,21 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   user,
   onClose,
 }) => {
+  console.log(user)
   const [selectedProjects, setSelectedProjects] = useState<
     Array<{
       value: string;
       label: string;
     } | null>
   >(
-    user.projects.map((projectId) => {
-      const project = ProjectsList.find((p) => p.id === projectId);
+    user.hasProjects.map((projectId) => {
+      console.log(projectId)
+      const project = user.hasProjects.find((p) => p.id === projectId.id);
       return project ? { value: project.id, label: project.name } : null;
     })
   );
 
-  const projectsList = ProjectsList.map((project) => ({
+  const projectsList = user.hasProjects.map((project) => ({
     value: project.id,
     label: project.name,
   }));
@@ -44,12 +46,11 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   const handleSave = () => {
     const editedUser = {
       ...user,
-      projects: selectedProjects
+      hasProjects: selectedProjects
         .filter((project) => project !== null)
         .map((project) => project!.value),
     };
-
-    console.log("Edited User:", editedUser);
+    console.log(editedUser)
     onClose();
   };
 
@@ -62,7 +63,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
         </div>
         <div className="mb-4 flex items-center">
           <h2 className="mr-2 font-semibold">Access Level:</h2>
-          <p className="">{user.accessLevel}</p>
+          <p className="">{user.userType}</p>
         </div>
         <div className="mb-4">
           <label htmlFor="projectSelect" className="font-semibold">
@@ -85,7 +86,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
           <button
             className="mr-2 rounded-md bg-blue-500 px-4 py-2 text-sm text-white"
             onClick={handleSave}
-            disabled={!selectedProjects || selectedProjects.length === 0}
+            disabled={!selectedProjects}
           >
             Save
           </button>
