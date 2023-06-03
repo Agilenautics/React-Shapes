@@ -81,17 +81,69 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
       userType: formData.accessLevel,
       active: formData.active
     };
-  
+
+    console.log("Hello")
+
+    console.log(formData)
+
+
+
+
+    // {
+    //   "input": [
+    //     {
+    //       "emailId": "akshay123@gmail.com",
+    //       "userType": "User",
+    //       "active": false,
+    //       "userName": "",
+    //       "hasProjects": {
+    //         "connect": [
+    //           {
+    //             "where": {
+    //               "node": {
+    //                 "id": "4523795e-2c85-48c9-9206-c77d2c9a37b1"
+    //               }
+    //             }
+    //           }
+    //         ]
+    //       }
+    //     }
+    //   ]
+    // }
+
+
+
+
+
     sendLink(newUser.emailId)
       .then((registerUser: any) => {
         if (registerUser.success) {
           setRegisterSuccess({ msg: registerUser.msg, error: false });
-          // createNewUser({
-          //   variables: {
-          //     newUser
-          //   },
-          //   refetchQueries: [{ query: ALL_USERS }]
-          // });
+          createNewUser({
+            variables: {
+              "input": [
+                {
+                  "emailId": formData.email,
+                  "userType": formData.accessLevel,
+                  "active": false,
+                  "userName": "",
+                  "hasProjects": {
+                    "connect": [
+                      {
+                        "where": {
+                          "node": {
+                            //here you can put project id
+                            "id": "4523795e-2c85-48c9-9206-c77d2c9a37b1"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            refetchQueries: [{ query: ALL_USERS }]
+          });
           onClose();
         } else {
           setRegisterSuccess({ msg: registerUser.msg, error: true });
@@ -116,6 +168,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             value={formData.email}
             onChange={handleInputChange}
             className="w-full rounded-md border border-gray-300 p-1"
+            required
           />
         </div>
         <div className="mb-4">
@@ -125,6 +178,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             value={formData.accessLevel}
             onChange={handleInputChange}
             className="w-full rounded-md border border-gray-300 p-1"
+            required
           >
             <option value="">Select Access Level</option>
             <option value="User">User</option>

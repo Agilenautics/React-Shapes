@@ -18,7 +18,7 @@ interface User {
   projects: string[];
 }
 
-const accessLevel: string = "user";
+const accessLevel: string = "users";
 const isButtonDisabled: boolean = accessLevel === "user";
 
 function Users() {
@@ -60,6 +60,7 @@ function Users() {
       dateAdded: String(new Date().toLocaleDateString()),
       projects: selectedProjects,
     };
+
 
     setUsers([...users, newUser]);
     setShowAddUserPopup(false);

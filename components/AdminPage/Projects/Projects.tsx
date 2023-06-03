@@ -28,8 +28,6 @@ function Projects() {
   const [projects, setProjects] = useState<Project[]>(ProjectsList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-
-
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
@@ -113,6 +111,7 @@ function Projects() {
   if (error) {
     console.log(error.message);
   }
+
 
   const isButtonDisabled: boolean = accessLevel === "user";
 

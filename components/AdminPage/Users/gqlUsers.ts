@@ -37,16 +37,33 @@ const handleUser_Delete = async (id: string, mutation: DocumentNode | TypedDocum
   })
 }
 
+// const ADD_USER = gql`
+// mutation AddUser($newUser: userInput!) {
+//   addUser(newUser: $newUser) {
+//     active
+//     emailId
+//     userName
+//     userType
+//   }
+// }
+// `
+
 const ADD_USER = gql`
-mutation AddUser($newUser: userInput!) {
-  addUser(newUser: $newUser) {
-    active
-    emailId
-    userName
-    userType
+mutation CreateUsers($input: [userCreateInput!]!) {
+  createUsers(input: $input) {
+    users {
+      userType
+      active
+      id
+      timeStamp
+      hasProjects {
+      name
+       }
+    }
   }
 }
 `
+
 
 const UPDATE_USER = gql`
 mutation UpdateUsers($where: userWhere, $update: userUpdateInput) {
@@ -57,6 +74,9 @@ mutation UpdateUsers($where: userWhere, $update: userUpdateInput) {
   }
 }
 `
+
+
+
 const handleUpdate_User = async (data: Object, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation,
