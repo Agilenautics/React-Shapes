@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GrAdd } from "react-icons/gr";
 import { MdDeleteOutline, MdDelete, MdManageAccounts } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
@@ -15,7 +15,13 @@ import {
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { ProjectsList } from "../Projects/ProjectsList";
-
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../auth";
+import {
+  get_user_method,
+  GET_USER,
+  GET_PROJECTS,
+} from "../Projects/gqlProject";
 interface User {
   id: string;
   name: string;
@@ -24,8 +30,12 @@ interface User {
   projects: string[];
 }
 
-const accessLevel: string = "suser";
-const isButtonDisabled: boolean = accessLevel === "user";
+interface Project {
+  id: string;
+  name: string;
+}
+
+//const accessLevel: string = "suser";
 
 function Users() {
   const [editedUser, setEditedUser] = useState<User | null>(null);
@@ -35,6 +45,32 @@ function Users() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [showManageAccountPopup, setShowManageAccountPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [projectsList, setProjectsList] = useState<Project[]>([]);
+  const [accessLevel, setAccessLevel] = useState<string>("");
+
+  const isButtonDisabled: boolean = accessLevel === "user";
+
+  const verfiyAuthToken = async () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // @ts-ignore
+        get_user_method(user.email, GET_USER).then((res: any[]) => {
+          const userType = res[0].userType;
+          setAccessLevel(userType);
+          const userProjects = res[0].hasProjects.map((project: any) => ({
+            id: project.id,
+            name: project.__typename,
+          }));
+          setProjectsList(userProjects);
+          console.log(userProjects);
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    verfiyAuthToken();
+  }, []);
 
   const { data, error, loading } = useQuery(ALL_USERS);
 
@@ -51,8 +87,6 @@ function Users() {
         return user;
       });
       handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
-
-      // handleUpdate_User()
 
       setUsers(updatedUsers);
       setEditedUser(null);
@@ -286,7 +320,7 @@ function Users() {
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
           onAddUser={handleAddUser}
-          projectData={ProjectsList}
+          projectData={projectsList}
         />
       )}
       {showManageAccountPopup && selectedUser && (

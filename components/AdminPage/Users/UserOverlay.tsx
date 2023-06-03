@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { usersList } from "./UsersList";
@@ -6,11 +6,12 @@ import { useMutation } from "@apollo/client";
 import { ADD_USER, ALL_USERS } from "./gqlUsers";
 import { GET_PROJECTS } from "../Projects/gqlProject";
 import { sendLink } from "../../Authentication/SignInLink/sendLink";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../auth";
 
 interface Project {
   id: string;
   name: string;
-  desc: string;
 }
 
 interface User {
