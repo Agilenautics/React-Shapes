@@ -37,11 +37,14 @@ function Projects() {
   const [userData, setUserData] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [userEmail, setUserEmail] = useState('')
 
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        // @ts-ignore
+        setUserEmail(user.email)
         // @ts-ignore
         get_user_method(user.email, GET_USER).then((res) => {
           // @ts-ignore
@@ -250,6 +253,7 @@ function Projects() {
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
           projectData={data}
+          userEmail={userEmail}
         />
       )}
     </div>

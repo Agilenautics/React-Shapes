@@ -4,18 +4,18 @@ import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
 import { Project } from "react-flow-renderer";
 import { auth } from "../../../auth";
 
-const userEmail = auth.currentUser?.email || "";
-
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
   projectData: Array<Project>;
+  userEmail: String;
 }
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onAddProject,
   onClose,
   projectData,
+  userEmail
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
   const [isFormValid, setIsFormValid] = useState(false);
