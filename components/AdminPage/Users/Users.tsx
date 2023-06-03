@@ -15,6 +15,8 @@ import {
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { ProjectsList } from "../Projects/ProjectsList";
+import LoadingIcon from "../../LoadingIcon";
+
 
 interface User {
   id: string;
@@ -98,7 +100,11 @@ function Users() {
     setConfirmDeleteId(null);
   };
 
-  if (loading) return <div>....Loading</div>;
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
 
   if (error) {
     return error && <div> {error.message} </div>;
