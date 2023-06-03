@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { FocusEvent, KeyboardEvent, SyntheticEvent } from "react";
+import React, { useState, FocusEvent, KeyboardEvent, SyntheticEvent } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 // @ts-ignore
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
@@ -16,6 +16,34 @@ import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
 import { getFileByNode } from "./gqlFiles";
 import { gql } from "graphql-tag";
 import styles from "../Flow/Nodes/styles.module.css";
+
+// LoadingIcon component
+const LoadingIcon: React.FC = () => {
+  return (
+    <div className="loading-icon">
+      <svg
+        className="animate-spin h-10 w-10 text-gray-500"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="11"
+          stroke="currentColor"
+          strokeWidth="2"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M9.5 16A6.5 6.5 0 016 12.5c0-1.623.61-3.105 1.61-4.22l1.564 1.564A4.5 4.5 0 008 12.5a4.5 4.5 0 004.5 4.5 4.5 4.5 0 004.22-6.15l1.565-1.565A6.5 6.5 0 0114.5 16h-5z"
+        ></path>
+      </svg>
+    </div>
+  );
+};
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -111,6 +139,7 @@ export const TreeNode = ({
     (state) => state.updateCurrentFlowchart
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
+  const [isLoading, setIsLoading] = useState(false);
 
   var accessLevel = "suser";
 
@@ -122,16 +151,28 @@ export const TreeNode = ({
     }
   }
 
-  function loadNewFlow(handlers: any, data: any) {
+  function loadNewFlow(
+    handlers: NodeRendererProps<MyData>,
+    data: NodeRendererProps<MyData>
+  ) {
     return (e: SyntheticEvent) => {
       handlers.select(e);
       if (data.children == null) {
-        getNodes(allNodes, data.id).then((result) => {
-          updateNodes(result);
-        });
-        getEdges(allEdges, data.id).then((result) => {
-          updateEdges(result);
-        });
+        setIsLoading(true);
+        getNodes(allNodes, data.id)
+          .then((result) => {
+            updateNodes(result);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+        getEdges(allEdges, data.id)
+          .then((result) => {
+            updateEdges(result);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       }
     };
   }
@@ -177,6 +218,24 @@ export const TreeNode = ({
               </div>
             )}
           </span>
+        )}
+        {isLoading && <LoadingIcon />}
+        {!isLoading && !state.isEditing && (
+          <>
+            <FiEdit2
+              onClick={handlers.edit}
+              className="cursor-pointer stroke-2 mx-1"
+              size={18}
+            />
+            <FiDelete
+              onClick={(e) => {
+                e.stopPropagation();
+                delete_item(Id);
+              }}
+              className="cursor-pointer stroke-2"
+              size={18}
+            />
+          </>
         )}
       </div>
     </div>

@@ -79,15 +79,10 @@ const nodeStore = create<NodeState>((set) => ({
       return { nodes: nodes };
     }),
   deleteNode: (node) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this node?"
-    );
-    if (confirmDelete) {
       set((state) => {
         const updated_nodes = state.nodes.filter((item) => item.id !== node.id);
         return { nodes: updated_nodes };
       });
-    }
   },
   updateDescription: (id: string, newDescription: string) => {
     set((state) => {

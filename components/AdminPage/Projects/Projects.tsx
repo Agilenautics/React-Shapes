@@ -34,20 +34,19 @@ function Projects() {
   const [projects, setProjects] = useState<Project[]>(ProjectsList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [accessLevel, setAccessLevel] = useState<string>("");
+  const [userData, setUserData] = useState([]);
+  const [projectData, setProjectData] = useState([]);
 
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // @ts-ignore
-        get_user_method(user.email, GET_USER).then((res: User[]) => {
-          const userType = res[0].userType;
-          setAccessLevel(userType);
-          console.log(userType);
-          const userProjects = res[0].hasProjects.map(
-            (project: { id: string }) => project.id
-          );
-          console.log(userProjects);
+        get_user_method(user.email, GET_USER).then((res) => {
+          // @ts-ignore
+          setUserData(res);
+          // @ts-ignore
+          setProjectData(res[0].hasProjects);
         });
       }
     });
@@ -123,7 +122,8 @@ function Projects() {
     console.log(error.message);
   }
 
-  const isButtonDisabled: boolean = accessLevel === "user";
+  // @ts-ignore
+  const isButtonDisabled: boolean = accessLevel === userData.userType;
 
   return (
     <div>
@@ -175,7 +175,7 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {data.projects.map((project: Project) => (
+            {projectData.map((project: Project) => (
               <tr key={project.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-4 py-4 font-medium">
                   {projectId === project.id ? (
@@ -189,7 +189,7 @@ function Projects() {
                     project.name
                   )}
                 </td>
-                <td className="px-6 py-4 md:table-cell">
+                <td className="hidden px-6 py-4 md:table-cell">
                   {projectId === project.id ? (
                     <input
                       type="text"
@@ -198,7 +198,8 @@ function Projects() {
                       className="border-b focus:border-blue-500 focus:outline-none"
                     />
                   ) : (
-                    project.desc
+                    // @ts-ignore
+                    project.description
                   )}
                 </td>
                 <td className="px-6 py-4">

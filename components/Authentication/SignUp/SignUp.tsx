@@ -46,7 +46,6 @@ const Signup: React.FC = () => {
                         const refreshToken = user.refreshToken;
 
 
-
                         // Store the tokens in cookies
                         document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
                         document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;

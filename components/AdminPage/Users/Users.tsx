@@ -325,6 +325,7 @@ function Users() {
       )}
       {showManageAccountPopup && selectedUser && (
         <ManageAccountOverlay
+          //@ts-ignore
           user={selectedUser}
           onClose={() => setShowManageAccountPopup(false)}
         />

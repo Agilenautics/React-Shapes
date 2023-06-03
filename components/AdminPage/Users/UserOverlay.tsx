@@ -86,23 +86,41 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
       userType: formData.accessLevel,
       active: formData.active,
     };
-    createNewUser({
-      variables: {
-        newUser,
-      },
-      refetchQueries: [{ query: ALL_USERS }],
-    });
+
 
     // onAddUser(newUser, formData.projects);
-    onClose();
+    // onClose();
+    console.log(newUser.emailId)
+
+
 
     sendLink(newUser.emailId)
       .then((registerUser: any) => {
         if (registerUser.success) {
           setRegisterSuccess({ msg: registerUser.msg, error: false });
+          console.log(registerUser)
           // createNewUser({
           //   variables: {
-          //     newUser
+          //     "input": [
+          //       {
+          //         "emailId": formData.email,
+          //         "userType": formData.accessLevel,
+          //         "active": false,
+          //         "userName": "",
+          //         "hasProjects": {
+          //           "connect": [
+          //             {
+          //               "where": {
+          //                 "node": {
+          //                   //here you can put project id
+          //                   "id": "4523795e-2c85-48c9-9206-c77d2c9a37b1"
+          //                 }
+          //               }
+          //             }
+          //           ]
+          //         }
+          //       }
+          //     ]
           //   },
           //   refetchQueries: [{ query: ALL_USERS }]
           // });
@@ -130,6 +148,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             value={formData.email}
             onChange={handleInputChange}
             className="w-full rounded-md border border-gray-300 p-1"
+            required
           />
         </div>
         <div className="mb-4">
@@ -139,6 +158,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             value={formData.accessLevel}
             onChange={handleInputChange}
             className="w-full rounded-md border border-gray-300 p-1"
+            required
           >
             <option value="">Select Access Level</option>
             <option value="User">User</option>
