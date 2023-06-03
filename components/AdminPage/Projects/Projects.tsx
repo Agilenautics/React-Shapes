@@ -10,6 +10,7 @@ import {
   DELETE_PROJECT,
   GET_PROJECTS,
   GET_USER,
+  EDIT_PROJECT,edit_Project,
   delete_Project,
   get_user_method,
 } from "./gqlProject";
@@ -72,19 +73,21 @@ function Projects() {
     projectName: string,
     projectDesc: string
   ) => {
+    
     setProjectId(projectId);
     setProjectName(projectName);
     setProjectDesc(projectDesc);
   };
 
   const handleSaveButtonClick = (projectId: string) => {
-    const updatedProjectsList: Project[] = updateProjectName(
-      projectId,
-      projectName,
-      projects
-    );
-
-    setProjects(updatedProjectsList);
+    // // const updatedProjectsList: Project[] = updateProjectName(
+    // //   projectId,
+    // //   projectName,
+    // //   projects
+    // );
+    edit_Project(projectId,projectName,projectDesc,EDIT_PROJECT);
+    //console.log(result,"res");
+    //setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };

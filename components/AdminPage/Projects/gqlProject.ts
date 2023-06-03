@@ -88,9 +88,34 @@ mutation Mutation($where: userWhere, $update: userUpdateInput) {
   }
 }
 `
+const EDIT_PROJECT = gql`
+mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
+  updateMains(where: $where, update: $update) {
+    mains {
+      name
+      description
+      
+     
+    }
+  }
+}
+`
+const edit_Project = async (id: string,projectName:string, projectDesc:string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id
+      },
+      "update": {
+        "name": projectName,
+        "description":projectDesc
+      }
+    },
+    refetchQueries: [{ query: GET_PROJECTS }],
+  })
+
+}
 
 
-
-
-
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER,get_user_method }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER,get_user_method,edit_Project,EDIT_PROJECT }
