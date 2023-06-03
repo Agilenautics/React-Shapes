@@ -1,5 +1,4 @@
-
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   addEdge,
   applyNodeChanges,
@@ -12,6 +11,7 @@ import ReactFlow, {
   ConnectionMode,
   useReactFlow,
 } from "react-flow-renderer";
+
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
 import CustomControls from "./CustomControls";
@@ -31,13 +31,8 @@ const defaultEdgeOptions = {
     bidirectional: false,
   },
 };
-/**
- * This is the main flowchart component. We're using a lot of hooks to get the data for this component.
- * The callbacks are used to update the flowchart whenever a change takes place.
- */
 
 function Flow() {
-
   const snapGrid: [number, number] = [10, 10];
   const { getNodes, getEdges } = useReactFlow();
   const defaultNodes = nodeStore((state) => state.nodes);
@@ -47,46 +42,49 @@ function Flow() {
   const deleteNode = nodeStore((state) => state.deleteNode);
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
-  const currentFlowchart = fileStore((state) => state.currentFlowchart)
+  const currentFlowchart = fileStore((state) => state.currentFlowchart);
   const fileId = fileStore((state) => state.Id);
-  const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId)
+  const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
+  const [nodeId, setNodeId] = useState([]);
 
-  const [nodeId, setNodeId] = useState([])
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
+  const handleConfirm = useCallback(() => {
+    const selectedNodes = getNodes().filter((node) => node.selected);
+    onNodesDelete(selectedNodes);
+    setShowConfirmation(false);
+  }, [getNodes, onNodesDelete]);
 
+  const handleCancel = useCallback(() => {
+    setShowConfirmation(false);
+  }, []);
 
   const onNodesChange = useCallback(
     (changes: any) =>
       setNodes((nds) => {
-        const nodeData = defaultNodes.filter((value) => value.id === changes[0].id)
+        const nodeData = defaultNodes.filter((value) => value.id === changes[0].id);
         nodeData.map((curEle: any) => {
-          setNodeId(curEle)
-        })
-        return applyNodeChanges(changes, nds)
-      }
-      ),
+          setNodeId(curEle);
+        });
+        return applyNodeChanges(changes, nds);
+      }),
     [defaultNodes, setNodes, updateNodes, currentFlowchart]
   );
 
-  const [edgeId, setEdgeId] = useState([])
+  const [edgeId, setEdgeId] = useState([]);
 
   const onEdgeClick = (event: any, edge: any) => {
-    setEdgeId(edge.id)
-  }
-
+    setEdgeId(edge.id);
+  };
 
   useEffect(() => {
     if (edgeId && edgeId.length !== 0) {
-      const newEdgeData = defaultEdges.filter((value: any) => value.id === edgeId)
+      const newEdgeData = defaultEdges.filter((value: any) => value.id === edgeId);
       newEdgeData.map((curEle) => {
-        updateEdgeBackend(updateEdgeMutation, curEle)
-      })
+        updateEdgeBackend(updateEdgeMutation, curEle);
+      });
     }
-    // if(nodeId.length!==0){
-    //   updateNodeBackend(nodeId,currentFlowchart)
-    // }
-  }, [defaultEdges, edgeId, nodeId, defaultNodes, updateNodeBackend])
-
+  }, [defaultEdges, edgeId, nodeId, defaultNodes, updateNodeBackend]);
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
@@ -95,42 +93,56 @@ function Flow() {
       }),
     [setEdges, defaultEdges, updateEdges, onEdgeClick]
   );
+
   const onConnect = useCallback(
     (newEdge: Connection) =>
       setEdges((eds) => {
-        createFlowEdge(newEdge, fileId, updateEdges)
+        createFlowEdge(newEdge, fileId, updateEdges);
         updateEdges(getEdges());
         return addEdge(newEdge, eds);
       }),
     [setEdges, getEdges, updateEdges, currentFlowchart]
   );
 
+  useEffect(() => {
+    const handleBackspace = (event: { key: string }) => {
+      const focusedElement = document.activeElement;
+      const isTextFieldFocused =
+        focusedElement instanceof HTMLInputElement || focusedElement instanceof HTMLTextAreaElement;
+
+      if (!isTextFieldFocused && event.key === "Backspace") {
+        const selectedNodes = getNodes().filter((node) => node.selected);
+        setShowConfirmation(true);
+      }
+    };
+    document.addEventListener("keydown", handleBackspace);
+    return () => {
+      document.removeEventListener("keydown", handleBackspace);
+    };
+  }, []);
+
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
-      deleteNodeBackend(element.id)
+      deleteNodeBackend(element.id);
       deleteNode(element);
     }
   }
 
-
-  //here iam calling update position methode 
   const onDrag = (event: any, node: Object) => {
-    updatePosition(node)
-  }
+    updatePosition(node);
+  };
 
-
-  // here iam calling deleteEdge methode inside onDeleteEdge
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map((CurEle: any) => {
-      deleteEdge(CurEle.id, CurEle.data.label)
-    })
-  }
+      deleteEdge(CurEle.id, CurEle.data.label);
+    });
+  };
 
   const onNodeClick = (e: any, nodeData: any) => {
-    updateLinkNodeId(nodeData.id)
-    // updateNodeBackend(nodeId,nodeData)
-  }
+    updateLinkNodeId(nodeData.id);
+  };
+
   return (
     <div className="absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
@@ -142,31 +154,42 @@ function Flow() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
-        // @ts-ignore
         connectionLineComponent={ConnectionLine}
-        // snapToGrid
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
-        // @ts-ignore
         edgeTypes={edgeTypeMap}
-        // @ts-ignore
         nodeTypes={nodeTypeMap}
         connectionMode={ConnectionMode.Loose}
-        onNodeDragStop={
-          (event, node) => {
-            updateNodes(getNodes())
-            onDrag(event, node)
-          }
-        }
+        onNodeDragStop={(event, node) => {
+          updateNodes(getNodes());
+          onDrag(event, node);
+        }}
         onNodesDelete={(selectedNodes) => onNodesDelete(selectedNodes)}
         onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
-        // onNodeDrag={onDrag}
         onEdgeClick={onEdgeClick}
         onNodeClick={onNodeClick}
+        deleteKeyCode={[]}
       >
         <MiniMap />
         <CustomControls />
       </ReactFlow>
+
+      {showConfirmation && (
+        <div className="popup-container">
+          <div className="popup-window">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete the selected node(s)?</p>
+            <div>
+              <button className="popup-button" onClick={handleConfirm}>
+                Yes
+              </button>
+              <button className="popup-button" onClick={handleCancel}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { FocusEvent, KeyboardEvent, SyntheticEvent } from "react";
+import React, { useState, FocusEvent, KeyboardEvent, SyntheticEvent } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 // @ts-ignore
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
@@ -16,6 +16,34 @@ import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
 import { getFileByNode } from "./gqlFiles";
 import { gql } from "graphql-tag";
 import styles from "../Flow/Nodes/styles.module.css";
+
+// LoadingIcon component
+const LoadingIcon: React.FC = () => {
+  return (
+    <div className="loading-icon">
+      <svg
+        className="animate-spin h-10 w-10 text-gray-500"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="11"
+          stroke="currentColor"
+          strokeWidth="2"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M9.5 16A6.5 6.5 0 016 12.5c0-1.623.61-3.105 1.61-4.22l1.564 1.564A4.5 4.5 0 008 12.5a4.5 4.5 0 004.5 4.5 4.5 4.5 0 004.22-6.15l1.565-1.565A6.5 6.5 0 0114.5 16h-5z"
+        ></path>
+      </svg>
+    </div>
+  );
+};
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -103,7 +131,7 @@ export const TreeNode = ({
   const folder = Array.isArray(data.children);
   const open = state.isOpen;
   const name = data.name;
-  const Id = data.id;
+  const id = data.id;
   const delete_item = fileStore((state) => state.delete_item);
   const updateNodes = nodeStore((state) => state.updateNodes);
   const updateEdges = edgeStore((state) => state.updateEdges);
@@ -111,34 +139,46 @@ export const TreeNode = ({
     (state) => state.updateCurrentFlowchart
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // This code below is called every frame, which is annoying but works for now
+  var accessLevel = "user"; // Set the access level here
+
   if (state.isSelected) {
-    updateCurrentFlowchart(name, Id);
+    updateCurrentFlowchart(name, id);
     if (data.type === "file") {
-      updateBreadCrumbs(data, Id, "new");
-      console.log("Selected File ID:", Id); // Console log the file's ID
+      updateBreadCrumbs(data, id, "new");
+      console.log("Selected File ID:", id);
     }
   }
 
   function loadNewFlow(
-    handlers: any,
-    data: any
+    handlers: NodeRendererProps<MyData>,
+    data: NodeRendererProps<MyData>
   ) {
     return (e: SyntheticEvent) => {
       handlers.select(e);
       if (data.children == null) {
-        getNodes(allNodes, data.id).then((result) => {
-          // @ts-ignore
-          updateNodes(result);
-        });
-        getEdges(allEdges, data.id).then((result) => {
-          // @ts-ignore
-          updateEdges(result);
-        });
+        setIsLoading(true);
+        getNodes(allNodes, data.id)
+          .then((result) => {
+            updateNodes(result);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+        getEdges(allEdges, data.id)
+          .then((result) => {
+            updateEdges(result);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       }
     };
   }
+
+  const isUser = accessLevel === "user";
+  const canEditAndDelete = !isUser;
 
   return (
     <div
@@ -162,28 +202,45 @@ export const TreeNode = ({
         ) : (
           <span className="flex flex-row text-lg">
             {name}{" "}
-            {state.isSelected && (
+            {state.isSelected && canEditAndDelete && (
               <div className="flex flex-row pl-2">
                 <button className="text-gray-900" onClick={handlers.edit}>
-                  <FiEdit2 size={20} className=" dark:text-white" />
+                  <FiEdit2 size={20} className="dark:text-white" />
                 </button>
                 <button
                   onClick={() => {
-                    delete_item(data.id);
+                    delete_item(id);
                   }}
                   className="ml-2"
                 >
-                  <FiDelete size={20} className=" dark:text-white" />
+                  <FiDelete size={20} className="dark:text-white" />
                 </button>
               </div>
             )}
           </span>
         )}
+        {isLoading && <LoadingIcon />}
+        {!isLoading && !state.isEditing && (
+          <>
+            <FiEdit2
+              onClick={handlers.edit}
+              className="cursor-pointer stroke-2 mx-1"
+              size={18}
+            />
+            <FiDelete
+              onClick={(e) => {
+                e.stopPropagation();
+                delete_item(Id);
+              }}
+              className="cursor-pointer stroke-2"
+              size={18}
+            />
+          </>
+        )}
       </div>
     </div>
   );
 };
-
 
 export const TreeNode2 = ({
   innerRef,
@@ -197,21 +254,21 @@ export const TreeNode2 = ({
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
-  //console.log(data);  
+  //console.log(data);
   var selectedNodeId: string;
-  
+
   if (state.isSelected) {
     selectedNodeId = data.id!;
     console.log("S:", selectedNodeId);
   }
   const customQuery = gql`
-  query FindFileById($nodeId: String!) {
-    files(where: { hasflowchart: { nodes: { id: { equals: $nodeId } } } }) {
-      id
+    query FindFileById($nodeId: String!) {
+      files(where: { hasflowchart: { nodes: { id: { equals: $nodeId } } } }) {
+        id
+      }
     }
-  }
-`;
-  let result: any; 
+  `;
+  let result: any;
   async function getfileId() {
     try {
       result = await getFileByNode(selectedNodeId, customQuery);
@@ -222,7 +279,7 @@ export const TreeNode2 = ({
   }
 
   const fileId = nodeStore((state) => state.fileId);
-  const currentFileId = fileId;//'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
+  const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
 
@@ -234,20 +291,22 @@ export const TreeNode2 = ({
       }
       handlers.select(e);
       if (data.children == null) {
-       return updateLinkNodes(data.hasflowchart.nodes, data.id);
+        return updateLinkNodes(data.hasflowchart.nodes, data.id);
       }
     };
   }
 
   const isCurrentFile = data.id === currentFileId;
-  const nodeStyles = isCurrentFile ? { pointerEvents: 'none', opacity: 0.5 } : {};
-  const disabledCursorClass = isCurrentFile ? styles.disabledCursor : '';
+  const nodeStyles = isCurrentFile
+    ? { pointerEvents: "none", opacity: 0.5 }
+    : {};
+  const disabledCursorClass = isCurrentFile ? styles.disabledCursor : "";
 
   return (
     <div
       ref={innerRef}
       style={{ ...styles.row, ...nodeStyles }}
-      className={classNames('row', state, disabledCursorClass)}
+      className={classNames("row", state, disabledCursorClass)}
       onClick={loadFlowNodes(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -261,7 +320,11 @@ export const TreeNode2 = ({
           <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
         {state.isEditing ? (
-          <RenameForm defaultValue={name} {...handlers} disabled={isCurrentFile} />
+          <RenameForm
+            defaultValue={name}
+            {...handlers}
+            disabled={isCurrentFile}
+          />
         ) : (
           <span className="flex flex-row">
             {name} {state.isSelected}

@@ -10,6 +10,8 @@ import { DELETE_PROJECT, GET_PROJECTS, GET_USER, delete_Project, get_user_method
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../../../auth';
+import LoadingIcon from "../../LoadingIcon";
+
 interface Project {
   id: string;
   name: string;
@@ -33,16 +35,16 @@ function Projects() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // @ts-ignore
-        get_user_method(user.email, GET_USER).then(res=>{
-          console.log(res)
-        })
+        get_user_method(user.email, GET_USER).then((res) => {
+          console.log(res);
+        });
       }
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    verfiyAuthToken()
-  }, [])
+    verfiyAuthToken();
+  }, []);
 
   const handleEditButtonClick = (
     projectId: string,
@@ -86,8 +88,6 @@ function Projects() {
     setShowForm(false);
   };
 
-  
-
   const handleCloseForm = () => {
     setShowForm(false);
   };
@@ -105,7 +105,11 @@ function Projects() {
   };
 
   if (loading) {
-    return <div>....Loading</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingIcon />
+      </div>
+    );
   }
 
   if (error) {
@@ -129,8 +133,9 @@ function Projects() {
           {data.projects.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-            }`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
+            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
@@ -149,8 +154,9 @@ function Projects() {
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
-                      }`}
+                    className={`ml-1 text-sm ${
+                      sortOrder === "asc" ? "rotate-180 transform" : ""
+                    }`}
                   />
                 </div>
               </th>
@@ -177,7 +183,7 @@ function Projects() {
                     project.name
                   )}
                 </td>
-                <td className="hidden px-6 py-4 md:table-cell">
+                <td className="px-6 py-4 md:table-cell">
                   {projectId === project.id ? (
                     <input
                       type="text"
@@ -193,7 +199,9 @@ function Projects() {
                   {projectId === project.id ? (
                     <button
                       onClick={() => handleSaveButtonClick(project.id)}
-                      className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                      className={`mr-2 ${
+                        isButtonDisabled ? "opacity-50" : ""
+                      }`}
                       disabled={isButtonDisabled}
                     >
                       Save
@@ -207,7 +215,9 @@ function Projects() {
                           project.desc
                         )
                       }
-                      className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                      className={`mr-2 ${
+                        isButtonDisabled ? "opacity-50" : ""
+                      }`}
                       disabled={isButtonDisabled}
                     >
                       <BiRename />
@@ -215,7 +225,9 @@ function Projects() {
                   )}
                   <button
                     onClick={() => handleDelete_Project(project.id)}
-                    className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                    className={`ml-2 ${
+                      isButtonDisabled ? "opacity-50" : ""
+                    }`}
                     disabled={isButtonDisabled}
                   >
                     <MdDeleteOutline />

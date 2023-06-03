@@ -8,8 +8,8 @@ function App() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("router", router)
-  }, [])
+    console.log("router", router);
+  }, []);
 
   const handleLinkClick = (link: string) => {
     setActiveLink(link);
@@ -29,11 +29,7 @@ function App() {
     return null;
   };
 
-  return (
-    <>
-      {renderPage()}
-    </>
-  );
+  return <>{renderPage()}</>;
 }
 
 export default App;

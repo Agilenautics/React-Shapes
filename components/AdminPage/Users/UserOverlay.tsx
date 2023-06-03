@@ -4,6 +4,7 @@ import makeAnimated from "react-select/animated";
 import { usersList } from "./UsersList";
 import { useMutation } from "@apollo/client";
 import { ADD_USER, ALL_USERS } from "./gqlUsers";
+import { GET_PROJECTS } from "../Projects/gqlProject";
 import { sendLink } from "../../Authentication/SignInLink/sendLink";
 
 interface Project {
@@ -19,7 +20,7 @@ interface User {
   projects: string[];
   email: string;
   dateAdded: string;
-  active: Boolean
+  active: Boolean;
 }
 
 interface UserOverlayProps {
@@ -40,10 +41,13 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     projects: [],
     email: "",
     dateAdded: "",
-    active: false
+    active: false,
   });
   const [isEmailValid, setIsEmailValid] = useState(false);
-  const [registerSuccess, setRegisterSuccess] = useState({ msg: "", error: false })
+  const [registerSuccess, setRegisterSuccess] = useState({
+    msg: "",
+    error: false,
+  });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -64,7 +68,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
 
   //mutation of add new user
 
-  const [createNewUser, { data, error, loading }] = useMutation(ADD_USER)
+  const [createNewUser, { data, error, loading }] = useMutation(ADD_USER);
 
   const handleProjectSelect = (selectedOptions: any) => {
     const selectedProjects = selectedOptions.map((option: any) => option.value);
@@ -79,41 +83,17 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
       userName: "",
       emailId: formData.email,
       userType: formData.accessLevel,
-      active: formData.active
+      active: formData.active,
     };
+    createNewUser({
+      variables: {
+        newUser,
+      },
+      refetchQueries: [{ query: ALL_USERS }],
+    });
 
-    console.log("Hello")
-
-    console.log(formData)
-
-
-
-
-    // {
-    //   "input": [
-    //     {
-    //       "emailId": "akshay123@gmail.com",
-    //       "userType": "User",
-    //       "active": false,
-    //       "userName": "",
-    //       "hasProjects": {
-    //         "connect": [
-    //           {
-    //             "where": {
-    //               "node": {
-    //                 "id": "4523795e-2c85-48c9-9206-c77d2c9a37b1"
-    //               }
-    //             }
-    //           }
-    //         ]
-    //       }
-    //     }
-    //   ]
-    // }
-
-
-
-
+    // onAddUser(newUser, formData.projects);
+    onClose();
 
     sendLink(newUser.emailId)
       .then((registerUser: any) => {
@@ -151,7 +131,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
       })
       .catch((error) => {
         // Handle any error during the sendLink process
-        console.log('Error:', error);
+        console.log("Error:", error);
       });
   };
 
@@ -227,9 +207,9 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             </button>
           </div>
         </div>
-        {
-          registerSuccess.error && <div className='text-sm text-red-500'>{registerSuccess.msg}</div>
-        }
+        {registerSuccess.error && (
+          <div className="text-sm text-red-500">{registerSuccess.msg}</div>
+        )}
       </div>
     </div>
   );
