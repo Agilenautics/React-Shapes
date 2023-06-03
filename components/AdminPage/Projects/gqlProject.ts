@@ -73,12 +73,18 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
 
 
 const ADD_PROJECT = gql`
-mutation addProject($newProject: projectInput!) {
-  createProject(newProject: $newProject) {
-    name
-    description
-    isOpen
-    userName
+mutation Mutation($where: userWhere, $update: userUpdateInput) {
+  updateUsers(where: $where, update: $update) {
+    users {
+      emailId
+      id
+      userType
+      hasProjects {
+        id
+        name
+        description
+      }
+    }
   }
 }
 `

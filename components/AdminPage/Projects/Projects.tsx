@@ -36,6 +36,7 @@ function Projects() {
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [userData, setUserData] = useState([]);
   const [projectData, setProjectData] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   //verifying token
   const verfiyAuthToken = async () => {
@@ -43,6 +44,9 @@ function Projects() {
       if (user) {
         // @ts-ignore
         get_user_method(user.email, GET_USER).then((res) => {
+          // @ts-ignore
+          const userType = res[0].userType;
+          setAccessLevel(userType);
           // @ts-ignore
           setUserData(res);
           // @ts-ignore
@@ -55,6 +59,10 @@ function Projects() {
   useEffect(() => {
     verfiyAuthToken();
   }, []);
+
+  useEffect(() => {
+    setIsButtonDisabled(accessLevel.toLowerCase() == "user")
+  }, [accessLevel])
 
   const handleEditButtonClick = (
     projectId: string,
@@ -122,8 +130,6 @@ function Projects() {
     console.log(error.message);
   }
 
-  // @ts-ignore
-  const isButtonDisabled: boolean = accessLevel === userData.userType;
 
   return (
     <div>
@@ -136,7 +142,7 @@ function Projects() {
         <h2 className="inline-block text-xl font-semibold">Projects</h2>
         <p className="ml-8 inline-block">Total</p>
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {data.projects.length}
+          {projectData && projectData.length}
         </div>
         <button
           className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${

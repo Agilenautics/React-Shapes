@@ -2,6 +2,9 @@ import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
 import { Project } from "react-flow-renderer";
+import { auth } from "../../../auth";
+
+const userEmail = auth.currentUser?.email || "";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
@@ -31,15 +34,37 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       name: formData.name,
       isOpen: true,
       userName: "",
+      //userId:userData.id
     };
+    
     // onAddProject(formData.name, formData.desc);
     createProject({
       variables: {
-        newProject: projectData,
+       
+        "where": {
+          "emailId": userEmail
+        },
+        "update": {
+          "hasProjects": [
+            {
+              "create": [
+                {
+                  "node": {
+                    "description":formData.desc,
+                    "name": formData.name,
+                    "isOpen": true,
+                    "userName": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
       },
       refetchQueries: [{ query: GET_PROJECTS }],
+      
     });
-
+    
     setFormData({ name: "", desc: "" });
     onClose();
   };

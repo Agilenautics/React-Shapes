@@ -47,8 +47,7 @@ function Users() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [projectsList, setProjectsList] = useState<Project[]>([]);
   const [accessLevel, setAccessLevel] = useState<string>("");
-
-  const isButtonDisabled: boolean = accessLevel === "user";
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
@@ -71,6 +70,10 @@ function Users() {
   useEffect(() => {
     verfiyAuthToken();
   }, []);
+
+  useEffect(() => {
+    setIsButtonDisabled(accessLevel.toLowerCase() == "user")
+  }, [accessLevel])
 
   const { data, error, loading } = useQuery(ALL_USERS);
 
@@ -161,7 +164,7 @@ function Users() {
         <h2 className="inline-block text-xl font-semibold">Users</h2>
         <p className="ml-8 inline-block">Total</p>
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {users.length}
+          {data && data.users && data.users.length}
         </div>
         <button
           className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
