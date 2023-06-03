@@ -112,7 +112,7 @@ export const TreeNode = ({
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
 
-  var accessLevel = "user"; // Set the access level here
+  var accessLevel = "suser";
 
   if (state.isSelected) {
     updateCurrentFlowchart(name, id);
