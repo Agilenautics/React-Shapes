@@ -59,7 +59,7 @@ function Users() {
           setAccessLevel(userType);
           const userProjects = res[0].hasProjects.map((project: any) => ({
             id: project.id,
-            name: project.__typename,
+            name: project.name,
           }));
           setProjectsList(userProjects);
           console.log(userProjects);

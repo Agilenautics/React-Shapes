@@ -11,7 +11,7 @@ type user{
 type main {
   id: ID! @id
   timeStamp: DateTime! @timestamp
-  userName: String!
+  userName: String
   description:String
   name: String!
   isOpen: Boolean!
