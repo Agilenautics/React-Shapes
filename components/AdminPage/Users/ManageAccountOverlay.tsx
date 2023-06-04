@@ -29,13 +29,17 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   >(
     user.hasProjects.map((projectId) => {
       console.log(projectId)
+      // @ts-ignore
       const project = user.hasProjects.find((p) => p.id === projectId.id);
+      // @ts-ignore
       return project ? { value: project.id, label: project.name } : null;
     })
   );
 
   const projectsList = user.hasProjects.map((project) => ({
+      // @ts-ignore
     value: project.id,
+      // @ts-ignore
     label: project.name,
   }));
 

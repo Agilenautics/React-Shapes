@@ -154,9 +154,11 @@ function Flow() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
+      // @ts-ignore
         connectionLineComponent={ConnectionLine}
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
+      // @ts-ignore
         edgeTypes={edgeTypeMap}
         nodeTypes={nodeTypeMap}
         connectionMode={ConnectionMode.Loose}

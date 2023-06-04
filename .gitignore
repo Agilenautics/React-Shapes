@@ -34,4 +34,4 @@ yarn-error.log*
 
 #firebase
 .firebase
-/functions
+/public/api/node_modules

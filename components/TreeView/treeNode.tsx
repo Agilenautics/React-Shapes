@@ -156,9 +156,12 @@ export const TreeNode = ({
     data: NodeRendererProps<MyData>
   ) {
     return (e: SyntheticEvent) => {
+      // @ts-ignore
       handlers.select(e);
+      // @ts-ignore
       if (data.children == null) {
         setIsLoading(true);
+        // @ts-ignore
         getNodes(allNodes, data.id)
           .then((result) => {
             updateNodes(result);
@@ -166,6 +169,7 @@ export const TreeNode = ({
           .finally(() => {
             setIsLoading(false);
           });
+        // @ts-ignore
         getEdges(allEdges, data.id)
           .then((result) => {
             updateEdges(result);
@@ -185,6 +189,7 @@ export const TreeNode = ({
       ref={innerRef}
       style={styles.row}
       className={classNames("row", state)}
+      // @ts-ignore
       onClick={loadNewFlow(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -228,8 +233,10 @@ export const TreeNode = ({
               size={18}
             />
             <FiDelete
+              // @ts-ignore
               onClick={(e) => {
                 e.stopPropagation();
+                // @ts-ignore
                 delete_item(Id);
               }}
               className="cursor-pointer stroke-2"

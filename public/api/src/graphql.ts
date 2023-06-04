@@ -8,7 +8,7 @@ import driver from "./dbConnection";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
-const typeDefs = loadFile("pages/api/sdl.graphql");
+const typeDefs = loadFile("src/sdl.graphql");
 
 
 EventEmitter.defaultMaxListeners = 15
