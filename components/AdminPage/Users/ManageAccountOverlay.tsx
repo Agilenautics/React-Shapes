@@ -9,7 +9,10 @@ interface ManageAccountOverlayProps {
     name: string;
     userType: string;
     dateAdded: string;
-    hasProjects: string[];
+    hasProjects: Array<{
+      id: string;
+      name: string;
+    }>;
   };
   onClose: () => void;
 }
@@ -20,7 +23,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   user,
   onClose,
 }) => {
-  console.log(user)
+  console.log(user);
   const [selectedProjects, setSelectedProjects] = useState<
     Array<{
       value: string;
@@ -28,7 +31,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
     } | null>
   >(
     user.hasProjects.map((projectId) => {
-      console.log(projectId)
+      console.log(projectId);
       const project = user.hasProjects.find((p) => p.id === projectId.id);
       return project ? { value: project.id, label: project.name } : null;
     })
@@ -50,7 +53,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
         .filter((project) => project !== null)
         .map((project) => project!.value),
     };
-    console.log(editedUser)
+    console.log(editedUser);
     onClose();
   };
 
