@@ -11,11 +11,11 @@ type user{
 type main {
   id: ID! @id
   timeStamp: DateTime! @timestamp
-  userName: String!
+  userName: String
   description:String
   name: String!
   isOpen: Boolean!
-  userHas: user @relationship (type: "hasMain", direction:IN)
+  userHas: [user!]! @relationship (type: "hasMain", direction:IN)
   hasContainsFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
   hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
 }

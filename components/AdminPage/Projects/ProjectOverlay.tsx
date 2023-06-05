@@ -2,17 +2,20 @@ import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
 import { Project } from "react-flow-renderer";
+import { auth } from "../../../auth";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
   projectData: Array<Project>;
+  userEmail: String;
 }
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onAddProject,
   onClose,
   projectData,
+  userEmail
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
   const [isFormValid, setIsFormValid] = useState(false);
@@ -31,15 +34,37 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       name: formData.name,
       isOpen: true,
       userName: "",
+      //userId:userData.id
     };
+    console.log("hi",userEmail,projectData);
     // onAddProject(formData.name, formData.desc);
     createProject({
       variables: {
-        newProject: projectData,
+       
+        "where": {
+          "emailId": userEmail
+        },
+        "update": {
+          "hasProjects": [
+            {
+              "create": [
+                {
+                  "node": {
+                    "description":formData.desc,
+                    "name": formData.name,
+                    "isOpen": true,
+                    "userName": ""
+                  }
+                }
+              ]
+            }
+          ]
+        }
       },
       refetchQueries: [{ query: GET_PROJECTS }],
+      
     });
-
+    
     setFormData({ name: "", desc: "" });
     onClose();
   };

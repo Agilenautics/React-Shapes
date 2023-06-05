@@ -73,18 +73,49 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
 
 
 const ADD_PROJECT = gql`
-mutation addProject($newProject: projectInput!) {
-  createProject(newProject: $newProject) {
-    name
-    description
-    isOpen
-    userName
+mutation Mutation($where: userWhere, $update: userUpdateInput) {
+  updateUsers(where: $where, update: $update) {
+    users {
+      emailId
+      id
+      userType
+      hasProjects {
+        id
+        name
+        description
+      }
+    }
   }
 }
 `
+const EDIT_PROJECT = gql`
+mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
+  updateMains(where: $where, update: $update) {
+    mains {
+      name
+      description
+      
+     
+    }
+  }
+}
+`
+const edit_Project = async (id: string,projectName:string, projectDesc:string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id
+      },
+      "update": {
+        "name": projectName,
+        "description":projectDesc
+      }
+    },
+    refetchQueries: [{ query: GET_PROJECTS }],
+  })
+
+}
 
 
-
-
-
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER,get_user_method }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER,get_user_method,edit_Project,EDIT_PROJECT }

@@ -10,6 +10,7 @@ import {
   DELETE_PROJECT,
   GET_PROJECTS,
   GET_USER,
+  EDIT_PROJECT,edit_Project,
   delete_Project,
   get_user_method,
 } from "./gqlProject";
@@ -36,13 +37,20 @@ function Projects() {
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [userData, setUserData] = useState([]);
   const [projectData, setProjectData] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [userEmail, setUserEmail] = useState('')
 
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // @ts-ignore
+        setUserEmail(user.email)
+        // @ts-ignore
         get_user_method(user.email, GET_USER).then((res) => {
+          // @ts-ignore
+          const userType = res[0].userType;
+          setAccessLevel(userType);
           // @ts-ignore
           setUserData(res);
           // @ts-ignore
@@ -56,24 +64,30 @@ function Projects() {
     verfiyAuthToken();
   }, []);
 
+  useEffect(() => {
+    setIsButtonDisabled(accessLevel.toLowerCase() == "user")
+  }, [accessLevel])
+
   const handleEditButtonClick = (
     projectId: string,
     projectName: string,
     projectDesc: string
   ) => {
+    
     setProjectId(projectId);
     setProjectName(projectName);
     setProjectDesc(projectDesc);
   };
 
   const handleSaveButtonClick = (projectId: string) => {
-    const updatedProjectsList: Project[] = updateProjectName(
-      projectId,
-      projectName,
-      projects
-    );
-
-    setProjects(updatedProjectsList);
+    // // const updatedProjectsList: Project[] = updateProjectName(
+    // //   projectId,
+    // //   projectName,
+    // //   projects
+    // );
+    edit_Project(projectId,projectName,projectDesc,EDIT_PROJECT);
+    //console.log(result,"res");
+    //setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };
@@ -122,8 +136,6 @@ function Projects() {
     console.log(error.message);
   }
 
-  // @ts-ignore
-  const isButtonDisabled: boolean = accessLevel === userData.userType;
 
   return (
     <div>
@@ -136,7 +148,7 @@ function Projects() {
         <h2 className="inline-block text-xl font-semibold">Projects</h2>
         <p className="ml-8 inline-block">Total</p>
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {data.projects.length}
+          {projectData && projectData.length}
         </div>
         <button
           className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
@@ -244,6 +256,7 @@ function Projects() {
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
           projectData={data}
+          userEmail={userEmail}
         />
       )}
     </div>

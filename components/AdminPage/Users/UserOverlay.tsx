@@ -99,31 +99,32 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
         if (registerUser.success) {
           setRegisterSuccess({ msg: registerUser.msg, error: false });
           console.log(registerUser)
-          // createNewUser({
-          //   variables: {
-          //     "input": [
-          //       {
-          //         "emailId": formData.email,
-          //         "userType": formData.accessLevel,
-          //         "active": false,
-          //         "userName": "",
-          //         "hasProjects": {
-          //           "connect": [
-          //             {
-          //               "where": {
-          //                 "node": {
-          //                   //here you can put project id
-          //                   "id": "4523795e-2c85-48c9-9206-c77d2c9a37b1"
-          //                 }
-          //               }
-          //             }
-          //           ]
-          //         }
-          //       }
-          //     ]
-          //   },
-          //   refetchQueries: [{ query: ALL_USERS }]
-          // });
+          console.log("form data",formData);
+          createNewUser({
+            variables: {
+              "input": [
+                {
+                  "emailId": formData.email,
+                  "userType": formData.accessLevel,
+                  "active": false,
+                  "userName": "",
+                  "hasProjects": {
+                    "connect": [
+                      {
+                        "where": {
+                          "node": {
+                            //here you can put project id
+                            "id": formData.projects[0],
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            refetchQueries: [{ query: ALL_USERS }]
+          });
           onClose();
         } else {
           setRegisterSuccess({ msg: registerUser.msg, error: true });
