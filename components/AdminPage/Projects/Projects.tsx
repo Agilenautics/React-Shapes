@@ -10,7 +10,8 @@ import {
   DELETE_PROJECT,
   GET_PROJECTS,
   GET_USER,
-  EDIT_PROJECT,edit_Project,
+  EDIT_PROJECT,
+  edit_Project,
   delete_Project,
   get_user_method,
 } from "./gqlProject";
@@ -38,14 +39,14 @@ function Projects() {
   const [userData, setUserData] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [userEmail, setUserEmail] = useState('')
+  const [userEmail, setUserEmail] = useState("");
 
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // @ts-ignore
-        setUserEmail(user.email)
+        setUserEmail(user.email);
         // @ts-ignore
         get_user_method(user.email, GET_USER).then((res) => {
           // @ts-ignore
@@ -65,15 +66,14 @@ function Projects() {
   }, []);
 
   useEffect(() => {
-    setIsButtonDisabled(accessLevel.toLowerCase() == "user")
-  }, [accessLevel])
+    setIsButtonDisabled(accessLevel.toLowerCase() == "user");
+  }, [accessLevel]);
 
   const handleEditButtonClick = (
     projectId: string,
     projectName: string,
     projectDesc: string
   ) => {
-    
     setProjectId(projectId);
     setProjectName(projectName);
     setProjectDesc(projectDesc);
@@ -85,7 +85,7 @@ function Projects() {
     // //   projectName,
     // //   projects
     // );
-    edit_Project(projectId,projectName,projectDesc,EDIT_PROJECT);
+    edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT);
     //console.log(result,"res");
     //setProjects(updatedProjectsList);
     setProjectId(null);
@@ -135,7 +135,6 @@ function Projects() {
   if (error) {
     console.log(error.message);
   }
-
 
   return (
     <div>
