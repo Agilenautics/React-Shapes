@@ -23,55 +23,56 @@ import {
 import { auth } from "../../auth";
 
 const userEmail = auth.currentUser?.email || "";
-const initData = await getTreeNodeByUser(getMainByUser, userEmail);
+// await getTreeNodeByUser(getMainByUser, userEmail);
+const initData = await getTreeNodeByUser(getMainByUser, "69a55226-35d8-491b-9f39-c1a386072ec9");
 // {
 //   id: "ROOT",
 //   name: "ROOT",
 //   isOpen: true,
 //   children: [
-//     {
-//       id: "1",
-//       name: "Clients",
-//       type: "folder",
-//       isOpen: true,
-//       children: [
-//         {
-//           id: "4",
-//           name: "Projects",
-//           isOpen: true,
-//           type: "folder",
-//           children: [
-//             {
-//               id: "2",
-//               name: "Flowchart 1",
-//               type: "file",
-//               flowchart: {
-//                 nodes: await getNodes(allNodes, "Flowchart 1"),
-//                 edges: edges1,
-//               },
-//               isOpen: true,
-//             },
-//             {
-//               id: "3",
-//               name: "Flowchart 2",
-//               flowchart: {
-//                 nodes: await getNodes(allNodes, "Flowchart 2"),
-//                 edges: await getEdges(allEdges, "Flowchart 2"),
-//               },
-//             },
-//             {
-//               id: "80",
-//               name: "Flowchart 3",
-//               flowchart: {
-//                 // here iam changing empty array to calling get all edges and nodes
-//                 nodes:await getNodes(allNodes,"Flowchart 3"),
-//                 edges:await getEdges(allEdges, "Flowchart 3") ,
-//               },
-//             },
-//           ],
-//         },
-//       ],
-//     },
+//     // {
+//     //   id: "1",
+//     //   name: "Clients",
+//     //   type: "folder",
+//     //   isOpen: true,
+//     //   children: [
+//     //     {
+//     //       id: "4",
+//     //       name: "Projects",
+//     //       isOpen: true,
+//     //       type: "folder",
+//     //       children: [
+//     //         {
+//     //           id: "2",
+//     //           name: "Flowchart 1",
+//     //           type: "file",
+//     //           flowchart: {
+//     //             nodes: await getNodes(allNodes, "Flowchart 1"),
+//     //             edges: [],
+//     //           },
+//     //           isOpen: true,
+//     //         },
+//     //         {
+//     //           id: "3",
+//     //           name: "Flowchart 2",
+//     //           flowchart: {
+//     //             nodes: await getNodes(allNodes, "Flowchart 2"),
+//     //             edges: await getEdges(allEdges, "Flowchart 2"),
+//     //           },
+//     //         },
+//     //         {
+//     //           id: "80",
+//     //           name: "Flowchart 3",
+//     //           flowchart: {
+//     //             // here iam changing empty array to calling get all edges and nodes
+//     //             nodes:await getNodes(allNodes,"Flowchart 3"),
+//     //             edges:await getEdges(allEdges, "Flowchart 3") ,
+//     //           },
+//     //         },
+//     //       ],
+//     //     },
+//     //   ],
+//     // },
 //     {
 //       id: "6",
 //       name: "Other Projects",
@@ -98,6 +99,7 @@ function searchTree(element: any, matchingTitle: any): any {
 
 interface files {
   data: MyData;
+  updateInitData:(data:MyData)=>void;
   linkNodeId: string;
   updateLinkNodeId: (nodeId: string) => void;
   Id: string;
@@ -115,6 +117,10 @@ interface files {
 const fileStore = create<files>((set) => ({
   // @ts-ignore
   data: initData[0],
+  updateInitData:(data:MyData)=>
+  set((state)=>{
+    return {data}
+  }),
   linkNodeId: "",
   // Id: "",
   currentFlowchart: "",

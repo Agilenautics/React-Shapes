@@ -17,6 +17,8 @@ import {
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
+import Link from "next/link";
+import LoadingIcon from "../../LoadingIcon";
 interface Project {
   id: string;
   name: string;
@@ -39,6 +41,23 @@ function Projects() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
+
+  const getProject = async () => {
+    get_user_method(userEmail, GET_USER).then((res) => {
+      if (loading) {
+        return ""
+      }
+      // @ts-ignore
+      const userType = res[0].userType === undefined ? "" : res[0].userType;
+      setAccessLevel(userType);
+      // @ts-ignore
+      setUserData(res);
+      // @ts-ignore
+      setProjectData(res[0].hasProjects);
+    });
+  }
+
+
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
@@ -49,17 +68,20 @@ function Projects() {
           setAccessLevel(userType);
           setProjectData(res[0].hasProjects);
         });
+        // @ts-ignore
+        getProject()
+
       }
     });
   };
 
-  useEffect(() => {
-    verfiyAuthToken();
-  }, []);
+
 
   useEffect(() => {
-    setIsButtonDisabled(accessLevel.toLowerCase() == "user");
-  }, [accessLevel]);
+    verfiyAuthToken();
+    setIsButtonDisabled(accessLevel.toLowerCase() == "user")
+  }, [userEmail, getProject]);
+
 
   const handleEditButtonClick = (
     projectId: string,
@@ -72,12 +94,13 @@ function Projects() {
   };
 
   const handleSaveButtonClick = (projectId: string) => {
+    edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT,GET_USER);
     // // const updatedProjectsList: Project[] = updateProjectName(
     // //   projectId,
     // //   projectName,
     // //   projects
     // );
-    edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT);
+    // edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT);
     //console.log(result,"res");
     //setProjects(updatedProjectsList);
     setProjectId(null);
@@ -85,7 +108,8 @@ function Projects() {
   };
 
   const handleDelete_Project = (projectId: string) => {
-    delete_Project(projectId, DELETE_PROJECT);
+    getProject()
+    delete_Project(projectId, DELETE_PROJECT,GET_USER);
   };
 
   const handleAddProjectClick = () => {
@@ -120,13 +144,19 @@ function Projects() {
   //   setProjects(sortedProjects);
   // };
 
-  if (loading) {
-    return <div>....Loading</div>;
-  }
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
 
   if (error) {
     console.log(error.message);
   }
+
+
+
+
 
   return (
     <div>
@@ -142,9 +172,8 @@ function Projects() {
           {projectData && projectData.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
@@ -163,9 +192,8 @@ function Projects() {
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
+                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
+                      }`}
                   />
                 </div>
               </th>
@@ -189,7 +217,9 @@ function Projects() {
                       className="border-b focus:border-blue-500 focus:outline-none"
                     />
                   ) : (
-                    project.name
+                    <Link href={'/flowchart/' + project.id}>
+                      {project.name}
+                    </Link>
                   )}
                 </td>
                 <td className="hidden px-6 py-4 md:table-cell">
@@ -219,6 +249,7 @@ function Projects() {
                         handleEditButtonClick(
                           project.id,
                           project.name,
+                          // @ts-ignore
                           project.description
                         )
                       }

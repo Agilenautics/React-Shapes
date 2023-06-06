@@ -746,7 +746,7 @@ function transformObject(root: RootObject): RootObject {
 }
 async function getTreeNodeByUser(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  userName: string
+  id: string
 ) {
   var nodes: Main[] = [];
 
@@ -755,7 +755,7 @@ async function getTreeNodeByUser(
       query: customQuery,
       variables: {
         where: {
-          userName
+          id
         },
       },
     })

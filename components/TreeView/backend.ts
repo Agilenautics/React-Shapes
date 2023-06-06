@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
-import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend } from "./gqlFiles";
+import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, getMainByUser, getTreeNodeByUser } from "./gqlFiles";
+import { useRouter } from "next/router";
 
 /**
  * It returns the first node in the tree that has a model with an id property that matches the id
@@ -40,6 +41,9 @@ export function useBackend() {
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
+  const router = useRouter()
+  
+
   useEffect(() => {
     setData(initData);
     update;

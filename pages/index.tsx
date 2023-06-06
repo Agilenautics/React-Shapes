@@ -48,10 +48,7 @@ const Home: NextPage = () => {
         <Sidebar />
         <Signout />
       </div>
-      <ReactFlowProvider>
-        <Flow />
-      </ReactFlowProvider>
-      <AddNodeButton />
+      
       {/* <button className="border-1 p-1 " onClick={()=>createProject({name:"",description:""}, createProjectMutation)} >create project</button> */}
 
       {/* <Tags /> */}

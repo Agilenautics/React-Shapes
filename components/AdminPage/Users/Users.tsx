@@ -4,6 +4,9 @@ import { MdDeleteOutline, MdDelete, MdManageAccounts } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
+import { usersList } from "./UsersList";
+import LoadingIcon from "../../LoadingIcon";
+
 import {
   ALL_USERS,
   DELETE_USER,
@@ -51,6 +54,7 @@ function Users() {
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
@@ -78,11 +82,11 @@ function Users() {
   }, [accessLevel]);
 
   const handleMessage = (message: any) => {
-    console.log(message);
-
     setMessage(message);
+    setIsLoading(true);
     setTimeout(() => {
       setMessage("");
+      setIsLoading(false);
     }, 5000);
   };
 
@@ -136,8 +140,12 @@ function Users() {
     setConfirmDeleteId(null);
   };
 
-  if (loading) return <div>....Loading</div>;
-
+  if (loading || isLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <LoadingIcon />
+      </div>
+    );
   if (error) {
     return error && <div> {error.message} </div>;
   }
