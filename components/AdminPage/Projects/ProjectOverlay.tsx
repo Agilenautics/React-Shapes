@@ -15,7 +15,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onAddProject,
   onClose,
   projectData,
-  userEmail
+  userEmail,
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
   const [isFormValid, setIsFormValid] = useState(false);
@@ -36,35 +36,33 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       userName: "",
       //userId:userData.id
     };
-    console.log("hi",userEmail,projectData);
+    console.log("hi", userEmail, projectData);
     // onAddProject(formData.name, formData.desc);
     createProject({
       variables: {
-       
-        "where": {
-          "emailId": userEmail
+        where: {
+          emailId: userEmail,
         },
-        "update": {
-          "hasProjects": [
+        update: {
+          hasProjects: [
             {
-              "create": [
+              create: [
                 {
-                  "node": {
-                    "description":formData.desc,
-                    "name": formData.name,
-                    "isOpen": true,
-                    "userName": ""
-                  }
-                }
-              ]
-            }
-          ]
-        }
+                  node: {
+                    description: formData.desc,
+                    name: formData.name,
+                    isOpen: true,
+                    userName: "",
+                  },
+                },
+              ],
+            },
+          ],
+        },
       },
       refetchQueries: [{ query: GET_PROJECTS }],
-      
     });
-    
+
     setFormData({ name: "", desc: "" });
     onClose();
   };
@@ -72,7 +70,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   if (loading) {
     return <p>Loading...</p>;
   }
-  
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -136,7 +133,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
           </div>
         </form>
       </div>
-    
     </div>
   );
 };

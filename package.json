@@ -44,6 +44,7 @@
     "react-virtualized-auto-sizer": "^1.0.6",
     "sharp": "^0.30.7",
     "tree-model-improved": "^2.0.1",
+    "yarn": "^1.22.19",
     "zustand": "^4.3.7"
   },
   "devDependencies": {

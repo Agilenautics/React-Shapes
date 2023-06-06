@@ -28,12 +28,14 @@ interface UserOverlayProps {
   onClose: () => void;
   onAddUser: (user: User, selectedProjects: string[]) => void;
   projectData: Array<Project>;
+  handleMessage: (message: string) => void; // Add the prop for handleMessage function
 }
 
 const UserOverlay: React.FC<UserOverlayProps> = ({
   onClose,
   onAddUser,
   projectData,
+  handleMessage, // Add the prop for handleMessage function
 }) => {
   const [formData, setFormData] = useState<User>({
     id: "",
@@ -67,7 +69,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     }
   };
 
-  //mutation of add new user
+  // Mutation of add new user
 
   const [createNewUser, { data, error, loading }] = useMutation(ADD_USER);
 
@@ -87,56 +89,53 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
       active: formData.active,
     };
 
-
-    // onAddUser(newUser, formData.projects);
-    // onClose();
-    console.log(newUser.emailId)
-
-
-
     sendLink(newUser.emailId)
       .then((registerUser: any) => {
         if (registerUser.success) {
           setRegisterSuccess({ msg: registerUser.msg, error: false });
-          console.log(registerUser)
-          console.log("form data",formData);
           createNewUser({
             variables: {
-              "input": [
+              input: [
                 {
-                  "emailId": formData.email,
-                  "userType": formData.accessLevel,
-                  "active": false,
-                  "userName": "",
-                  "hasProjects": {
-                    "connect": [
+                  emailId: formData.email,
+                  userType: formData.accessLevel,
+                  active: false,
+                  userName: "",
+                  hasProjects: {
+                    connect: [
                       {
-                        "where": {
-                          "node": {
-                            //here you can put project id
-                            "id": formData.projects[0],
-                          }
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
+                        where: {
+                          node: {
+                            // Here you can put project id
+                            id: formData.projects[0],
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
             },
-            refetchQueries: [{ query: ALL_USERS }]
+            refetchQueries: [{ query: ALL_USERS }],
           });
+
           onClose();
         } else {
           setRegisterSuccess({ msg: registerUser.msg, error: true });
         }
       })
       .catch((error) => {
-        // Handle any error during the sendLink process
         console.log("Error:", error);
       });
   };
 
   const animatedComponents = makeAnimated();
+
+  // Function to send a message to the parent component
+  const sendMessage = (message: string) => {
+    handleMessage(message);
+  };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-6/12 rounded-lg bg-white p-8">
@@ -195,7 +194,10 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
           <div className="flex">
             <button
               className="mr-2 rounded-md bg-blue-500 px-4 py-2 text-sm text-white"
-              onClick={handleAddUser}
+              onClick={() => {
+                handleAddUser();
+                sendMessage("User added successfully!"); // Send the success message
+              }}
               disabled={!isEmailValid}
             >
               Add User

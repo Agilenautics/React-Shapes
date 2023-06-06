@@ -5,6 +5,8 @@ import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
+import LoadingIcon from "../../LoadingIcon";
+
 import {
   ALL_USERS,
   DELETE_USER,
@@ -14,7 +16,6 @@ import {
 } from "./gqlUsers";
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
-import { ProjectsList } from "../Projects/ProjectsList";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
 import {
@@ -48,7 +49,8 @@ function Users() {
   const [projectsList, setProjectsList] = useState<Project[]>([]);
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -66,14 +68,24 @@ function Users() {
       }
     });
   };
+  console.log(projectsList);
 
   useEffect(() => {
     verfiyAuthToken();
   }, []);
 
   useEffect(() => {
-    setIsButtonDisabled(accessLevel.toLowerCase() == "user")
-  }, [accessLevel])
+    setIsButtonDisabled(accessLevel.toLowerCase() == "user");
+  }, [accessLevel]);
+
+  const handleMessage = (message: any) => {
+    setMessage(message);
+    setIsLoading(true);
+    setTimeout(() => {
+      setMessage("");
+      setIsLoading(false);
+    }, 5000);
+  };
 
   const { data, error, loading } = useQuery(ALL_USERS);
 
@@ -97,12 +109,12 @@ function Users() {
   };
 
   const handleAddUser = (user: User, selectedProjects: string[]) => {
-    const newUser: User = {
-      ...user,
-      id: String(usersList.length + 1),
-      dateAdded: String(new Date().toLocaleDateString()),
-      projects: selectedProjects,
-    };
+  const newUser: User = {
+    ...user,
+    id: String(usersList.length + 1),
+    dateAdded: String(new Date().toLocaleDateString()),
+    projects: selectedProjects,
+  };
 
     setUsers([...users, newUser]);
     setShowAddUserPopup(false);
@@ -129,24 +141,26 @@ function Users() {
     handleUser_Delete(userId, DELETE_USER, ALL_USERS);
     setUsers(updatedUsers);
     setConfirmDeleteId(null);
+
+    const deletedUser = users.find((user) => user.id === userId);
+    if (deletedUser) {
+      console.log(deletedUser.name + "Deleted.");
+      setMessage(`User ${deletedUser.name} deleted successfully.`);
+    }
   };
 
   const handleCancelDelete = () => {
     setConfirmDeleteId(null);
   };
 
-  if (loading) return <div>....Loading</div>;
-
+  if (loading || isLoading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
   if (error) {
     return error && <div> {error.message} </div>;
   }
-
-  // function convert(str: string) {
-  //   var date = new Date(str),
-  //     mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-  //     day = ("0" + date.getDate()).slice(-2);
-  //   return [date.getFullYear(), mnth, day].join("-");
-  // }
 
   const handleManageAccountClick = (user: User) => {
     setSelectedUser(user);
@@ -318,12 +332,14 @@ function Users() {
             ))}
           </tbody>
         </table>
+        {message && <div className="mt-4 text-red-500">{message}</div>}
       </div>
       {showAddUserPopup && (
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
           onAddUser={handleAddUser}
           projectData={projectsList}
+          handleMessage={handleMessage}
         />
       )}
       {showManageAccountPopup && selectedUser && (
@@ -331,6 +347,7 @@ function Users() {
           //@ts-ignore
           user={selectedUser}
           onClose={() => setShowManageAccountPopup(false)}
+          adminProjects={projectsList}
         />
       )}
     </div>
@@ -356,7 +373,5 @@ const formatDate = (date: string) => {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-    // hour: "2-digit",
-    // minute: "2-digit",
   });
 };

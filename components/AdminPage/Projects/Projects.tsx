@@ -10,7 +10,8 @@ import {
   DELETE_PROJECT,
   GET_PROJECTS,
   GET_USER,
-  EDIT_PROJECT, edit_Project,
+  EDIT_PROJECT,
+  edit_Project,
   delete_Project,
   get_user_method,
 } from "./gqlProject";
@@ -18,6 +19,7 @@ import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
 import Link from "next/link";
+import LoadingIcon from "../../LoadingIcon";
 interface Project {
   id: string;
   name: string;
@@ -39,7 +41,7 @@ function Projects() {
   const [userData, setUserData] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [userEmail, setUserEmail] = useState('')
+  const [userEmail, setUserEmail] = useState("");
 
 
   const getProject = async () => {
@@ -63,7 +65,7 @@ function Projects() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // @ts-ignore
-        setUserEmail(user.email)
+        setUserEmail(user.email);
         // @ts-ignore
         getProject()
 
@@ -84,7 +86,6 @@ function Projects() {
     projectName: string,
     projectDesc: string
   ) => {
-
     setProjectId(projectId);
     setProjectName(projectName);
     setProjectDesc(projectDesc);
@@ -92,6 +93,14 @@ function Projects() {
 
   const handleSaveButtonClick = (projectId: string) => {
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT,GET_USER);
+    // // const updatedProjectsList: Project[] = updateProjectName(
+    // //   projectId,
+    // //   projectName,
+    // //   projects
+    // );
+    // edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT);
+    //console.log(result,"res");
+    //setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };
@@ -133,9 +142,11 @@ function Projects() {
     setProjects(sortedProjects);
   };
 
-  if (loading) {
-    return <div>....Loading</div>;
-  }
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
 
   if (error) {
     console.log(error.message);

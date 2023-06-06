@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { ProjectsList } from "../Projects/ProjectsList";
 
 interface ManageAccountOverlayProps {
   user: {
@@ -14,6 +13,10 @@ interface ManageAccountOverlayProps {
       name: string;
     }>;
   };
+  adminProjects: Array<{
+    id: string;
+    name: string;
+  }>;
   onClose: () => void;
 }
 
@@ -21,9 +24,9 @@ const animatedComponents = makeAnimated();
 
 const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   user,
+  adminProjects,
   onClose,
 }) => {
-  console.log(user);
   const [selectedProjects, setSelectedProjects] = useState<
     Array<{
       value: string;
@@ -31,16 +34,24 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
     } | null>
   >(
     user.hasProjects.map((projectId) => {
-      console.log(projectId);
       const project = user.hasProjects.find((p) => p.id === projectId.id);
       return project ? { value: project.id, label: project.name } : null;
     })
   );
 
-  const projectsList = user.hasProjects.map((project) => ({
-    value: project.id,
-    label: project.name,
-  }));
+  console.log(adminProjects);
+
+  const projectsList = adminProjects
+    .filter(
+      (project) =>
+        !selectedProjects.find(
+          (selectedProject) => selectedProject?.value === project.id
+        )
+    )
+    .map((project) => ({
+      value: project.id,
+      label: project.name,
+    }));
 
   const handleProjectChange = (selectedOptions: any) => {
     setSelectedProjects(selectedOptions);
