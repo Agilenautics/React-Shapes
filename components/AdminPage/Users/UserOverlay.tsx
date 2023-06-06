@@ -26,14 +26,13 @@ interface User {
 
 interface UserOverlayProps {
   onClose: () => void;
-  onAddUser: (user: User, selectedProjects: string[]) => void;
+  //onAddUser: (user: User, selectedProjects: string[]) => void;
   projectData: Array<Project>;
   handleMessage: (message: string) => void; // Add the prop for handleMessage function
 }
 
 const UserOverlay: React.FC<UserOverlayProps> = ({
   onClose,
-  onAddUser,
   projectData,
   handleMessage, // Add the prop for handleMessage function
 }) => {

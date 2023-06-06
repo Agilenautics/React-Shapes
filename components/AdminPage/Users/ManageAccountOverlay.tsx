@@ -8,15 +8,15 @@ interface ManageAccountOverlayProps {
     name: string;
     userType: string;
     dateAdded: string;
-    hasProjects: Array<{
+    hasProjects: {
       id: string;
       name: string;
-    }>;
+    }[];
   };
-  adminProjects: Array<{
+  adminProjects: {
     id: string;
     name: string;
-  }>;
+  }[];
   onClose: () => void;
 }
 
@@ -58,13 +58,39 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   };
 
   const handleSave = () => {
+    const currentProjects = selectedProjects
+      .filter((project) => project !== null)
+      .map((project) => project!.value);
+
+    const deletedProjects = user.hasProjects
+      .filter((project) => !currentProjects.includes(project.id))
+      .map((project) => ({
+        id: project.id,
+        name: project.name,
+      }));
+
+    const addedProjects = currentProjects
+      .filter(
+        (projectId) =>
+          !user.hasProjects.find((project) => project.id === projectId)
+      )
+      .map((projectId) => {
+        const project = adminProjects.find(
+          (project) => project.id === projectId
+        );
+        return project ? { id: project.id, name: project.name } : null;
+      })
+      .filter(Boolean);
+
+    console.log("Deleted Projects:", deletedProjects);
+    console.log("Added Projects:", addedProjects);
+
     const editedUser = {
       ...user,
-      hasProjects: selectedProjects
-        .filter((project) => project !== null)
-        .map((project) => project!.value),
+      hasProjects: currentProjects,
     };
-    console.log(editedUser);
+
+    console.log("Edited User:", editedUser);
     onClose();
   };
 

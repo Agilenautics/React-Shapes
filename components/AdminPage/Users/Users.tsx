@@ -4,7 +4,6 @@ import { MdDeleteOutline, MdDelete, MdManageAccounts } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
-import { usersList } from "./UsersList";
 import {
   ALL_USERS,
   DELETE_USER,
@@ -27,6 +26,13 @@ interface User {
   accessLevel: string;
   dateAdded: string;
   projects: string[];
+  emailId: string;
+  userType: string;
+  timeStamp: string;
+  hasProjects: Array<{
+    id: string;
+    name: string;
+  }>;
 }
 
 interface Project {
@@ -34,12 +40,9 @@ interface Project {
   name: string;
 }
 
-//const accessLevel: string = "suser";
-
 function Users() {
   const [editedUser, setEditedUser] = useState<User | null>(null);
   const [showAddUserPopup, setShowAddUserPopup] = useState(false);
-  const [users, setUsers] = useState<User[]>(usersList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [showManageAccountPopup, setShowManageAccountPopup] = useState(false);
@@ -50,9 +53,8 @@ function Users() {
   const [message, setMessage] = useState("");
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // @ts-ignore
-        get_user_method(user.email, GET_USER).then((res: any[]) => {
+      if (user && user.email) {
+        get_user_method(user.email, GET_USER).then((res: any) => {
           const userType = res[0].userType;
           setAccessLevel(userType);
           const userProjects = res[0].hasProjects.map((project: any) => ({
@@ -90,60 +92,44 @@ function Users() {
     setEditedUser(user);
   };
 
-  const handleSaveClick = () => {
-    if (editedUser) {
-      const updatedUsers = users.map((user) => {
-        if (user.id === editedUser.id) {
-          return { ...user, accessLevel: editedUser.accessLevel };
-        }
-        return user;
-      });
-      handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
+  // const handleSaveClick = () => {
+  //   if (editedUser) {
+  //     const updatedUsers = users.map((user) => {
+  //       if (user.id === editedUser.id) {
+  //         return { ...user, accessLevel: editedUser.accessLevel };
+  //       }
+  //       return user;
+  //     });
+  //     handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
 
-      setUsers(updatedUsers);
-      setEditedUser(null);
-    }
-  };
+  //     setUsers(updatedUsers);
+  //     setEditedUser(null);
+  //   }
+  // };
 
   const handleAddUser = (user: User, selectedProjects: string[]) => {
-    const newUser: User = {
-      ...user,
-      id: String(usersList.length + 1),
-      dateAdded: String(new Date().toLocaleDateString()),
-      projects: selectedProjects,
-    };
-
-    setUsers([...users, newUser]);
     setShowAddUserPopup(false);
   };
 
-  const handleSortClick = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    const sortedUsers = [...users].sort((a, b) => {
-      const nameA = a.name.toUpperCase();
-      const nameB = b.name.toUpperCase();
-      if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
-      if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
-    setUsers(sortedUsers);
-  };
+  // const handleSortClick = () => {
+  //   setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  //   const sortedUsers = [...users].sort((a, b) => {
+  //     const nameA = a.name.toUpperCase();
+  //     const nameB = b.name.toUpperCase();
+  //     if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
+  //     if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
+  //     return 0;
+  //   });
+  //   setUsers(sortedUsers);
+  // };
 
   const handleDeleteClick = (userId: string) => {
     setConfirmDeleteId(userId);
   };
 
   const handleConfirmDelete = (userId: string) => {
-    const updatedUsers = users.filter((user) => user.id !== userId);
     handleUser_Delete(userId, DELETE_USER, ALL_USERS);
-    setUsers(updatedUsers);
     setConfirmDeleteId(null);
-
-    const deletedUser = users.find((user) => user.id === userId);
-    if (deletedUser) {
-      console.log(deletedUser.name + "Deleted.");
-      setMessage(`User ${deletedUser.name} deleted successfully.`);
-    }
   };
 
   const handleCancelDelete = () => {
@@ -192,7 +178,7 @@ function Users() {
               <th
                 scope="col"
                 className="ml-6 w-60 cursor-pointer px-6 py-3"
-                onClick={handleSortClick}
+                //onClick={handleSortClick}
               >
                 <div className="flex items-center">
                   Name
@@ -220,16 +206,10 @@ function Users() {
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
-                      {
-                        // @ts-ignore
-                        getInitials(user.emailId)
-                      }
+                      {getInitials(user.emailId)}
                     </div>
                     <span className="ml-2">
-                      {
-                        // @ts-ignore
-                        getNameFromEmail(user.emailId)
-                      }
+                      {getNameFromEmail(user.emailId)}
                     </span>
                   </div>
                 </td>
@@ -251,16 +231,10 @@ function Users() {
                       <option value="Super User">Super User</option>
                     </select>
                   ) : (
-                    // @ts-ignore
                     user.userType
                   )}
                 </td>
-                <td className="px-16 py-4">
-                  {
-                    // @ts-ignore
-                    formatDate(user.timeStamp)
-                  }
-                </td>
+                <td className="px-16 py-4">{formatDate(user.timeStamp)}</td>
                 <td className="px-10 py-4">
                   {confirmDeleteId === user.id ? (
                     <div className="flex items-center">
@@ -284,7 +258,7 @@ function Users() {
                       {editedUser?.id === user.id ? (
                         <button
                           className="rounded-md bg-red-600 px-2 py-1 font-semibold text-white"
-                          onClick={handleSaveClick}
+                          //onClick={handleSaveClick}
                           disabled={isButtonDisabled}
                         >
                           Save
@@ -326,19 +300,18 @@ function Users() {
             ))}
           </tbody>
         </table>
-        {message && <div className="mt-4 text-red-500">{message}</div>}
+        {message && <div className="mt-4 text-green-500">{message}</div>}
       </div>
       {showAddUserPopup && (
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
-          onAddUser={handleAddUser}
+          //onAddUser={handleAddUser}
           projectData={projectsList}
           handleMessage={handleMessage}
         />
       )}
       {showManageAccountPopup && selectedUser && (
         <ManageAccountOverlay
-          //@ts-ignore
           user={selectedUser}
           onClose={() => setShowManageAccountPopup(false)}
           adminProjects={projectsList}

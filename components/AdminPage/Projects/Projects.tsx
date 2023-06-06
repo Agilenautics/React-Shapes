@@ -5,7 +5,6 @@ import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineArrowDown } from "react-icons/ai";
 import { updateProjectName, deleteProject } from "./ProjectUtils";
 import ProjectOverlay from "./ProjectOverlay";
-import { ProjectsList } from "./ProjectsList";
 import {
   DELETE_PROJECT,
   GET_PROJECTS,
@@ -22,6 +21,7 @@ interface Project {
   id: string;
   name: string;
   desc: string;
+  description: string;
 }
 
 function Projects() {
@@ -33,10 +33,8 @@ function Projects() {
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [projects, setProjects] = useState<Project[]>(ProjectsList);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [accessLevel, setAccessLevel] = useState<string>("");
-  const [userData, setUserData] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
@@ -44,17 +42,11 @@ function Projects() {
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // @ts-ignore
+      if (user && user.email) {
         setUserEmail(user.email);
-        // @ts-ignore
-        get_user_method(user.email, GET_USER).then((res) => {
-          // @ts-ignore
+        get_user_method(user.email, GET_USER).then((res: any) => {
           const userType = res[0].userType;
           setAccessLevel(userType);
-          // @ts-ignore
-          setUserData(res);
-          // @ts-ignore
           setProjectData(res[0].hasProjects);
         });
       }
@@ -101,14 +93,14 @@ function Projects() {
   };
 
   const handleAddProject = (name: string, desc: string) => {
-    const newProjectId = String(projects.length + 1);
-    const newProject = {
-      id: newProjectId,
-      name: name,
-      desc: desc,
-    };
-    const updatedProjectsList = [...projects, newProject];
-    setProjects(updatedProjectsList);
+    // const newProjectId = String(projects.length + 1);
+    // const newProject = {
+    //   id: newProjectId,
+    //   name: name,
+    //   desc: desc,
+    // };
+    // const updatedProjectsList = [...projects, newProject];
+    // setProjects(updatedProjectsList);
     setShowForm(false);
   };
 
@@ -116,17 +108,17 @@ function Projects() {
     setShowForm(false);
   };
 
-  const handleSortClick = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    const sortedProjects = [...projects].sort((a, b) => {
-      const nameA = a.name.toUpperCase();
-      const nameB = b.name.toUpperCase();
-      if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
-      if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
-    setProjects(sortedProjects);
-  };
+  // const handleSortClick = () => {
+  //   setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  //   const sortedProjects = [...projects].sort((a, b) => {
+  //     const nameA = a.name.toUpperCase();
+  //     const nameB = b.name.toUpperCase();
+  //     if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
+  //     if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
+  //     return 0;
+  //   });
+  //   setProjects(sortedProjects);
+  // };
 
   if (loading) {
     return <div>....Loading</div>;
@@ -167,7 +159,7 @@ function Projects() {
               <th scope="col" className="w-40 px-4 py-3 md:w-60">
                 <div
                   className="flex cursor-pointer items-center"
-                  onClick={handleSortClick}
+                  //onClick={handleSortClick}
                 >
                   Project name
                   <AiOutlineArrowDown
@@ -209,7 +201,6 @@ function Projects() {
                       className="border-b focus:border-blue-500 focus:outline-none"
                     />
                   ) : (
-                    // @ts-ignore
                     project.description
                   )}
                 </td>
@@ -228,7 +219,7 @@ function Projects() {
                         handleEditButtonClick(
                           project.id,
                           project.name,
-                          project.desc
+                          project.description
                         )
                       }
                       className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
