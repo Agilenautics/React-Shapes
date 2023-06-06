@@ -18,6 +18,7 @@ import {
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
+import LoadingIcon from "../../LoadingIcon";
 interface Project {
   id: string;
   name: string;
@@ -128,9 +129,11 @@ function Projects() {
     setProjects(sortedProjects);
   };
 
-  if (loading) {
-    return <div>....Loading</div>;
-  }
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
 
   if (error) {
     console.log(error.message);

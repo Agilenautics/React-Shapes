@@ -5,6 +5,8 @@ import { AiFillEdit } from "react-icons/ai";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
 import { usersList } from "./UsersList";
+import LoadingIcon from "../../LoadingIcon";
+
 import {
   ALL_USERS,
   DELETE_USER,
@@ -48,6 +50,7 @@ function Users() {
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -76,11 +79,11 @@ function Users() {
   }, [accessLevel]);
 
   const handleMessage = (message: any) => {
-    console.log(message);
-
     setMessage(message);
+    setIsLoading(true);
     setTimeout(() => {
       setMessage("");
+      setIsLoading(false);
     }, 5000);
   };
 
@@ -106,12 +109,12 @@ function Users() {
   };
 
   const handleAddUser = (user: User, selectedProjects: string[]) => {
-    const newUser: User = {
-      ...user,
-      id: String(usersList.length + 1),
-      dateAdded: String(new Date().toLocaleDateString()),
-      projects: selectedProjects,
-    };
+  const newUser: User = {
+    ...user,
+    id: String(usersList.length + 1),
+    dateAdded: String(new Date().toLocaleDateString()),
+    projects: selectedProjects,
+  };
 
     setUsers([...users, newUser]);
     setShowAddUserPopup(false);
@@ -150,8 +153,11 @@ function Users() {
     setConfirmDeleteId(null);
   };
 
-  if (loading) return <div>....Loading</div>;
-
+  if (loading || isLoading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
   if (error) {
     return error && <div> {error.message} </div>;
   }
