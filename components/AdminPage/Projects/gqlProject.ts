@@ -58,7 +58,7 @@ const get_user_method = async (email: String, customQuery: DocumentNode | TypedD
 }
 
 
-const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation,
     variables: {
@@ -66,7 +66,7 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
         id
       }
     },
-    refetchQueries: [{ query: GET_PROJECTS }],
+    refetchQueries: [{ query}],
   })
 
 }
@@ -94,13 +94,11 @@ mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
     mains {
       name
       description
-      
-     
     }
   }
 }
 `
-const edit_Project = async (id: string,projectName:string, projectDesc:string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const edit_Project = async (id: string,projectName:string, projectDesc:string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,customQuery:DocumentNode|TypedDocumentNode<any ,OperationVariables>) => {
   await client.mutate({
     mutation,
     variables: {
@@ -112,7 +110,7 @@ const edit_Project = async (id: string,projectName:string, projectDesc:string, m
         "description":projectDesc
       }
     },
-    refetchQueries: [{ query: GET_PROJECTS }],
+    refetchQueries:[{query:customQuery}]
   })
 
 }

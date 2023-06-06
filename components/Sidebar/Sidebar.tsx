@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FileTree } from "../TreeView/fileRenderer";
 import { AiFillFolderAdd, AiFillFileAdd } from "react-icons/ai";
 import DarkModeToggleButton from "./DarkModeToggleButton";
 import fileStore from "../TreeView/fileStore";
 import BreadCrumbs from "./BreadCrumbs";
+import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
+import { getMainByUser, getTreeNodeByUser } from "../TreeView/gqlFiles";
 //import {createFolder,newFolder } from "../TreeView/gqlFiles";
 
 //class based & function based
@@ -17,6 +20,8 @@ const Sidebar = () => {
   const [showSidebar, setShowSidebar] = useState(false); //local state
   const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
   const [menuOpen, setMenuOpen] = useState("h-0 overflow-hidden");
+  const updateInitData = fileStore((state) => state.updateInitData)
+
 
   const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
@@ -26,42 +31,70 @@ const Sidebar = () => {
     setShowSidebar(!showSidebar);
   }
 
+  const router = useRouter()
+  const projectId = router.query.projectId || ""
+
+  // const { data, loading } = useQuery(getMainByUser, {
+  //   variables: {
+  //     where: {
+  //       id: projectId
+  //     }
+  //   }
+  // })
+
+
+  const getProjectId = async(id: string) => {
+   const initData = await getTreeNodeByUser(getMainByUser, id)
+   const data = initData[0]
+   updateInitData(data)
+   return initData
+  }
+
+
+
+  // updateInitData(projectId)
+
+  useEffect(() => {
+    if (projectId) {
+      // @ts-ignore
+      getProjectId(projectId)
+    }
+  }, [projectId])
+
+
+
+
   return (
     <div>
       {/* This is a custom hamburger menu button. Each line is defined and animated purely with CSS.
        When clicked, expands/collapses the sidebar. */}
       <div
-        className={`absolute left-8 top-8 z-50 rounded px-1 duration-700 ease-in-out focus:outline-none ${
-          showSidebar ? "bg-transparent" : "bg-white dark:bg-neutral-900"
-        }`}
+        className={`absolute left-8 top-8 z-50 rounded px-1 duration-700 ease-in-out focus:outline-none ${showSidebar ? "bg-transparent" : "bg-white dark:bg-neutral-900"
+          }`}
       >
         <button
           className="group flex h-10 w-10 flex-col items-center rounded"
           onClick={toggleMenu}
         >
           <div
-            className={`${genericHamburgerLine} ${
-              menuOpen == "h-fit" ? "translate-y-3 rotate-45" : ""
-            }`}
+            className={`${genericHamburgerLine} ${menuOpen == "h-fit" ? "translate-y-3 rotate-45" : ""
+              }`}
           />
           <div
-            className={`${genericHamburgerLine} ${
-              menuOpen == "h-fit" ? "opacity-0" : ""
-            }`}
+            className={`${genericHamburgerLine} ${menuOpen == "h-fit" ? "opacity-0" : ""
+              }`}
           />
           <div
-            className={`${genericHamburgerLine} ${
-              menuOpen == "h-fit" ? "-translate-y-3 -rotate-45 " : ""
-            }`}
+            className={`${genericHamburgerLine} ${menuOpen == "h-fit" ? "-translate-y-3 -rotate-45 " : ""
+              }`}
           />
         </button>
       </div>
       {/* This is where the REAL Sidebar begins */}
       {/* This div also contains CSS for the shadow of the sidebar */}
       <div
-        className={`fixed top-0 left-0 -z-10 h-full w-[20vw] bg-white  shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${
-          showSidebar ? "sidebar-shadow -translate-x-0 " : "-translate-x-full"
-        }`}
+        className={`fixed top-0 left-0 -z-10 h-full w-[20vw] bg-white  shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${showSidebar ? "sidebar-shadow -translate-x-0 " : "-translate-x-full"
+          }`}
       >
         <BreadCrumbs />
         <div

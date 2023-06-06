@@ -10,13 +10,14 @@ import {
   DELETE_PROJECT,
   GET_PROJECTS,
   GET_USER,
-  EDIT_PROJECT,edit_Project,
+  EDIT_PROJECT, edit_Project,
   delete_Project,
   get_user_method,
 } from "./gqlProject";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
+import Link from "next/link";
 interface Project {
   id: string;
   name: string;
@@ -40,6 +41,23 @@ function Projects() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState('')
 
+
+  const getProject = async () => {
+    get_user_method(userEmail, GET_USER).then((res) => {
+      if (loading) {
+        return ""
+      }
+      // @ts-ignore
+      const userType = res[0].userType === undefined ? "" : res[0].userType;
+      setAccessLevel(userType);
+      // @ts-ignore
+      setUserData(res);
+      // @ts-ignore
+      setProjectData(res[0].hasProjects);
+    });
+  }
+
+
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
@@ -47,53 +65,40 @@ function Projects() {
         // @ts-ignore
         setUserEmail(user.email)
         // @ts-ignore
-        get_user_method(user.email, GET_USER).then((res) => {
-          // @ts-ignore
-          const userType = res[0].userType;
-          setAccessLevel(userType);
-          // @ts-ignore
-          setUserData(res);
-          // @ts-ignore
-          setProjectData(res[0].hasProjects);
-        });
+        getProject()
+
       }
     });
   };
 
-  useEffect(() => {
-    verfiyAuthToken();
-  }, []);
+
 
   useEffect(() => {
+    verfiyAuthToken();
     setIsButtonDisabled(accessLevel.toLowerCase() == "user")
-  }, [accessLevel])
+  }, [userEmail, getProject]);
+
 
   const handleEditButtonClick = (
     projectId: string,
     projectName: string,
     projectDesc: string
   ) => {
-    
+
     setProjectId(projectId);
     setProjectName(projectName);
     setProjectDesc(projectDesc);
   };
 
   const handleSaveButtonClick = (projectId: string) => {
-    // // const updatedProjectsList: Project[] = updateProjectName(
-    // //   projectId,
-    // //   projectName,
-    // //   projects
-    // );
-    edit_Project(projectId,projectName,projectDesc,EDIT_PROJECT);
-    //console.log(result,"res");
-    //setProjects(updatedProjectsList);
+    edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT,GET_USER);
     setProjectId(null);
     setProjectName("");
   };
 
   const handleDelete_Project = (projectId: string) => {
-    delete_Project(projectId, DELETE_PROJECT);
+    getProject()
+    delete_Project(projectId, DELETE_PROJECT,GET_USER);
   };
 
   const handleAddProjectClick = () => {
@@ -137,6 +142,9 @@ function Projects() {
   }
 
 
+
+
+
   return (
     <div>
       <div className="ml-6 flex items-center">
@@ -151,9 +159,8 @@ function Projects() {
           {projectData && projectData.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }`}
           disabled={isButtonDisabled}
           onClick={handleAddProjectClick}
         >
@@ -172,9 +179,8 @@ function Projects() {
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
+                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
+                      }`}
                   />
                 </div>
               </th>
@@ -198,7 +204,9 @@ function Projects() {
                       className="border-b focus:border-blue-500 focus:outline-none"
                     />
                   ) : (
-                    project.name
+                    <Link href={'/flowchart/' + project.id}>
+                      {project.name}
+                    </Link>
                   )}
                 </td>
                 <td className="hidden px-6 py-4 md:table-cell">
@@ -229,7 +237,8 @@ function Projects() {
                         handleEditButtonClick(
                           project.id,
                           project.name,
-                          project.desc
+                          // @ts-ignore
+                          project.description
                         )
                       }
                       className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
