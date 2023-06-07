@@ -24,7 +24,6 @@ import { auth } from "../../auth";
 
 const userEmail = auth.currentUser?.email || "";
 // await getTreeNodeByUser(getMainByUser, userEmail);
-const initData = await getTreeNodeByUser(getMainByUser, "69a55226-35d8-491b-9f39-c1a386072ec9");
 // {
 //   id: "ROOT",
 //   name: "ROOT",
@@ -116,7 +115,7 @@ interface files {
 }
 const fileStore = create<files>((set) => ({
   // @ts-ignore
-  data: initData[0],
+  data: {},
   updateInitData:(data:MyData)=>
   set((state)=>{
     return {data}
