@@ -41,6 +41,8 @@ function Projects() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
+  
+
 
   const getProject = async () => {
     get_user_method(userEmail, GET_USER).then((res) => {
@@ -48,10 +50,8 @@ function Projects() {
         return ""
       }
       // @ts-ignore
-      const userType = res[0].userType === undefined ? "" : res[0].userType;
+      const userType = res[0].userType === undefined ? "" : res[0].userType||"";
       setAccessLevel(userType);
-      // @ts-ignore
-      setUserData(res);
       // @ts-ignore
       setProjectData(res[0].hasProjects);
     });
@@ -63,14 +63,7 @@ function Projects() {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         setUserEmail(user.email);
-        get_user_method(user.email, GET_USER).then((res: any) => {
-          const userType = res[0].userType;
-          setAccessLevel(userType);
-          setProjectData(res[0].hasProjects);
-        });
-        // @ts-ignore
         getProject()
-
       }
     });
   };
@@ -95,14 +88,6 @@ function Projects() {
 
   const handleSaveButtonClick = (projectId: string) => {
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT,GET_USER);
-    // // const updatedProjectsList: Project[] = updateProjectName(
-    // //   projectId,
-    // //   projectName,
-    // //   projects
-    // );
-    // edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT);
-    //console.log(result,"res");
-    //setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };
@@ -117,14 +102,6 @@ function Projects() {
   };
 
   const handleAddProject = (name: string, desc: string) => {
-    // const newProjectId = String(projects.length + 1);
-    // const newProject = {
-    //   id: newProjectId,
-    //   name: name,
-    //   desc: desc,
-    // };
-    // const updatedProjectsList = [...projects, newProject];
-    // setProjects(updatedProjectsList);
     setShowForm(false);
   };
 
@@ -132,17 +109,6 @@ function Projects() {
     setShowForm(false);
   };
 
-  // const handleSortClick = () => {
-  //   setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  //   const sortedProjects = [...projects].sort((a, b) => {
-  //     const nameA = a.name.toUpperCase();
-  //     const nameB = b.name.toUpperCase();
-  //     if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
-  //     if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
-  //     return 0;
-  //   });
-  //   setProjects(sortedProjects);
-  // };
 
   if (loading) return (
     <div className="flex justify-center items-center h-screen">

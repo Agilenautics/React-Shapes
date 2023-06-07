@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useState, FocusEvent, KeyboardEvent, SyntheticEvent } from "react";
+import React, { useState, FocusEvent, KeyboardEvent, SyntheticEvent, useEffect } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 // @ts-ignore
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
@@ -16,6 +16,10 @@ import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
 import { getFileByNode } from "./gqlFiles";
 import { gql } from "graphql-tag";
 import styles from "../Flow/Nodes/styles.module.css";
+import userStore from "../AdminPage/Users/userStore";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../auth";
+import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
 
 // LoadingIcon component
 const LoadingIcon: React.FC = () => {
@@ -140,14 +144,34 @@ export const TreeNode = ({
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState([])
 
-  var accessLevel = "user"; // Set the access level here
+
+  const verfiyAuthToken = async () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // @ts-ignore
+        get_user_method(user.email, GET_USER).then((res) => {
+          setUser(res[0].userType)
+        })
+      } else {
+        setUser([])
+      }
+    })
+  }
+
+  useEffect(() => {
+    verfiyAuthToken()
+  }, [])
+
+
+
+  var accessLevel = user; // Set the access level here
 
   if (state.isSelected) {
     updateCurrentFlowchart(name, id);
     if (data.type === "file") {
       updateBreadCrumbs(data, id, "new");
-      console.log("Selected File ID:", id);
     }
   }
 
