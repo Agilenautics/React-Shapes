@@ -55,6 +55,8 @@ function Users() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
+
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
@@ -79,6 +81,7 @@ function Users() {
 
   useEffect(() => {
     setIsButtonDisabled(accessLevel.toLowerCase() == "user");
+    setIsNewUserDisabled(accessLevel.toLowerCase() == "super user");
   }, [accessLevel]);
 
   const handleMessage = (message: any) => {
@@ -96,20 +99,20 @@ function Users() {
     setEditedUser(user);
   };
 
-  // const handleSaveClick = () => {
-  //   if (editedUser) {
-  //     const updatedUsers = users.map((user) => {
-  //       if (user.id === editedUser.id) {
-  //         return { ...user, accessLevel: editedUser.accessLevel };
-  //       }
-  //       return user;
-  //     });
-  //     handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
+  const handleSaveClick = () => {
+    if (editedUser) {
+      // const updatedUsers = users.map((user) => {
+      //   if (user.id === editedUser.id) {
+      //     return { ...user, accessLevel: editedUser.accessLevel };
+      //   }
+      //   return user;
+      // });
+      handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
 
-  //     setUsers(updatedUsers);
-  //     setEditedUser(null);
-  //   }
-  // };
+      //setUsers(updatedUsers);
+      setEditedUser(null);
+    }
+  };
 
   const handleAddUser = (user: User, selectedProjects: string[]) => {
     setShowAddUserPopup(false);
@@ -171,8 +174,8 @@ function Users() {
         <button
           className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
             isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }`}
-          disabled={isButtonDisabled}
+          }${isNewUserDisabled ? "opacity-50" : ""}`}
+          disabled={isButtonDisabled || isNewUserDisabled}
           onClick={() => setShowAddUserPopup(true)}
         >
           <GrAdd />
@@ -225,7 +228,7 @@ function Users() {
                 <td className="max-w-xs whitespace-nowrap py-4 pl-60 pr-20">
                   {editedUser?.id === user.id ? (
                     <select
-                      value={editedUser.accessLevel}
+                      value={accessLevel}
                       onChange={(e) =>
                         setEditedUser({
                           ...editedUser,
@@ -235,7 +238,6 @@ function Users() {
                       className="rounded-md border border-gray-300 p-1"
                     >
                       <option value="User">User</option>
-                      <option value="Admin">Admin</option>
                       <option value="Super User">Super User</option>
                     </select>
                   ) : (
@@ -266,7 +268,7 @@ function Users() {
                       {editedUser?.id === user.id ? (
                         <button
                           className="rounded-md bg-red-600 px-2 py-1 font-semibold text-white"
-                          //onClick={handleSaveClick}
+                          onClick={handleSaveClick}
                           disabled={isButtonDisabled}
                         >
                           Save

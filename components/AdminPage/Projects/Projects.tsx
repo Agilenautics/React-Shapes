@@ -3,7 +3,6 @@ import { GrAdd } from "react-icons/gr";
 import { BiRename } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineArrowDown } from "react-icons/ai";
-import { updateProjectName, deleteProject } from "./ProjectUtils";
 import ProjectOverlay from "./ProjectOverlay";
 import {
   DELETE_PROJECT,
@@ -30,28 +29,27 @@ function Projects() {
   // Access Level controlled by the server-side or additional validation
   //const accessLevel: string = "suser";
 
-
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [userData, setUserData] = useState([]);
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("irfan123@gmail.com");
 
-  console.log(userEmail)
-
+  console.log(userEmail);
 
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
       where: {
-        emailId: userEmail
-      }
-    }
+        emailId: userEmail,
+      },
+    },
   });
-
 
   const getProject = async (data: Array<Project>) => {
     // get_user_method(userEmail, GET_USER).then((res) => {
@@ -66,32 +64,29 @@ function Projects() {
     // });
 
     // @ts-ignore
-    const userType = data.users[0].userType
-    setAccessLevel(userType)
+    const userType = data.users[0].userType;
+
+    setAccessLevel(userType);
     // @ts-ignore
-    setProjectData(data.users[0].hasProjects)
-  }
-
-
+    setProjectData(data.users[0].hasProjects);
+  };
 
   //verifying token
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         setUserEmail(user.email);
-        if (loading) return ""
-        getProject(data)
+        if (loading) return "";
+        getProject(data);
       }
     });
   };
 
-
-
   useEffect(() => {
     verfiyAuthToken();
-    setIsButtonDisabled(accessLevel.toLowerCase() == "user")
+    setIsButtonDisabled(accessLevel.toLowerCase() == "user");
+    setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
   }, [userEmail, getProject]);
-
 
   const handleEditButtonClick = (
     projectId: string,
@@ -105,12 +100,20 @@ function Projects() {
 
   const handleSaveButtonClick = (projectId: string) => {
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
+    // // const updatedProjectsList: Project[] = updateProjectName(
+    // //   projectId,
+    // //   projectName,
+    // //   projects
+    // );
+    // edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT);
+    //console.log(result,"res");
+    //setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };
 
   const handleDelete_Project = (projectId: string) => {
-    getProject(data)
+    getProject(data);
     delete_Project(projectId, DELETE_PROJECT, GET_USER);
   };
 
@@ -126,20 +129,16 @@ function Projects() {
     setShowForm(false);
   };
 
-
-  if (loading) return (
-    <div className="flex justify-center items-center h-screen">
-      <LoadingIcon />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <LoadingIcon />
+      </div>
+    );
 
   if (error) {
     console.log(error.message);
   }
-
-
-
-
 
   return (
     <div>
@@ -155,9 +154,10 @@ function Projects() {
           {projectData && projectData.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-            }`}
-          disabled={isButtonDisabled}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
+            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          }${isNewProjectDisabled ? "opacity-50" : ""}`}
+          disabled={isButtonDisabled || isNewProjectDisabled}
           onClick={handleAddProjectClick}
         >
           <GrAdd />
@@ -171,12 +171,13 @@ function Projects() {
               <th scope="col" className="w-40 px-4 py-3 md:w-60">
                 <div
                   className="flex cursor-pointer items-center"
-                //onClick={handleSortClick}
+                  //onClick={handleSortClick}
                 >
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
-                      }`}
+                    className={`ml-1 text-sm ${
+                      sortOrder === "asc" ? "rotate-180 transform" : ""
+                    }`}
                   />
                 </div>
               </th>
@@ -200,7 +201,7 @@ function Projects() {
                       className="border-b focus:border-blue-500 focus:outline-none"
                     />
                   ) : (
-                    <Link href={'/flowchart/' + project.id}>
+                    <Link href={"/flowchart/" + project.id}>
                       {project.name}
                     </Link>
                   )}
