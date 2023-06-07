@@ -36,7 +36,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       userName: "",
       //userId:userData.id
     };
-    console.log("hi", userEmail, projectData);
     // onAddProject(formData.name, formData.desc);
     createProject({
       variables: {
@@ -60,7 +59,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
           ],
         },
       },
-      refetchQueries: [{ query: GET_PROJECTS }],
+      // refetchQueries: [{ query: GET_PROJECTS }],
     });
 
     setFormData({ name: "", desc: "" });

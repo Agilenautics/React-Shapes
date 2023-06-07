@@ -30,7 +30,7 @@ function Projects() {
   // Access Level controlled by the server-side or additional validation
   //const accessLevel: string = "suser";
 
-  const { data, error, loading } = useQuery(GET_PROJECTS);
+
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
@@ -41,21 +41,35 @@ function Projects() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
-  
 
-
-  const getProject = async () => {
-    get_user_method(userEmail, GET_USER).then((res) => {
-      if (loading) {
-        return ""
+  const { data, error, loading } = useQuery(GET_USER, {
+    variables: {
+      where: {
+        emailId: userEmail
       }
-      // @ts-ignore
-      const userType = res[0].userType === undefined ? "" : res[0].userType||"";
-      setAccessLevel(userType);
-      // @ts-ignore
-      setProjectData(res[0].hasProjects);
-    });
+    }
+  });
+
+
+  const getProject = async (data: Array<Project>) => {
+    // get_user_method(userEmail, GET_USER).then((res) => {
+    //   if (loading) {
+    //     return ""
+    //   }
+    //   // @ts-ignore
+    //   const userType = res[0].userType === undefined ? "" : res[0].userType;
+    //   setAccessLevel(userType);
+    //   // @ts-ignore
+    //   setProjectData(res[0].hasProjects);
+    // });
+
+    // @ts-ignore
+    const userType = data.users[0].userType
+    setAccessLevel(userType)
+    // @ts-ignore
+    setProjectData(data.users[0].hasProjects)
   }
+
 
 
   //verifying token
@@ -63,7 +77,8 @@ function Projects() {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         setUserEmail(user.email);
-        getProject()
+        if (loading) return ""
+        getProject(data)
       }
     });
   };
@@ -87,14 +102,14 @@ function Projects() {
   };
 
   const handleSaveButtonClick = (projectId: string) => {
-    edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT,GET_USER);
+    edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
     setProjectId(null);
     setProjectName("");
   };
 
   const handleDelete_Project = (projectId: string) => {
-    getProject()
-    delete_Project(projectId, DELETE_PROJECT,GET_USER);
+    getProject(data)
+    delete_Project(projectId, DELETE_PROJECT, GET_USER);
   };
 
   const handleAddProjectClick = () => {
@@ -154,7 +169,7 @@ function Projects() {
               <th scope="col" className="w-40 px-4 py-3 md:w-60">
                 <div
                   className="flex cursor-pointer items-center"
-                  //onClick={handleSortClick}
+                //onClick={handleSortClick}
                 >
                   Project name
                   <AiOutlineArrowDown
