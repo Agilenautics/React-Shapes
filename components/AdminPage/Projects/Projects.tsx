@@ -39,7 +39,9 @@ function Projects() {
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState("irfan123@gmail.com");
+
+  console.log(userEmail)
 
 
   const { data, error, loading } = useQuery(GET_USER, {
