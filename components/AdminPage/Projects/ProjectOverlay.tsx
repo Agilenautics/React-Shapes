@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
 import { Project } from "react-flow-renderer";
 import { auth } from "../../../auth";
+import LoadingIcon from "../../LoadingIcon";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
   projectData: Array<Project>;
   userEmail: String;
+  handleMessage: (message: string) => void;
 }
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
@@ -16,6 +18,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onClose,
   projectData,
   userEmail,
+  handleMessage,
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
   const [isFormValid, setIsFormValid] = useState(false);
@@ -23,6 +26,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT);
   const [errors, setError] = useState({});
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +41,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       //userId:userData.id
     };
     // onAddProject(formData.name, formData.desc);
+    sendMessage("project created");
     createProject({
       variables: {
         where: {
@@ -66,9 +71,14 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     onClose();
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  const sendMessage = (message: string) => {
+    handleMessage(message);
+  };
+  if (loading || isLoading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

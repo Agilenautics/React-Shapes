@@ -40,7 +40,9 @@ function Projects() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("irfan123@gmail.com");
-
+  const [successMessage, setSuccessMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   console.log(userEmail);
 
   const { data, error, loading } = useQuery(GET_USER, {
@@ -115,6 +117,10 @@ function Projects() {
   const handleDelete_Project = (projectId: string) => {
     getProject(data);
     delete_Project(projectId, DELETE_PROJECT, GET_USER);
+    setSuccessMessage("Project successfully deleted.");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
   };
 
   const handleAddProjectClick = () => {
@@ -129,12 +135,19 @@ function Projects() {
     setShowForm(false);
   };
 
-  if (loading)
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <LoadingIcon />
-      </div>
-    );
+  const handleMessage = (message: any) => {
+    setMessage(message);
+    setIsLoading(true);
+    setTimeout(() => {
+      setMessage("");
+      setIsLoading(false);
+    }, 5000);
+  };
+  if (loading || isLoading) return (
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon />
+    </div>
+  );
 
   if (error) {
     console.log(error.message);
@@ -142,6 +155,13 @@ function Projects() {
 
   return (
     <div>
+      <div className="flex justify-center mt-4">
+        {successMessage && (
+          <div className="bg-green-200 text-green-800 py-2 px-4 rounded-md">
+            {successMessage}
+          </div>
+        )}
+      </div>
       <div className="ml-6 flex items-center">
         <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
           Team Agile
@@ -262,6 +282,7 @@ function Projects() {
           onClose={handleCloseForm}
           projectData={data}
           userEmail={userEmail}
+          handleMessage={handleMessage}
         />
       )}
     </div>
