@@ -32,7 +32,7 @@ const LoadingIcon: React.FC = () => {
     <div className="loading-icon">
       <svg
         className="h-10 w-10 animate-spin text-gray-500"
-        className="h-10 w-10 animate-spin text-gray-500"
+        
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -189,18 +189,20 @@ export const TreeNode = ({
         setIsLoading(true);
         getNodes(allNodes, data.id)
           .then((result) => {
-            updateNodes(result);
+            updateNodes(result.nodes);
+            console.log(result);
+            updateEdges(result.edges);
           })
           .finally(() => {
             setIsLoading(false);
           });
-        getEdges(allEdges, data.id)
-          .then((result) => {
-            updateEdges(result);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
+        // getEdges(allEdges, data.id)
+        //   .then((result) => {
+        //     updateEdges(result);
+        //   })
+        //   .finally(() => {
+        //     setIsLoading(false);
+        //   });
       }
     };
   }

@@ -34,18 +34,13 @@ const Sidebar = () => {
   const router = useRouter()
   const projectId = router.query.projectId || ""
 
-  // const { data, loading } = useQuery(getMainByUser, {
-  //   variables: {
-  //     where: {
-  //       id: projectId
-  //     }
-  //   }
-  // })
+ 
 
 
   const getProjectId = async(id: string) => {
    const initData = await getTreeNodeByUser(getMainByUser, id)
    const data = initData[0]
+   //@ts-ignore
    updateInitData(data)
    return initData
   }

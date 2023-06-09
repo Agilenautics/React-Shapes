@@ -5,37 +5,40 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../apollo-client";
-
-
+//@ Irfan we have to create project and connect with Admin na, y we need this?
 const createProjectMutation = gql`
- mutation createProject($input: [mainCreateInput!]!) {
-  createMains(input: $input) {
-    mains {
-      name
-      description
-      isOpen
-      userName
-      id
+  mutation createProject($input: [mainCreateInput!]!) {
+    createMains(input: $input) {
+      mains {
+        name
+        description
+        isOpen
+        userName
+        id
+      }
     }
   }
-}
 `;
+//@ Irfan check this too
 // create project methode
-const createProject = async (data: any, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  console.log(data)
+const createProject = async (
+  data: any,
+  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
+  console.log(data);
   await client.mutate({
     mutation: mutations,
     variables: {
       input: {
-        "name": data.name,
-        "description": data.description,
-        "userName": "",
-        "isOpen": true
-      }
-    }
-  })
-}
-
+        name: data.name,
+        description: data.description,
+        userName: "",
+        isOpen: true,
+      },
+    },
+  });
+};
+//@ Irfan Check this is need?
 const getInitData = gql`
   query Mains {
     mains {
@@ -52,6 +55,7 @@ const getInitData = gql`
     }
   }
 `;
+//@ Irfan check this too
 // Update project name and description
 const updateProject = gql`
 mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
@@ -63,115 +67,42 @@ mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
      userName
    } 
   }
-}`
-//------------------------------------------------------
-//for update project function
-// {
-//   "where": {
-//     "id": "af767e7d-6001-4efa-9c6b-9fb1a97bbabd"
-//   },
-//   "update": {
-//     "userName":"Anitha",
-//     "description": "This is a React flow project",
-//     "name": "React flow"
-//   }
-// }
-//-------------------------------------------------------
+`;
+
 
 //Get root using unique userName(UID)
 const getMainByUser = gql`
   query Query($where: mainWhere) {
     mains(where: $where) {
-     
+      name
+      isOpen
+      id
+      hasContainsFile {
         name
-        isOpen
         id
-        hasContainsFile {
+        type
+      }
+      hasContainsFolder {
+        id
+        type
+        isOpen
+        name
+        hasFolder {
           name
-          id
-          type
-        }
-        hasContainsFolder {
           id
           type
           isOpen
-          name
-          hasFolder {
-            name
-            id
-            type
-            isOpen
-            hasFile {
-              name
-              id
-              type
-              hasflowchart {
-                name
-                nodes {
-                  id
-                  type
-                  draggable
-                  flowchart
-                  hasdataNodedata {
-                    label
-                    shape
-                    description
-                    links {
-                      label
-                      id
-                      fileId
-                      flag
-                    }
-                    linkedBy {
-                      label
-                      id
-                      flag
-                      fileId
-                    }
-                  }
-                  haspositionPosition {
-                    name
-                    x
-                    y
-                  }
-                }
-                edges {
-                  selected
-                  source
-                  sourceHandle
-                  target
-                  targetHandle
-                  hasedgedataEdgedata {
-                    id
-                    bidirectional
-                    boxCSS
-                    label
-                    pathCSS
-                  }
-                  flownodeConnectedby {
-                    flowchart
-                    id
-                  }
-                  connectedtoFlownode {
-                    flowchart
-                    id
-                  }
-                }
-              }
-            }
-          }
           hasFile {
-            type
-            id
             name
-  
+            id
+            type
             hasflowchart {
               name
               nodes {
                 id
+                type
                 draggable
                 flowchart
-                type
                 hasdataNodedata {
                   label
                   shape
@@ -185,8 +116,8 @@ const getMainByUser = gql`
                   linkedBy {
                     label
                     id
-                    fileId
                     flag
+                    fileId
                   }
                 }
                 haspositionPosition {
@@ -220,8 +151,68 @@ const getMainByUser = gql`
             }
           }
         }
+        hasFile {
+          type
+          id
+          name
+
+          hasflowchart {
+            name
+            nodes {
+              id
+              draggable
+              flowchart
+              type
+              hasdataNodedata {
+                label
+                shape
+                description
+                links {
+                  label
+                  id
+                  fileId
+                  flag
+                }
+                linkedBy {
+                  label
+                  id
+                  fileId
+                  flag
+                }
+              }
+              haspositionPosition {
+                name
+                x
+                y
+              }
+            }
+            edges {
+              selected
+              source
+              sourceHandle
+              target
+              targetHandle
+              hasedgedataEdgedata {
+                id
+                bidirectional
+                boxCSS
+                label
+                pathCSS
+              }
+              flownodeConnectedby {
+                flowchart
+                id
+              }
+              connectedtoFlownode {
+                flowchart
+                id
+              }
+            }
+          }
+        }
       }
     }
+  }
 `;
 const deleteFolders = gql`
   mutation DeleteFolders($where: folderWhere, $delete: folderDeleteInput) {
@@ -337,16 +328,18 @@ const connectToFolderOnMove = gql`
   }
 `;
 const disconnectFromFolderOnMove = gql`
-mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
-  updateFolders(where: $where, disconnect: $disconnect) {
-   folders {
-     name
-     hasFile {
-       name
-     }
-   } 
+  mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
+    updateFolders(where: $where, disconnect: $disconnect) {
+      folders {
+        name
+        hasFile {
+          name
+        }
+      }
+    }
   }
-}`;
+`;
+//@ Irfan - check this is needed
 async function createProjectNewUser(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   userName: string
@@ -428,6 +421,7 @@ async function createFolderInMain(
     })
     .then((result) => {
       node = result.data.createFolders.folders[0];
+      console.log(result.data.createFolders);
     });
   return node;
 }
@@ -448,7 +442,7 @@ async function createFileInMain(
             {
               node: {
                 type: "file",
-                name: "FileInMain2",
+                name: "FileInMain",
                 hasflowchart: {
                   create: {
                     node: {
@@ -464,9 +458,10 @@ async function createFileInMain(
     })
     .then((result) => {
       console.log(result.data.updateMains.mains);
-      const newFile1 = JSON.stringify(
-        result.data.updateMains.mains[0]
-      ).replace('"hasContainsFile":', '"file":');
+      const newFile1 = JSON.stringify(result.data.updateMains.mains[0]).replace(
+        '"hasContainsFile":',
+        '"file":'
+      );
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
     });
@@ -530,19 +525,19 @@ interface File {
   id: string;
   hasflowchart: any;
   flowchart: any;
-  type: 'file';
-  __typename: 'file';
+  type: "file";
+  __typename: "file";
 }
 
 interface Folder {
   id: string;
-  type: 'folder';
+  type: "folder";
   isOpen: boolean;
   name: string;
   hasFolder: Folder[];
   hasFile: File[];
   children: (Folder | File)[];
-  __typename: 'folder';
+  __typename: "folder";
 }
 
 interface Main {
@@ -552,7 +547,7 @@ interface Main {
   hasContainsFile: File[];
   hasContainsFolder: Folder[];
   children: (Folder | File)[];
-  __typename: 'main';
+  __typename: "main";
 }
 
 interface Data {
@@ -567,30 +562,34 @@ function transformObject(root: RootObject): RootObject {
   const transformMain = (main: Main): Main => ({
     ...main,
     children: [
-      ...(Array.isArray(main.hasContainsFolder) ? main.hasContainsFolder.map(transformFolder) : []),
-      ...(main.hasContainsFile || [])
+      ...(Array.isArray(main.hasContainsFolder)
+        ? main.hasContainsFolder.map(transformFolder)
+        : []),
+      ...(main.hasContainsFile || []),
     ].map((item) => {
-      if (item.type === 'file') {
+      if (item.type === "file") {
         return item;
       }
       return transformFolder(item);
     }),
-    hasContainsFolder: main.hasContainsFolder.map(folder =>
+    hasContainsFolder: main.hasContainsFolder.map((folder) =>
       transformFolder(folder)
     ),
   });
 
   const transformFolder = (folder: Folder): Folder => ({
     ...folder,
-    hasFolder: folder.hasFolder ? folder.hasFolder.map(f => transformFolder(f)) : [],
+    hasFolder: folder.hasFolder
+      ? folder.hasFolder.map((f) => transformFolder(f))
+      : [],
     children: [
       ...(Array.isArray(folder.hasFolder) ? folder.hasFolder : []),
-      ...(folder.hasFile || [])
-    ].map(item => {
-      if (item.type === 'file') {
+      ...(folder.hasFile || []),
+    ].map((item) => {
+      if (item.type === "file") {
         return {
           ...item,
-          flowchart: item.hasflowchart
+          flowchart: item.hasflowchart,
         };
       }
       return transformFolder(item);
@@ -599,7 +598,7 @@ function transformObject(root: RootObject): RootObject {
 
   const transformData = (data: Data): Data => ({
     ...data,
-    mains: data.mains.map(main => transformMain(main)),
+    mains: data.mains.map((main) => transformMain(main)),
   });
 
   return {
@@ -618,7 +617,7 @@ async function getTreeNodeByUser(
       query: customQuery,
       variables: {
         where: {
-          id
+          id,
         },
       },
     })
@@ -628,46 +627,13 @@ async function getTreeNodeByUser(
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
         return { ...rest, children: hasContainsFolder };
       });
-      // const nodes1 = JSON.stringify(result.data.mains)
-      //   .replace('"hasContainsFolder":', '"children":')
-      //   .replace('"hasFolder":', '"children":')
-      //   .replace('"hasFile":', '"children":')
-      //   .replace('"hasflowchart":', '"flowchart":');
-      // nodes = JSON.parse(nodes1);
+      
 
       const res_updated = transformObject(result);
       nodes = res_updated.data.mains;
     });
   return nodes;
 }
-
-// async function getTreeNode(
-//   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
-// ) {
-//   var nodes: Main[] = [];
-//   await client
-//     .query({
-//       query: customQuery,
-//     })
-//     .then((result) => {
-//       const mainData = result.data.mains
-//       const data = mainData.map((value: any) => {
-//        const {hasContainsFile,hasContainsFolder,...rest} = value
-//        return {...rest,children:hasContainsFolder}
-//       })
-//       // const nodes1 = JSON.stringify(result.data.mains)
-//       //   .replace('"hasContainsFolder":', '"children":')
-//       //   .replace('"hasFolder":', '"children":')
-//       //   .replace('"hasFile":', '"children":')
-//       //   .replace('"hasflowchart":', '"flowchart":');
-//       // nodes = JSON.parse(nodes1);
-
-//       const res_updated = transformObject(result);
-//       nodes = res_updated.data.mains;
-
-//     });
-//   return nodes;
-// }
 
 async function deleteFileBackend(fileID: string) {
   await client.mutate({
@@ -787,20 +753,19 @@ const disconnectFromFolderBackendOnMove = async (fileId: string) => {
   await client.mutate({
     mutation: disconnectFromFolderOnMove,
     variables: {
-
-      "where": {
-        "hasFile_SINGLE": {
-          "id": fileId,
-        }
+      where: {
+        hasFile_SINGLE: {
+          id: fileId,
+        },
       },
-      "disconnect": {
-        "hasFile": [
+      disconnect: {
+        hasFile: [
           {
-            "disconnect": {}
-          }
-        ]
-      }
-    }
+            disconnect: {},
+          },
+        ],
+      },
+    },
   });
 };
 
@@ -819,62 +784,67 @@ const updateFileBackend = async (fileId: string, flowchart: string) => {
 };
 
 const getFile = gql`
- query Query($where: fileWhere) {
-  files(where: $where) {
-    name
-    id
-    type
-    hasflowchart {
+  query Query($where: fileWhere) {
+    files(where: $where) {
       name
-      nodes {
-        draggable
-        flowchart
-        id
-        hasdataNodedata {
-          label
-          shape
-          description
-          links {
-            fileId
-             flag
-             id
-             label
-          }
-          linkedBy {
-            id
-            fileId
-            flag
+      id
+      type
+      hasflowchart {
+        name
+        nodes {
+          draggable
+          flowchart
+          id
+          hasdataNodedata {
             label
+            shape
+            description
+            links {
+              fileId
+              flag
+              id
+              label
+            }
+            linkedBy {
+              id
+              fileId
+              flag
+              label
+            }
           }
-        }
-        haspositionPosition {
-          x
-          y
+          haspositionPosition {
+            x
+            y
+          }
         }
       }
     }
   }
-}
-`
+`;
 
-const getFileByNode = async (nodeId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  let file: any
-  await client.query({
-    query: customQuery,
-    variables: {
-      "where": {
-        "hasflowchart": {
-          "nodes_SINGLE": {
-            "id": nodeId
-          }
-        }
-      }
-    }
-  }).then((result) => {
-    file = result
-  })
-  return file
-}
+const getFileByNode = async (
+  nodeId: string,
+  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
+  let file: any;
+  await client
+    .query({
+      query: customQuery,
+      variables: {
+        where: {
+          hasflowchart: {
+            nodes_SINGLE: {
+              id: nodeId,
+            },
+          },
+        },
+      },
+    })
+    .then((result) => {
+      file = result;
+    });
+  return file;
+};
 
 export {
   createFolderInMain,
@@ -898,5 +868,5 @@ export {
   createProject,
   createProjectMutation,
   getMainByUser,
-  getTreeNodeByUser
+  getTreeNodeByUser,
 };

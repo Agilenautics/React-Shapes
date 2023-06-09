@@ -5,31 +5,8 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Edge } from "react-flow-renderer";
-// const getNode = gql`
-//   query Query($where: fileWhere) {
-//     flowNodes {
-//       id
-//       timeStamp
-//       draggable
-//       flowchart
-//       type
-//       hasdataNodedata {
-//         shape
-//         description
-//         label
-//         links{
-//           id
-//           label
-//         }
-//       }
-//       haspositionPosition {
-//         x
-//         y
-//       }
-//     }
-//   }
-// `;
+import { Edge, updateEdge } from "react-flow-renderer";
+
 
 const allEdges = gql`
 query Query($where: flowchartWhere) {
@@ -61,33 +38,7 @@ query Query($where: flowchartWhere) {
 }
 
 `;
-// const newNode = gql`
-//   mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
-//     updateFiles(where: $where, update: $update) {
-//       files {
-//         name
-//         hasflowchart {
-//           name
-//           nodes {
-//             draggable
-//             flowchart
-//             hasdataNodedata {
-//               label
-//               shape
-//               links{
-//                 label
-//                 id
-//               }
-//             }
-//             haspositionPosition {
-//               x
-//               y
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
+
 
 // create Edge mutation
 
@@ -162,37 +113,7 @@ const deleteEdge = async (edgeId: string, label: string) => {
 
   //await client.resetStore()
 };
-// async function getNodes(
-//   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-//   id: string
-// ) {
-//   var nodes: Array<Node> = [];
-//   await client
-//     .query({
-//       query: customQuery,
-//       variables: {
-//         where: {
-//           hasFile: {
-//             id: id,
-//           },
-//         },
-//       },
-//     })
-//     .then((result) => {
-//       //console.log(result.data.flowcharts[0]);
-//       const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
 
-//       const nodes2 = nodes1
-//         .replaceAll('"hasdataNodedata":', '"data":')
-        
-//         .replaceAll('"haspositionPosition":', '"position":');
-//       //@ts-ignore
-//       nodes = JSON.parse(nodes2);
-//       //console.log("getNodes",nodes);
-//     });
-
-//   return nodes;
-// }
 
 
 async function getEdges(
@@ -229,6 +150,7 @@ async function getEdges(
 
 //methode for creating edge
 const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
+  var edges: Array<Edge> = [];
   await client.mutate({
     mutation: createEdgeMutation,
     variables: {
@@ -290,7 +212,7 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
         },
       },
     },
-  });
+  })
   // if (flowchart) {
   //   client
   //     .resetStore()
@@ -303,7 +225,25 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
   //     .catch((error) => {
   //       console.error(error);
   //     });
-  //}
+  // }
+  .then((result) => {
+    console.log(
+      result.data.updateFiles.files[0].hasflowchart.edges,
+      "create edge"
+    );
+    const edges1 = JSON.stringify(
+      result.data.updateFiles.files[0].hasflowchart.edges
+    )
+      .replaceAll('"hasedgedataEdgedata:', '"data":');
+    //@ts-ignore
+    edges = JSON.parse(edges1);
+    return updateEdges(edges);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+client.clearStore();
+
 };
 
 //update Edge mutation
@@ -350,7 +290,7 @@ const updateEdgeBackend = async (
 };
 
 export {
-  allEdges,
+ allEdges,
   getEdges,
   createFlowEdge,
   deleteEdge,

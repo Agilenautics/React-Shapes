@@ -22,64 +22,7 @@ import {
 } from "./gqlFiles";
 import { auth } from "../../auth";
 
-// await getTreeNodeByUser(getMainByUser, userEmail);
-// {
-//   id: "ROOT",
-//   name: "ROOT",
-//   isOpen: true,
-//   children: [
-//     // {
-//     //   id: "1",
-//     //   name: "Clients",
-//     //   type: "folder",
-//     //   isOpen: true,
-//     //   children: [
-//     //     {
-//     //       id: "4",
-//     //       name: "Projects",
-//     //       isOpen: true,
-//     //       type: "folder",
-//     //       children: [
-//     //         {
-//     //           id: "2",
-//     //           name: "Flowchart 1",
-//     //           type: "file",
-//     //           flowchart: {
-//     //             nodes: await getNodes(allNodes, "Flowchart 1"),
-//     //             edges: [],
-//     //           },
-//     //           isOpen: true,
-//     //         },
-//     //         {
-//     //           id: "3",
-//     //           name: "Flowchart 2",
-//     //           flowchart: {
-//     //             nodes: await getNodes(allNodes, "Flowchart 2"),
-//     //             edges: await getEdges(allEdges, "Flowchart 2"),
-//     //           },
-//     //         },
-//     //         {
-//     //           id: "80",
-//     //           name: "Flowchart 3",
-//     //           flowchart: {
-//     //             // here iam changing empty array to calling get all edges and nodes
-//     //             nodes:await getNodes(allNodes,"Flowchart 3"),
-//     //             edges:await getEdges(allEdges, "Flowchart 3") ,
-//     //           },
-//     //         },
-//     //       ],
-//     //     },
-//     //   ],
-//     // },
-//     {
-//       id: "6",
-//       name: "Other Projects",
-//       isOpen: true,
-//       type: "folder",
-//       children: [],
-//     },
-//   ],
-// };
+const userEmail = auth.currentUser?.email || "";
 
 function searchTree(element: any, matchingTitle: any): any {
   if (element.id == matchingTitle) {
@@ -146,6 +89,8 @@ const fileStore = create<files>((set) => ({
 
       if (node?.model.type === "folder") {
         createFileInFolder(newFileInFolder, parentId).then((result) => {
+         
+
           node?.model.children?.push({
             name: result.name,
             id: result.id,
@@ -156,9 +101,8 @@ const fileStore = create<files>((set) => ({
       } else {
         parentId = root.model.id;
         createFileInMain(newFileInMain, parentId).then((result) => {
-          // @ts-ignore
-          console.log(result);
-          console.log(root.model.children);
+         
+         
           root.model.children?.push({
             name: result.name,
             id: result.id,
@@ -176,9 +120,9 @@ const fileStore = create<files>((set) => ({
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       let node = findById(root, parentId);
-      console.log(parentId);
+      
       let data_chk = node?.model.type;
-      console.log(data_chk);
+      
       if (node?.model.type === "folder") {
         createFolderInFolder(newFolderInFolder, parentId).then((result) => {
           node?.model.children?.push({
@@ -193,8 +137,7 @@ const fileStore = create<files>((set) => ({
       } else {
         parentId = root.model.id;
         createFolderInMain(newFolderInMain, parentId).then((result) => {
-          console.log(result);
-          console.log(node?.parent.model);
+          
           root.model.children?.push({
             id: result.id,
             name: result.name,
@@ -219,9 +162,9 @@ const fileStore = create<files>((set) => ({
         deleteFolderBackend(id)
         node?.drop();
       } else if (node?.model.type === "file") {
-        deleteFileBackend(id).then(() => {
+        deleteFileBackend(id)
           node?.drop();
-        })
+        
       }
 
 
@@ -235,7 +178,7 @@ const fileStore = create<files>((set) => ({
   find_file: (id: string) => {
     var x = {};
     set((state) => {
-      // ? Replace this function with findById when I implement any database
+      
       const targetNode = searchTree(state.data, id);
       x = targetNode;
       return {};

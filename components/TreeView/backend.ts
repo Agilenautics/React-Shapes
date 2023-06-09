@@ -81,9 +81,7 @@ export function useBackend() {
 
       if (node) {
         node.model.name = name;
-        console.log("hi", id, name);
-        // updateFileBackend(id,name);
-        // updateFolderBackend(id,name);
+        
         update();
       }
       const { type } = node?.model

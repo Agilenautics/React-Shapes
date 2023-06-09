@@ -6,6 +6,7 @@ import {
 } from "@apollo/client";
 import client from "../../../apollo-client";
 import { Node } from "react-flow-renderer";
+import { Edge } from "reactflow";
 
 const allNodes = gql`
   query Query($where: flowchartWhere) {
@@ -40,40 +41,62 @@ const allNodes = gql`
           y
         }
       }
+      edges {
+        id
+        source
+        target
+        sourceHandle
+        targetHandle
+        selected
+        hasedgedataEdgedata {
+          label
+          pathCSS
+          boxCSS
+          bidirectional
+        }
+        flownodeConnectedby {
+          id
+          flowchart
+        }
+        connectedtoFlownode {
+          id
+          flowchart
+        }
+      }
     }
   }
 `;
 
 const getNode = gql`
- query FlowNodes($where: flowNodeWhere) {
-  flowNodes(where: $where) {
-    draggable
-    flowchart
-    type
-    id
-    hasdataNodedata {
-      shape
-      label
-      description
-      links {
-        fileId
-        flag
-        id
+  query FlowNodes($where: flowNodeWhere) {
+    flowNodes(where: $where) {
+      draggable
+      flowchart
+      type
+      id
+      hasdataNodedata {
+        shape
         label
+        description
+        links {
+          fileId
+          flag
+          id
+          label
+        }
+        linkedBy {
+          fileId
+          flag
+          label
+          id
+        }
       }
-      linkedBy {
-        fileId
-        flag
-        label
-        id
+      haspositionPosition {
+        x
+        y
       }
-    }
-    haspositionPosition {
-      x
-      y
     }
   }
-}
 `;
 
 const newNode = gql`
@@ -166,6 +189,7 @@ async function getNodes(
   id: string
 ) {
   var nodes: Array<Node> = [];
+  var edges: Array<Edge> = [];
   await client
     .query({
       query: customQuery,
@@ -179,6 +203,10 @@ async function getNodes(
     })
     .then((result) => {
       const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
+      const edge1=JSON.stringify(result.data.flowcharts[0].edges)
+      const edge2=edge1
+      .replaceAll('"hasedgedataEdgedata":','"data":');
+    edges = JSON.parse(edge2);
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
         .replaceAll('"haspositionPosition":', '"position":');
@@ -186,7 +214,7 @@ async function getNodes(
       nodes = JSON.parse(nodes2);
     });
 
-  return nodes;
+  return {nodes,edges};
 }
 
 async function createNode(
@@ -267,10 +295,7 @@ async function createNode(
     })
 
     .then((result) => {
-      console.log(
-        result.data.updateFiles.files[0].hasflowchart.nodes,
-        "create node"
-      );
+      
       const nodes1 = JSON.stringify(
         result.data.updateFiles.files[0].hasflowchart.nodes
       )
@@ -344,13 +369,7 @@ const updatePosition = async (node: any) => {
   });
 };
 
-//  12.2.2
-// "react-tag-input": "^6.8.0",
-// "react-virtualized-auto-sizer": "^1.0.6",
-// "@apollo/client": "^3.6.9",
-// "react": "^18.2.0",
-//  "react-arborist": "^1.1.0",
-// "react-dom": "^18.2.0",
+
 
 const updateNodesMutation = gql`
   mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
@@ -395,92 +414,93 @@ const updateNodeBackend = async (nodeData: any) => {
   });
 };
 
-
 const updateLinkedBy = gql`
   mutation UpdateLinkedBy($where: linkedWhere, $update: linkedUpdateInput) {
-  updateLinkeds(where: $where, update: $update) {
-    linkeds {
-      fileId
-      flag
-      id
-      label
+    updateLinkeds(where: $where, update: $update) {
+      linkeds {
+        fileId
+        flag
+        id
+        label
+      }
     }
   }
-}
-`
+`;
 
-const updateLinkedByMethod = async (nodeData: any, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const updateLinkedByMethod = async (
+  nodeData: any,
+  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   await client.mutate({
     mutation: mutations,
     variables: {
       where: {
         hasLinked: {
           flownodeHasdata: {
-            id: nodeData.id
-          }
-        }
+            id: nodeData.id,
+          },
+        },
       },
       update: {
         fileId: nodeData.data.linkedBy.fileId,
         flag: nodeData.data.linkedBy.flag,
         id: nodeData.data.linkedBy.id,
-        label: nodeData.data.linkedBy.label
-      }
-    }
-  })
-}
-
+        label: nodeData.data.linkedBy.label,
+      },
+    },
+  });
+};
 
 //updateNodes links and data
 
 const updateLinksMutation = gql`
-mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
-  updateNodeData(where: $where, update: $update) {
-    nodeData {
-      label
-      description
-      shape
-      links {
+  mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
+    updateNodeData(where: $where, update: $update) {
+      nodeData {
         label
-        id
-        fileId
-        flag
+        description
+        shape
+        links {
+          label
+          id
+          fileId
+          flag
+        }
       }
     }
   }
-}
-`
+`;
 
-const updateNodeData = async (nodeData: any, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const updateNodeData = async (
+  nodeData: any,
+  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   await client.mutate({
     mutation: mutations,
     variables: {
-      "where": {
-        "flownodeHasdata": {
-          "id": nodeData.id
+      where: {
+        flownodeHasdata: {
+          id: nodeData.id,
         },
       },
-      "update": {
-        "description": nodeData.data.description,
-        "shape": nodeData.data.shape,
-        "label": nodeData.data.label,
-        "links": {
-          "update": {
-            "node": {
-              "fileId": nodeData.data.links.fileId,
-              "flag": nodeData.data.links.flag,
-              "id": nodeData.data.links.id,
-              "label": nodeData.data.links.label
-            }
-          }
+      update: {
+        description: nodeData.data.description,
+        shape: nodeData.data.shape,
+        label: nodeData.data.label,
+        links: {
+          update: {
+            node: {
+              fileId: nodeData.data.links.fileId,
+              flag: nodeData.data.links.flag,
+              id: nodeData.data.links.id,
+              label: nodeData.data.links.label,
+            },
+          },
         },
-      }
-    }
-  })
-}
-
-
-
+      },
+    },
+  });
+};
 
 export {
   allNodes,
@@ -495,5 +515,5 @@ export {
   updateLinkedByMethod,
   updateLinkedBy,
   updateLinksMutation,
-  updateNodeData
+  updateNodeData,
 };

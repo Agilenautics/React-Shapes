@@ -120,6 +120,7 @@ function Flow() {
       document.removeEventListener("keydown", handleBackspace);
     };
   }, []);
+//@ Irfan check this
 
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
