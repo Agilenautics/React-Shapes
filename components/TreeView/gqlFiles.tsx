@@ -67,6 +67,7 @@ mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
      userName
    } 
   }
+}
 `;
 
 
