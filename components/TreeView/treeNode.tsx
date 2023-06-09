@@ -1,5 +1,11 @@
 import classNames from "classnames";
-import React, { useState, FocusEvent, KeyboardEvent, SyntheticEvent, useEffect } from "react";
+import React, {
+  useState,
+  FocusEvent,
+  KeyboardEvent,
+  SyntheticEvent,
+  useEffect,
+} from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 // @ts-ignore
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
@@ -16,7 +22,6 @@ import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
 import { getFileByNode } from "./gqlFiles";
 import { gql } from "graphql-tag";
 import styles from "../Flow/Nodes/styles.module.css";
-import userStore from "../AdminPage/Users/userStore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
@@ -26,7 +31,8 @@ const LoadingIcon: React.FC = () => {
   return (
     <div className="loading-icon">
       <svg
-        className="animate-spin h-10 w-10 text-gray-500"
+        className="h-10 w-10 animate-spin text-gray-500"
+        className="h-10 w-10 animate-spin text-gray-500"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -144,27 +150,24 @@ export const TreeNode = ({
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState([])
-
+  const [user, setUser] = useState([]);
 
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // @ts-ignore
         get_user_method(user.email, GET_USER).then((res) => {
-          setUser(res[0].userType)
-        })
+          setUser(res[0].userType);
+        });
       } else {
-        setUser([])
+        setUser([]);
       }
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    verfiyAuthToken()
-  }, [])
-
-
+    verfiyAuthToken();
+  }, []);
 
   var accessLevel = user; // Set the access level here
 
@@ -202,9 +205,6 @@ export const TreeNode = ({
     };
   }
 
-  const isUser = accessLevel === "user";
-  const canEditAndDelete = !isUser;
-
   return (
     <div
       ref={innerRef}
@@ -227,7 +227,7 @@ export const TreeNode = ({
         ) : (
           <span className="flex flex-row text-lg">
             {name}{" "}
-            {state.isSelected && canEditAndDelete && (
+            {state.isSelected && !state.isEditing && (
               <div className="flex flex-row pl-2">
                 <button className="text-gray-900" onClick={handlers.edit}>
                   <FiEdit2 size={20} className="dark:text-white" />
