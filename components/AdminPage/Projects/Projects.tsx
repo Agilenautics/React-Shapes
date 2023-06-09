@@ -39,9 +39,10 @@ function Projects() {
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [userEmail, setUserEmail] = useState("irfan123@gmail.com");
+  const [userEmail, setUserEmail] = useState("");
 
-  console.log(userEmail)
+
+
 
 
   const { data, error, loading } = useQuery(GET_USER, {
@@ -65,11 +66,19 @@ function Projects() {
     //   setProjectData(res[0].hasProjects);
     // });
 
+
+
+
     // @ts-ignore
-    const userType = data.users[0].userType
-    setAccessLevel(userType)
-    // @ts-ignore
-    setProjectData(data.users[0].hasProjects)
+    if (data && data.users.length) {
+      // @ts-ignore
+      const userType = data.users[0].userType
+      setAccessLevel(userType)
+      // @ts-ignore
+      setProjectData(data.users[0].hasProjects)
+
+    }
+
   }
 
 
@@ -90,7 +99,7 @@ function Projects() {
   useEffect(() => {
     verfiyAuthToken();
     setIsButtonDisabled(accessLevel.toLowerCase() == "user")
-  }, [userEmail, getProject]);
+  }, [getProject, verfiyAuthToken]);
 
 
   const handleEditButtonClick = (

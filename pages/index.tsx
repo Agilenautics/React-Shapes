@@ -45,7 +45,7 @@ const Home: NextPage = () => {
         position: 'fixed',
         top: 0
       }}>
-        <Sidebar />
+        {/* <Sidebar /> */}
         <Signout />
       </div>
       

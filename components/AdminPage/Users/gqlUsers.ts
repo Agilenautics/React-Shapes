@@ -94,4 +94,75 @@ const handleUpdate_User = async (data: Object, mutation: DocumentNode | TypedDoc
   })
 }
 
-export { ALL_USERS, DELETE_USER, handleUser_Delete, ADD_USER, UPDATE_USER, handleUpdate_User }
+//assign  project to users mutation
+const allocateProjectToUserMutation = gql`
+mutation assignProjectToUser($connect: userConnectInput, $where: userWhere) {
+  updateUsers(connect: $connect, where: $where) {
+    users {
+      id
+      hasProjects {
+        name
+      }
+    }
+  }
+}
+`
+
+
+const allocateProjectToUserMethod = async (projectId: string, userId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id: userId
+      },
+      connect: {
+        hasProjects: [
+          {
+            where: {
+              node: {
+                id: projectId
+              }
+            }
+          }
+        ]
+      }
+    }
+  })
+}
+
+const deAllocateProjectToUserMutation = gql`
+mutation UpdateUsers($disconnect: userDisconnectInput, $where: userWhere) {
+  updateUsers(disconnect: $disconnect, where: $where) {
+    info {
+      relationshipsDeleted
+    }
+  }
+}
+`
+
+const deAllocateProjectToUserMethod = async (projectId: string, userId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id: userId
+      },
+      disconnect: {
+        hasProjects: [
+          {
+            where: {
+              node: {
+                id: projectId
+              }
+            }
+          }
+        ]
+      }
+    }
+  })
+}
+
+
+
+export { ALL_USERS, DELETE_USER, handleUser_Delete, ADD_USER, UPDATE_USER, handleUpdate_User, allocateProjectToUserMethod, allocateProjectToUserMutation,deAllocateProjectToUserMethod,deAllocateProjectToUserMutation }

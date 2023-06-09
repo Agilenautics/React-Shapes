@@ -53,7 +53,7 @@ const getInitData = gql`
   }
 `;
 // Update project name and description
-const updateProject =gql`
+const updateProject = gql`
 mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
   updateMains(where: $where, update: $update) {
    mains {
@@ -223,149 +223,6 @@ const getMainByUser = gql`
       }
     }
 `;
-// const getInitData = gql`
-//   query Mains {
-//     mains {
-//       name
-//       isOpen
-//       id
-//       hasContainsFile {
-//         name
-//         id
-//         type
-//       }
-//       hasContainsFolder {
-//         id
-//         type
-//         isOpen
-//         name
-//         hasFolder {
-//           name
-//           id
-//           type
-//           isOpen
-//           hasFile {
-//             name
-//             id
-//             type
-//             hasflowchart {
-//               name
-//               nodes {
-//                 id
-//                 type
-//                 draggable
-//                 flowchart
-//                 hasdataNodedata {
-//                   label
-//                   shape
-//                   description
-//                   links {
-//                     label
-//                     id
-//                     fileId
-//                     flag
-//                   }
-//                   linkedBy {
-//                     label
-//                     id
-//                     flag
-//                     fileId
-//                   }
-//                 }
-//                 haspositionPosition {
-//                   name
-//                   x
-//                   y
-//                 }
-//               }
-//               edges {
-//                 selected
-//                 source
-//                 sourceHandle
-//                 target
-//                 targetHandle
-//                 hasedgedataEdgedata {
-//                   id
-//                   bidirectional
-//                   boxCSS
-//                   label
-//                   pathCSS
-//                 }
-//                 flownodeConnectedby {
-//                   flowchart
-//                   id
-//                 }
-//                 connectedtoFlownode {
-//                   flowchart
-//                   id
-//                 }
-//               }
-//             }
-//           }
-//         }
-//         hasFile {
-//           type
-//           id
-//           name
-
-//           hasflowchart {
-//             name
-//             nodes {
-//               id
-//               draggable
-//               flowchart
-//               type
-//               hasdataNodedata {
-//                 label
-//                 shape
-//                 description
-//                 links {
-//                   label
-//                   id
-//                   fileId
-//                   flag
-//                 }
-//                 linkedBy {
-//                   label
-//                   id
-//                   fileId
-//                   flag
-//                 }
-//               }
-//               haspositionPosition {
-//                 name
-//                 x
-//                 y
-//               }
-//             }
-//             edges {
-//               selected
-//               source
-//               sourceHandle
-//               target
-//               targetHandle
-//               hasedgedataEdgedata {
-//                 id
-//                 bidirectional
-//                 boxCSS
-//                 label
-//                 pathCSS
-//               }
-//               flownodeConnectedby {
-//                 flowchart
-//                 id
-//               }
-//               connectedtoFlownode {
-//                 flowchart
-//                 id
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// `;
 const deleteFolders = gql`
   mutation DeleteFolders($where: folderWhere, $delete: folderDeleteInput) {
     deleteFolders(where: $where, delete: $delete) {
@@ -571,11 +428,6 @@ async function createFolderInMain(
     })
     .then((result) => {
       node = result.data.createFolders.folders[0];
-      // const newFolder = JSON.stringify(
-      //   result.data.createFolders.folders)
-      // .replace('"mainHas":', '"folder":');
-      // const nodes1 = JSON.parse(newFolder);
-      // node = nodes1.folder[0];
     });
   return node;
 }
@@ -650,6 +502,17 @@ async function createFileInFolder(
             },
           ],
         },
+      },
+      update: (cache, result) => {
+        console.log(result)
+      },
+      refetchQueries:[{query:getMainByUser}],
+      onQueryUpdated(observableQuery) {
+        console.log(observableQuery)
+        // Define any custom logic for determining whether to refetch
+        if (observableQuery) {
+          return observableQuery.refetch();
+        }
       },
     })
     .then((result) => {

@@ -175,6 +175,7 @@ export const TreeNode = ({
     }
   }
 
+
   function loadNewFlow(
     handlers: NodeRendererProps<MyData>,
     data: NodeRendererProps<MyData>
@@ -254,7 +255,7 @@ export const TreeNode = ({
             <FiDelete
               onClick={(e) => {
                 e.stopPropagation();
-                delete_item(Id);
+                delete_item(id);
               }}
               className="cursor-pointer stroke-2"
               size={18}

@@ -25,7 +25,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const toggleDraggable = nodeStore((state) => state.toggleDraggable);
   const updateNodes = nodeStore((state) => state.updateNodes);
   const findFile = fileStore((state) => state.find_file)
-  const linkNodeId = fileStore((state) => state.linkNodeId)
   const updateEdges = edgeStore((state) => state.updateEdges)
   const updateDescription = nodeStore((state) => state.updateDescription)
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs)
@@ -36,6 +35,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const shapeCSS = nodeShapeMap[data.shape];
   // @ts-ignore
   const description = data.description;
+
+  console.log(shapeCSS)
 
 
 

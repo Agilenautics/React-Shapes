@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { allocateProjectToUserMethod, allocateProjectToUserMutation, deAllocateProjectToUserMethod, deAllocateProjectToUserMutation } from "./gqlUsers";
 
 interface ManageAccountOverlayProps {
   user: {
@@ -39,7 +40,6 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
     })
   );
 
-  console.log(adminProjects);
 
   const projectsList = adminProjects
     .filter(
@@ -84,6 +84,18 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
 
     console.log("Deleted Projects:", deletedProjects);
     console.log("Added Projects:", addedProjects);
+
+    for(let i = 0; i<addedProjects.length;i++){
+      const id = addedProjects[i]?.id
+      // @ts-ignore
+      allocateProjectToUserMethod(id,user.id,allocateProjectToUserMutation)
+    }
+
+    for(let i = 0; i<deletedProjects.length;i++){
+      const id = deletedProjects[i].id
+      deAllocateProjectToUserMethod(id,user.id,deAllocateProjectToUserMutation)
+    }
+    
 
     const editedUser = {
       ...user,

@@ -66,13 +66,10 @@ function Users() {
             name: project.name,
           }));
           setProjectsList(userProjects);
-          console.log(userProjects);
         });
       }
     });
   };
-  console.log(projectsList);
-
   useEffect(() => {
     verfiyAuthToken();
   }, []);
