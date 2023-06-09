@@ -56,6 +56,7 @@ const FinishSignIn: React.FC = () => {
                 });
                 // Add user to Database
                 // user.email
+                // set active to true
             })
             .catch((error) => {
                 const errorCode = error.code;

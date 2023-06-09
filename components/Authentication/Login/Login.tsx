@@ -51,6 +51,9 @@ const Login: React.FC = () => {
                     const accessToken = idTokenResult.token;
                     const refreshToken = user.refreshToken;
 
+                    //  check if active == true
+
+
                     // Store the tokens in cookies
                     document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
                     document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
