@@ -18,6 +18,13 @@ query getUsers {
   }
 }
 `
+const GET_USERS_ByProject = gql`
+query Query($where: userWhere) {
+  users(where: $where) {
+   emailId 
+   userType
+  }
+}`
 const DELETE_USER = gql`
 mutation deleteUser($where: userWhere, $delete: userDeleteInput) {
   deleteUsers(where: $where, delete: $delete) {
@@ -93,6 +100,18 @@ const handleUpdate_User = async (data: Object, mutation: DocumentNode | TypedDoc
     refetchQueries: [{ query }]
   })
 }
+const handleGetUsersByProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id
+      }
+    },
+    refetchQueries: [{ query }]
+  })
+}
+
 
 //assign  project to users mutation
 const allocateProjectToUserMutation = gql`
@@ -165,4 +184,8 @@ const deAllocateProjectToUserMethod = async (projectId: string, userId: string, 
 
 
 
-export { ALL_USERS, DELETE_USER, handleUser_Delete, ADD_USER, UPDATE_USER, handleUpdate_User, allocateProjectToUserMethod, allocateProjectToUserMutation,deAllocateProjectToUserMethod,deAllocateProjectToUserMutation }
+export { ALL_USERS, DELETE_USER, handleUser_Delete,
+   ADD_USER, UPDATE_USER, handleUpdate_User, 
+   allocateProjectToUserMethod, allocateProjectToUserMutation,
+   deAllocateProjectToUserMethod,deAllocateProjectToUserMutation,
+  GET_USERS_ByProject,handleGetUsersByProject}
