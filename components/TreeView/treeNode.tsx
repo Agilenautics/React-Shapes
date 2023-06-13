@@ -32,7 +32,6 @@ const LoadingIcon: React.FC = () => {
     <div className="loading-icon">
       <svg
         className="h-10 w-10 animate-spin text-gray-500"
-        
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -151,25 +150,25 @@ export const TreeNode = ({
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState([]);
+  const [accessLevel, setAccessLevel] = useState("");
 
-  const verfiyAuthToken = async () => {
+  const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // @ts-ignore
-        get_user_method(user.email, GET_USER).then((res) => {
+      if (user && user.email) {
+        get_user_method(user.email, GET_USER).then((res: any) => {
           setUser(res[0].userType);
+          setAccessLevel(res[0].userType);
         });
       } else {
         setUser([]);
+        setAccessLevel("");
       }
     });
   };
 
   useEffect(() => {
-    verfiyAuthToken();
+    verifyAuthToken();
   }, []);
-
-  var accessLevel = user; // Set the access level here
 
   if (state.isSelected) {
     updateCurrentFlowchart(name, id);
@@ -177,7 +176,6 @@ export const TreeNode = ({
       updateBreadCrumbs(data, id, "new");
     }
   }
-
 
   function loadNewFlow(
     handlers: NodeRendererProps<MyData>,
@@ -229,41 +227,26 @@ export const TreeNode = ({
         ) : (
           <span className="flex flex-row text-lg">
             {name}{" "}
-            {state.isSelected && !state.isEditing && (
-              <div className="flex flex-row pl-2">
-                <button className="text-gray-900" onClick={handlers.edit}>
-                  <FiEdit2 size={20} className="dark:text-white" />
-                </button>
-                <button
-                  onClick={() => {
-                    delete_item(id);
-                  }}
-                  className="ml-2"
-                >
-                  <FiDelete size={20} className="dark:text-white" />
-                </button>
-              </div>
-            )}
+            {state.isSelected &&
+              !state.isEditing &&
+              accessLevel.toLowerCase() !== "user" && (
+                <div className="flex flex-row pl-2">
+                  <button className="text-gray-900" onClick={handlers.edit}>
+                    <FiEdit2 size={20} className="dark:text-white" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      delete_item(id);
+                    }}
+                    className="ml-2"
+                  >
+                    <FiDelete size={20} className="dark:text-white" />
+                  </button>
+                </div>
+              )}
           </span>
         )}
         {isLoading && <LoadingIcon />}
-        {!isLoading && !state.isEditing && (
-          <>
-            <FiEdit2
-              onClick={handlers.edit}
-              className="cursor-pointer stroke-2 mx-1"
-              size={18}
-            />
-            <FiDelete
-              onClick={(e) => {
-                e.stopPropagation();
-                delete_item(id);
-              }}
-              className="cursor-pointer stroke-2"
-              size={18}
-            />
-          </>
-        )}
       </div>
     </div>
   );

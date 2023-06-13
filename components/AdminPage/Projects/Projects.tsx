@@ -65,22 +65,15 @@ function Projects() {
     //   setProjectData(res[0].hasProjects);
     // });
 
-
-
-
     // @ts-ignore
     if (data && data.users.length) {
       // @ts-ignore
-      const userType = data.users[0].userType
-      setAccessLevel(userType)
+      const userType = data.users[0].userType;
+      setAccessLevel(userType);
       // @ts-ignore
-      setProjectData(data.users[0].hasProjects)
-
+      setProjectData(data.users[0].hasProjects);
     }
-
-  }
-
-
+  };
 
   //verifying token
   const verfiyAuthToken = async () => {
@@ -152,11 +145,12 @@ function Projects() {
       setIsLoading(false);
     }, 5000);
   };
-  if (loading || isLoading) return (
-    <div className="flex justify-center items-center h-screen">
-      <LoadingIcon />
-    </div>
-  );
+  if (loading || isLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <LoadingIcon />
+      </div>
+    );
 
   if (error) {
     console.log(error.message);
@@ -164,9 +158,9 @@ function Projects() {
 
   return (
     <div>
-      <div className="flex justify-center mt-4">
+      <div className="mt-4 flex justify-center">
         {successMessage && (
-          <div className="bg-green-200 text-green-800 py-2 px-4 rounded-md">
+          <div className="rounded-md bg-green-200 px-4 py-2 text-green-800">
             {successMessage}
           </div>
         )}
@@ -230,7 +224,11 @@ function Projects() {
                       className="border-b focus:border-blue-500 focus:outline-none"
                     />
                   ) : (
-                    <Link href={"/flowchart/" + project.id}>
+                    <Link
+                      href={{
+                        pathname: "/projects/" + project.id,
+                      }}
+                    >
                       {project.name}
                     </Link>
                   )}

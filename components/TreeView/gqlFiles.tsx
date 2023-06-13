@@ -58,24 +58,24 @@ const getInitData = gql`
 //@ Irfan check this too
 // Update project name and description
 const updateProject = gql`
-mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-   mains {
-     id
-     name
-     description
-     userName
-   } 
+  mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
+    updateMains(where: $where, update: $update) {
+      mains {
+        id
+        name
+        description
+        userName
+      }
+    }
   }
-}
 `;
-
 
 //Get root using unique userName(UID)
 const getMainByUser = gql`
   query Query($where: mainWhere) {
     mains(where: $where) {
       name
+      description
       isOpen
       id
       hasContainsFile {
@@ -211,6 +211,10 @@ const getMainByUser = gql`
             }
           }
         }
+      }
+      userHas {
+        emailId
+        userType
       }
     }
   }
@@ -500,11 +504,11 @@ async function createFileInFolder(
         },
       },
       update: (cache, result) => {
-        console.log(result)
+        console.log(result);
       },
-      refetchQueries:[{query:getMainByUser}],
+      refetchQueries: [{ query: getMainByUser }],
       onQueryUpdated(observableQuery) {
-        console.log(observableQuery)
+        console.log(observableQuery);
         // Define any custom logic for determining whether to refetch
         if (observableQuery) {
           return observableQuery.refetch();
@@ -549,6 +553,8 @@ interface Main {
   hasContainsFolder: Folder[];
   children: (Folder | File)[];
   __typename: "main";
+  userHas: File[];
+  description: string;
 }
 
 interface Data {
@@ -628,7 +634,6 @@ async function getTreeNodeByUser(
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
         return { ...rest, children: hasContainsFolder };
       });
-      
 
       const res_updated = transformObject(result);
       nodes = res_updated.data.mains;
