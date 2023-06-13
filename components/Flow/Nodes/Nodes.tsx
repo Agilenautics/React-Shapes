@@ -36,7 +36,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   // @ts-ignore
   const description = data.description;
 
-  console.log(shapeCSS)
+  //console.log(shapeCSS)
 
 
 
@@ -56,7 +56,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
   const linkedTo = () => {
     const x = findFile(data.links.fileId);
-    console.log('x: ', x);
+    //console.log('x: ', x);
     // @ts-ignore
     const nodes = x.hasflowchart.nodes
     const nodeData = JSON.stringify(nodes)

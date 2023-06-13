@@ -6,43 +6,25 @@ import {
 } from "@apollo/client";
 import client from "../../../apollo-client";
 import { Edge, updateEdge } from "react-flow-renderer";
-
+import { Edge_Fragment } from "../Nodes/gqlNodes";
 
 const allEdges = gql`
+${Edge_Fragment}
 query Query($where: flowchartWhere) {
   flowcharts(where: $where) {
     name
     edges {
-      id
-      source
-      target
-      sourceHandle
-      targetHandle
-      selected
-      hasedgedataEdgedata {
-        label
-        pathCSS
-        boxCSS
-        bidirectional
-      }
-      flownodeConnectedby {
-        id
-        flowchart
-      }
-      connectedtoFlownode {
-        id
-        flowchart
-      }
+      ...EdgeFragment
     }
   }
 }
-
 `;
 
 
 // create Edge mutation
 
 const createEdgeMutation = gql`
+${Edge_Fragment}
 mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
   updateFiles(where: $where, update: $update) {
     files {
@@ -50,26 +32,7 @@ mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
       hasflowchart {
         name
         edges {
-        selected
-        source
-        sourceHandle
-        target
-        targetHandle
-        hasedgedataEdgedata {
-          id
-          bidirectional
-          boxCSS
-          label
-          pathCSS
-        }
-        flownodeConnectedby {
-          flowchart
-          id
-        }
-        connectedtoFlownode {
-          flowchart
-          id
-        }
+        ...EdgeFragment
       }
     }
   }

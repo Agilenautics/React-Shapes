@@ -5,6 +5,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../apollo-client";
+import { Node_Fragment, Edge_Fragment } from "../Flow/Nodes/gqlNodes";
 //@ Irfan we have to create project and connect with Admin na, y we need this?
 const createProjectMutation = gql`
   mutation createProject($input: [mainCreateInput!]!) {
@@ -58,30 +59,47 @@ const getInitData = gql`
 //@ Irfan check this too
 // Update project name and description
 const updateProject = gql`
-mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-   mains {
-     id
-     name
-     description
-     userName
-   } 
+  mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
+    updateMains(where: $where, update: $update) {
+      mains {
+        id
+        name
+        description
+        userName
+      }
+    }
   }
-}
 `;
-
+const File_Fragment = gql`
+  ${Node_Fragment}
+  ${Edge_Fragment}
+  fragment FileFragment on file {
+    type
+    id
+    name
+    hasflowchart {
+      name
+      nodes {
+        ...NodeFragment
+      }
+      edges {
+        ...EdgeFragment
+      }
+    }
+  }
+`;
 
 //Get root using unique userName(UID)
 const getMainByUser = gql`
+  ${File_Fragment}
   query Query($where: mainWhere) {
     mains(where: $where) {
       name
+      description
       isOpen
       id
       hasContainsFile {
-        name
-        id
-        type
+        ...FileFragment
       }
       hasContainsFolder {
         id
@@ -94,123 +112,16 @@ const getMainByUser = gql`
           type
           isOpen
           hasFile {
-            name
-            id
-            type
-            hasflowchart {
-              name
-              nodes {
-                id
-                type
-                draggable
-                flowchart
-                hasdataNodedata {
-                  label
-                  shape
-                  description
-                  links {
-                    label
-                    id
-                    fileId
-                    flag
-                  }
-                  linkedBy {
-                    label
-                    id
-                    flag
-                    fileId
-                  }
-                }
-                haspositionPosition {
-                  name
-                  x
-                  y
-                }
-              }
-              edges {
-                selected
-                source
-                sourceHandle
-                target
-                targetHandle
-                hasedgedataEdgedata {
-                  id
-                  bidirectional
-                  boxCSS
-                  label
-                  pathCSS
-                }
-                flownodeConnectedby {
-                  flowchart
-                  id
-                }
-                connectedtoFlownode {
-                  flowchart
-                  id
-                }
-              }
-            }
+            ...FileFragment
           }
         }
         hasFile {
-          type
-          id
-          name
-
-          hasflowchart {
-            name
-            nodes {
-              id
-              draggable
-              flowchart
-              type
-              hasdataNodedata {
-                label
-                shape
-                description
-                links {
-                  label
-                  id
-                  fileId
-                  flag
-                }
-                linkedBy {
-                  label
-                  id
-                  fileId
-                  flag
-                }
-              }
-              haspositionPosition {
-                name
-                x
-                y
-              }
-            }
-            edges {
-              selected
-              source
-              sourceHandle
-              target
-              targetHandle
-              hasedgedataEdgedata {
-                id
-                bidirectional
-                boxCSS
-                label
-                pathCSS
-              }
-              flownodeConnectedby {
-                flowchart
-                id
-              }
-              connectedtoFlownode {
-                flowchart
-                id
-              }
-            }
-          }
+          ...FileFragment
         }
+      }
+      userHas {
+        emailId
+        userType
       }
     }
   }
@@ -500,11 +411,11 @@ async function createFileInFolder(
         },
       },
       update: (cache, result) => {
-        console.log(result)
+        console.log(result);
       },
-      refetchQueries:[{query:getMainByUser}],
+      refetchQueries: [{ query: getMainByUser }],
       onQueryUpdated(observableQuery) {
-        console.log(observableQuery)
+        console.log(observableQuery);
         // Define any custom logic for determining whether to refetch
         if (observableQuery) {
           return observableQuery.refetch();
@@ -628,7 +539,6 @@ async function getTreeNodeByUser(
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
         return { ...rest, children: hasContainsFolder };
       });
-      
 
       const res_updated = transformObject(result);
       nodes = res_updated.data.mains;
@@ -785,6 +695,7 @@ const updateFileBackend = async (fileId: string, flowchart: string) => {
 };
 
 const getFile = gql`
+  ${Node_Fragment}
   query Query($where: fileWhere) {
     files(where: $where) {
       name
@@ -793,30 +704,7 @@ const getFile = gql`
       hasflowchart {
         name
         nodes {
-          draggable
-          flowchart
-          id
-          hasdataNodedata {
-            label
-            shape
-            description
-            links {
-              fileId
-              flag
-              id
-              label
-            }
-            linkedBy {
-              id
-              fileId
-              flag
-              label
-            }
-          }
-          haspositionPosition {
-            x
-            y
-          }
+          ...NodeFragment
         }
       }
     }
