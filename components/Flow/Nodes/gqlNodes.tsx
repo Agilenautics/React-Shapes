@@ -8,98 +8,88 @@ import client from "../../../apollo-client";
 import { Node } from "react-flow-renderer";
 import { Edge } from "reactflow";
 
+export const Node_Fragment = gql`
+  fragment NodeFragment on flowNode {
+    id
+    draggable
+    flowchart
+    type
+    timeStamp
+    hasdataNodedata {
+      label
+      shape
+      description
+      links {
+        label
+        id
+        flag
+        fileId
+      }
+      linkedBy {
+        label
+        id
+        fileId
+        flag
+      }
+    }
+    haspositionPosition {
+      name
+      x
+      y
+    }
+  }
+`;
+export const Edge_Fragment = gql`
+  fragment EdgeFragment on flowEdge {
+    id
+    source
+    target
+    sourceHandle
+    targetHandle
+    selected
+    hasedgedataEdgedata {
+      label
+      pathCSS
+      boxCSS
+      bidirectional
+    }
+    flownodeConnectedby {
+      id
+      flowchart
+    }
+    connectedtoFlownode {
+      id
+      flowchart
+    }
+  }
+`;
 const allNodes = gql`
+  ${Node_Fragment}
+  ${Edge_Fragment}
   query Query($where: flowchartWhere) {
     flowcharts(where: $where) {
       name
       nodes {
-        id
-        draggable
-        flowchart
-        type
-        timeStamp
-        hasdataNodedata {
-          label
-          shape
-          description
-          links {
-            label
-            id
-            flag
-            fileId
-          }
-          linkedBy {
-            label
-            id
-            fileId
-            flag
-          }
-        }
-        haspositionPosition {
-          name
-          x
-          y
-        }
+        ...NodeFragment
       }
       edges {
-        id
-        source
-        target
-        sourceHandle
-        targetHandle
-        selected
-        hasedgedataEdgedata {
-          label
-          pathCSS
-          boxCSS
-          bidirectional
-        }
-        flownodeConnectedby {
-          id
-          flowchart
-        }
-        connectedtoFlownode {
-          id
-          flowchart
-        }
+        ...EdgeFragment
       }
     }
   }
 `;
 
 const getNode = gql`
+  ${Node_Fragment}
   query FlowNodes($where: flowNodeWhere) {
     flowNodes(where: $where) {
-      draggable
-      flowchart
-      type
-      id
-      hasdataNodedata {
-        shape
-        label
-        description
-        links {
-          fileId
-          flag
-          id
-          label
-        }
-        linkedBy {
-          fileId
-          flag
-          label
-          id
-        }
-      }
-      haspositionPosition {
-        x
-        y
-      }
+      ...NodeFragment
     }
   }
 `;
 
 const newNode = gql`
+  ${Node_Fragment}
   mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
@@ -107,33 +97,7 @@ const newNode = gql`
         hasflowchart {
           name
           nodes {
-            id
-            timeStamp
-            draggable
-            flowchart
-            type
-            hasdataNodedata {
-              label
-              shape
-              description
-              links {
-                label
-                id
-                fileId
-                flag
-              }
-              linkedBy {
-                label
-                id
-                fileId
-                flag
-              }
-            }
-            haspositionPosition {
-              name
-              x
-              y
-            }
+            ...NodeFragment
           }
         }
       }
@@ -172,13 +136,16 @@ async function findNode(
       },
     })
     .then((result) => {
+      //const nodes3 = JSON.stringify(result.data.flowNodes.hasdataNodedata.linkedByAggregate);
       const nodes1 = JSON.stringify(result.data.flowNodes);
+      console.log("getnode", nodes1);
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
         //.replaceAll('"links":','"link":');
         .replaceAll('"haspositionPosition":', '"position":');
       // @ts-ignore
       nodes = JSON.parse(nodes2);
+      console.log(nodes);
     });
 
   return nodes;
@@ -203,10 +170,9 @@ async function getNodes(
     })
     .then((result) => {
       const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
-      const edge1=JSON.stringify(result.data.flowcharts[0].edges)
-      const edge2=edge1
-      .replaceAll('"hasedgedataEdgedata":','"data":');
-    edges = JSON.parse(edge2);
+      const edge1 = JSON.stringify(result.data.flowcharts[0].edges);
+      const edge2 = edge1.replaceAll('"hasedgedataEdgedata":', '"data":');
+      edges = JSON.parse(edge2);
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
         .replaceAll('"haspositionPosition":', '"position":');
@@ -214,7 +180,7 @@ async function getNodes(
       nodes = JSON.parse(nodes2);
     });
 
-  return {nodes,edges};
+  return { nodes, edges };
 }
 
 async function createNode(
@@ -295,7 +261,6 @@ async function createNode(
     })
 
     .then((result) => {
-      
       const nodes1 = JSON.stringify(
         result.data.updateFiles.files[0].hasflowchart.nodes
       )
@@ -369,31 +334,12 @@ const updatePosition = async (node: any) => {
   });
 };
 
-
-
 const updateNodesMutation = gql`
+${Node_Fragment}
   mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {
       flowNodes {
-        draggable
-        type
-        hasdataNodedata {
-          label
-          shape
-          description
-          links {
-            label
-            id
-            fileId
-            flag
-          }
-          linkedBy {
-            label
-            id
-            fileId
-            flag
-          }
-        }
+        ...NodeFragment
       }
     }
   }
