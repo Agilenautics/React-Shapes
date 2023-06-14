@@ -76,11 +76,6 @@ function Users() {
     verfiyAuthToken();
   }, []);
 
-  useEffect(() => {
-    setIsButtonDisabled(accessLevel.toLowerCase() == "user");
-    setIsNewUserDisabled(accessLevel.toLowerCase() == "super user");
-  }, [accessLevel]);
-
   const handleMessage = (message: any) => {
     setMessage(message);
     setIsLoading(true);
@@ -91,9 +86,32 @@ function Users() {
   };
 
   const { data, error, loading } = useQuery(ALL_USERS);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    if (data && data.users) {
+      setUsers(data.users);
+    }
+    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
+    setIsNewUserDisabled(accessLevel.toLowerCase() === "super user");
+  }, [data, accessLevel]);
 
   const handleEditClick = (user: User) => {
     setEditedUser(user);
+  };
+
+  const handleSortClick = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    const sortedUsers = [...users].sort((a, b) => {
+      //@ts-ignore
+      const nameA = getNameFromEmail(a.emailId).toUpperCase();
+      //@ts-ignore
+      const nameB = getNameFromEmail(b.emailId).toUpperCase();
+      if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
+      if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+    setUsers(sortedUsers);
   };
 
   const handleSaveClick = () => {
@@ -114,18 +132,6 @@ function Users() {
   const handleAddUser = (user: User, selectedProjects: string[]) => {
     setShowAddUserPopup(false);
   };
-
-  // const handleSortClick = () => {
-  //   setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  //   const sortedUsers = [...users].sort((a, b) => {
-  //     const nameA = a.name.toUpperCase();
-  //     const nameB = b.name.toUpperCase();
-  //     if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
-  //     if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
-  //     return 0;
-  //   });
-  //   setUsers(sortedUsers);
-  // };
 
   const handleDeleteClick = (userId: string) => {
     setConfirmDeleteId(userId);
@@ -186,7 +192,7 @@ function Users() {
               <th
                 scope="col"
                 className="ml-6 w-60 cursor-pointer px-6 py-3"
-                //onClick={handleSortClick}
+                onClick={handleSortClick}
               >
                 <div className="flex items-center">
                   Name
@@ -209,7 +215,7 @@ function Users() {
             </tr>
           </thead>
           <tbody>
-            {data.users.map((user: User) => (
+            {users.map((user: User) => (
               <tr key={user.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">

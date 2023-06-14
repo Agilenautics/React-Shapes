@@ -9,7 +9,6 @@ const flowchart = () => {
   const router = useRouter();
   return (
     <>
-      <TopBar />
       <Sidebar />
       <ReactFlowProvider>
         <Flow />
