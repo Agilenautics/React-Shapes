@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import TopBar from "../../components/AdminPage/TopBar";
 
-const flowchart = () => {
+const Flowchart = () => {
   const router = useRouter();
   return (
     <>
@@ -18,4 +18,4 @@ const flowchart = () => {
   );
 };
 
-export default flowchart;
+export default Flowchart;

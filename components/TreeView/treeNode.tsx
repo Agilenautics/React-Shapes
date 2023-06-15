@@ -182,9 +182,12 @@ export const TreeNode = ({
     data: NodeRendererProps<MyData>
   ) {
     return (e: SyntheticEvent) => {
+      //@ts-ignore
       handlers.select(e);
+      //@ts-ignore
       if (data.children == null) {
         setIsLoading(true);
+        //@ts-ignore
         getNodes(allNodes, data.id)
           .then((result) => {
             updateNodes(result.nodes);
@@ -210,6 +213,7 @@ export const TreeNode = ({
       ref={innerRef}
       style={styles.row}
       className={classNames("row", state)}
+      //@ts-ignore
       onClick={loadNewFlow(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>

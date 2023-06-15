@@ -18,8 +18,17 @@ import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import { deleteNodeBackend, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
-import { createFlowEdge, deleteEdge, updateEdgeBackend, updateEdgeMutation } from "./Edges/gqlEdges";
+import {
+  deleteNodeBackend,
+  updateNodeBackend,
+  updatePosition,
+} from "./Nodes/gqlNodes";
+import {
+  createFlowEdge,
+  deleteEdge,
+  updateEdgeBackend,
+  updateEdgeMutation,
+} from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
 
 const defaultEdgeOptions = {
@@ -62,7 +71,9 @@ function Flow() {
   const onNodesChange = useCallback(
     (changes: any) =>
       setNodes((nds) => {
-        const nodeData = defaultNodes.filter((value) => value.id === changes[0].id);
+        const nodeData = defaultNodes.filter(
+          (value) => value.id === changes[0].id
+        );
         nodeData.map((curEle: any) => {
           setNodeId(curEle);
         });
@@ -79,7 +90,9 @@ function Flow() {
 
   useEffect(() => {
     if (edgeId && edgeId.length !== 0) {
-      const newEdgeData = defaultEdges.filter((value: any) => value.id === edgeId);
+      const newEdgeData = defaultEdges.filter(
+        (value: any) => value.id === edgeId
+      );
       newEdgeData.map((curEle) => {
         updateEdgeBackend(updateEdgeMutation, curEle);
       });
@@ -108,7 +121,8 @@ function Flow() {
     const handleBackspace = (event: { key: string }) => {
       const focusedElement = document.activeElement;
       const isTextFieldFocused =
-        focusedElement instanceof HTMLInputElement || focusedElement instanceof HTMLTextAreaElement;
+        focusedElement instanceof HTMLInputElement ||
+        focusedElement instanceof HTMLTextAreaElement;
 
       if (!isTextFieldFocused && event.key === "Backspace") {
         const selectedNodes = getNodes().filter((node) => node.selected);
@@ -120,7 +134,7 @@ function Flow() {
       document.removeEventListener("keydown", handleBackspace);
     };
   }, []);
-//@ Irfan check this
+  //@ Irfan check this
 
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
@@ -155,9 +169,11 @@ function Flow() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
+        //@ts-ignore
         connectionLineComponent={ConnectionLine}
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
+        //@ts-ignore
         edgeTypes={edgeTypeMap}
         nodeTypes={nodeTypeMap}
         connectionMode={ConnectionMode.Loose}

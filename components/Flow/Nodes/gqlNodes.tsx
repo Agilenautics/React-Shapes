@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import client from "../../../apollo-client";
 import { Node } from "react-flow-renderer";
-import { Edge } from "reactflow";
+import { Edge } from "react-flow-renderer";
 
 export const Node_Fragment = gql`
   fragment NodeFragment on flowNode {
@@ -335,7 +335,7 @@ const updatePosition = async (node: any) => {
 };
 
 const updateNodesMutation = gql`
-${Node_Fragment}
+  ${Node_Fragment}
   mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {
       flowNodes {
