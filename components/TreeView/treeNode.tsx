@@ -182,12 +182,12 @@ export const TreeNode = ({
     data: NodeRendererProps<MyData>
   ) {
     return (e: SyntheticEvent) => {
-      //@ts-ignore
+      // @ts-ignore
       handlers.select(e);
-      //@ts-ignore
+      // @ts-ignore
       if (data.children == null) {
         setIsLoading(true);
-        //@ts-ignore
+        // @ts-ignore
         getNodes(allNodes, data.id)
           .then((result) => {
             updateNodes(result.nodes);
@@ -197,13 +197,14 @@ export const TreeNode = ({
           .finally(() => {
             setIsLoading(false);
           });
-        // getEdges(allEdges, data.id)
-        //   .then((result) => {
-        //     updateEdges(result);
-        //   })
-        //   .finally(() => {
-        //     setIsLoading(false);
-        //   });
+        // @ts-ignore
+        getEdges(allEdges, data.id)
+          .then((result) => {
+            updateEdges(result);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       }
     };
   }
@@ -213,7 +214,7 @@ export const TreeNode = ({
       ref={innerRef}
       style={styles.row}
       className={classNames("row", state)}
-      //@ts-ignore
+      // @ts-ignore
       onClick={loadNewFlow(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -251,6 +252,25 @@ export const TreeNode = ({
           </span>
         )}
         {isLoading && <LoadingIcon />}
+        {!isLoading && !state.isEditing && (
+          <>
+            <FiEdit2
+              onClick={handlers.edit}
+              className="mx-1 cursor-pointer stroke-2"
+              size={18}
+            />
+            <FiDelete
+              // @ts-ignore
+              onClick={(e) => {
+                e.stopPropagation();
+                // @ts-ignore
+                delete_item(Id);
+              }}
+              className="cursor-pointer stroke-2"
+              size={18}
+            />
+          </>
+        )}
       </div>
     </div>
   );

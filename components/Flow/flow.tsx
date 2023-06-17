@@ -173,7 +173,7 @@ function Flow() {
         connectionLineComponent={ConnectionLine}
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
-        //@ts-ignore
+        // @ts-ignore
         edgeTypes={edgeTypeMap}
         nodeTypes={nodeTypeMap}
         connectionMode={ConnectionMode.Loose}
