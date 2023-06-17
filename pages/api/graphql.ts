@@ -5,10 +5,12 @@ import dotenv from 'dotenv';
 import EventEmitter from "events";
 import resolvers from "./resolvers";
 import driver from "./dbConnection";
+import { gql } from "@apollo/client";
+import typeDefs from "./typeDefs";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
-const typeDefs = loadFile("pages/api/sdl.graphql");
+// const typeDefs = loadFile("pages/api/sdl.graphql");
 
 
 EventEmitter.defaultMaxListeners = 15
@@ -32,7 +34,8 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://studio.apollographql.com"
+    // "https://studio.apollographql.com",
+    "https://ssrreactflowf9455-n7cidehgba-uc.a.run.app/"
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
