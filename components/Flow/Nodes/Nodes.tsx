@@ -125,7 +125,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
         <div
           className={`${css_props} font-sans ${shapeCSS[1]
-            } mx-1 flex  items-center justify-center border-b-2  text-xs font-normal shadow-md ${editing ? "cursor-default" : ""
+            } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${editing ? "cursor-default" : ""
             }`}
           onDoubleClick={() => {
             setEditing(true);

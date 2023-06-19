@@ -43,7 +43,6 @@ function Projects() {
   const [successMessage, setSuccessMessage] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  console.log(userEmail);
 
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
@@ -54,17 +53,6 @@ function Projects() {
   });
 
   const getProject = async (data: Array<Project>) => {
-    // get_user_method(userEmail, GET_USER).then((res) => {
-    //   if (loading) {
-    //     return ""
-    //   }
-    //   // @ts-ignore
-    //   const userType = res[0].userType === undefined ? "" : res[0].userType;
-    //   setAccessLevel(userType);
-    //   // @ts-ignore
-    //   setProjectData(res[0].hasProjects);
-    // });
-
     // @ts-ignore
     if (data && data.users.length) {
       // @ts-ignore

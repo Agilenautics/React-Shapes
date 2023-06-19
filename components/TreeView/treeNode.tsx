@@ -154,8 +154,10 @@ export const TreeNode = ({
 
   const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        get_user_method(user.email, GET_USER).then((res: any) => {
+      if (user) {
+        // @ts-ignore
+        get_user_method(user.email, GET_USER).then((res) => {
+          // @ts-ignore
           setUser(res[0].userType);
           setAccessLevel(res[0].userType);
         });
@@ -254,7 +256,7 @@ export const TreeNode = ({
         {isLoading && <LoadingIcon />}
         {!isLoading && !state.isEditing && (
           <>
-            <FiEdit2
+            {/* <FiEdit2
               onClick={handlers.edit}
               className="mx-1 cursor-pointer stroke-2"
               size={18}
@@ -268,7 +270,7 @@ export const TreeNode = ({
               }}
               className="cursor-pointer stroke-2"
               size={18}
-            />
+            /> */}
           </>
         )}
       </div>

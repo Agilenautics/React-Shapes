@@ -68,6 +68,14 @@ export default function CustomEdge({
     : `url(#circle-${data.id})`;
   const markerEnd = `url(#arrow-${data.id})`;
 
+
+  console.log(data.pathCSS)
+
+  const fillData = data.pathCSS.split('-').join(' ')
+  console.log(fillData)
+
+  
+
   return (
     <>
       <defs>
@@ -82,7 +90,7 @@ export default function CustomEdge({
             markerWidth="3"
             markerHeight="3"
           >
-            <circle cx="5" cy="5" r="5" />
+            <circle cx="5" cy="5" r="5" fill="green" />
           </marker>
         ))}
         {markerFill.map((fill, i) => (
@@ -93,11 +101,11 @@ export default function CustomEdge({
             viewBox="0 -5 10 10"
             refX="5"
             refY="0"
-            markerWidth="5"
-            markerHeight="5"
+            markerWidth="3"
+            markerHeight="3"
             orient="auto-start-reverse"
           >
-            <path d="M0,-5L10,0L0,5"></path>
+            <path d="M0,-5L10,0L0,5"   fill={'green'}  ></path>
           </marker>
         ))}
       </defs>
@@ -106,7 +114,7 @@ export default function CustomEdge({
         key={id}
         id={id}
         style={style}
-        className={`react-flow__edge-path ${data.pathCSS} ${
+        className={`react-flow__edge-path  ${data.pathCSS} ${
           selected ? "!stroke-[5]" : ""
         }`}
         d={edgePath}

@@ -51,9 +51,9 @@ const nodeCSSMap = Object.fromEntries(
 );
 
 const nodeShapeMap = {
-  rectangle: ["w-40 h-10", "h-8 rounded-md", ""],
+  rectangle: ["w-40 !h-10", "h-7 rounded-md", ""],
   diamond: [
-    "h-36 w-36",
+    "!h-36 w-36",
     "rotate-45 h-20 w-20 translate-x-6 translate-y-6 rounded-md",
     "-rotate-45",
   ],
