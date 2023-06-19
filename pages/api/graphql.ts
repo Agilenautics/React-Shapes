@@ -1,4 +1,5 @@
 import { ApolloServer } from "apollo-server-micro";
+import {ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageLocalDefault} from "apollo-server-core";
 import { Neo4jGraphQL } from "@neo4j/graphql";
 import { loadFile } from "graphql-import-files";
 import dotenv from 'dotenv';
@@ -32,15 +33,14 @@ dotenv.config()
 // @ts-ignore
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    // "https://studio.apollographql.com",
-    "https://ssrreactflowf9455-n7cidehgba-uc.a.run.app/"
-  );
+  res.setHeader("Access-Control-Allow-Origin", "https://studio.apollographql.com");
+  res.setHeader("Access-Control-Allow-Origin", "https://ssrreactflowf9455-n7cidehgba-uc.a.run.app/");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
   if (req.method === "OPTIONS") {
     res.end();
     return false;
@@ -49,6 +49,7 @@ export default async function handler(req, res) {
   const neoSchema = new Neo4jGraphQL({ typeDefs, driver,resolvers });
   const apolloServer = new ApolloServer({
     schema: await neoSchema.getSchema(),
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
   });
   await apolloServer.start();
   await apolloServer.createHandler({
