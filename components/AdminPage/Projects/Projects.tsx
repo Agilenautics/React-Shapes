@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { GrAdd } from "react-icons/gr";
 import { BiRename } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
@@ -18,6 +18,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
+
 interface Project {
   id: string;
   name: string;
@@ -41,8 +42,8 @@ function Projects() {
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false); // Added state for confirmation box
 
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
@@ -53,6 +54,17 @@ function Projects() {
   });
 
   const getProject = async (data: Array<Project>) => {
+    // get_user_method(userEmail, GET_USER).then((res) => {
+    //   if (loading) {
+    //     return ""
+    //   }
+    //   // @ts-ignore
+    //   const userType = res[0].userType === undefined ? "" : res[0].userType;
+    //   setAccessLevel(userType);
+    //   // @ts-ignore
+    //   setProjectData(res[0].hasProjects);
+    // });
+
     // @ts-ignore
     if (data && data.users.length) {
       // @ts-ignore
@@ -64,7 +76,7 @@ function Projects() {
   };
 
   //verifying token
-  const verfiyAuthToken = async () => {
+  const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         setUserEmail(user.email);
@@ -75,8 +87,8 @@ function Projects() {
   };
 
   useEffect(() => {
-    verfiyAuthToken();
-    setIsButtonDisabled(accessLevel.toLowerCase() == "user");
+    verifyAuthToken();
+    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
     setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
   }, [userEmail, getProject]);
 
@@ -92,26 +104,28 @@ function Projects() {
 
   const handleSaveButtonClick = (projectId: string) => {
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
-    // // const updatedProjectsList: Project[] = updateProjectName(
-    // //   projectId,
-    // //   projectName,
-    // //   projects
-    // );
-    // edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT);
-    //console.log(result,"res");
-    //setProjects(updatedProjectsList);
     setProjectId(null);
     setProjectName("");
   };
 
   const handleDelete_Project = (projectId: string) => {
-    getProject(data);
-    delete_Project(projectId, DELETE_PROJECT, GET_USER);
-    setSuccessMessage("Project successfully deleted.");
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 3000);
+    // Display confirmation box
+    setShowConfirmation(true);
+    setProjectId(projectId);
   };
+
+  const handleConfirm = useCallback(() => {
+    // Delete the project if confirmed
+    setShowConfirmation(false);
+    delete_Project(projectId, DELETE_PROJECT, GET_USER);
+    setProjectId(null);
+  }, [projectId]);
+
+  const handleCancel = useCallback(() => {
+    // Cancel the delete operation
+    setShowConfirmation(false);
+    setProjectId(null);
+  }, []);
 
   const handleAddProjectClick = () => {
     setShowForm(true);
@@ -126,19 +140,19 @@ function Projects() {
   };
 
   const handleMessage = (message: any) => {
-    setMessage(message);
     setIsLoading(true);
     setTimeout(() => {
-      setMessage("");
       setIsLoading(false);
     }, 5000);
   };
-  if (loading || isLoading)
+
+  if (loading || isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex justify-center items-center h-screen">
         <LoadingIcon />
       </div>
     );
+  }
 
   if (error) {
     console.log(error.message);
@@ -279,6 +293,22 @@ function Projects() {
           userEmail={userEmail}
           handleMessage={handleMessage}
         />
+      )}
+      {showConfirmation && (
+        <div className="popup-container">
+          <div className="popup-window">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete the project?</p>
+            <div>
+              <button className="popup-button" onClick={handleConfirm}>
+                Yes
+              </button>
+              <button className="popup-button" onClick={handleCancel}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

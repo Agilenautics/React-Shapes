@@ -5,26 +5,16 @@ import edges from "./flowchart1";
 /* This is the store for managing the state of the edges in the present flowchart. */
 interface EdgeState {
   edges: Array<Edge>;
-  markerFill: Array<string>;
   updateEdges: (edges: Array<Edge>) => void;
   updateEdgeCSS: (id: string, CSS: Array<string>) => void;
   updateArrows: (id: string, bidirectional: boolean) => void;
   updateLabel: (id: string, newLabel: string) => void;
-  // updateEdgeType: (id: string, newType: string) => void,
 }
 
 const edgeStore = create<EdgeState>((set) => ({
   edges: edges,
-  markerFill: [
-    "fill-node-green-200",
-    "fill-node-red-200",
-    "fill-node-blue-200",
-    "fill-node-orange-200",
-    "fill-node-purple-200",
-  ],
   updateEdges: (edges) =>
     set((state): any => {
-      // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
       return { edges: edges };
     }),
   updateEdgeCSS: (id, CSS) =>

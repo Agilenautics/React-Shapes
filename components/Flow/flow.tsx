@@ -18,17 +18,8 @@ import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import {
-  deleteNodeBackend,
-  updateNodeBackend,
-  updatePosition,
-} from "./Nodes/gqlNodes";
-import {
-  createFlowEdge,
-  deleteEdge,
-  updateEdgeBackend,
-  updateEdgeMutation,
-} from "./Edges/gqlEdges";
+import { deleteNodeBackend, findNode, getNode, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
+import { createFlowEdge, deleteEdge, updateEdgeBackend, updateEdgeMutation } from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
 
 const defaultEdgeOptions = {
@@ -56,16 +47,28 @@ function Flow() {
   const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
   const [nodeId, setNodeId] = useState([]);
 
-  const [showConfirmation, setShowConfirmation] = useState(false);
-
+  const [showConfirmation, setShowConfirmation] = useState(null);
+  const onDeleteEdge = (edge: Array<Edge>) => {
+    edge.map((curEle: any) => {
+      deleteEdge(curEle.id, curEle.data.label);
+    });
+  };
   const handleConfirm = useCallback(() => {
-    const selectedNodes = getNodes().filter((node) => node.selected);
-    onNodesDelete(selectedNodes);
-    setShowConfirmation(false);
-  }, [getNodes, onNodesDelete]);
+    const selectedItems = showConfirmation.selectedItems;
+    if (showConfirmation.type === "node") {
+      //console.log(findNode(selectedItems));
+      onNodesDelete(selectedItems);
+    } else if (showConfirmation.type === "links") {
+      //console.log(findNode(selectedItems));
+      onNodesDelete(selectedItems);
+    } else if (showConfirmation.type === "edge") {
+      onDeleteEdge(selectedItems);
+    }
+    setShowConfirmation(null);
+  }, [showConfirmation, onNodesDelete, onDeleteEdge]);
 
   const handleCancel = useCallback(() => {
-    setShowConfirmation(false);
+    setShowConfirmation(null);
   }, []);
 
   const onNodesChange = useCallback(
@@ -118,7 +121,7 @@ function Flow() {
   );
 
   useEffect(() => {
-    const handleBackspace = (event: { key: string }) => {
+    const handleBackspace = async (event: { key: string }) => {
       const focusedElement = document.activeElement;
       const isTextFieldFocused =
         focusedElement instanceof HTMLInputElement ||
@@ -126,15 +129,43 @@ function Flow() {
 
       if (!isTextFieldFocused && event.key === "Backspace") {
         const selectedNodes = getNodes().filter((node) => node.selected);
-        setShowConfirmation(true);
+        const selectedEdges = getEdges().filter((edge) => edge.selected);
+        if (selectedNodes.length > 0) {
+          const node = await findNode(getNode, selectedNodes[0].id);
+          const linkA = node[0].data.linkedBy.flag;
+          const linkB = node[0].data.links.flag;
+          //.flowNode.nodeData.linked
+          if (linkA || linkB){
+            setShowConfirmation({
+              type: "links",
+              show: true,
+              selectedItems: selectedNodes,
+            });
+          }
+          else{
+            setShowConfirmation({
+              type: "node",
+              show: true,
+              selectedItems: selectedNodes,
+            });
+          }
+          
+        } else if (selectedEdges.length > 0) {
+          setShowConfirmation({
+            type: "edge",
+            show: true,
+            selectedItems: selectedEdges,
+          });
+        }
       }
     };
+
     document.addEventListener("keydown", handleBackspace);
     return () => {
       document.removeEventListener("keydown", handleBackspace);
     };
-  }, []);
-  //@ Irfan check this
+  }, [getNodes, getEdges]);
+//@ Irfan check this
 
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
@@ -144,16 +175,10 @@ function Flow() {
     }
   }
 
+ 
   const onDrag = (event: any, node: Object) => {
     updatePosition(node);
   };
-
-  const onDeleteEdge = (edge: Array<Edge>) => {
-    edge.map((CurEle: any) => {
-      deleteEdge(CurEle.id, CurEle.data.label);
-    });
-  };
-
   const onNodeClick = (e: any, nodeData: any) => {
     updateLinkNodeId(nodeData.id);
   };
@@ -195,7 +220,10 @@ function Flow() {
         <div className="popup-container">
           <div className="popup-window">
             <h3>Confirm Deletion</h3>
-            <p>Are you sure you want to delete the selected node(s)?</p>
+            <p>
+            Are you sure you want to delete the selected{" "}
+            {showConfirmation.type === "node" ? "node" : showConfirmation.type === "links" ? "node with attached links" : "edge"}?
+            </p>
             <div>
               <button className="popup-button" onClick={handleConfirm}>
                 Yes

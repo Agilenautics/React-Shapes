@@ -1,10 +1,14 @@
 import React from "react";
 
-const LoadingIcon: React.FC = () => {
+interface LoadingIconProps {
+  color?: string;
+}
+
+const LoadingIcon: React.FC<LoadingIconProps> = ({ color }) => {
   return (
-    <div className="loading-icon">
+    <div className="animate-spin h-10 w-10 text-gray-500">
       <svg
-        className="animate-spin h-10 w-10 text-gray-500"
+        className={`h-10 w-10 ${color ? `text-${color}` : "text-black-500"}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -14,7 +18,7 @@ const LoadingIcon: React.FC = () => {
           cx="12"
           cy="12"
           r="11"
-          stroke="currentColor"
+          stroke="black"
           strokeWidth="2"
         ></circle>
         <path

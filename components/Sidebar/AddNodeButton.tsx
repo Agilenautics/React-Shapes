@@ -36,7 +36,7 @@ function AddNodeButton() {
         disabled={isLoading} // Disable the button when isLoading is true
       >
         {isLoading ? (
-          <LoadingIcon /> // Render the loading icon component when isLoading is true
+          <LoadingIcon color="white" /> // Render the loading icon component when isLoading is true
         ) : (
           <MdOutlineAdd className="h-10 w-10" />
         )}

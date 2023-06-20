@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Editing } from "../Editing";
-import {
-  getSmoothStepPath,
-  getEdgeCenter,
-  Position,
-} from "react-flow-renderer";
+import { getSmoothStepPath, getEdgeCenter, Position, } from "react-flow-renderer";
 import edgeStore from "./edgeStore";
 const fO = 144;
 const fOHeight = fO;
@@ -12,7 +8,7 @@ const fOWidth = fO + 100;
 
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
-// ! The label placement needs to be improved
+
 /* This is the custom node component that is used */
 export default function CustomEdge({
   id,
@@ -60,13 +56,14 @@ export default function CustomEdge({
   const [selected, setSelected] = useState(false);
   const updateLabel = edgeStore((state) => state.updateLabel);
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
-  const markerFill = edgeStore((state) => state.markerFill);
-
   const updateDescription = nodeStore((state) => state.updateDescription);
+  
   const markerStart = data.bidirectional
     ? `url(#arrow-${data.id})`
     : `url(#circle-${data.id})`;
   const markerEnd = `url(#arrow-${data.id})`;
+  
+  const lineColor = 'green'; // Assign the pathCSS to lineColor variable
 
 
   console.log(data.pathCSS)
@@ -79,35 +76,31 @@ export default function CustomEdge({
   return (
     <>
       <defs>
-        {markerFill.map((fill, i) => (
-          <marker
-            key={`circle-${data.id}-${fill}`}
-            id={`circle-${data.id}`}
-            fill={fill}
-            viewBox="0 0 10 10"
-            refX="5"
-            refY="5"
-            markerWidth="3"
-            markerHeight="3"
-          >
-            <circle cx="5" cy="5" r="5" fill="green" />
-          </marker>
-        ))}
-        {markerFill.map((fill, i) => (
-          <marker
-            key={`arrow-${data.id}-${fill}`}
-            id={`arrow-${data.id}`}
-            fill={fill}
-            viewBox="0 -5 10 10"
-            refX="5"
-            refY="0"
-            markerWidth="3"
-            markerHeight="3"
-            orient="auto-start-reverse"
-          >
-            <path d="M0,-5L10,0L0,5"   fill={'green'}  ></path>
-          </marker>
-        ))}
+        <marker
+          key={`circle-${data.id}`}
+          id={`circle-${data.id}`}
+          fill={lineColor} // Use lineColor variable as fill color
+          viewBox="0 0 10 10"
+          refX="5"
+          refY="5"
+          markerWidth="3"
+          markerHeight="3"
+        >
+          <circle cx="5" cy="5" r="5" />
+        </marker>
+        <marker
+          key={`arrow-${data.id}`}
+          id={`arrow-${data.id}`}
+          fill={lineColor} // Use lineColor variable as fill color
+          viewBox="0 -5 10 10"
+          refX="5"
+          refY="0"
+          markerWidth="5"
+          markerHeight="5"
+          orient="auto-start-reverse"
+        >
+          <path d="M0,-5L10,0L0,5"></path>
+        </marker>
       </defs>
 
       <path
@@ -129,7 +122,6 @@ export default function CustomEdge({
       />
 
       <foreignObject
-        // className="bg-red-200" // ? For debugging purposes
         width={fOWidth}
         height={fOHeight}
         x={edgeCenterX - fOWidth / 2}

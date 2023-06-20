@@ -84,6 +84,47 @@ const getNode = gql`
   query FlowNodes($where: flowNodeWhere) {
     flowNodes(where: $where) {
       ...NodeFragment
+      draggable
+      flowchart
+      type
+      id
+      hasdataNodedata {
+        shape
+        label
+        description
+        links {
+          fileId
+          flag
+          id
+          label
+        }
+        linkedBy {
+          fileId
+          flag
+          label
+          id
+        }
+        linksAggregate {
+          count
+          node {
+            label {
+              shortest
+            }
+          }
+        }
+        linkedByAggregate {
+          count
+          node {
+            label {
+              shortest
+            }
+          }
+        }
+      }
+      haspositionPosition {
+        x
+        y
+      }
     }
   }
 `;

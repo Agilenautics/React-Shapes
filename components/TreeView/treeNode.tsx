@@ -25,34 +25,8 @@ import styles from "../Flow/Nodes/styles.module.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
-
+import LoadingIcon from "../LoadingIcon";
 // LoadingIcon component
-const LoadingIcon: React.FC = () => {
-  return (
-    <div className="loading-icon">
-      <svg
-        className="h-10 w-10 animate-spin text-gray-500"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="11"
-          stroke="currentColor"
-          strokeWidth="2"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M9.5 16A6.5 6.5 0 016 12.5c0-1.623.61-3.105 1.61-4.22l1.564 1.564A4.5 4.5 0 008 12.5a4.5 4.5 0 004.5 4.5 4.5 4.5 0 004.22-6.15l1.565-1.565A6.5 6.5 0 0114.5 16h-5z"
-        ></path>
-      </svg>
-    </div>
-  );
-};
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -211,7 +185,13 @@ export const TreeNode = ({
       }
     };
   }
-
+  if (isLoading) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+        <LoadingIcon color = "black"/>
+      </div>
+    );
+  }
   return (
     <div
       ref={innerRef}
@@ -253,26 +233,6 @@ export const TreeNode = ({
                 </div>
               )}
           </span>
-        )}
-        {isLoading && <LoadingIcon />}
-        {!isLoading && !state.isEditing && (
-          <>
-            {/* <FiEdit2
-              onClick={handlers.edit}
-              className="mx-1 cursor-pointer stroke-2"
-              size={18}
-            />
-            <FiDelete
-              // @ts-ignore
-              onClick={(e) => {
-                e.stopPropagation();
-                // @ts-ignore
-                delete_item(Id);
-              }}
-              className="cursor-pointer stroke-2"
-              size={18}
-            /> */}
-          </>
         )}
       </div>
     </div>
