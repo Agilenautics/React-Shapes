@@ -159,6 +159,7 @@ export const TreeNode = ({
         get_user_method(user.email, GET_USER).then((res) => {
           // @ts-ignore
           setUser(res[0].userType);
+          // @ts-ignore
           setAccessLevel(res[0].userType);
         });
       } else {
