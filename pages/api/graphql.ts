@@ -6,6 +6,7 @@ import EventEmitter from "events";
 import resolvers from "./resolvers";
 import driver from "./dbConnection";
 import { gql } from "@apollo/client";
+import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import typeDefs from "./typeDefs";
 
 // ? The function below takes the path from the root directory
@@ -46,7 +47,8 @@ export default async function handler(req, res) {
   const neoSchema = new Neo4jGraphQL({ typeDefs, driver, resolvers });
   const apolloServer = new ApolloServer({
     schema: await neoSchema.getSchema(),
-    introspection: true,
+    introspection:true,
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
   });
   await apolloServer.start();
   await apolloServer.createHandler({
