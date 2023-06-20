@@ -12,7 +12,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   return (
     <>
       <div className="mt-8 flex items-center">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-xl font-semibold text-white">
+        <div className="min-h-10 min-w-10 flex items-center justify-center rounded-xl bg-blue-500 p-2 text-xl font-semibold text-white">
           {getInitials(projectName)}
         </div>
         <h1 className="ml-4 text-2xl font-bold">{projectName}</h1>
@@ -33,9 +33,12 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
 };
 
 function getInitials(name: string) {
-  const words = name.split(" ");
-  const initials = words.map((word) => word.charAt(0)).join("");
-  return initials;
+  const initials = name
+    .replace(/[^a-zA-Z ]/g, "") // Remove special characters and numbers
+    .split(" ")
+    .map((word) => word.charAt(0))
+    .join("");
+  return initials.toUpperCase();
 }
 
 export default ProjectOverview;
