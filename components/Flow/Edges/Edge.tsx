@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Editing } from "../Editing";
 import {
   getSmoothStepPath,
@@ -13,7 +13,8 @@ const fOWidth = fO + 100;
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
 import { EdgeTypes } from "react-flow-renderer";
-// ! The label placement needs to be improved
+import { lineColors } from "../constants";
+
 /* This is the custom node component that is used */
 export default function CustomEdge({
   id,
@@ -63,18 +64,21 @@ export default function CustomEdge({
   const updateLabel = edgeStore((state) => state.updateLabel);
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
   const updateDescription = nodeStore((state) => state.updateDescription);
+  const [lineColor, setLineColor] = useState('green'); // Assign the pathCSS to lineColor variable
 
   const markerStart = data.bidirectional
     ? `url(#arrow-${data.id})`
     : `url(#circle-${data.id})`;
   const markerEnd = `url(#arrow-${data.id})`;
 
-  const lineColor = "green"; // Assign the pathCSS to lineColor variable
+  useEffect(() => {
+    const lineColorPath = data.pathCSS.split(" ").slice(-1)[0];
+    const fillPath = lineColorPath.split("-").slice(0, 3).join("-")
+    const strokeWidth = lineColorPath.split("-").slice(-1)[0];
+    // @ts-ignore
+    setLineColor(lineColors[fillPath][strokeWidth]);
+  }, [data.pathCSS])
 
-  console.log(data.pathCSS);
-
-  const fillData = data.pathCSS.split("-").join(" ");
-  console.log(fillData);
 
   return (
     <>
@@ -110,9 +114,8 @@ export default function CustomEdge({
         key={id}
         id={id}
         style={style}
-        className={`react-flow__edge-path  ${data.pathCSS} ${
-          selected ? "!stroke-[5]" : ""
-        }`}
+        className={`react-flow__edge-path  ${data.pathCSS} ${selected ? "!stroke-[5]" : ""
+          }`}
         d={edgePath}
         markerStart={markerStart}
         markerEnd={markerEnd}
@@ -144,7 +147,7 @@ export default function CustomEdge({
                   <Editing
                     key={id}
                     isEdge={true}
-                    toggleDraggable={() => {}}
+                    toggleDraggable={() => { }}
                     id={id}
                     updateNodeType={updateEdgeType}
                     setEditing={setEditing}

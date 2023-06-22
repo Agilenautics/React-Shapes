@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
-    registerServiceWorker();
+    // registerServiceWorker();
     verfiyAuthToken()
   }, []);
 
@@ -22,6 +22,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
+        if(window.location.pathname == "/")
+          router.push("/projects")
       } else {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);

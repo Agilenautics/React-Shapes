@@ -43,6 +43,12 @@ const defaultEdgeOptions = {
   },
 };
 
+const defaultShowConfirmation = {
+  type: "",
+  show: false,
+  selectedItems: []
+}
+
 function Flow() {
   const snapGrid: [number, number] = [10, 10];
   const { getNodes, getEdges } = useReactFlow();
@@ -58,7 +64,7 @@ function Flow() {
   const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
   const [nodeId, setNodeId] = useState([]);
 
-  const [showConfirmation, setShowConfirmation] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(defaultShowConfirmation);
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map((curEle: any) => {
       deleteEdge(curEle.id, curEle.data.label);
@@ -79,11 +85,11 @@ function Flow() {
     } else if (showConfirmation.type === "edge") {
       onDeleteEdge(selectedItems);
     }
-    setShowConfirmation(null);
+    setShowConfirmation(defaultShowConfirmation);
   }, [showConfirmation, onNodesDelete, onDeleteEdge]);
 
   const handleCancel = useCallback(() => {
-    setShowConfirmation(null);
+    setShowConfirmation(defaultShowConfirmation);
   }, []);
 
   const onNodesChange = useCallback(
@@ -155,6 +161,7 @@ function Flow() {
               //@ts-ignore
               type: "links",
               show: true,
+              // @ts-ignore
               selectedItems: selectedNodes,
             });
           } else {
@@ -162,6 +169,7 @@ function Flow() {
               //@ts-ignore
               type: "node",
               show: true,
+              // @ts-ignore
               selectedItems: selectedNodes,
             });
           }
@@ -170,8 +178,11 @@ function Flow() {
             //@ts-ignore
             type: "edge",
             show: true,
+            // @ts-ignore
             selectedItems: selectedEdges,
           });
+        } else {
+          setShowConfirmation(defaultShowConfirmation)
         }
       }
     };
@@ -230,7 +241,7 @@ function Flow() {
         <CustomControls />
       </ReactFlow>
 
-      {showConfirmation && (
+      {showConfirmation.show && (
         <div className="popup-container">
           <div className="popup-window">
             <h3>Confirm Deletion</h3>
@@ -240,8 +251,8 @@ function Flow() {
                 ? "node"
                 : // @ts-ignore
                 showConfirmation.type === "links"
-                ? "node with attached links"
-                : "edge"}
+                  ? "node with attached links"
+                  : "edge"}
               ?
             </p>
             <div>
