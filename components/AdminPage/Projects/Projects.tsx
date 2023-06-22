@@ -28,14 +28,11 @@ interface Project {
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
-  //const accessLevel: string = "suser";
-
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [userData, setUserData] = useState([]);
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -54,17 +51,6 @@ function Projects() {
   });
 
   const getProject = async (data: Array<Project>) => {
-    // get_user_method(userEmail, GET_USER).then((res) => {
-    //   if (loading) {
-    //     return ""
-    //   }
-    //   // @ts-ignore
-    //   const userType = res[0].userType === undefined ? "" : res[0].userType;
-    //   setAccessLevel(userType);
-    //   // @ts-ignore
-    //   setProjectData(res[0].hasProjects);
-    // });
-
     // @ts-ignore
     if (data && data.users.length) {
       // @ts-ignore

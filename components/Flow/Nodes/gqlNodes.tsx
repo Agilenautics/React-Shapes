@@ -177,16 +177,12 @@ async function findNode(
       },
     })
     .then((result) => {
-      //const nodes3 = JSON.stringify(result.data.flowNodes.hasdataNodedata.linkedByAggregate);
       const nodes1 = JSON.stringify(result.data.flowNodes);
-      console.log("getnode", nodes1);
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
-        //.replaceAll('"links":','"link":');
         .replaceAll('"haspositionPosition":', '"position":');
       // @ts-ignore
       nodes = JSON.parse(nodes2);
-      console.log(nodes);
     });
 
   return nodes;

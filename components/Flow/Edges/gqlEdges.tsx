@@ -40,42 +40,9 @@ mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
 }
 `;
 
-// delete Edge
 
-const deleteEdgeMutation = gql`
-  mutation deleteFlowEdges(
-    $where: flowEdgeWhere
-    $delete: flowEdgeDeleteInput
-  ) {
-    deleteFlowEdges(where: $where, delete: $delete) {
-      nodesDeleted
-      relationshipsDeleted
-    }
-  }
-`;
 
-// delete edge method
-const deleteEdge = async (edgeId: string, label: string) => {
-  await client.mutate({
-    mutation: deleteEdgeMutation,
-    variables: {
-      where: {
-        id: edgeId,
-      },
-      delete: {
-        hasedgedataEdgedata: {
-          where: {
-            node: {
-              label,
-            },
-          },
-        },
-      },
-    },
-  });
 
-  //await client.resetStore()
-};
 
 
 
@@ -99,14 +66,8 @@ async function getEdges(
     })
     .then((result) => {
       const edges1 = JSON.stringify(result.data.flowcharts[0].edges);
-      const edges2 = edges1.replaceAll('"hasedgedataEdgedata":', '"data":');
       // @ts-ignore
-      edges = JSON.parse(edges2);
-      // edges.forEach((edge) => {
-      //   edge.source = edge.flownodeConnectedby.id;
-      //   delete edge.flownodeCo
-      //   edge.target = edge.connectedtoFlownode.id;
-      // });
+      edges = JSON.parse(edges1.replaceAll('"hasedgedataEdgedata":', '"data":'));
     });
   return edges;
 }
@@ -150,7 +111,6 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
                             where: {
                               node: {
                                 id: newEdge.source,
-                                //flowchart: flowchart
                               },
                             },
                           },
@@ -160,7 +120,6 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
                             where: {
                               node: {
                                 id: newEdge.target,
-                                //flowchart: flowchart
                               },
                             },
                           },
@@ -176,37 +135,17 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
       },
     },
   })
-  // if (flowchart) {
-  //   client
-  //     .resetStore()
-  //     .then(() => {
-  //       console.log("Cache reset successfully.");
-  //       getEdges(allEdges, flowchart).then((res: any) => {
-  //         return updateEdges(res);
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
-  .then((result) => {
-    console.log(
-      result.data.updateFiles.files[0].hasflowchart.edges,
-      "create edge"
-    );
-    const edges1 = JSON.stringify(
-      result.data.updateFiles.files[0].hasflowchart.edges
-    )
-      .replaceAll('"hasedgedataEdgedata:', '"data":');
-    //@ts-ignore
-    edges = JSON.parse(edges1);
-    return updateEdges(edges);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-client.clearStore();
-
+    .then((result) => {
+      const edges1 = JSON.stringify(
+        result.data.updateFiles.files[0].hasflowchart.edges
+      )
+      //@ts-ignore
+      edges = JSON.parse(edges1.replaceAll('"hasedgedataEdgedata":', '"data":'));
+      return updateEdges(edges);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 //update Edge mutation
@@ -252,11 +191,51 @@ const updateEdgeBackend = async (
   });
 };
 
+
+
+// delete Edge
+
+const deleteEdgeMutation = gql`
+  mutation deleteFlowEdges(
+    $where: flowEdgeWhere
+    $delete: flowEdgeDeleteInput
+  ) {
+    deleteFlowEdges(where: $where, delete: $delete) {
+      nodesDeleted
+      relationshipsDeleted
+    }
+  }
+`;
+
+
+// delete edge method
+const deleteEdgeBackend = async (edgeId: string, label: string) => {
+  await client.mutate({
+    mutation: deleteEdgeMutation,
+    variables: {
+      where: {
+        id: edgeId,
+      },
+      delete: {
+        hasedgedataEdgedata: {
+          where: {
+            node: {
+              label,
+            },
+          },
+        },
+      },
+    },
+  })
+
+  //await client.resetStore()
+};
+
 export {
- allEdges,
+  allEdges,
   getEdges,
   createFlowEdge,
-  deleteEdge,
+  deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
 };

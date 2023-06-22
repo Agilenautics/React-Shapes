@@ -35,38 +35,35 @@ const FinishSignIn: React.FC = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password != repeatPassword) {
-        console.log("Error: Passwords do not match")
+      console.log("Error: Passwords do not match")
     } else {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in 
-                const { user } = userCredential;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          const { user } = userCredential;
 
-                // Access the user's authentication tokens
-                user.getIdTokenResult().then((idTokenResult) => {
-                    // Retrieve the access token and refresh token
-                    const accessToken = idTokenResult.token;
-                    const refreshToken = user.refreshToken;
+          // Access the user's authentication tokens
+          user.getIdTokenResult().then((idTokenResult) => {
+            // Retrieve the access token and refresh token
+            const accessToken = idTokenResult.token;
+            const refreshToken = user.refreshToken;
 
-                    // Store the tokens in cookies
-                    document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
-                    document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
-                    router.push("/projects")
+            // Store the tokens in cookies
+            document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
+            document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
+            router.push("/projects")
 
-                });
-                // Add user to Database
-                // user.email
-                // set active to true
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                console.log('errorCode: ', errorCode);
-                const errorMessage = error.message;
-                console.log('errorMessage: ', errorMessage);
-                // ..
-            });
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          console.log('errorCode: ', errorCode);
+          const errorMessage = error.message;
+          console.log('errorMessage: ', errorMessage);
+          // ..
+        });
     }
-};
+  };
 
   return (
     <div style={{ textAlign: 'center' }}>

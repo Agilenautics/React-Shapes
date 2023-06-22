@@ -18,19 +18,8 @@ import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import {
-  deleteNodeBackend,
-  findNode,
-  getNode,
-  updateNodeBackend,
-  updatePosition,
-} from "./Nodes/gqlNodes";
-import {
-  createFlowEdge,
-  deleteEdge,
-  updateEdgeBackend,
-  updateEdgeMutation,
-} from "./Edges/gqlEdges";
+import { deleteNodeBackend, findNode, getNode, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
+import {  createFlowEdge, deleteEdgeBackend, updateEdgeBackend, updateEdgeMutation } from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
 
 const defaultEdgeOptions = {
@@ -62,12 +51,14 @@ function Flow() {
   const currentFlowchart = fileStore((state) => state.currentFlowchart);
   const fileId = fileStore((state) => state.Id);
   const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
+  const deleteEdge = edgeStore((state)=>state.deleteEdge)
   const [nodeId, setNodeId] = useState([]);
 
   const [showConfirmation, setShowConfirmation] = useState(defaultShowConfirmation);
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map((curEle: any) => {
-      deleteEdge(curEle.id, curEle.data.label);
+      deleteEdge(curEle)
+      deleteEdgeBackend(curEle.id, curEle.data.label);
     });
   };
   const handleConfirm = useCallback(() => {
@@ -192,8 +183,6 @@ function Flow() {
       document.removeEventListener("keydown", handleBackspace);
     };
   }, [getNodes, getEdges]);
-  //@ Irfan check this
-
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];

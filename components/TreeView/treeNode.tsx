@@ -166,7 +166,6 @@ export const TreeNode = ({
         getNodes(allNodes, data.id)
           .then((result) => {
             updateNodes(result.nodes);
-            console.log(result);
             updateEdges(result.edges);
           })
           .finally(() => {

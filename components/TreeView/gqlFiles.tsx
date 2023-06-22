@@ -39,24 +39,6 @@ const createProject = async (
     },
   });
 };
-//@ Irfan Check this is need?
-const getInitData = gql`
-  query Mains {
-    mains {
-      name
-      isOpen
-      id
-      hasContainsFile {
-        name
-        id
-        isOpen
-        timeStamp
-        userName
-      }
-    }
-  }
-`;
-//@ Irfan check this too
 // Update project name and description
 const updateProject = gql`
   mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
