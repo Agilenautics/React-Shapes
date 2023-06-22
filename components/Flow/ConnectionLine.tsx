@@ -1,6 +1,7 @@
 //@ts-nocheck
 /* This is the custom connection line that is used when connecting two nodes. */
-const ConnectionLine = ({
+import { ConnectionLineComponent } from "react-flow-renderer";
+const ConnectionLine: ConnectionLineComponent = ({
   sourceX,
   sourceY,
   sourcePosition,

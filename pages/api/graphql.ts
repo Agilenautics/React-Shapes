@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   res.setHeader(
     "Access-Control-Allow-Origin",
     // "https://studio.apollographql.com",
-    "https://ssrreactflowf9455-n7cidehgba-uc.a.run.app/"
+    "*"
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -47,8 +47,8 @@ export default async function handler(req, res) {
   const neoSchema = new Neo4jGraphQL({ typeDefs, driver, resolvers });
   const apolloServer = new ApolloServer({
     schema: await neoSchema.getSchema(),
-    introspection:true,
-    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })]
+    introspection: true,
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
   });
   await apolloServer.start();
   await apolloServer.createHandler({

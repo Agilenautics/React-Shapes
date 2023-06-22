@@ -18,8 +18,19 @@ import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import { deleteNodeBackend, findNode, getNode, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
-import { createFlowEdge, deleteEdge, updateEdgeBackend, updateEdgeMutation } from "./Edges/gqlEdges";
+import {
+  deleteNodeBackend,
+  findNode,
+  getNode,
+  updateNodeBackend,
+  updatePosition,
+} from "./Nodes/gqlNodes";
+import {
+  createFlowEdge,
+  deleteEdge,
+  updateEdgeBackend,
+  updateEdgeMutation,
+} from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
 
 const defaultEdgeOptions = {
@@ -54,13 +65,17 @@ function Flow() {
     });
   };
   const handleConfirm = useCallback(() => {
+    //@ts-ignore
     const selectedItems = showConfirmation.selectedItems;
+    //@ts-ignore
     if (showConfirmation.type === "node") {
       //console.log(findNode(selectedItems));
       onNodesDelete(selectedItems);
+      //@ts-ignore
     } else if (showConfirmation.type === "links") {
       //console.log(findNode(selectedItems));
       onNodesDelete(selectedItems);
+      //@ts-ignore
     } else if (showConfirmation.type === "edge") {
       onDeleteEdge(selectedItems);
     }
@@ -135,23 +150,24 @@ function Flow() {
           const linkA = node[0].data.linkedBy.flag;
           const linkB = node[0].data.links.flag;
           //.flowNode.nodeData.linked
-          if (linkA || linkB){
+          if (linkA || linkB) {
             setShowConfirmation({
+              //@ts-ignore
               type: "links",
               show: true,
               selectedItems: selectedNodes,
             });
-          }
-          else{
+          } else {
             setShowConfirmation({
+              //@ts-ignore
               type: "node",
               show: true,
               selectedItems: selectedNodes,
             });
           }
-          
         } else if (selectedEdges.length > 0) {
           setShowConfirmation({
+            //@ts-ignore
             type: "edge",
             show: true,
             selectedItems: selectedEdges,
@@ -165,7 +181,7 @@ function Flow() {
       document.removeEventListener("keydown", handleBackspace);
     };
   }, [getNodes, getEdges]);
-//@ Irfan check this
+  //@ Irfan check this
 
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
@@ -175,7 +191,6 @@ function Flow() {
     }
   }
 
- 
   const onDrag = (event: any, node: Object) => {
     updatePosition(node);
   };
@@ -194,11 +209,10 @@ function Flow() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
-        //@ts-ignore
         connectionLineComponent={ConnectionLine}
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
-        // @ts-ignore
+        //@ts-ignore
         edgeTypes={edgeTypeMap}
         nodeTypes={nodeTypeMap}
         connectionMode={ConnectionMode.Loose}
@@ -221,8 +235,14 @@ function Flow() {
           <div className="popup-window">
             <h3>Confirm Deletion</h3>
             <p>
-            Are you sure you want to delete the selected{" "}
-            {showConfirmation.type === "node" ? "node" : showConfirmation.type === "links" ? "node with attached links" : "edge"}?
+              Are you sure you want to delete the selected {/* @ts-ignore */}
+              {showConfirmation.type === "node"
+                ? "node"
+                : // @ts-ignore
+                showConfirmation.type === "links"
+                ? "node with attached links"
+                : "edge"}
+              ?
             </p>
             <div>
               <button className="popup-button" onClick={handleConfirm}>

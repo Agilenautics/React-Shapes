@@ -7,7 +7,6 @@ import React, {
   useEffect,
 } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
-// @ts-ignore
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
 import { MyData } from "./backend";
 import { FiEdit2, FiDelete } from "react-icons/fi";
@@ -26,6 +25,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
 import LoadingIcon from "../LoadingIcon";
+import { ApolloQueryResult } from "@apollo/client";
+
 // LoadingIcon component
 
 /**
@@ -128,12 +129,9 @@ export const TreeNode = ({
 
   const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // @ts-ignore
-        get_user_method(user.email, GET_USER).then((res) => {
-          // @ts-ignore
+      if (user && user.email) {
+        get_user_method(user.email, GET_USER).then((res: any) => {
           setUser(res[0].userType);
-          // @ts-ignore
           setAccessLevel(res[0].userType);
         });
       } else {
@@ -155,16 +153,16 @@ export const TreeNode = ({
   }
 
   function loadNewFlow(
-    handlers: NodeRendererProps<MyData>,
-    data: NodeRendererProps<MyData>
+    handlers: NodeRendererProps<MyData> & {
+      select: (e: SyntheticEvent<Element, Event>) => void;
+    },
+    //data: NodeRendererProps<MyData> & { children?: MyData[] }
+    data: MyData
   ) {
     return (e: SyntheticEvent) => {
-      // @ts-ignore
       handlers.select(e);
-      // @ts-ignore
       if (data.children == null) {
         setIsLoading(true);
-        // @ts-ignore
         getNodes(allNodes, data.id)
           .then((result) => {
             updateNodes(result.nodes);
@@ -174,7 +172,6 @@ export const TreeNode = ({
           .finally(() => {
             setIsLoading(false);
           });
-        // @ts-ignore
         getEdges(allEdges, data.id)
           .then((result) => {
             updateEdges(result);
@@ -187,8 +184,8 @@ export const TreeNode = ({
   }
   if (isLoading) {
     return (
-      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
-        <LoadingIcon color = "black"/>
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+        <LoadingIcon color="black" />
       </div>
     );
   }
@@ -197,7 +194,7 @@ export const TreeNode = ({
       ref={innerRef}
       style={styles.row}
       className={classNames("row", state)}
-      // @ts-ignore
+      //@ts-ignore
       onClick={loadNewFlow(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>

@@ -117,6 +117,7 @@ function Projects() {
   const handleConfirm = useCallback(() => {
     // Delete the project if confirmed
     setShowConfirmation(false);
+    //@ts-ignore
     delete_Project(projectId, DELETE_PROJECT, GET_USER);
     setProjectId(null);
   }, [projectId]);
@@ -148,7 +149,7 @@ function Projects() {
 
   if (loading || isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex h-screen items-center justify-center">
         <LoadingIcon />
       </div>
     );

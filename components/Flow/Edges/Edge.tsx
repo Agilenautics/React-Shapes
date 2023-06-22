@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Editing } from "../Editing";
-import { getSmoothStepPath, getEdgeCenter, Position, } from "react-flow-renderer";
+import {
+  getSmoothStepPath,
+  getEdgeCenter,
+  Position,
+} from "react-flow-renderer";
 import edgeStore from "./edgeStore";
 const fO = 144;
 const fOHeight = fO;
@@ -8,7 +12,8 @@ const fOWidth = fO + 100;
 
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
-
+import { EdgeTypes } from "react-flow-renderer";
+// ! The label placement needs to be improved
 /* This is the custom node component that is used */
 export default function CustomEdge({
   id,
@@ -36,6 +41,7 @@ export default function CustomEdge({
     bidirectional: boolean;
   };
   style: Object;
+  edgeTypes: EdgeTypes;
 }) {
   const edgePath = getSmoothStepPath({
     sourceX,
@@ -57,21 +63,18 @@ export default function CustomEdge({
   const updateLabel = edgeStore((state) => state.updateLabel);
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
   const updateDescription = nodeStore((state) => state.updateDescription);
-  
+
   const markerStart = data.bidirectional
     ? `url(#arrow-${data.id})`
     : `url(#circle-${data.id})`;
   const markerEnd = `url(#arrow-${data.id})`;
-  
-  const lineColor = 'green'; // Assign the pathCSS to lineColor variable
 
+  const lineColor = "green"; // Assign the pathCSS to lineColor variable
 
-  console.log(data.pathCSS)
+  console.log(data.pathCSS);
 
-  const fillData = data.pathCSS.split('-').join(' ')
-  console.log(fillData)
-
-  
+  const fillData = data.pathCSS.split("-").join(" ");
+  console.log(fillData);
 
   return (
     <>
