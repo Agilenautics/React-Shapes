@@ -18,9 +18,22 @@ import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import { deleteNodeBackend, findNode, getNode, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
-import {  createFlowEdge, deleteEdgeBackend, updateEdgeBackend, updateEdgeMutation } from "./Edges/gqlEdges";
+import {
+  deleteNodeBackend,
+  findNode,
+  getNode,
+  updateNodeBackend,
+  updatePosition,
+} from "./Nodes/gqlNodes";
+import {
+  createFlowEdge,
+  deleteEdgeBackend,
+  updateEdgeBackend,
+  updateEdgeMutation,
+} from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
+import { NodeState } from "./Nodes/nodeStore";
+import { EdgeState } from "./Edges/edgeStore";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -35,8 +48,8 @@ const defaultEdgeOptions = {
 const defaultShowConfirmation = {
   type: "",
   show: false,
-  selectedItems: []
-}
+  selectedItems: [],
+};
 
 function Flow() {
   const snapGrid: [number, number] = [10, 10];
@@ -51,30 +64,33 @@ function Flow() {
   const currentFlowchart = fileStore((state) => state.currentFlowchart);
   const fileId = fileStore((state) => state.Id);
   const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
-  const deleteEdge = edgeStore((state)=>state.deleteEdge)
+  const deleteEdge = edgeStore((state) => state.deleteEdge);
   const [nodeId, setNodeId] = useState([]);
 
-  const [showConfirmation, setShowConfirmation] = useState(defaultShowConfirmation);
+  const [showConfirmation, setShowConfirmation] = useState(
+    defaultShowConfirmation
+  );
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map((curEle: any) => {
-      deleteEdge(curEle)
+      deleteEdge(curEle);
       deleteEdgeBackend(curEle.id, curEle.data.label);
     });
   };
   const handleConfirm = useCallback(() => {
-    //@ts-ignore
-    const selectedItems = showConfirmation.selectedItems;
-    //@ts-ignore
-    if (showConfirmation.type === "node") {
-      //console.log(findNode(selectedItems));
-      onNodesDelete(selectedItems);
+    if (showConfirmation) {
       //@ts-ignore
-    } else if (showConfirmation.type === "links") {
-      //console.log(findNode(selectedItems));
-      onNodesDelete(selectedItems);
+      const selectedItems = showConfirmation.selectedItems;
+      if (showConfirmation.type === "node") {
+        //console.log(findNode(selectedItems));
+        onNodesDelete(selectedItems);
+      } else if (showConfirmation.type === "links") {
+        //console.log(findNode(selectedItems));
+        onNodesDelete(selectedItems);
+      } else if (showConfirmation.type === "edge") {
+        onDeleteEdge(selectedItems);
+      }
       //@ts-ignore
-    } else if (showConfirmation.type === "edge") {
-      onDeleteEdge(selectedItems);
+      setShowConfirmation(null);
     }
     setShowConfirmation(defaultShowConfirmation);
   }, [showConfirmation, onNodesDelete, onDeleteEdge]);
@@ -149,7 +165,6 @@ function Flow() {
           //.flowNode.nodeData.linked
           if (linkA || linkB) {
             setShowConfirmation({
-              //@ts-ignore
               type: "links",
               show: true,
               // @ts-ignore
@@ -157,7 +172,6 @@ function Flow() {
             });
           } else {
             setShowConfirmation({
-              //@ts-ignore
               type: "node",
               show: true,
               // @ts-ignore
@@ -166,14 +180,13 @@ function Flow() {
           }
         } else if (selectedEdges.length > 0) {
           setShowConfirmation({
-            //@ts-ignore
             type: "edge",
             show: true,
             // @ts-ignore
             selectedItems: selectedEdges,
           });
         } else {
-          setShowConfirmation(defaultShowConfirmation)
+          setShowConfirmation(defaultShowConfirmation);
         }
       }
     };
@@ -235,13 +248,13 @@ function Flow() {
           <div className="popup-window">
             <h3>Confirm Deletion</h3>
             <p>
-              Are you sure you want to delete the selected {/* @ts-ignore */}
+              Are you sure you want to delete the selected
               {showConfirmation.type === "node"
                 ? "node"
                 : // @ts-ignore
                 showConfirmation.type === "links"
-                  ? "node with attached links"
-                  : "edge"}
+                ? "node with attached links"
+                : "edge"}
               ?
             </p>
             <div>

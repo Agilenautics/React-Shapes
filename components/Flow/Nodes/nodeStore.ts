@@ -13,7 +13,7 @@ import { getFileByNode } from "../../TreeView/gqlFiles";
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
 
-interface NodeState {
+export interface NodeState {
   nodes: Array<Node>;
   addNode: (newNode: Node) => void;
   updateNodes: (nodes: Array<Node>) => void;
@@ -79,10 +79,10 @@ const nodeStore = create<NodeState>((set) => ({
       return { nodes: nodes };
     }),
   deleteNode: (node) => {
-      set((state) => {
-        const updated_nodes = state.nodes.filter((item) => item.id !== node.id);
-        return { nodes: updated_nodes };
-      });
+    set((state) => {
+      const updated_nodes = state.nodes.filter((item) => item.id !== node.id);
+      return { nodes: updated_nodes };
+    });
   },
   updateDescription: (id: string, newDescription: string) => {
     set((state) => {

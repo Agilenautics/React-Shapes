@@ -41,9 +41,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
   >(
     user.hasProjects.map((projectId) => {
       console.log(projectId);
-      // @ts-ignore
       const project = user.hasProjects.find((p) => p.id === projectId.id);
-      // @ts-ignore
       return project ? { value: project.id, label: project.name } : null;
     })
   );
@@ -93,8 +91,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
     console.log("Added Projects:", addedProjects);
 
     for (let i = 0; i < addedProjects.length; i++) {
-      const id = addedProjects[i]?.id;
-      // @ts-ignore
+      const id = addedProjects[i]?.id || "";
       allocateProjectToUserMethod(id, user.id, allocateProjectToUserMutation);
     }
 

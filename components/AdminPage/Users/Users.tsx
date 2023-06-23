@@ -23,7 +23,7 @@ import {
   GET_USER,
   GET_PROJECTS,
 } from "../Projects/gqlProject";
-interface User {
+export interface User {
   id: string;
   name: string;
   accessLevel: string;
@@ -102,10 +102,8 @@ function Users() {
 
   const handleSortClick = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    const sortedUsers = [...users].sort((a, b) => {
-      //@ts-ignore
+    const sortedUsers = [...users].sort((a: User, b: User) => {
       const nameA = getNameFromEmail(a.emailId).toUpperCase();
-      //@ts-ignore
       const nameB = getNameFromEmail(b.emailId).toUpperCase();
       if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
       if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;

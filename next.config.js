@@ -1,19 +1,19 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination:
-          "https://ssrreactflowf9455-n7cidehgba-uc.a.run.app/api/graphql",
-      },
-    ];
-  },
-};
+// const nextConfig = {
+//   reactStrictMode: true,
+//   async rewrites() {
+//     return [
+//       {
+//         source: "/api/:path*",
+//         destination:
+//           "https://ssrreactflowf9455-n7cidehgba-uc.a.run.app/api/graphql",
+//       },
+//     ];
+//   },
+// };
 
 module.exports = {
-  ...nextConfig,
+  // ...nextConfig,
   webpack: (config) => {
     config.experiments = { topLevelAwait: true, layers: true };
     return config;

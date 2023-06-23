@@ -18,12 +18,14 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
+import { User } from "../Users/Users";
 
 interface Project {
   id: string;
   name: string;
   desc: string;
   description: string;
+  users: User[];
 }
 
 function Projects() {
@@ -34,13 +36,15 @@ function Projects() {
   const [showForm, setShowForm] = useState(false);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [accessLevel, setAccessLevel] = useState<string>("");
-  const [projectData, setProjectData] = useState([]);
+  const [projectData, setProjectData] = useState<Project[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false); // Added state for confirmation box
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
@@ -50,13 +54,22 @@ function Projects() {
     },
   });
 
-  const getProject = async (data: Array<Project>) => {
-    // @ts-ignore
+  const getProject = async (data: Project) => {
+    // get_user_method(userEmail, GET_USER).then((res) => {
+    //   if (loading) {
+    //     return ""
+    //   }
+    //   // @ts-ignore
+    //   const userType = res[0].userType === undefined ? "" : res[0].userType;
+    //   setAccessLevel(userType);
+    //   // @ts-ignore
+    //   setProjectData(res[0].hasProjects);
+    // });
+
     if (data && data.users.length) {
-      // @ts-ignore
       const userType = data.users[0].userType;
       setAccessLevel(userType);
-      // @ts-ignore
+      //@ts-ignore
       setProjectData(data.users[0].hasProjects);
     }
   };
@@ -71,7 +84,41 @@ function Projects() {
       }
     });
   };
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = e.target.value;
+    setSearchTerm(searchValue);
 
+    if (searchValue.trim() === "") {
+      setProjectData(data.users[0].hasProjects);
+      setTotalCount(data.users[0].hasProjects.length);
+    } else {
+      const filtered = data.users[0].hasProjects.filter(
+        //@ts-ignore
+        (project) =>
+          project.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          project.description.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setProjectData(filtered);
+      setTotalCount(filtered.length);
+    }
+  };
+
+  const handleSortClick = () => {
+    const sortedProjects = [...projectData].sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
+
+    setProjectData(sortedProjects);
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  useEffect(() => {
+    console.log("Sorted Data:", projectData);
+  }, [projectData]);
   useEffect(() => {
     verifyAuthToken();
     setIsButtonDisabled(accessLevel.toLowerCase() === "user");
@@ -103,9 +150,10 @@ function Projects() {
   const handleConfirm = useCallback(() => {
     // Delete the project if confirmed
     setShowConfirmation(false);
-    //@ts-ignore
-    delete_Project(projectId, DELETE_PROJECT, GET_USER);
-    setProjectId(null);
+    if (projectId) {
+      delete_Project(projectId, DELETE_PROJECT, GET_USER);
+      setProjectId(null);
+    }
   }, [projectId]);
 
   const handleCancel = useCallback(() => {
@@ -126,7 +174,7 @@ function Projects() {
     setShowForm(false);
   };
 
-  const handleMessage = (message: any) => {
+  const handleMessage = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -176,15 +224,49 @@ function Projects() {
           <div className="mx-1 my-1">New Project</div>
         </button>
       </div>
+      <div className="ml-10 mt-2">
+        <div className="max-w-2xl">
+          <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-gray-200 focus-within:shadow-lg">
+            <div className="grid h-full w-12 place-items-center text-gray-600">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+
+            <input
+              className="peer h-full w-full bg-gray-200 pr-2 text-base text-black outline-none"
+              type="text"
+              id="search"
+              placeholder="Search"
+              autoComplete="off"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="relative overflow-x-auto sm:rounded-lg">
-        <table className="ml-8 mt-4 w-11/12 rounded-lg text-left text-sm">
+        <table className="mb-4 ml-8 mt-4 w-11/12 rounded-lg text-left text-sm">
           <thead className="bg-gray-200 text-xs">
             <tr>
-              <th scope="col" className="w-40 px-4 py-3 md:w-60">
-                <div
-                  className="flex cursor-pointer items-center"
-                  //onClick={handleSortClick}
-                >
+              <th
+                scope="col"
+                className="w-40 px-4 py-3"
+                onClick={handleSortClick}
+              >
+                <div className="flex cursor-pointer items-center">
                   Project name
                   <AiOutlineArrowDown
                     className={`ml-1 text-sm ${
@@ -193,7 +275,7 @@ function Projects() {
                   />
                 </div>
               </th>
-              <th scope="col" className="hidden px-6 py-3 md:table-cell">
+              <th scope="col" className="px-6 py-3">
                 Description
               </th>
               <th scope="col" className="px-6 py-3">
@@ -202,73 +284,86 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {projectData.map((project: Project) => (
-              <tr key={project.id} className="border-b bg-white">
-                <td className="whitespace-nowrap px-4 py-4 font-medium">
-                  {projectId === project.id ? (
-                    <input
-                      type="text"
-                      value={projectName}
-                      onChange={(e) => setProjectName(e.target.value)}
-                      className="border-b focus:border-blue-500 focus:outline-none"
-                    />
-                  ) : (
-                    <Link
-                      href={{
-                        pathname: "/projects/" + project.id,
-                      }}
-                    >
-                      {project.name}
-                    </Link>
-                  )}
-                </td>
-                <td className="hidden px-6 py-4 md:table-cell">
-                  {projectId === project.id ? (
-                    <input
-                      type="text"
-                      value={projectDesc}
-                      onChange={(e) => setProjectDesc(e.target.value)}
-                      className="border-b focus:border-blue-500 focus:outline-none"
-                    />
-                  ) : (
-                    project.description
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  {projectId === project.id ? (
+            {projectData
+              .filter(
+                (project: Project) =>
+                  project.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                  project.description
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
+              )
+              .map((project: Project) => (
+                <tr key={project.id} className="border-b bg-white">
+                  <td className="whitespace-nowrap px-4 py-4 font-medium">
+                    {projectId === project.id ? (
+                      <input
+                        type="text"
+                        value={projectName}
+                        onChange={(e) => setProjectName(e.target.value)}
+                        className="border-b focus:border-blue-500 focus:outline-none"
+                      />
+                    ) : (
+                      <Link
+                        href={{
+                          pathname: "/projects/" + project.id,
+                        }}
+                      >
+                        {project.name}
+                      </Link>
+                    )}
+                  </td>
+                  <td className="hidden px-6 py-4 md:table-cell">
+                    {projectId === project.id ? (
+                      <input
+                        type="text"
+                        value={projectDesc}
+                        onChange={(e) => setProjectDesc(e.target.value)}
+                        className="w-full border-b focus:border-blue-500 focus:outline-none"
+                      />
+                    ) : (
+                      project.description
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    {projectId === project.id ? (
+                      <button
+                        onClick={() => handleSaveButtonClick(project.id)}
+                        className={`mr-2 ${
+                          isButtonDisabled ? "opacity-50" : ""
+                        }`}
+                        disabled={isButtonDisabled}
+                      >
+                        Save
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleEditButtonClick(
+                            project.id,
+                            project.name,
+                            project.description
+                          )
+                        }
+                        className={`mr-2 w-3 ${
+                          isButtonDisabled ? "opacity-50" : ""
+                        }`}
+                        disabled={isButtonDisabled}
+                      >
+                        <BiRename />
+                      </button>
+                    )}
                     <button
-                      onClick={() => handleSaveButtonClick(project.id)}
-                      className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                      onClick={() => handleDelete_Project(project.id)}
+                      className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
                       disabled={isButtonDisabled}
                     >
-                      Save
+                      <MdDeleteOutline />
                     </button>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        handleEditButtonClick(
-                          project.id,
-                          project.name,
-                          // @ts-ignore
-                          project.description
-                        )
-                      }
-                      className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""}`}
-                      disabled={isButtonDisabled}
-                    >
-                      <BiRename />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleDelete_Project(project.id)}
-                    className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
-                    disabled={isButtonDisabled}
-                  >
-                    <MdDeleteOutline />
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

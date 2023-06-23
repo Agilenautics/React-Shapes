@@ -5,7 +5,7 @@ import edges from "./flowchart1";
 
 
 /* This is the store for managing the state of the edges in the present flowchart. */
-interface EdgeState {
+export interface EdgeState {
   edges: Array<Edge>;
   updateEdges: (edges: Array<Edge>) => void;
   updateEdgeCSS: (id: string, CSS: Array<string>) => void;
