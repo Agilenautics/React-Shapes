@@ -5,8 +5,8 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Node } from "react-flow-renderer";
-import { Edge } from "react-flow-renderer";
+import { Node } from "reactflow";
+import { Edge } from "reactflow";
 
 export const Node_Fragment = gql`
   fragment NodeFragment on flowNode {

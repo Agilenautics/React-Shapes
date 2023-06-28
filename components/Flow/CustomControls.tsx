@@ -1,5 +1,5 @@
 import { MdGridOn } from "react-icons/md";
-import { Controls, ControlButton } from "react-flow-renderer";
+import { Controls, ControlButton } from "reactflow";
 
 /**
  * This component contains the custom controls for the flowchart view. It contains the default controls, and allows us

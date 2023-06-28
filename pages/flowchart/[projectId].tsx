@@ -1,4 +1,4 @@
-import { ReactFlowProvider } from "react-flow-renderer";
+import { ReactFlowProvider } from "reactflow";
 import Flow from "../../components/Flow/flow";
 import AddNodeButton from "../../components/Sidebar/AddNodeButton";
 import { useRouter } from "next/router";

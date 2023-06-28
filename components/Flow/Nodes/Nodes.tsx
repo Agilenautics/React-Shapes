@@ -1,6 +1,6 @@
 import { Editing } from "../Editing";
 import { useState, useEffect } from "react";
-import { Handle, Position } from "react-flow-renderer";
+import { Handle, Position } from "reactflow";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
 import fileStore from "../../TreeView/fileStore";

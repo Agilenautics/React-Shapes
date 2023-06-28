@@ -5,7 +5,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Edge, updateEdge } from "react-flow-renderer";
+import { Edge, updateEdge } from "reactflow";
 import { Edge_Fragment } from "../Nodes/gqlNodes";
 
 const allEdges = gql`

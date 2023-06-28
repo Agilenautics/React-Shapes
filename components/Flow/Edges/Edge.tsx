@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Editing } from "../Editing";
 import {
   getSmoothStepPath,
-  getEdgeCenter,
+  //getEdgeCenter,
   Position,
-} from "react-flow-renderer";
+} from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
 const fOHeight = fO;
@@ -12,7 +12,7 @@ const fOWidth = fO + 100;
 
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
-import { EdgeTypes } from "react-flow-renderer";
+import { EdgeTypes } from "reactflow";
 import { lineColors } from "../constants";
 
 /* This is the custom node component that is used */
@@ -44,7 +44,7 @@ export default function CustomEdge({
   style: Object;
   edgeTypes: EdgeTypes;
 }) {
-  const edgePath = getSmoothStepPath({
+  const [edgePath,labelX,labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -52,13 +52,14 @@ export default function CustomEdge({
     targetY,
     targetPosition,
   });
+  /*
   const [edgeCenterX, edgeCenterY] = getEdgeCenter({
     sourceX,
     sourceY,
     targetX,
     targetY,
   });
-
+*/
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
   const updateLabel = edgeStore((state) => state.updateLabel);
@@ -130,8 +131,8 @@ export default function CustomEdge({
       <foreignObject
         width={fOWidth}
         height={fOHeight}
-        x={edgeCenterX - fOWidth / 2}
-        y={edgeCenterY - 145 / 2}
+        x={labelX - fOWidth / 2}
+        y={labelY - 145 / 2}
         requiredExtensions="http://www.w3.org/1999/xhtml"
       >
         <div className="flex h-full items-center justify-center">

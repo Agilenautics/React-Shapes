@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { updateEdge, useReactFlow } from "react-flow-renderer";
+import { updateEdge, useReactFlow } from "reactflow";
 import { MdOutlineAdd } from "react-icons/md";
 import { newNode, createNode } from "../Flow/Nodes/gqlNodes";
 import nodeStore from "../Flow/Nodes/nodeStore";

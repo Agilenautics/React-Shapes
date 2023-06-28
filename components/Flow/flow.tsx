@@ -10,7 +10,7 @@ import ReactFlow, {
   MiniMap,
   ConnectionMode,
   useReactFlow,
-} from "react-flow-renderer";
+} from "reactflow";
 
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
@@ -206,6 +206,7 @@ function Flow() {
 
   const onDrag = (event: any, node: Object) => {
     updatePosition(node);
+    console.log(node);
   };
   const onNodeClick = (e: any, nodeData: any) => {
     updateLinkNodeId(nodeData.id);
@@ -215,7 +216,7 @@ function Flow() {
     <div className="absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
         panOnScroll
-        defaultNodes={defaultNodes}
+        nodes={defaultNodes}
         defaultEdges={defaultEdges}
         defaultEdgeOptions={defaultEdgeOptions}
         onNodesChange={onNodesChange}

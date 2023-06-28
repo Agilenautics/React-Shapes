@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Edge } from "react-flow-renderer";
+import { Edge } from "reactflow";
 import edges from "./flowchart1";
 
 
