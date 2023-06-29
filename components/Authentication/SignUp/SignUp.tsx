@@ -65,7 +65,7 @@ const Signup: React.FC = () => {
     };
 
     return (
-        <div style={{ textAlign: 'center' }}>
+        <div className='my-4 text-center'>
             <h1>Signup</h1>
             <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <input

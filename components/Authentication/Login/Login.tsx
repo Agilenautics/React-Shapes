@@ -75,6 +75,10 @@ const Login: React.FC = () => {
             });
     };
 
+    const handleForgotPassword = () => {
+        router.push("/forgot-password")
+    }
+
     return (
         <div style={{ textAlign: 'center', marginTop: 30 }}>
             <h1>Login</h1>
@@ -96,6 +100,7 @@ const Login: React.FC = () => {
                 {
                     loginError.error && <div className='text-sm text-red-500'>{loginError.msg}</div>
                 }
+                <a className="text-blue-600 hover:text-blue-800 cursor-pointer my-2" onClick={handleForgotPassword}>Forgot Password</a>
                 <button type="submit" style={{ padding: '5px 10px', backgroundColor: 'blue', color: 'white', border: 'none' }}>
                     Login
                 </button>

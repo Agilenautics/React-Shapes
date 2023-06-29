@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { auth } from '../../../auth';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailLink, onAuthStateChanged } from "firebase/auth";
 
-const FinishSignIn: React.FC = () => {
+const ResetPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -98,4 +98,4 @@ const FinishSignIn: React.FC = () => {
 };
 
 
-export default FinishSignIn;
+export default ResetPassword;
