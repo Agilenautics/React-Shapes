@@ -4,6 +4,8 @@ import Signout from "../Authentication/Signout/Signout";
 import { AiOutlineMail } from "react-icons/ai";
 import Link from "next/link";
 import { getAuth } from "firebase/auth";
+import { useRouter } from "next/router";
+import { UrlObject } from "url";
 
 const auth = getAuth();
 
@@ -21,6 +23,7 @@ const getNameFromEmail = (email: string) => {
 
 function TopBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -33,11 +36,15 @@ function TopBar() {
     setEmail(userEmail);
   });
 
+  const navigate = (path: string | UrlObject) => {
+    router.push(path)
+  }
+
   return (
     <div className="flex h-14 items-center border-b border-gray-300 text-xl">
       <a className="ml-6 font-bold text-gray-400">FLOWCHART</a>
       <div className="flex flex-grow items-center justify-center space-x-8 text-lg">
-        <a className="hover:text-sky-700">Projects</a>
+        <a className="hover:text-sky-700 cursor-pointer" onClick={() => navigate('/projects')}>Projects</a>
         {/* <a className="hover:text-sky-700">Organizations</a> */}
         {/* <a className="text-sky-700">{userEmail}</a> */}
         <Link href="/Policies">Policies</Link>
