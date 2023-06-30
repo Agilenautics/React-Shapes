@@ -8,13 +8,15 @@ import TopBar from "../../components/AdminPage/TopBar";
 const Flowchart = () => {
   const router = useRouter();
   return (
-    <>
+    <div className="providerflow">
+      <div className="">
+        <ReactFlowProvider>
+          <Flow />
+        </ReactFlowProvider>
+        <AddNodeButton />
+      </div>
       <Sidebar />
-      <ReactFlowProvider>
-        <Flow />
-      </ReactFlowProvider>
-      <AddNodeButton />
-    </>
+    </div>
   );
 };
 

@@ -7,9 +7,8 @@ import fileStore from "../../TreeView/fileStore";
 import edgeStore from "../Edges/edgeStore";
 import Tags from "./Tags";
 import Progress from "./Progress";
-import { BiArrowToRight, BiArrowBack } from 'react-icons/bi'
+import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
 import { updateLinksMutation, updateNodeData } from "./gqlNodes";
-
 
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
@@ -24,10 +23,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const updateNodeType = nodeStore((state) => state.updateNodeType);
   const toggleDraggable = nodeStore((state) => state.toggleDraggable);
   const updateNodes = nodeStore((state) => state.updateNodes);
-  const findFile = fileStore((state) => state.find_file)
-  const updateEdges = edgeStore((state) => state.updateEdges)
-  const updateDescription = nodeStore((state) => state.updateDescription)
-  const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs)
+  const findFile = fileStore((state) => state.find_file);
+  const updateEdges = edgeStore((state) => state.updateEdges);
+  const updateDescription = nodeStore((state) => state.updateDescription);
+  const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
 
   // @ts-ignore
   const label = data.label;
@@ -37,11 +36,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const description = data.description;
 
   //console.log(shapeCSS)
-
-
-
-
-
 
   // const updateNodeData_Links = async () => {
   //   if (linkNodeId === id) {
@@ -53,45 +47,48 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   //   updateNodeData_Links()
   // }, [updateNodeData_Links])
 
-
   const linkedTo = () => {
     const x = findFile(data.links.fileId);
     //console.log('x: ', x);
     // @ts-ignore
-    const nodes = x.hasflowchart.nodes
+    const nodes = x.hasflowchart.nodes;
     const nodeData = JSON.stringify(nodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
     // @ts-ignore
-    const edges = x.hasflowchart.edges
-    const edgeData = JSON.stringify(edges)
-      .replaceAll('"hasedgedataEdgedata":', '"data":');
+    const edges = x.hasflowchart.edges;
+    const edgeData = JSON.stringify(edges).replaceAll(
+      '"hasedgedataEdgedata":',
+      '"data":'
+    );
     if (x.children == null) {
       // @ts-ignore
       updateEdges(JSON.parse(edgeData));
       updateNodes(JSON.parse(nodeData));
     }
-    updateBreadCrumbs(x, x.id, 'push')
-  }
+    updateBreadCrumbs(x, x.id, "push");
+  };
 
   const linkedBy = () => {
     const x = findFile(data.linkedBy.fileId);
-    console.log('x: ', x);
+    console.log("x: ", x);
     // @ts-ignore
-    const nodes = x.hasflowchart.nodes
+    const nodes = x.hasflowchart.nodes;
     const nodeData = JSON.stringify(nodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
     // @ts-ignore
-    const edges = x.hasflowchart.edges
-    const edgeData = JSON.stringify(edges)
-      .replaceAll('"hasedgedataEdgedata":', '"data":');
+    const edges = x.hasflowchart.edges;
+    const edgeData = JSON.stringify(edges).replaceAll(
+      '"hasedgedataEdgedata":',
+      '"data":'
+    );
     if (x.children == null) {
       updateEdges(JSON.parse(edgeData));
       updateNodes(JSON.parse(nodeData));
     }
-    updateBreadCrumbs(x, x.id, 'new')
-  }
+    updateBreadCrumbs(x, x.id, "new");
+  };
 
 
 
@@ -102,11 +99,14 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
 
   return (
-    <div>
-      <div className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group`}  >
+    <div className="">
+      <div
+        className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
+      >
         {
           // ? Loop to generate 4 handles
-          Object.keys(handlePositions).map((key, _) => (
+
+          Object.keys(handlePositions).map((key) => (
             <Handle
               type="source"
               key={key}
@@ -116,17 +116,20 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             />
           ))
         }
+
         {/* here iam performing toolTip of description */}
-        {
-          description ?
-            (<div className="invisible absolute group-hover:visible  transition top-full mt-2 text-xs font-extralight bg-slate-50 border rounded p-1 whitespace-nowrap  dark:text-black z-10">{description}</div>) :
-            null
-        }
+        {description ? (
+          <div className="invisible absolute top-full  z-10 mt-2 whitespace-nowrap rounded border bg-slate-50 p-1 text-xs font-extralight transition  group-hover:visible dark:text-black">
+            {description}
+          </div>
+        ) : null}
 
         <div
-          className={`${css_props} font-sans ${shapeCSS[1]
-            } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${editing ? "cursor-default" : ""
-            }`}
+          className={`${css_props} font-sans ${
+            shapeCSS[1]
+          } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
+            editing ? "cursor-default" : ""
+          }`}
           onDoubleClick={() => {
             setEditing(true);
             toggleDraggable(id, false);
@@ -148,34 +151,37 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                 bidirectionalArrows={false}
               />
             ) : (
-             <p className="text-center py-1">{label}</p>
+              <p className="py-1 text-center">{label}</p>
             )}
             {/* LinkedTo */}
-            {
-              data.links.flag ? (
-                <div
-                  className="absolute min-w-max top-12 left-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-black "
-                  onClick={linkedTo}
-                >
-                  <div className="text-xs"> {data.links.label} </div>
-                  <div>  <BiArrowToRight className="w-4 h-4" /> </div>
+            {data.links.flag ? (
+              <div
+                className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                onClick={linkedTo}
+              >
+                <div className="text-xs"> {data.links.label} </div>
+                <div>
+                  {" "}
+                  <BiArrowToRight className="h-4 w-4" />{" "}
                 </div>
-              ) : (
-                <></>
-              )
-            }
-
+              </div>
+            ) : (
+              <></>
+            )}
 
             {/* linked by node  */}
             {
               // @ts-ignore
               data.linkedBy.flag ? (
                 <div
-                  className="absolute min-w-max top-12 right-36 border rounded flex p-1 cursor-pointer text-gray-800 bg-white text-xs hover:bg-slate-100 dark:text-black "
+                  className="absolute right-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                   onClick={linkedBy}
                 >
                   <div className="text-xs"> {data.linkedBy.label} </div>
-                  <div>  <BiArrowBack className="w-4 h-4" /> </div>
+                  <div>
+                    {" "}
+                    <BiArrowBack className="h-4 w-4" />{" "}
+                  </div>
                 </div>
               ) : (
                 <></>
