@@ -69,27 +69,7 @@ a {
 .react-flow__renderer {
   @apply dark:!bg-neutral-900;
 }
-.react-flow__handle-left {
-  left: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.react-flow__handle-top {
-  left: 50%;
-  top: -4px;
-  transform: translate(-50%);
-}
-.react-flow__handle-right {
-  right: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.react-flow__handle-bottom {
-  bottom: -4px;
-  left: 50%;
-  top: auto;
-  transform: translate(-50%);
-}
+
 /* Toggle B */
 input:checked ~ .dot {
   @apply translate-x-full bg-blue-500;

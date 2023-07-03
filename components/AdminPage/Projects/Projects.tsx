@@ -43,8 +43,8 @@ function Projects() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [totalCount, setTotalCount] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
 
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
@@ -54,19 +54,10 @@ function Projects() {
     },
   });
 
-  const getProject = async (data: Project) => {
-    // get_user_method(userEmail, GET_USER).then((res) => {
-    //   if (loading) {
-    //     return ""
-    //   }
-    //   // @ts-ignore
-    //   const userType = res[0].userType === undefined ? "" : res[0].userType;
-    //   setAccessLevel(userType);
-    //   // @ts-ignore
-    //   setProjectData(res[0].hasProjects);
-    // });
-
+  const getProject = async (data: Array<Project>) => {
+    // @ts-ignore
     if (data && data.users.length) {
+      //@ts-ignore
       const userType = data.users[0].userType;
       setAccessLevel(userType);
       //@ts-ignore
@@ -84,46 +75,53 @@ function Projects() {
       }
     });
   };
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value;
-    setSearchTerm(searchValue);
+  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const searchValue = e.target.value;
+  //   setSearchTerm(searchValue);
 
-    if (searchValue.trim() === "") {
-      setProjectData(data.users[0].hasProjects);
-      setTotalCount(data.users[0].hasProjects.length);
-    } else {
-      const filtered = data.users[0].hasProjects.filter(
-        //@ts-ignore
-        (project) =>
-          project.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-          project.description.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setProjectData(filtered);
-      setTotalCount(filtered.length);
-    }
-  };
+  //   if (searchValue.trim() === "") {
+  //     setProjectData(data.users[0].hasProjects);
+  //     setTotalCount(data.users[0].hasProjects.length);
+  //   } else {
+  //     const filtered = data.users[0].hasProjects.filter(
+  //       //@ts-ignore
+  //       (project) =>
+  //         project.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+  //         project.description.toLowerCase().includes(searchValue.toLowerCase())
+  //     );
+  //     setProjectData(filtered);
+  //     setTotalCount(filtered.length);
+  //   }
+  // };
+
+  useEffect(() => {
+    const filteredProjects = projectData.filter((project) =>
+      project.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setSortedProjects(filteredProjects);
+  }, [projectData, searchTerm]);
+
+  useEffect(() => {
+    verifyAuthToken();
+    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
+    setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
+  }, [userEmail, getProject]);
 
   const handleSortClick = () => {
-    const sortedProjects = [...projectData].sort((a, b) => {
-      if (sortOrder === "asc") {
+    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newSortOrder);
+
+    const sortedProjectsCopy = [...sortedProjects];
+    sortedProjectsCopy.sort((a, b) => {
+      if (newSortOrder === "asc") {
         return a.name.localeCompare(b.name);
       } else {
         return b.name.localeCompare(a.name);
       }
     });
 
-    setProjectData(sortedProjects);
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    setSortedProjects(sortedProjectsCopy);
   };
-
-  useEffect(() => {
-    console.log("Sorted Data:", projectData);
-  }, [projectData]);
-  useEffect(() => {
-    verifyAuthToken();
-    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
-    setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
-  }, [userEmail, getProject]);
 
   const handleEditButtonClick = (
     projectId: string,
@@ -284,16 +282,16 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {projectData
-              .filter(
-                (project: Project) =>
-                  project.name
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  project.description
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-              )
+            {sortedProjects
+              // .filter(
+              //   (project: Project) =>
+              //     project.name
+              //       .toLowerCase()
+              //       .includes(searchTerm.toLowerCase()) ||
+              //     project.description
+              //       .toLowerCase()
+              //       .includes(searchTerm.toLowerCase())
+              // )
               .map((project: Project) => (
                 <tr key={project.id} className="border-b bg-white">
                   <td className="whitespace-nowrap px-4 py-4 font-medium">

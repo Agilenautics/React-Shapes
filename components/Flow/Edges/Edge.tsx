@@ -14,14 +14,8 @@ import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
 import { EdgeTypes } from "reactflow";
 import { lineColors } from "../constants";
-// import SimpleFloatingEdge from "./FloatingEdge";
-// export type GetSpecialPathParams = {
-//   sourceX: number;
-//   sourceY: number;
-//   targetX: number;
-//   targetY: number;
-// };
 
+/* This is the custom node component that is used */
 export default function CustomEdge({
   id,
   sourceX,
@@ -30,6 +24,7 @@ export default function CustomEdge({
   targetY,
   sourcePosition,
   targetPosition,
+  data,
   style = {},
 }: {
   id: any;
@@ -49,7 +44,7 @@ export default function CustomEdge({
   style: Object;
   edgeTypes: EdgeTypes;
 }) {
-  const [edgePath,labelX,labelY] = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -71,12 +66,6 @@ export default function CustomEdge({
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
   const updateDescription = nodeStore((state) => state.updateDescription);
   const [lineColor, setLineColor] = useState("green"); // Assign the pathCSS to lineColor variable
-
-  const markerStart = data.bidirectional
-    ? `url(#arrow-${data.id})`
-    : `url(#circle-${data.id})`;
-  const markerEnd = `url(#arrow-${data.id})`;
-
   const markerStart = data.bidirectional
     ? `url(#arrow-${data.id})`
     : `url(#circle-${data.id})`;

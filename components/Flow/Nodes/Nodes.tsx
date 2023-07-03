@@ -1,6 +1,6 @@
 import { Editing } from "../Editing";
-import { useState, useEffect } from "react";
-import { Handle, Position } from "reactflow";
+import { useState, useEffect, useCallback } from "react";
+import { Handle, Position, applyNodeChanges } from "reactflow";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
 import fileStore from "../../TreeView/fileStore";
@@ -90,32 +90,20 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     updateBreadCrumbs(x, x.id, "new");
   };
 
-
-
-
-
-
-
-
-
   return (
     <div className="">
       <div
         className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
       >
-        {
-          // ? Loop to generate 4 handles
-
-          Object.keys(handlePositions).map((key) => (
-            <Handle
-              type="source"
-              key={key}
-              className="handle"
-              position={handlePositions[key]}
-              id={key}
-            />
-          ))
-        }
+        {Object.keys(handlePositions).map((key) => (
+          <Handle
+            type="source"
+            key={key}
+            className="handle"
+            position={handlePositions[key]}
+            id={key}
+          />
+        ))}
 
         {/* here iam performing toolTip of description */}
         {description ? (

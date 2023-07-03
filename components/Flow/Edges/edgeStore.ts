@@ -2,8 +2,6 @@ import { create } from "zustand";
 import { Edge } from "reactflow";
 import edges from "./flowchart1";
 
-
-
 /* This is the store for managing the state of the edges in the present flowchart. */
 export interface EdgeState {
   edges: Array<Edge>;
@@ -11,10 +9,8 @@ export interface EdgeState {
   updateEdgeCSS: (id: string, CSS: Array<string>) => void;
   updateArrows: (id: string, bidirectional: boolean) => void;
   updateLabel: (id: string, newLabel: string) => void;
-  deleteEdge: (edge:Object) => void
+  deleteEdge: (edge: Object) => void;
 }
-
-
 
 const edgeStore = create<EdgeState>((set) => ({
   edges: edges,
@@ -22,10 +18,10 @@ const edgeStore = create<EdgeState>((set) => ({
     set((state): any => {
       return { edges: edges };
     }),
-  deleteEdge: (edge:any) =>
+  deleteEdge: (edge: any) =>
     set((state) => {
-      const to_be_updated = state.edges.filter((items)=>items.id!==edge.id)
-      return {edges:to_be_updated}
+      const to_be_updated = state.edges.filter((items) => items.id !== edge.id);
+      return { edges: to_be_updated };
     }),
   updateEdgeCSS: (id, CSS) =>
     set((state) => {
