@@ -25,19 +25,19 @@ a {
 }
 
 .projects {
-  @apply text-xl ml-2 mt-4;
+  @apply ml-2 mt-4 text-xl;
 }
 
 .add-buttons {
-  @apply text-white bg-blue-600 hover:bg-blue-700 focus:outline-none font-medium
-  rounded-lg text-sm px-2 py-2 text-center inline-flex items-center mr-2 transition-all ease-in-out duration-300;
+  @apply mr-2 inline-flex items-center rounded-lg bg-blue-600
+  px-2 py-2 text-center text-sm font-medium text-white transition-all duration-300 ease-in-out hover:bg-blue-700 focus:outline-none;
 }
 .add-buttons-icon {
   @apply h-6 w-6;
 }
 
 .add-buttons-tooltip {
-  @apply opacity-0 my-2 peer-hover:opacity-100 transition-all ease-in-out duration-300 bg-slate-500 rounded-lg text-white absolute px-2 top-[19rem] z-30;
+  @apply absolute top-[19rem] z-30 my-2 rounded-lg bg-slate-500 px-2 text-white opacity-0 transition-all duration-300 ease-in-out peer-hover:opacity-100;
 }
 
 *::-webkit-scrollbar {
@@ -62,7 +62,8 @@ a {
 }
 
 .react-flow__handle {
-  @apply group-hover:opacity-100 opacity-0 transition-opacity duration-200;
+  position: absolute;
+  @apply opacity-0 transition-opacity duration-200 group-hover:opacity-100;
 }
 
 .react-flow__renderer {
@@ -71,7 +72,7 @@ a {
 
 /* Toggle B */
 input:checked ~ .dot {
-  @apply bg-blue-500 translate-x-full;
+  @apply translate-x-full bg-blue-500;
 }
 
 #parent-div {
@@ -88,7 +89,7 @@ path.react-flow__edge-path {
 }
 
 .handle {
-  @apply !bg-neutral-700 !w-2 !h-2;
+  @apply !h-2 !w-2 rounded-full !bg-neutral-700;
 }
 
 .popup-container {
@@ -144,5 +145,3 @@ path.react-flow__edge-path {
   border-radius: 10px 10px 10px 10px;
   clip-path: polygon(10% 0, 100% 0%, 90% 100%, 0% 100%);
 }
-
-

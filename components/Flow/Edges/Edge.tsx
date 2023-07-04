@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Editing } from "../Editing";
 import {
   getSmoothStepPath,
-  getEdgeCenter,
+  //getEdgeCenter,
   Position,
-} from "react-flow-renderer";
+} from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
 const fOHeight = fO;
@@ -12,7 +12,7 @@ const fOWidth = fO + 100;
 
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
-import { EdgeTypes } from "react-flow-renderer";
+import { EdgeTypes } from "reactflow";
 import { lineColors } from "../constants";
 
 /* This is the custom node component that is used */
@@ -44,7 +44,7 @@ export default function CustomEdge({
   style: Object;
   edgeTypes: EdgeTypes;
 }) {
-  const edgePath = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -52,20 +52,20 @@ export default function CustomEdge({
     targetY,
     targetPosition,
   });
+  /*
   const [edgeCenterX, edgeCenterY] = getEdgeCenter({
     sourceX,
     sourceY,
     targetX,
     targetY,
   });
-
+*/
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
   const updateLabel = edgeStore((state) => state.updateLabel);
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
   const updateDescription = nodeStore((state) => state.updateDescription);
-  const [lineColor, setLineColor] = useState('green'); // Assign the pathCSS to lineColor variable
-
+  const [lineColor, setLineColor] = useState("green"); // Assign the pathCSS to lineColor variable
   const markerStart = data.bidirectional
     ? `url(#arrow-${data.id})`
     : `url(#circle-${data.id})`;
@@ -73,12 +73,11 @@ export default function CustomEdge({
 
   useEffect(() => {
     const lineColorPath = data.pathCSS.split(" ").slice(-1)[0];
-    const fillPath = lineColorPath.split("-").slice(0, 3).join("-")
+    const fillPath = lineColorPath.split("-").slice(0, 3).join("-");
     const strokeWidth = lineColorPath.split("-").slice(-1)[0];
     // @ts-ignore
     setLineColor(lineColors[fillPath][strokeWidth]);
-  }, [data.pathCSS])
-
+  }, [data.pathCSS]);
 
   return (
     <>
@@ -114,8 +113,9 @@ export default function CustomEdge({
         key={id}
         id={id}
         style={style}
-        className={`react-flow__edge-path  ${data.pathCSS} ${selected ? "!stroke-[5]" : ""
-          }`}
+        className={`react-flow__edge-path  ${data.pathCSS} ${
+          selected ? "!stroke-[5]" : ""
+        }`}
         d={edgePath}
         markerStart={markerStart}
         markerEnd={markerEnd}
@@ -130,8 +130,8 @@ export default function CustomEdge({
       <foreignObject
         width={fOWidth}
         height={fOHeight}
-        x={edgeCenterX - fOWidth / 2}
-        y={edgeCenterY - 145 / 2}
+        x={labelX - fOWidth / 2}
+        y={labelY - 145 / 2}
         requiredExtensions="http://www.w3.org/1999/xhtml"
       >
         <div className="flex h-full items-center justify-center">
@@ -147,7 +147,7 @@ export default function CustomEdge({
                   <Editing
                     key={id}
                     isEdge={true}
-                    toggleDraggable={() => { }}
+                    toggleDraggable={() => {}}
                     id={id}
                     updateNodeType={updateEdgeType}
                     setEditing={setEditing}

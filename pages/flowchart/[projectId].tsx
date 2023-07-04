@@ -1,4 +1,4 @@
-import { ReactFlowProvider } from "react-flow-renderer";
+import { ReactFlowProvider } from "reactflow";
 import Flow from "../../components/Flow/flow";
 import AddNodeButton from "../../components/Sidebar/AddNodeButton";
 import { useRouter } from "next/router";
@@ -8,13 +8,15 @@ import TopBar from "../../components/AdminPage/TopBar";
 const Flowchart = () => {
   const router = useRouter();
   return (
-    <>
+    <div className="providerflow">
+      <div className="">
+        <ReactFlowProvider>
+          <Flow />
+        </ReactFlowProvider>
+        <AddNodeButton />
+      </div>
       <Sidebar />
-      <ReactFlowProvider>
-        <Flow />
-      </ReactFlowProvider>
-      <AddNodeButton />
-    </>
+    </div>
   );
 };
 

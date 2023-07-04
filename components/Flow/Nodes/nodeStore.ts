@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Node } from "react-flow-renderer";
+import { Node } from "reactflow";
 import {
   findNode,
   getNode,

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import "reactflow/dist/style.css";
 import ReactFlow, {
   addEdge,
   applyNodeChanges,
@@ -10,7 +11,7 @@ import ReactFlow, {
   MiniMap,
   ConnectionMode,
   useReactFlow,
-} from "react-flow-renderer";
+} from "reactflow";
 
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
@@ -34,6 +35,7 @@ import {
 import fileStore from "../TreeView/fileStore";
 import { NodeState } from "./Nodes/nodeStore";
 import { EdgeState } from "./Edges/edgeStore";
+import MiniMapNode from "./MiniMapNode";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -206,17 +208,23 @@ function Flow() {
 
   const onDrag = (event: any, node: Object) => {
     updatePosition(node);
+    console.log(node);
   };
   const onNodeClick = (e: any, nodeData: any) => {
     updateLinkNodeId(nodeData.id);
   };
+  const proOptions = { hideAttribution: true };
 
   return (
-    <div className="absolute -z-20 h-screen w-screen transition-all duration-100">
+    <div className="reactflow-wrapper absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
+        draggable
+        nodesDraggable={true}
+        proOptions={proOptions}
         panOnScroll
-        defaultNodes={defaultNodes}
-        defaultEdges={defaultEdges}
+        defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
+        nodes={defaultNodes}
+        edges={defaultEdges}
         defaultEdgeOptions={defaultEdgeOptions}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -239,8 +247,11 @@ function Flow() {
         onNodeClick={onNodeClick}
         deleteKeyCode={[]}
       >
-        <MiniMap />
-        <CustomControls />
+        <MiniMap
+          //nodeComponent={MiniMapNode}
+          zoomable
+        />
+        {/* <CustomControls /> */}
       </ReactFlow>
 
       {showConfirmation.show && (

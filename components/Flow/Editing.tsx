@@ -107,6 +107,7 @@ export function Editing({
 
     // getting the current file data
     const { data } = await getFileByNode(linkNodeId, getFile);
+    console.log(data);
 
     updateLinks(linkNodeId, {
       label: linkNodes.nodes[key].hasdataNodedata.label,

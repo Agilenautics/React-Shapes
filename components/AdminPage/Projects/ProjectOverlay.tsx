@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
-import { Project } from "react-flow-renderer";
+import { Project } from "reactflow";
 import { auth } from "../../../auth";
 import LoadingIcon from "../../LoadingIcon";
 
