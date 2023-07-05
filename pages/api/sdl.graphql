@@ -1,16 +1,60 @@
 # ! Interfaces only work on relationships!
 type user{
-  userName: String!
+  id:ID! @id
+  timeStamp:DateTime! @timestamp
+  userName: String
   emailId: String!
-  active: Boolean
-  }
+  userType:String
+  hasProjects:[main!]! @relationship (type: "hasMain",direction: OUT)
+  active: Boolean!
+}
 type main {
   id: ID! @id
   timeStamp: DateTime! @timestamp
+  userName: String
+  description:String
   name: String!
   isOpen: Boolean!
+  userHas: [user!]! @relationship (type: "hasMain", direction:IN)
   hasContainsFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
   hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
+}
+
+type Query{
+projects:[main!]!
+getUsers:[user!]!
+}
+
+type Mutation{
+ createProject(newProject:projectInput!):main
+ updateProject(projectData:projectInput!):updateData
+ addUser(newUser:userInput!):user
+}
+
+input userEmail{
+email:String!
+}
+
+input projectInput{
+ name:String!
+ description:String
+ userName:String!
+ isOpen: Boolean!
+}
+
+input userInput{
+userName:String!
+emailId:String!
+userType:String
+active:Boolean!
+}
+
+type updateData{
+id: ID!
+name:String!
+description:String!
+userName:String!
+isOpen:Boolean!
 }
 
 type folder {

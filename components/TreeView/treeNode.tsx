@@ -1,7 +1,12 @@
 import classNames from "classnames";
-import React, { FocusEvent, KeyboardEvent, SyntheticEvent } from "react";
+import React, {
+  useState,
+  FocusEvent,
+  KeyboardEvent,
+  SyntheticEvent,
+  useEffect,
+} from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
-// @ts-ignore
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
 import { MyData } from "./backend";
 import { FiEdit2, FiDelete } from "react-icons/fi";
@@ -16,6 +21,13 @@ import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
 import { getFileByNode } from "./gqlFiles";
 import { gql } from "graphql-tag";
 import styles from "../Flow/Nodes/styles.module.css";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../auth";
+import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
+import LoadingIcon from "../LoadingIcon";
+import { ApolloQueryResult } from "@apollo/client";
+
+// LoadingIcon component
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -103,7 +115,7 @@ export const TreeNode = ({
   const folder = Array.isArray(data.children);
   const open = state.isOpen;
   const name = data.name;
-  const Id = data.id;
+  const id = data.id;
   const delete_item = fileStore((state) => state.delete_item);
   const updateNodes = nodeStore((state) => state.updateNodes);
   const updateEdges = edgeStore((state) => state.updateEdges);
@@ -111,33 +123,70 @@ export const TreeNode = ({
     (state) => state.updateCurrentFlowchart
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
+  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState([]);
+  const [accessLevel, setAccessLevel] = useState("");
 
-  // This code below is called every frame, which is annoying but works for now
+  const verifyAuthToken = async () => {
+    onAuthStateChanged(auth, (user) => {
+      if (user && user.email) {
+        get_user_method(user.email, GET_USER).then((res: any) => {
+          setUser(res[0].userType);
+          setAccessLevel(res[0].userType);
+        });
+      } else {
+        setUser([]);
+        setAccessLevel("");
+      }
+    });
+  };
+
+  useEffect(() => {
+    verifyAuthToken();
+  }, []);
+
   if (state.isSelected) {
-    updateCurrentFlowchart(name, Id);
+    updateCurrentFlowchart(name, id);
     if (data.type === "file") {
-      updateBreadCrumbs(data, Id, "new");
-      console.log("Selected File ID:", Id); // Console log the file's ID
+      updateBreadCrumbs(data, id, "new");
     }
   }
 
   function loadNewFlow(
-    handlers: NodeRendererProps<MyData>,
-    data: NodeRendererProps<MyData>
+    handlers: NodeRendererProps<MyData> & {
+      select: (e: SyntheticEvent<Element, Event>) => void;
+    },
+    //data: NodeRendererProps<MyData> & { children?: MyData[] }
+    data: MyData
   ) {
     return (e: SyntheticEvent) => {
       handlers.select(e);
       if (data.children == null) {
-        getNodes(allNodes, data.id).then((result) => {
-          // @ts-ignore
-          updateNodes(result);
-        });
-        getEdges(allEdges, data.id).then((result) => {
-          // @ts-ignore
-          updateEdges(result);
-        });
+        setIsLoading(true);
+        getNodes(allNodes, data.id)
+          .then((result) => {
+            updateNodes(result.nodes);
+            updateEdges(result.edges);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+        getEdges(allEdges, data.id)
+          .then((result) => {
+            updateEdges(result);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       }
     };
+  }
+  if (isLoading) {
+    return (
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+        <LoadingIcon color="black" />
+      </div>
+    );
   }
 
   return (
@@ -145,6 +194,7 @@ export const TreeNode = ({
       ref={innerRef}
       style={styles.row}
       className={classNames("row", state)}
+      //@ts-ignore
       onClick={loadNewFlow(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -162,21 +212,23 @@ export const TreeNode = ({
         ) : (
           <span className="flex flex-row text-lg">
             {name}{" "}
-            {state.isSelected && (
-              <div className="flex flex-row pl-2">
-                <button className="text-gray-900" onClick={handlers.edit}>
-                  <FiEdit2 size={20} className=" dark:text-white" />
-                </button>
-                <button
-                  onClick={() => {
-                    delete_item(data.id);
-                  }}
-                  className="ml-2"
-                >
-                  <FiDelete size={20} className=" dark:text-white" />
-                </button>
-              </div>
-            )}
+            {state.isSelected &&
+              !state.isEditing &&
+              accessLevel.toLowerCase() !== "user" && (
+                <div className="flex flex-row pl-2">
+                  <button className="text-gray-900" onClick={handlers.edit}>
+                    <FiEdit2 size={20} className="dark:text-white" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      delete_item(id);
+                    }}
+                    className="ml-2"
+                  >
+                    <FiDelete size={20} className="dark:text-white" />
+                  </button>
+                </div>
+              )}
           </span>
         )}
       </div>
@@ -192,26 +244,26 @@ export const TreeNode2 = ({
   state,
   handlers,
   tree,
-}: NodeRendererProps<MyData>) => {
+}: any) => {
   const folder = Array.isArray(data.children);
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
-  //console.log(data);  
+  //console.log(data);
   var selectedNodeId: string;
-  
+
   if (state.isSelected) {
     selectedNodeId = data.id!;
     console.log("S:", selectedNodeId);
   }
   const customQuery = gql`
-  query FindFileById($nodeId: String!) {
-    files(where: { hasflowchart: { nodes: { id: { equals: $nodeId } } } }) {
-      id
+    query FindFileById($nodeId: String!) {
+      files(where: { hasflowchart: { nodes: { id: { equals: $nodeId } } } }) {
+        id
+      }
     }
-  }
-`;
-  let result: any; 
+  `;
+  let result: any;
   async function getfileId() {
     try {
       result = await getFileByNode(selectedNodeId, customQuery);
@@ -222,11 +274,11 @@ export const TreeNode2 = ({
   }
 
   const fileId = nodeStore((state) => state.fileId);
-  const currentFileId = fileId;//'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
+  const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
 
-  function loadFlowNodes(handlers: NodeRendererProps<MyData>, data: NodeRendererProps<MyData>) {
+  function loadFlowNodes(handlers: any, data: any) {
     return (e: SyntheticEvent) => {
       if (data.id === currentFileId) {
         e.stopPropagation(); // Prevent event propagation for the current file's node
@@ -234,20 +286,22 @@ export const TreeNode2 = ({
       }
       handlers.select(e);
       if (data.children == null) {
-        updateLinkNodes(data.hasflowchart.nodes, data.id);
+        return updateLinkNodes(data.hasflowchart.nodes, data.id);
       }
     };
   }
 
   const isCurrentFile = data.id === currentFileId;
-  const nodeStyles = isCurrentFile ? { pointerEvents: 'none', opacity: 0.5 } : {};
-  const disabledCursorClass = isCurrentFile ? styles.disabledCursor : '';
+  const nodeStyles = isCurrentFile
+    ? { pointerEvents: "none", opacity: 0.5 }
+    : {};
+  const disabledCursorClass = isCurrentFile ? styles.disabledCursor : "";
 
   return (
     <div
       ref={innerRef}
       style={{ ...styles.row, ...nodeStyles }}
-      className={classNames('row', state, disabledCursorClass)}
+      className={classNames("row", state, disabledCursorClass)}
       onClick={loadFlowNodes(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -261,7 +315,11 @@ export const TreeNode2 = ({
           <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
         {state.isEditing ? (
-          <RenameForm defaultValue={name} {...handlers} disabled={isCurrentFile} />
+          <RenameForm
+            defaultValue={name}
+            {...handlers}
+            disabled={isCurrentFile}
+          />
         ) : (
           <span className="flex flex-row">
             {name} {state.isSelected}

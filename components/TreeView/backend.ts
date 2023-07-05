@@ -1,8 +1,7 @@
-import { Console } from "console";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
-import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend } from "./gqlFiles";
+import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, getMainByUser, getTreeNodeByUser } from "./gqlFiles";
 
 /**
  * It returns the first node in the tree that has a model with an id property that matches the id
@@ -41,6 +40,9 @@ export function useBackend() {
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
+
+  
+
   useEffect(() => {
     setData(initData);
     update;
@@ -79,9 +81,7 @@ export function useBackend() {
 
       if (node) {
         node.model.name = name;
-        console.log("hi", id, name);
-        // updateFileBackend(id,name);
-        // updateFolderBackend(id,name);
+        
         update();
       }
       const { type } = node?.model

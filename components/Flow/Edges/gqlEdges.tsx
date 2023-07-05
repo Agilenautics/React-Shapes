@@ -5,195 +5,39 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Edge } from "react-flow-renderer";
-// const getNode = gql`
-//   query Query($where: fileWhere) {
-//     flowNodes {
-//       id
-//       timeStamp
-//       draggable
-//       flowchart
-//       type
-//       hasdataNodedata {
-//         shape
-//         description
-//         label
-//         links{
-//           id
-//           label
-//         }
-//       }
-//       haspositionPosition {
-//         x
-//         y
-//       }
-//     }
-//   }
-// `;
+import { Edge } from "reactflow";
+import { Edge_Fragment } from "../Nodes/gqlNodes";
 
 const allEdges = gql`
-query Query($where: flowchartWhere) {
-  flowcharts(where: $where) {
-    name
-    edges {
-      id
-      source
-      target
-      sourceHandle
-      targetHandle
-      selected
-      hasedgedataEdgedata {
-        label
-        pathCSS
-        boxCSS
-        bidirectional
-      }
-      flownodeConnectedby {
-        id
-        flowchart
-      }
-      connectedtoFlownode {
-        id
-        flowchart
+  ${Edge_Fragment}
+  query Query($where: flowchartWhere) {
+    flowcharts(where: $where) {
+      name
+      edges {
+        ...EdgeFragment
       }
     }
   }
-}
-
 `;
-// const newNode = gql`
-//   mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
-//     updateFiles(where: $where, update: $update) {
-//       files {
-//         name
-//         hasflowchart {
-//           name
-//           nodes {
-//             draggable
-//             flowchart
-//             hasdataNodedata {
-//               label
-//               shape
-//               links{
-//                 label
-//                 id
-//               }
-//             }
-//             haspositionPosition {
-//               x
-//               y
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
 
 // create Edge mutation
 
 const createEdgeMutation = gql`
-mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
-  updateFiles(where: $where, update: $update) {
-    files {
-      name
-      hasflowchart {
+  ${Edge_Fragment}
+  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
+    updateFiles(where: $where, update: $update) {
+      files {
         name
-        edges {
-        selected
-        source
-        sourceHandle
-        target
-        targetHandle
-        hasedgedataEdgedata {
-          id
-          bidirectional
-          boxCSS
-          label
-          pathCSS
-        }
-        flownodeConnectedby {
-          flowchart
-          id
-        }
-        connectedtoFlownode {
-          flowchart
-          id
+        hasflowchart {
+          name
+          edges {
+            ...EdgeFragment
+          }
         }
       }
     }
   }
-}
-}
 `;
-
-// delete Edge
-
-const deleteEdgeMutation = gql`
-  mutation deleteFlowEdges(
-    $where: flowEdgeWhere
-    $delete: flowEdgeDeleteInput
-  ) {
-    deleteFlowEdges(where: $where, delete: $delete) {
-      nodesDeleted
-      relationshipsDeleted
-    }
-  }
-`;
-
-// delete edge method
-const deleteEdge = async (edgeId: string, label: string) => {
-  await client.mutate({
-    mutation: deleteEdgeMutation,
-    variables: {
-      where: {
-        id: edgeId,
-      },
-      delete: {
-        hasedgedataEdgedata: {
-          where: {
-            node: {
-              label,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  //await client.resetStore()
-};
-// async function getNodes(
-//   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-//   id: string
-// ) {
-//   var nodes: Array<Node> = [];
-//   await client
-//     .query({
-//       query: customQuery,
-//       variables: {
-//         where: {
-//           hasFile: {
-//             id: id,
-//           },
-//         },
-//       },
-//     })
-//     .then((result) => {
-//       //console.log(result.data.flowcharts[0]);
-//       const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
-
-//       const nodes2 = nodes1
-//         .replaceAll('"hasdataNodedata":', '"data":')
-        
-//         .replaceAll('"haspositionPosition":', '"position":');
-//       //@ts-ignore
-//       nodes = JSON.parse(nodes2);
-//       //console.log("getNodes",nodes);
-//     });
-
-//   return nodes;
-// }
-
 
 async function getEdges(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -215,95 +59,91 @@ async function getEdges(
     })
     .then((result) => {
       const edges1 = JSON.stringify(result.data.flowcharts[0].edges);
-      const edges2 = edges1.replaceAll('"hasedgedataEdgedata":', '"data":');
       // @ts-ignore
-      edges = JSON.parse(edges2);
-      // edges.forEach((edge) => {
-      //   edge.source = edge.flownodeConnectedby.id;
-      //   delete edge.flownodeCo
-      //   edge.target = edge.connectedtoFlownode.id;
-      // });
+      edges = JSON.parse(
+        edges1.replaceAll('"hasedgedataEdgedata":', '"data":')
+      );
     });
   return edges;
 }
 
 //methode for creating edge
 const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
-  await client.mutate({
-    mutation: createEdgeMutation,
-    variables: {
-      where: {
-        id,
-      },
-      update: {
-        hasflowchart: {
-          update: {
-            node: {
-              edges: [
-                {
-                  create: [
-                    {
-                      node: {
-                        name: "newEdge",
-                        selected: true,
-                        source: newEdge.source,
-                        sourceHandle: newEdge.sourceHandle,
-                        target: newEdge.target,
-                        targetHandle: newEdge.targetHandle,
-                        hasedgedataEdgedata: {
-                          create: {
-                            node: {
-                              bidirectional: newEdge.data.bidirectional,
-                              boxCSS: newEdge.data.boxCSS,
-                              label: newEdge.data.label,
-                              pathCSS: newEdge.data.pathCSS,
-                            },
-                          },
-                        },
-                        flownodeConnectedby: {
-                          connect: {
-                            where: {
+  var edges: Array<Edge> = [];
+  await client
+    .mutate({
+      mutation: createEdgeMutation,
+      variables: {
+        where: {
+          id,
+        },
+        update: {
+          hasflowchart: {
+            update: {
+              node: {
+                edges: [
+                  {
+                    create: [
+                      {
+                        node: {
+                          name: "newEdge",
+                          selected: true,
+                          source: newEdge.source,
+                          sourceHandle: newEdge.sourceHandle,
+                          target: newEdge.target,
+                          targetHandle: newEdge.targetHandle,
+                          hasedgedataEdgedata: {
+                            create: {
                               node: {
-                                id: newEdge.source,
-                                //flowchart: flowchart
+                                bidirectional: newEdge.data.bidirectional,
+                                boxCSS: newEdge.data.boxCSS,
+                                label: newEdge.data.label,
+                                pathCSS: newEdge.data.pathCSS,
                               },
                             },
                           },
-                        },
-                        connectedtoFlownode: {
-                          connect: {
-                            where: {
-                              node: {
-                                id: newEdge.target,
-                                //flowchart: flowchart
+                          flownodeConnectedby: {
+                            connect: {
+                              where: {
+                                node: {
+                                  id: newEdge.source,
+                                },
+                              },
+                            },
+                          },
+                          connectedtoFlownode: {
+                            connect: {
+                              where: {
+                                node: {
+                                  id: newEdge.target,
+                                },
                               },
                             },
                           },
                         },
                       },
-                    },
-                  ],
-                },
-              ],
+                    ],
+                  },
+                ],
+              },
             },
           },
         },
       },
-    },
-  });
-  // if (flowchart) {
-  //   client
-  //     .resetStore()
-  //     .then(() => {
-  //       console.log("Cache reset successfully.");
-  //       getEdges(allEdges, flowchart).then((res: any) => {
-  //         return updateEdges(res);
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  //}
+    })
+    .then((result) => {
+      const edges1 = JSON.stringify(
+        result.data.updateFiles.files[0].hasflowchart.edges
+      );
+      //@ts-ignore
+      edges = JSON.parse(
+        edges1.replaceAll('"hasedgedataEdgedata":', '"data":')
+      );
+      return updateEdges(edges);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 //update Edge mutation
@@ -349,11 +189,48 @@ const updateEdgeBackend = async (
   });
 };
 
+// delete Edge
+
+const deleteEdgeMutation = gql`
+  mutation deleteFlowEdges(
+    $where: flowEdgeWhere
+    $delete: flowEdgeDeleteInput
+  ) {
+    deleteFlowEdges(where: $where, delete: $delete) {
+      nodesDeleted
+      relationshipsDeleted
+    }
+  }
+`;
+
+// delete edge method
+const deleteEdgeBackend = async (edgeId: string, label: string) => {
+  await client.mutate({
+    mutation: deleteEdgeMutation,
+    variables: {
+      where: {
+        id: edgeId,
+      },
+      delete: {
+        hasedgedataEdgedata: {
+          where: {
+            node: {
+              label,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  //await client.resetStore()
+};
+
 export {
   allEdges,
   getEdges,
   createFlowEdge,
-  deleteEdge,
+  deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
 };

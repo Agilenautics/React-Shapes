@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Editing } from "../Editing";
 import {
   getSmoothStepPath,
-  getEdgeCenter,
+  //getEdgeCenter,
   Position,
-} from "react-flow-renderer";
+} from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
 const fOHeight = fO;
@@ -12,7 +12,9 @@ const fOWidth = fO + 100;
 
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
-// ! The label placement needs to be improved
+import { EdgeTypes } from "reactflow";
+import { lineColors } from "../constants";
+
 /* This is the custom node component that is used */
 export default function CustomEdge({
   id,
@@ -33,15 +35,16 @@ export default function CustomEdge({
   sourcePosition: Position;
   targetPosition: Position;
   data: {
-    id:string;
+    id: string;
     label: string;
     pathCSS: string;
     boxCSS: string;
     bidirectional: boolean;
   };
   style: Object;
+  edgeTypes: EdgeTypes;
 }) {
-  const edgePath = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -49,66 +52,73 @@ export default function CustomEdge({
     targetY,
     targetPosition,
   });
+  /*
   const [edgeCenterX, edgeCenterY] = getEdgeCenter({
     sourceX,
     sourceY,
     targetX,
     targetY,
   });
-
-
+*/
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
   const updateLabel = edgeStore((state) => state.updateLabel);
   const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
-  const markerFill = edgeStore((state) => state.markerFill);
-  const updateDescription = nodeStore((state)=>state.updateDescription)
+  const updateDescription = nodeStore((state) => state.updateDescription);
+  const [lineColor, setLineColor] = useState("green"); // Assign the pathCSS to lineColor variable
   const markerStart = data.bidirectional
-    ? `url(#arrow${data.pathCSS.split(" ")[2]})`
-    : `url(#circle${data.pathCSS.split(" ")[2]})`;
+    ? `url(#arrow-${data.id})`
+    : `url(#circle-${data.id})`;
+  const markerEnd = `url(#arrow-${data.id})`;
+
+  useEffect(() => {
+    const lineColorPath = data.pathCSS.split(" ").slice(-1)[0];
+    const fillPath = lineColorPath.split("-").slice(0, 3).join("-");
+    const strokeWidth = lineColorPath.split("-").slice(-1)[0];
+    // @ts-ignore
+    setLineColor(lineColors[fillPath][strokeWidth]);
+  }, [data.pathCSS]);
+
   return (
     <>
       <defs>
-        {[...markerFill].map((x, i) => (
-          <div key={i}>
-            <marker
-              key={"circle" + x}
-              id={"circle" + x}
-              className={x}
-              viewBox="0 0 10 10"
-              refX="5"
-              refY="5"
-              markerWidth="3"
-              markerHeight="3"
-            >
-              <circle cx="5" cy="5" r="5" />
-            </marker>
-            <marker
-              key={"arrow" + x}
-              id={"arrow" + x}
-              className={x}
-              viewBox="0 -5 10 10"
-              refX="5"
-              refY="0"
-              markerWidth="5"
-              markerHeight="5"
-              orient="auto-start-reverse"
-            >
-              <path d="M0,-5L10,0L0,5"></path>
-            </marker>
-          </div>
-        ))}
+        <marker
+          key={`circle-${data.id}`}
+          id={`circle-${data.id}`}
+          fill={lineColor} // Use lineColor variable as fill color
+          viewBox="0 0 10 10"
+          refX="5"
+          refY="5"
+          markerWidth="3"
+          markerHeight="3"
+        >
+          <circle cx="5" cy="5" r="5" />
+        </marker>
+        <marker
+          key={`arrow-${data.id}`}
+          id={`arrow-${data.id}`}
+          fill={lineColor} // Use lineColor variable as fill color
+          viewBox="0 -5 10 10"
+          refX="5"
+          refY="0"
+          markerWidth="5"
+          markerHeight="5"
+          orient="auto-start-reverse"
+        >
+          <path d="M0,-5L10,0L0,5"></path>
+        </marker>
       </defs>
+
       <path
         key={id}
         id={id}
         style={style}
-        className={`react-flow__edge-path ${data.pathCSS} ${
+        className={`react-flow__edge-path  ${data.pathCSS} ${
           selected ? "!stroke-[5]" : ""
         }`}
         d={edgePath}
         markerStart={markerStart}
-        markerEnd={`url(#arrow${data.pathCSS.split(" ")[2]})`}
+        markerEnd={markerEnd}
         onClick={() => {
           setSelected(!selected);
         }}
@@ -116,12 +126,12 @@ export default function CustomEdge({
           setEditing(true);
         }}
       />
+
       <foreignObject
-        // className="bg-red-200" // ? For debugging purposes
         width={fOWidth}
         height={fOHeight}
-        x={edgeCenterX - fOWidth / 2}
-        y={edgeCenterY - 145 / 2}
+        x={labelX - fOWidth / 2}
+        y={labelY - 145 / 2}
         requiredExtensions="http://www.w3.org/1999/xhtml"
       >
         <div className="flex h-full items-center justify-center">

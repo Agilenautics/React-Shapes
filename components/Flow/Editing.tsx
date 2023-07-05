@@ -33,14 +33,16 @@ function ExpandableChip({
   const [isCollapsed, setCollapsed] = useState(true);
   return (
     <div
-      className={`absolute overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${isCollapsed ? expTrue : expFalse
-        } ${positioningCSS} dark:bg-neutral-900 `}
+      className={`absolute overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
+        isCollapsed ? expTrue : expFalse
+      } ${positioningCSS} dark:bg-neutral-900 `}
     >
       <div className="ml-1 mt-[1px] flex text-black dark:text-white">
         <div className="flex-none">{title}</div>
         <FiChevronRight
-          className={`-mt-[2px] h-5 w-5 flex-none cursor-pointer stroke-slate-800 transition-transform dark:stroke-slate-200 ${isCollapsed ? "" : "rotate-90"
-            }`}
+          className={`-mt-[2px] h-5 w-5 flex-none cursor-pointer stroke-slate-800 transition-transform dark:stroke-slate-200 ${
+            isCollapsed ? "" : "rotate-90"
+          }`}
           onClick={() => {
             setCollapsed(!isCollapsed);
           }}
@@ -74,7 +76,7 @@ export function Editing({
   label: string;
   CSSMap: object;
   description: string;
-  updateDescription: Function
+  updateDescription: Function;
   bidirectionalArrows: boolean;
 }) {
   const pEtrue = isEdge ? "w-14 h-5 top-10" : "w-14 h-5 -top-5";
@@ -93,39 +95,47 @@ export function Editing({
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
   const updateLinks = nodeStore((state) => state.updateLinks);
-  const linkNodeId = fileStore((state) => state.linkNodeId)
-  const updateLinkedBy = nodeStore((state) => state.updateLinkedBy)
-
-
-
-
-
+  const linkNodeId = fileStore((state) => state.linkNodeId);
+  const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
 
   const addLinkMethod = async (key: string) => {
-    //id of the current node 
+    //id of the current node
     const id = linkNodes.nodes[key].id;
 
-    // finding the node to collect the label of the node 
-    let nodeData = await findNode(getNode, linkNodeId)
+    // finding the node to collect the label of the node
+    let nodeData = await findNode(getNode, linkNodeId);
 
-    // getting the current file data 
-    const { data } = await getFileByNode(linkNodeId, getFile)
+    // getting the current file data
+    const { data } = await getFileByNode(linkNodeId, getFile);
+    console.log(data);
 
-    updateLinks(linkNodeId, { label: linkNodes.nodes[key].hasdataNodedata.label, flag: true, id, fileId: linkNodes.fileID })
+    updateLinks(linkNodeId, {
+      label: linkNodes.nodes[key].hasdataNodedata.label,
+      flag: true,
+      id,
+      fileId: linkNodes.fileID,
+    });
 
-    updateLinkedBy(id, { label: nodeData[0].data.label, id: linkNodeId, fileId: data.files[0].id, flag: true }, getFile)
-  }
+    updateLinkedBy(
+      id,
+      {
+        label: nodeData[0].data.label,
+        id: linkNodeId,
+        fileId: data.files[0].id,
+        flag: true,
+      },
+      getFile
+    );
+  };
 
-  const handleSubmit = (event:any) =>{
-    event.preventDefault()
-    updateDescription(id,event.target.description.value)
-  }
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    updateDescription(id, event.target.description.value);
+  };
 
-  const handleChanges = (event:any) =>{
-    if(event.keyCode==13) updateDescription(id,event.target.value)
-  }
-
-
+  const handleChanges = (event: any) => {
+    if (event.keyCode == 13) updateDescription(id, event.target.value);
+  };
 
   return (
     <div>
@@ -141,7 +151,7 @@ export function Editing({
             ${
               // @ts-ignore
               isEdge ? CSSMap[key][1] : CSSMap[key]
-              }`}
+            }`}
             id={key}
             onClick={() => {
               toggleDraggable(id, true);
@@ -228,13 +238,10 @@ export function Editing({
             expFalse={dEfalse}
             positioningCSS={"left-1 -top-12"}
             objects={
-              <form
-              onSubmit={(e)=>handleSubmit(e)}
-                autoComplete="off"
-              >
+              <form onSubmit={(e) => handleSubmit(e)} autoComplete="off">
                 <textarea
-                  className={`h-14 w-full  bg-transparent pl-1 text-center border text-[10px] leading-[10px] text-black`}
-                  name="description" //@ts-ignore
+                  className={`h-14 w-full  border bg-transparent pl-1 text-center text-[10px] leading-[10px] text-black`}
+                  name="description"
                   defaultValue={description}
                   placeholder="Enter a description for the node"
                   onKeyDown={handleChanges}
@@ -242,7 +249,7 @@ export function Editing({
               </form>
             }
           />
-         
+
           <ExpandableChip
             title="Add Link"
             expTrue={Ltrue}
@@ -250,10 +257,10 @@ export function Editing({
             positioningCSS={"left-24 -top-12"}
             objects={
               <div>
-                <div className="absolute top-5 left-1 text-black">
+                <div className="absolute left-1 top-5 text-black">
                   <button
                     type="button"
-                    className="absolute right-2 -top-[19px] flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5"
+                    className="absolute -top-[19px] right-2 flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5"
                     onClick={() => {
                       updateLinkNodes({}, linkNodes.fileID);
                     }}
@@ -262,7 +269,7 @@ export function Editing({
                     Back
                   </button>
                   {linkNodes.nodes &&
-                    Object.keys(linkNodes.nodes).length !== 0 ? (
+                  Object.keys(linkNodes.nodes).length !== 0 ? (
                     <div className="h-32 overflow-y-scroll">
                       {
                         // ? Loop to generate tiles for the nodes
@@ -308,7 +315,7 @@ export function Editing({
         <input
           className={`max-w-full rounded border-2 border-gray-700 bg-transparent pb-[2px] text-center text-xs focus:border-2 ${inputSize}`}
           autoFocus
-          name="label" //@ts-ignore
+          name="label"
           defaultValue={label}
         />
       </form>

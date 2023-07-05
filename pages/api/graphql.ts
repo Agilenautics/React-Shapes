@@ -1,25 +1,39 @@
 import { ApolloServer } from "apollo-server-micro";
 import { Neo4jGraphQL } from "@neo4j/graphql";
-import neo4j from "neo4j-driver";
 import { loadFile } from "graphql-import-files";
+import dotenv from "dotenv";
+import EventEmitter from "events";
+import resolvers from "./resolvers";
+import driver from "./dbConnection";
+import { gql } from "@apollo/client";
+import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
+import typeDefs from "./typeDefs";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
-const typeDefs = loadFile("pages/api/sdl.graphql");
+//const typeDefs = loadFile("pages/api/sdl.graphql");
+
+EventEmitter.defaultMaxListeners = 15;
+
+dotenv.config();
 
 // ? Here we provide authentication details for the Neo4j server
 // * This server is currently for development only, we will need to change
 // * to another server before production
-const driver = neo4j.driver(
-  "neo4j+s://77c4b64b.databases.neo4j.io",
-  neo4j.auth.basic("neo4j", "Iu4am2zvXvKYSvhtm3aEPP-WKv5a96IrP4NIvcgGoPo")
-);
+// const driver = neo4j.driver(
+//   // @ts-ignore
+//   process.env.DB_URL,
+//   // @ts-ignore
+//   neo4j.auth.basic(process.env.USER_NAME, process.env.DB_PASSWORD)
+// );
+
 // @ts-ignore
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
     "https://studio.apollographql.com"
+    //"*"
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -30,9 +44,11 @@ export default async function handler(req, res) {
     return false;
   }
 
-  const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
+  const neoSchema = new Neo4jGraphQL({ typeDefs, driver, resolvers });
   const apolloServer = new ApolloServer({
     schema: await neoSchema.getSchema(),
+    introspection: true,
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
   });
   await apolloServer.start();
   await apolloServer.createHandler({

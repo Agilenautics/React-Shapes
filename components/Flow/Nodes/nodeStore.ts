@@ -1,12 +1,19 @@
 import { create } from "zustand";
-import { Node } from "react-flow-renderer";
-import { getNodes, findNode, allNodes, newNode, getNode, updateLinkedByMethod, updateLinkedBy } from "./gqlNodes";
+import { Node } from "reactflow";
+import {
+  findNode,
+  getNode,
+  updateLinkedByMethod,
+  updateLinkedBy,
+  updateNodeData,
+  updateLinksMutation,
+  updateNodeBackend,
+} from "./gqlNodes";
 import { getFileByNode } from "../../TreeView/gqlFiles";
-
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
 
-interface NodeState {
+export interface NodeState {
   nodes: Array<Node>;
   addNode: (newNode: Node) => void;
   updateNodes: (nodes: Array<Node>) => void;
@@ -20,7 +27,7 @@ interface NodeState {
   breadCrumbs: Array<Node>;
   updateBreadCrumbs: (breadCrumbs: Object, id: string, action: string) => void;
   updateDescription: (id: string, description: string) => void;
-  fileId: string
+  fileId: string;
 }
 
 const nodeStore = create<NodeState>((set) => ({
@@ -42,44 +49,41 @@ const nodeStore = create<NodeState>((set) => ({
   fileId: "",
   breadCrumbs: [],
   updateBreadCrumbs: (data: any, id: any, action: string) => {
-    switch(action) {
-      case 'new':
+    switch (action) {
+      case "new":
         set((state) => {
-          return { breadCrumbs: [data.name] }
-        })
-      case 'push':
+          return { breadCrumbs: [data.name] };
+        });
+      case "push":
         set((state) => {
-          const breadCrumbs = [...state.breadCrumbs, data.name]
-          const uniqueValue = new Set(breadCrumbs)
+          const breadCrumbs = [...state.breadCrumbs, data.name];
+          const uniqueValue = new Set(breadCrumbs);
           if (state.fileId !== id) {
-            const datas = [[breadCrumbs, ...uniqueValue]]
+            const datas = [[breadCrumbs, ...uniqueValue]];
           }
-          return { breadCrumbs: [...uniqueValue], fileId: id }
-        })
+          return { breadCrumbs: [...uniqueValue], fileId: id };
+        });
       default:
         set((state) => {
-          return { breadCrumbs: state.breadCrumbs }
-        })
+          return { breadCrumbs: state.breadCrumbs };
+        });
     }
   },
   addNode: (newNode) =>
     set((state) => ({
-      nodes: [
-        ...state.nodes,
-        { ...newNode, id: newNode.id },
-      ],
-    })
-    ),
+      nodes: [...state.nodes, { ...newNode, id: newNode.id }],
+    })),
   updateNodes: (nodes) =>
     set((state) => {
       // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
       return { nodes: nodes };
     }),
-  deleteNode: (node) =>
+  deleteNode: (node) => {
     set((state) => {
       const updated_nodes = state.nodes.filter((item) => item.id !== node.id);
       return { nodes: updated_nodes };
-    }),
+    });
+  },
   updateDescription: (id: string, newDescription: string) => {
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
@@ -88,17 +92,10 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-
+      updateNodeData(updated_node, updateLinksMutation);
       return { nodes: [...to_be_updated, updated_node] };
-    })
+    });
   },
-  // allNodesData: (node) => {
-  //   set((state) => {
-
-
-  //   })
-
-  // }
   updateLabel: (id: string, newLabel: string) =>
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
@@ -108,6 +105,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, label: newLabel },
       };
+      updateNodeData(updated_node, updateLinksMutation);
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateShape: (id: string, newShape: string) =>
@@ -119,6 +117,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, shape: newShape },
       };
+      updateNodeData(updated_node, updateLinksMutation);
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateNodeType: (id: string, newType: string) =>
@@ -127,43 +126,37 @@ const nodeStore = create<NodeState>((set) => ({
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       //@ts-ignore
       const updated_node = { ...old_node, type: newType };
+      updateNodeBackend(updated_node);
       return { nodes: [...to_be_updated, updated_node] };
     }),
-  updateLinks: async (id, newLink) =>  // add flowchart variable
-  {
+  updateLinks: async (
+    id,
+    newLink // add flowchart variable
+  ) => {
     //find data of new node
     const node_to_be = await findNode(getNode, id);
     //save data of new node
     const new_node = node_to_be[0];
     //add the saved data to the node to be replaced
     set((state): any => {
-      // const old_node = state.nodes.filter((item) => item.id === id)[0];
-      //const [node_to_be]= await async findNode(allNodes, flowchart, id);
-
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      // console.log(state.nodes.filter((item) => item.data.flowchart === "Flowchart 1"));//only works with the flowchart we are on - does not work with a different flowchart
-      //@ts-ignore
-      // const updated_node = {
-      //   ...old_node,
-      //   data: { ...old_node.data, links: newLink },
-      // };
       const updated_node = {
         ...new_node,
         data: { ...new_node.data, links: newLink, id },
       };
-      // newNodes={ nodes: [...to_be_updated, updated_node] }
+      updateNodeData(updated_node, updateLinksMutation);
       return { nodes: [...to_be_updated, updated_node] };
-    })
+    });
   },
   updateLinkedBy: async (id: string, linkedBy: any, getNodeQuery: any) => {
     const node_to_be = await findNode(getNode, id);
     //save data of new node
 
-    const { data } = await getFileByNode(id, getNodeQuery)
+    const { data } = await getFileByNode(id, getNodeQuery);
     const nodes = JSON.stringify(data.files[0].hasflowchart.nodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
-    const nodesData = JSON.parse(nodes)
+    const nodesData = JSON.parse(nodes);
     const new_node = node_to_be[0];
     //add the saved data to the node to be replaced
 
@@ -173,7 +166,7 @@ const nodeStore = create<NodeState>((set) => ({
       ...new_node,
       data: { ...new_node.data, linkedBy: linkedBy },
     };
-    await updateLinkedByMethod(updated_node, updateLinkedBy)
+    await updateLinkedByMethod(updated_node, updateLinkedBy);
     set((state): any => {
       // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
 
@@ -183,7 +176,7 @@ const nodeStore = create<NodeState>((set) => ({
       // };
       return Object.entries({ nodes: [...to_be_updated, updated_node] });
       // return { nodes: [...to_be_updated, updated_node] }
-    })
+    });
   },
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {

@@ -12,9 +12,10 @@ function BCTile(name: string, isFirst: boolean = false) {
     <li>
       <div className="flex items-center">
         {isFirst ? null : <MdOutlineArrowForwardIos className="h-5 w-5" />}
-        <button className="mx-1 ml-2 flex w-48 items-center justify-center whitespace-nowrap rounded-xl border-b-2 border-r-2 border-node-blue-100 bg-node-blue-50 p-2 text-xl font-normal text-node-blue-200 shadow-md hover:bg-node-blue-100 hover:text-node-blue-50 dark:text-gray-400 dark:hover:text-white">
+        <div className="mx-1 ml-2 flex items-center justify-center bg-purple-100 p-3 text-lg font-normal text-black-400 rounded-tl-lg rounded-tr-lg shadow-md dark:text-gray-400 dark:hover:text-white breadcrumb-trapezoid-purple">
           {name}
-        </button>
+          <div className="breadcrumb-triangle" />
+        </div>
       </div>
     </li>
   );
@@ -22,15 +23,15 @@ function BCTile(name: string, isFirst: boolean = false) {
 
 /* This function manages the actual breadcrumb tiles */
 function BreadCrumbs() {
-  const breadCrumbs = nodeStore((state)=>state.breadCrumbs)
+  const breadCrumbs = nodeStore((state) => state.breadCrumbs);
   return (
-    <div className="relative left-[26vw] top-5">
-      <nav className="flex " aria-label="Breadcrumb">
+    <div className="relative left-[25vw] top--2" style={{ marginTop: 75 }}>
+      <nav className="flex" aria-label="Breadcrumb">
         <ol className="flex space-x-3 py-2 pr-2">
-          {breadCrumbs.map((value:any, index) => {
-            return  (
-              <div key={index}> { BCTile(value, index == 0)}  </div>
-            ) 
+          {breadCrumbs.map((value: any, index) => {
+            return (
+              <div key={index}> {BCTile(value, index === 0)} </div>
+            );
           })}
         </ol>
       </nav>

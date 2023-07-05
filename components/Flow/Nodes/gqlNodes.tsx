@@ -5,80 +5,132 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Node, updateEdge } from "react-flow-renderer";
-import { allEdges, getEdges } from "../Edges/gqlEdges";
-import addNode from "./nodeStore";
+import { Node } from "reactflow";
+import { Edge } from "reactflow";
 
+export const Node_Fragment = gql`
+  fragment NodeFragment on flowNode {
+    id
+    draggable
+    flowchart
+    type
+    timeStamp
+    hasdataNodedata {
+      label
+      shape
+      description
+      links {
+        label
+        id
+        flag
+        fileId
+      }
+      linkedBy {
+        label
+        id
+        fileId
+        flag
+      }
+    }
+    haspositionPosition {
+      name
+      x
+      y
+    }
+  }
+`;
+export const Edge_Fragment = gql`
+  fragment EdgeFragment on flowEdge {
+    id
+    source
+    target
+    sourceHandle
+    targetHandle
+    selected
+    hasedgedataEdgedata {
+      label
+      pathCSS
+      boxCSS
+      bidirectional
+    }
+    flownodeConnectedby {
+      id
+      flowchart
+    }
+    connectedtoFlownode {
+      id
+      flowchart
+    }
+  }
+`;
 const allNodes = gql`
+  ${Node_Fragment}
+  ${Edge_Fragment}
   query Query($where: flowchartWhere) {
     flowcharts(where: $where) {
       name
       nodes {
-        id
-        draggable
-        flowchart
-        type
-        timeStamp
-        hasdataNodedata {
-          label
-          shape
-          description
-          links {
-            label
-            id
-            flag
-            fileId
-          }
-          linkedBy {
-            label
-            id
-            fileId
-            flag
-          }
-        }
-        haspositionPosition {
-          name
-          x
-          y
-        }
+        ...NodeFragment
+      }
+      edges {
+        ...EdgeFragment
       }
     }
   }
 `;
 
 const getNode = gql`
- query FlowNodes($where: flowNodeWhere) {
-  flowNodes(where: $where) {
-    draggable
-    flowchart
-    type
-    id
-    hasdataNodedata {
-      shape
-      label
-      description
-      links {
-        fileId
-        flag
-        id
+  ${Node_Fragment}
+  query FlowNodes($where: flowNodeWhere) {
+    flowNodes(where: $where) {
+      ...NodeFragment
+      draggable
+      flowchart
+      type
+      id
+      hasdataNodedata {
+        shape
         label
+        description
+        links {
+          fileId
+          flag
+          id
+          label
+        }
+        linkedBy {
+          fileId
+          flag
+          label
+          id
+        }
+        linksAggregate {
+          count
+          node {
+            label {
+              shortest
+            }
+          }
+        }
+        linkedByAggregate {
+          count
+          node {
+            label {
+              shortest
+            }
+          }
+        }
       }
-      linkedBy {
-        fileId
-        flag
-        label
-        id
+      haspositionPosition {
+        x
+        y
       }
-    }
-    haspositionPosition {
-      x
-      y
     }
   }
-}
 `;
 
 const newNode = gql`
+  ${Node_Fragment}
   mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
@@ -86,33 +138,7 @@ const newNode = gql`
         hasflowchart {
           name
           nodes {
-            id
-            timeStamp
-            draggable
-            flowchart
-            type
-            hasdataNodedata {
-              label
-              shape
-              description
-              links {
-                label
-                id
-                fileId
-                flag
-              }
-              linkedBy {
-                label
-                id
-                fileId
-                flag
-              }
-            }
-            haspositionPosition {
-              name
-              x
-              y
-            }
+            ...NodeFragment
           }
         }
       }
@@ -154,7 +180,6 @@ async function findNode(
       const nodes1 = JSON.stringify(result.data.flowNodes);
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
-        //.replaceAll('"links":','"link":');
         .replaceAll('"haspositionPosition":', '"position":');
       // @ts-ignore
       nodes = JSON.parse(nodes2);
@@ -168,6 +193,7 @@ async function getNodes(
   id: string
 ) {
   var nodes: Array<Node> = [];
+  var edges: Array<Edge> = [];
   await client
     .query({
       query: customQuery,
@@ -180,19 +206,18 @@ async function getNodes(
       },
     })
     .then((result) => {
-      //console.log(result.data.flowcharts[0]);
       const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
-
+      const edge1 = JSON.stringify(result.data.flowcharts[0].edges);
+      const edge2 = edge1.replaceAll('"hasedgedataEdgedata":', '"data":');
+      edges = JSON.parse(edge2);
       const nodes2 = nodes1
         .replaceAll('"hasdataNodedata":', '"data":')
-
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes2);
-      //console.log("getNodes",nodes);
     });
 
-  return nodes;
+  return { nodes, edges };
 }
 
 async function createNode(
@@ -270,16 +295,9 @@ async function createNode(
           },
         },
       },
-      //update:(client.cache,{})
-      // refetchQueries: [{ query: allNodes }],
-
     })
 
     .then((result) => {
-      console.log(
-        result.data.updateFiles.files[0].hasflowchart.nodes,
-        "create node"
-      );
       const nodes1 = JSON.stringify(
         result.data.updateFiles.files[0].hasflowchart.nodes
       )
@@ -287,31 +305,12 @@ async function createNode(
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes1);
-      //client.cache.writeQuery({newNode,nodes});
-      //console.log(newlyCreatedNode,"newnode");
-
-      //getNodes(allNodes, id).then((res) => {
-      //console.log(res,"getnodes");
       return updateNode(nodes);
-      //});
-
     })
     .catch((error) => {
       console.error(error);
     });
   client.clearStore();
-  // if (flowchart) {
-  //   client
-  //     .resetStore()
-  //     .then(() => {
-  //       getNodes(allNodes, id).then((res) => {
-  //         return updateNode(res);
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
 }
 
 const delNode = gql`
@@ -350,17 +349,7 @@ async function deleteNodeBackend(nodeID: string) {
         },
       },
     },
-    // refetchQueries:[{query:allNodes}],
   });
-  // client
-  // .resetStore()
-  // .then((res) => {
-  //   console.log("cache restoring.......");
-  // })
-  // .catch((error) => {
-  //   console.log(error);
-  // });
-  // client.clearStore();
 }
 
 // here iam parforming update node position methode
@@ -379,39 +368,21 @@ const updatePosition = async (node: any) => {
         },
       },
     },
-    // refetchQueries:[{query:allNodes}],
   });
 };
 
 const updateNodesMutation = gql`
+  ${Node_Fragment}
   mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {
       flowNodes {
-        draggable
-        type
-        hasdataNodedata {
-          label
-          shape
-          description
-          links {
-            label
-            id
-            fileId
-            flag
-          }
-          linkedBy {
-            label
-            id
-            fileId
-            flag
-          }
-        }
+        ...NodeFragment
       }
     }
   }
 `;
 
-const updateNodeBackend = async (nodeData: any, flowchart: string) => {
+const updateNodeBackend = async (nodeData: any) => {
   await client.mutate({
     mutation: updateNodesMutation,
     variables: {
@@ -426,92 +397,93 @@ const updateNodeBackend = async (nodeData: any, flowchart: string) => {
   });
 };
 
-
 const updateLinkedBy = gql`
-  mutation UpdateLinkeds($where: linkedWhere, $update: linkedUpdateInput) {
-  updateLinkeds(where: $where, update: $update) {
-    linkeds {
-      fileId
-      flag
-      id
-      label
+  mutation UpdateLinkedBy($where: linkedWhere, $update: linkedUpdateInput) {
+    updateLinkeds(where: $where, update: $update) {
+      linkeds {
+        fileId
+        flag
+        id
+        label
+      }
     }
   }
-}
-`
+`;
 
-const updateLinkedByMethod = async (nodeData: any, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const updateLinkedByMethod = async (
+  nodeData: any,
+  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   await client.mutate({
     mutation: mutations,
     variables: {
       where: {
         hasLinked: {
           flownodeHasdata: {
-            id: nodeData.id
-          }
-        }
+            id: nodeData.id,
+          },
+        },
       },
       update: {
         fileId: nodeData.data.linkedBy.fileId,
         flag: nodeData.data.linkedBy.flag,
         id: nodeData.data.linkedBy.id,
-        label: nodeData.data.linkedBy.label
-      }
-    }
-  })
-}
-
+        label: nodeData.data.linkedBy.label,
+      },
+    },
+  });
+};
 
 //updateNodes links and data
 
 const updateLinksMutation = gql`
-mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
-  updateNodeData(where: $where, update: $update) {
-    nodeData {
-      label
-      description
-      shape
-      links {
+  mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
+    updateNodeData(where: $where, update: $update) {
+      nodeData {
         label
-        id
-        fileId
-        flag
+        description
+        shape
+        links {
+          label
+          id
+          fileId
+          flag
+        }
       }
     }
   }
-}
-`
+`;
 
-const updateNodeData = async (nodaData: any,id:string, mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const updateNodeData = async (
+  nodeData: any,
+  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   await client.mutate({
     mutation: mutations,
     variables: {
-      "where": {
-        "flownodeHasdata": {
-          "id": id
+      where: {
+        flownodeHasdata: {
+          id: nodeData.id,
         },
       },
-      "update": {
-        "description":nodaData.description,
-        "shape": nodaData.shape,
-        "label":nodaData.label,
-        "links": {
-          "update": {
-            "node": {
-              "fileId":nodaData.links.fileId,
-              "flag":nodaData.links.flag,
-              "id":nodaData.links.id,
-              "label":nodaData.links.label
-            }
-          }
+      update: {
+        description: nodeData.data.description,
+        shape: nodeData.data.shape,
+        label: nodeData.data.label,
+        links: {
+          update: {
+            node: {
+              fileId: nodeData.data.links.fileId,
+              flag: nodeData.data.links.flag,
+              id: nodeData.data.links.id,
+              label: nodeData.data.links.label,
+            },
+          },
         },
-      }
-    }
-  })
-
-}
-
-
+      },
+    },
+  });
+};
 
 export {
   allNodes,
@@ -526,5 +498,5 @@ export {
   updateLinkedByMethod,
   updateLinkedBy,
   updateLinksMutation,
-  updateNodeData
+  updateNodeData,
 };

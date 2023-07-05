@@ -1,20 +1,6 @@
 import type { NextPage } from "next";
-import Sidebar from "../components/Sidebar/Sidebar";
-import Flow from "../components/Flow/flow";
-import { ReactFlowProvider } from "react-flow-renderer";
-import AddNodeButton from "../components/Sidebar/AddNodeButton";
-import { getNodes, allNodes } from "../components/Flow/Nodes/gqlNodes";
-import nodeStore from "../components/Flow/Nodes/nodeStore";
-import { allEdges, getEdges } from "../components/Flow/Edges/gqlEdges";
-import edgeStore from "../components/Flow/Edges/edgeStore";
-import Tags from "../components/Flow/Nodes/Tags";
+import Signout from "../components/Authentication/Signout/Signout";
 
-/**
- * This is the root of the application.
- * We're using the `ReactFlowProvider` component to wrap our `Flow` component, which is the component
- * that will render our flowchart.
- * @returns A component with a collapsible sidebar, a flowchart, and an add node button.
- */
 const Home: NextPage = () => {
   // const updateNodes = nodeStore((state) => state.updateNodes);
   // const updateEdges = edgeStore((state) => state.updateEdges);
@@ -28,14 +14,28 @@ const Home: NextPage = () => {
   //   updateNodes(result);
   //   console.log(result);
   // });
-
   return (
     <>
-      <Sidebar />
-      <ReactFlowProvider>
-        <Flow/>
-      </ReactFlowProvider>
-      <AddNodeButton />
+      <div
+        style={{
+          backgroundColor: "#fff",
+          borderBottom: "2px solid #000",
+          width: "100vw",
+          height: 75,
+          padding: "0px 35px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          position: "fixed",
+          top: 0,
+        }}
+      >
+        {/* <Sidebar /> */}
+        <Signout />
+      </div>
+
+      {/* <button className="border-1 p-1 " onClick={()=>createProject({name:"",description:""}, createProjectMutation)} >create project</button> */}
+
       {/* <Tags /> */}
     </>
   );

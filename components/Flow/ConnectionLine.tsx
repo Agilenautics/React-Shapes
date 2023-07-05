@@ -1,34 +1,29 @@
 //@ts-nocheck
 /* This is the custom connection line that is used when connecting two nodes. */
-const ConnectionLine = ({
-  sourceX,
-  sourceY,
-  sourcePosition,
-  targetX,
-  targetY,
-  targetPosition,
+import { ConnectionLineComponent } from "reactflow";
+import { getSmoothStepPath } from "reactflow";
+const ConnectionLine: ConnectionLineComponent = ({
+  fromX,
+  fromY,
+  fromPosition,
+  toX,
+  toY,
+  toPosition,
   connectionLineType,
   connectionLineStyle,
 }) => {
-  // const y = getSmoothStepPath(sourceX,
-  // sourceY,
-  // sourcePosition,
-  // targetX,
-  // targetY,
-  // targetPosition)
-  // console.log(y);
   return (
     <g>
       <path
         fill="none"
         stroke="#222"
         strokeWidth={1.5}
-        className="animated dark:stroke-white"
-        d={`M${sourceX},${sourceY} ${targetX},${targetY}`}
+        className="animated"
+        d={`M${fromX},${fromY} C ${fromX} ${toY} ${fromX} ${toY} ${toX},${toY}`}
       />
       <circle
-        cx={targetX}
-        cy={targetY}
+        cx={toX}
+        cy={toY}
         fill="#fff"
         r={3}
         stroke="#222"

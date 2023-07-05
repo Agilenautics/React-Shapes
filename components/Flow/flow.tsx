@@ -1,28 +1,41 @@
-
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import "reactflow/dist/style.css";
 import ReactFlow, {
   addEdge,
   applyNodeChanges,
   applyEdgeChanges,
   Node,
   Edge,
-  NodeChange,
   EdgeChange,
   Connection,
   MiniMap,
   ConnectionMode,
   useReactFlow,
-  useEdges,
-} from "react-flow-renderer";
+} from "reactflow";
+
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
 import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import { allNodes, deleteNodeBackend, updateNodeBackend, updatePosition } from "./Nodes/gqlNodes";
-import { createFlowEdge, deleteEdge, updateEdgeBackend, updateEdgeMutation } from "./Edges/gqlEdges";
+import {
+  deleteNodeBackend,
+  findNode,
+  getNode,
+  updateNodeBackend,
+  updatePosition,
+} from "./Nodes/gqlNodes";
+import {
+  createFlowEdge,
+  deleteEdgeBackend,
+  updateEdgeBackend,
+  updateEdgeMutation,
+} from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
+import { NodeState } from "./Nodes/nodeStore";
+import { EdgeState } from "./Edges/edgeStore";
+import MiniMapNode from "./MiniMapNode";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -33,13 +46,14 @@ const defaultEdgeOptions = {
     bidirectional: false,
   },
 };
-/**
- * This is the main flowchart component. We're using a lot of hooks to get the data for this component.
- * The callbacks are used to update the flowchart whenever a change takes place.
- */
+
+const defaultShowConfirmation = {
+  type: "",
+  show: false,
+  selectedItems: [],
+};
 
 function Flow() {
-  
   const snapGrid: [number, number] = [10, 10];
   const { getNodes, getEdges } = useReactFlow();
   const defaultNodes = nodeStore((state) => state.nodes);
@@ -49,46 +63,74 @@ function Flow() {
   const deleteNode = nodeStore((state) => state.deleteNode);
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
-  const currentFlowchart = fileStore((state) => state.currentFlowchart)
-  const fileId=fileStore((state)=>state.Id);
-  const updateLinkNodeId = fileStore((state)=>state.updateLinkNodeId)
+  const currentFlowchart = fileStore((state) => state.currentFlowchart);
+  const fileId = fileStore((state) => state.Id);
+  const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
+  const deleteEdge = edgeStore((state) => state.deleteEdge);
+  const [nodeId, setNodeId] = useState([]);
 
-  const [nodeId, setNodeId] = useState([])
+  const [showConfirmation, setShowConfirmation] = useState(
+    defaultShowConfirmation
+  );
+  const onDeleteEdge = (edge: Array<Edge>) => {
+    edge.map((curEle: any) => {
+      deleteEdge(curEle);
+      deleteEdgeBackend(curEle.id, curEle.data.label);
+    });
+  };
+  const handleConfirm = useCallback(() => {
+    if (showConfirmation) {
+      //@ts-ignore
+      const selectedItems = showConfirmation.selectedItems;
+      if (showConfirmation.type === "node") {
+        //console.log(findNode(selectedItems));
+        onNodesDelete(selectedItems);
+      } else if (showConfirmation.type === "links") {
+        //console.log(findNode(selectedItems));
+        onNodesDelete(selectedItems);
+      } else if (showConfirmation.type === "edge") {
+        onDeleteEdge(selectedItems);
+      }
+      //@ts-ignore
+      setShowConfirmation(null);
+    }
+    setShowConfirmation(defaultShowConfirmation);
+  }, [showConfirmation, onNodesDelete, onDeleteEdge]);
 
-
+  const handleCancel = useCallback(() => {
+    setShowConfirmation(defaultShowConfirmation);
+  }, []);
 
   const onNodesChange = useCallback(
     (changes: any) =>
       setNodes((nds) => {
-        const nodeData = defaultNodes.filter((value) => value.id === changes[0].id)
-        nodeData.map((curEle:any) => {
-          setNodeId(curEle)
-        })
-        return applyNodeChanges(changes, nds)
-      }
-      ),
-    [defaultNodes,setNodes,updateNodes,currentFlowchart]
+        const nodeData = defaultNodes.filter(
+          (value) => value.id === changes[0].id
+        );
+        nodeData.map((curEle: any) => {
+          setNodeId(curEle);
+        });
+        return applyNodeChanges(changes, nds);
+      }),
+    [defaultNodes, setNodes, updateNodes, currentFlowchart]
   );
 
-  const [edgeId, setEdgeId] = useState([])
+  const [edgeId, setEdgeId] = useState([]);
 
   const onEdgeClick = (event: any, edge: any) => {
-    setEdgeId(edge.id)
-  }
-
+    setEdgeId(edge.id);
+  };
 
   useEffect(() => {
     if (edgeId && edgeId.length !== 0) {
-      const newEdgeData = defaultEdges.filter((value: any) => value.id === edgeId)
+      const newEdgeData = defaultEdges.filter(
+        (value: any) => value.id === edgeId
+      );
       newEdgeData.map((curEle) => {
-        updateEdgeBackend(updateEdgeMutation, curEle)
-      })
+        updateEdgeBackend(updateEdgeMutation, curEle);
+      });
     }
-    if(nodeId.length!==0){
-      updateNodeBackend(nodeId,currentFlowchart)
-    }
-  },[defaultEdges, edgeId,nodeId,defaultNodes,updateNodeBackend])
-
+  }, [defaultEdges, edgeId, nodeId, defaultNodes, updateNodeBackend]);
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
@@ -97,81 +139,146 @@ function Flow() {
       }),
     [setEdges, defaultEdges, updateEdges, onEdgeClick]
   );
+
   const onConnect = useCallback(
     (newEdge: Connection) =>
       setEdges((eds) => {
-        console.log(currentFlowchart,fileId,"currentFlowchart");
-        createFlowEdge(newEdge, fileId, updateEdges)
+        createFlowEdge(newEdge, fileId, updateEdges);
         updateEdges(getEdges());
         return addEdge(newEdge, eds);
       }),
     [setEdges, getEdges, updateEdges, currentFlowchart]
   );
 
+  useEffect(() => {
+    const handleBackspace = async (event: { key: string }) => {
+      const focusedElement = document.activeElement;
+      const isTextFieldFocused =
+        focusedElement instanceof HTMLInputElement ||
+        focusedElement instanceof HTMLTextAreaElement;
+
+      if (!isTextFieldFocused && event.key === "Backspace") {
+        const selectedNodes = getNodes().filter((node) => node.selected);
+        const selectedEdges = getEdges().filter((edge) => edge.selected);
+        if (selectedNodes.length > 0) {
+          const node = await findNode(getNode, selectedNodes[0].id);
+          const linkA = node[0].data.linkedBy.flag;
+          const linkB = node[0].data.links.flag;
+          //.flowNode.nodeData.linked
+          if (linkA || linkB) {
+            setShowConfirmation({
+              type: "links",
+              show: true,
+              // @ts-ignore
+              selectedItems: selectedNodes,
+            });
+          } else {
+            setShowConfirmation({
+              type: "node",
+              show: true,
+              // @ts-ignore
+              selectedItems: selectedNodes,
+            });
+          }
+        } else if (selectedEdges.length > 0) {
+          setShowConfirmation({
+            type: "edge",
+            show: true,
+            // @ts-ignore
+            selectedItems: selectedEdges,
+          });
+        } else {
+          setShowConfirmation(defaultShowConfirmation);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleBackspace);
+    return () => {
+      document.removeEventListener("keydown", handleBackspace);
+    };
+  }, [getNodes, getEdges]);
   function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
-      console.log(element.data.label);
-      deleteNodeBackend(element.id)
+      deleteNodeBackend(element.id);
       deleteNode(element);
     }
   }
 
-
-  //here iam calling update position methode 
   const onDrag = (event: any, node: Object) => {
-    updatePosition(node)
-  }
+    updatePosition(node);
+    console.log(node);
+  };
+  const onNodeClick = (e: any, nodeData: any) => {
+    updateLinkNodeId(nodeData.id);
+  };
+  const proOptions = { hideAttribution: true };
 
-
-  // here iam calling deleteEdge methode inside onDeleteEdge
-
-  const onDeleteEdge = (edge: Array<Edge>) => {
-    edge.map((CurEle: any) => {
-      deleteEdge(CurEle.id, CurEle.data.label)
-    })
-  }
-
-  const onNodeClick = (e:any,nodeData: any) => {
-    updateLinkNodeId(nodeData.id)
-    // updateNodeBackend(nodeId,nodeData)
-  }
   return (
-    <div className="absolute -z-20 h-screen w-screen transition-all duration-100">
+    <div className="reactflow-wrapper absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
+        draggable
+        nodesDraggable={true}
+        proOptions={proOptions}
         panOnScroll
-        defaultNodes={defaultNodes}
-        defaultEdges={defaultEdges}
+        defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
+        nodes={defaultNodes}
+        edges={defaultEdges}
         defaultEdgeOptions={defaultEdgeOptions}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         fitView
-        // @ts-ignore
         connectionLineComponent={ConnectionLine}
-        // snapToGrid
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
-        // @ts-ignore
+        //@ts-ignore
         edgeTypes={edgeTypeMap}
-        // @ts-ignore
         nodeTypes={nodeTypeMap}
         connectionMode={ConnectionMode.Loose}
-        onNodeDragStop={
-          (event, node) => {
-            updateNodes(getNodes())
-            onDrag(event, node)
-          }
-        }
+        onNodeDragStop={(event, node) => {
+          updateNodes(getNodes());
+          onDrag(event, node);
+        }}
         onNodesDelete={(selectedNodes) => onNodesDelete(selectedNodes)}
         onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
-        // onNodeDrag={onDrag}
         onEdgeClick={onEdgeClick}
         onNodeClick={onNodeClick}
+        deleteKeyCode={[]}
       >
-        <MiniMap />
-        <CustomControls />
+        <MiniMap
+          //nodeComponent={MiniMapNode}
+          zoomable
+        />
+        {/* <CustomControls /> */}
       </ReactFlow>
+
+      {showConfirmation.show && (
+        <div className="popup-container">
+          <div className="popup-window">
+            <h3>Confirm Deletion</h3>
+            <p>
+              Are you sure you want to delete the selected
+              {showConfirmation.type === "node"
+                ? "node"
+                : // @ts-ignore
+                showConfirmation.type === "links"
+                ? "node with attached links"
+                : "edge"}
+              ?
+            </p>
+            <div>
+              <button className="popup-button" onClick={handleConfirm}>
+                Yes
+              </button>
+              <button className="popup-button" onClick={handleCancel}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
