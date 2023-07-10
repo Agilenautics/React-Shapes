@@ -91,11 +91,11 @@ const Sidebar = () => {
             width={144}
             alt="Company Logo"
           />
-          <h1 className="mt-2 font-['Cormorant_Garamond'] text-4xl tracking-wide ">
+          <h1 className="mt-2 font-['Cormorant_Garamond'] text-4xl tracking-wide dark:text-white">
             Flowchart
           </h1>
         </div>
-        <h3 className="projects">Projects</h3>
+        <h3 className="projects dark:text-white">Projects</h3>
         <div className="mx-4 my-2 flex">
           <button
             type="button"

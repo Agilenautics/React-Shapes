@@ -46,6 +46,7 @@ function DarkModeToggleButton() {
           <input
             type="checkbox"
             className="sr-only"
+            checked={isDark}
             onChange={(e) => toggleDarkModeButton(e.target.checked)}
           />
           <div className="block h-6 w-10 rounded-full bg-gray-700"></div>

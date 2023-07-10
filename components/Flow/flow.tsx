@@ -11,6 +11,7 @@ import ReactFlow, {
   MiniMap,
   ConnectionMode,
   useReactFlow,
+  Controls,
 } from "reactflow";
 
 import { nodeTypeMap } from "./Nodes/nodeTypes";
@@ -251,6 +252,7 @@ function Flow() {
           //nodeComponent={MiniMapNode}
           zoomable
         />
+        <Controls />
         {/* <CustomControls /> */}
       </ReactFlow>
 

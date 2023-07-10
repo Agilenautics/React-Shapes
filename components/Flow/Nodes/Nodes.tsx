@@ -1,6 +1,6 @@
 import { Editing } from "../Editing";
 import { useState, useEffect, useCallback } from "react";
-import { Handle, Position, applyNodeChanges } from "reactflow";
+import { Handle, NodeResizer, Position, applyNodeChanges } from "reactflow";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
 import fileStore from "../../TreeView/fileStore";
@@ -113,11 +113,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         ) : null}
 
         <div
-          className={`${css_props} font-sans ${
-            shapeCSS[1]
-          } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
-            editing ? "cursor-default" : ""
-          }`}
+          className={`${css_props} font-sans ${shapeCSS[1]
+            } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${editing ? "cursor-default" : ""
+            }`}
           onDoubleClick={() => {
             setEditing(true);
             toggleDraggable(id, false);
@@ -190,11 +188,22 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
 //@ts-ignore
 function BrightblueNode({ data, id }) {
-  return PrototypicalNode(
-    "border-node-blue-100 bg-node-blue-200 text-white",
-    data,
-    id
-  );
+  return <>
+    <NodeResizer minWidth={100} minHeight={30} nodeId= {id} />
+    {
+      PrototypicalNode(
+        "border-node-blue-100 bg-node-blue-200 text-white",
+        data,
+        id
+      )
+    }
+
+  </>
+  // return PrototypicalNode(
+  //   "border-node-blue-100 bg-node-blue-200 text-white",
+  //   data,
+  //   id
+  // );
 }
 //@ts-ignore
 function blueNode({ data, id }) {

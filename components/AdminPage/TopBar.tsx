@@ -34,17 +34,12 @@ function TopBar() {
   });
 
   return (
-    <div className="flex h-14 items-center border-b border-gray-300 text-xl">
+    <div className="flex h-14 items-center border-b border-gray-300 text-xl dark:text-white">
       <a className="ml-6 font-bold text-gray-400">FLOWCHART</a>
       <div className="flex flex-grow items-center justify-center space-x-8 text-lg">
         <a className="hover:text-sky-700">Projects</a>
-        {/* <a className="hover:text-sky-700">Organizations</a> */}
-        {/* <a className="text-sky-700">{userEmail}</a> */}
         <Link href="/Policies">Policies</Link>
       </div>
-      {/* <div>
-        <a className="text-sky-700">{userEmail}</a>
-      </div> */}
       <div className="relative">
         <button
           className="mr-12 flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white"
