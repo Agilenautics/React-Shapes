@@ -39,7 +39,7 @@ function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
     const Icon = isOpen ? ChevronDown : ChevronRight;
     return (
       <button tabIndex={-1} onClick={toggle} className="mx-1">
-        <Icon size={20} className=" stroke-2 text-gray-700" />
+        <Icon size={20} className=" stroke-2 text-gray-700 dark:text-white" />
       </button>
     );
   } else {
@@ -188,6 +188,7 @@ export const TreeNode = ({
       </div>
     );
   }
+
   return (
     <div
       ref={innerRef}
@@ -209,12 +210,12 @@ export const TreeNode = ({
         {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
         ) : (
-          <span className="flex flex-row text-lg">
+          <span className="flex flex-row text-lg group dark:text-white">
             {name}{" "}
-            {state.isSelected &&
+            {
               !state.isEditing &&
               accessLevel.toLowerCase() !== "user" && (
-                <div className="flex flex-row pl-2">
+                <div className="flex flex-row pl-2 invisible group-hover:visible">
                   <button className="text-gray-900" onClick={handlers.edit}>
                     <FiEdit2 size={20} className="dark:text-white" />
                   </button>
@@ -234,6 +235,7 @@ export const TreeNode = ({
     </div>
   );
 };
+
 
 export const TreeNode2 = ({
   innerRef,

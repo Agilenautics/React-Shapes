@@ -105,7 +105,7 @@ export default function CustomEdge({
           markerHeight="5"
           orient="auto-start-reverse"
         >
-          <path d="M0,-5L10,0L0,5"></path>
+          <path d="M0,-5L10,0L0,5" fill={lineColor} ></path>
         </marker>
       </defs>
 
