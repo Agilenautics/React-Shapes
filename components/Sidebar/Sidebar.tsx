@@ -10,6 +10,7 @@ import { useQuery } from "@apollo/client";
 import { getMainByUser, getTreeNodeByUser } from "../TreeView/gqlFiles";
 import TopBar from "../AdminPage/TopBar";
 
+
 const Sidebar = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
@@ -18,6 +19,7 @@ const Sidebar = () => {
 
   const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
+  const setLoading = fileStore((state)=> state.setLoading);
 
   function toggleMenu() {
     setMenuOpen(menuOpen === "h-fit" ? "h-0 overflow-hidden" : "h-fit");
@@ -28,7 +30,7 @@ const Sidebar = () => {
   const projectId = router.query.projectId || "";
 
   const getProjectId = async (id: string) => {
-    const initData = await getTreeNodeByUser(getMainByUser, id);
+    const initData = await getTreeNodeByUser(getMainByUser, id, setLoading);
     const data = initData[0];
     //@ts-ignore
     updateInitData(data);

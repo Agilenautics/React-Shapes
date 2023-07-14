@@ -9,6 +9,7 @@ import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import LoadingIcon from "../../components/LoadingIcon";
 import MembersTable from "../../components/AdminPage/Projects/MembersTable";
 import ProjectOverview from "../../components/AdminPage/Projects/ProjectOverview";
+import fileStore from "../../components/TreeView/fileStore";
 
 interface Project {
   name: string;
@@ -29,12 +30,14 @@ function SideBar() {
   const [details, setDetails] = useState<User[]>([]);
   const router = useRouter();
   const projectId = router.query.projectId as string;
+  const setLoading = fileStore((state)=> state.setLoading);
 
   async function fetchData() {
     if (projectId) {
       const initData = await getTreeNodeByUser(
         getMainByUser,
-        projectId.toString()
+        projectId.toString(),
+        setLoading
       );
       console.log(initData);
       setTotal(initData[0].userHas.length);

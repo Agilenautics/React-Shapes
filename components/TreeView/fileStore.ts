@@ -54,8 +54,11 @@ interface files {
   add_folder: () => void;
   delete_item: (id: string) => void;
   find_file: (id: string) => MyData;
+  loading: boolean;
+  setLoading: (load: boolean)=> void;
 }
 const fileStore = create<files>((set) => ({
+
   // @ts-ignore
   data: {},
   updateInitData: (data: MyData) =>
@@ -157,21 +160,22 @@ const fileStore = create<files>((set) => ({
   delete_item: (id: string) =>
     set((state) => {
       const root = new TreeModel().parse(state.data);
+
+      
       const node = findById(root, id);
       if (node?.model.type === "folder") {
         deleteFolderBackend(id)
         node?.drop();
+        return {data: state.data}
       } else if (node?.model.type === "file") {
         deleteFileBackend(id)
           node?.drop();
+          return {data: state.data}
         
       }
-
-
-
       const x = searchTree(state.data, id);
       // ? Figure out how to make this work
-      // node?.drop();
+      node?.drop();
       
       return { data: state.data };
     }),
@@ -188,8 +192,7 @@ const fileStore = create<files>((set) => ({
   
   update_file: (id: string, updatedFile: MyData) =>
   set((state) => {
-    console.log(state);
-    
+        
     const root = new TreeModel().parse(state.data);
     const node = findById(root, id);
     if (node) {
@@ -197,6 +200,13 @@ const fileStore = create<files>((set) => ({
     }
     return { data: root.model };
   }),
+
+loading: true,
+setLoading: (load:boolean) =>
+  set((state)=>{
+    return {loading: load}
+  }
+  )
 }));
 
 export default fileStore;

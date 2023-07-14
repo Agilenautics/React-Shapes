@@ -5,6 +5,7 @@ import React, {
   KeyboardEvent,
   SyntheticEvent,
   useEffect,
+  useMemo,
 } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
@@ -26,6 +27,8 @@ import { auth } from "../../auth";
 import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
 import LoadingIcon from "../LoadingIcon";
 import { ApolloQueryResult } from "@apollo/client";
+import TreeModel from "tree-model-improved";
+import useBackend from './backend'
 
 // LoadingIcon component
 
@@ -126,6 +129,7 @@ export const TreeNode = ({
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState([]);
   const [accessLevel, setAccessLevel] = useState("");
+  const { onDelete } = useBackend();
 
   const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
@@ -189,6 +193,7 @@ export const TreeNode = ({
     );
   }
 
+
   return (
     <div
       ref={innerRef}
@@ -212,20 +217,22 @@ export const TreeNode = ({
         ) : (
           <span className="flex flex-row text-lg group dark:text-white">
             {name}{" "}
-            {!state.isSelected &&
+            {state.isSelected &&
               !state.isEditing &&
               accessLevel.toLowerCase() !== "user" && (
-                <div className="flex flex-row pl-2 invisible group-hover:visible">
+                <div className="flex flex-row pl-2">
                   <button className="text-gray-900" onClick={handlers.edit}>
                     <FiEdit2 size={20} className="dark:text-white" />
                   </button>
                   <button
                     onClick={() => {
                       const confirmation = window.confirm('Are you sure you want to delete?');
-                      console.log(confirmation)
+                     // console.log(confirmation)
                       
                       if (confirmation) {
-                        delete_item(id);
+
+                      onDelete(id);
+
                       }
                     }}
                     className="ml-2"
@@ -254,12 +261,12 @@ export const TreeNode2 = ({
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
-  //console.log(data);
+  ////console.log(data);
   var selectedNodeId: string;
 
   if (state.isSelected) {
     selectedNodeId = data.id!;
-    console.log("S:", selectedNodeId);
+   // console.log("S:", selectedNodeId);
   }
   const customQuery = gql`
     query FindFileById($nodeId: String!) {
@@ -272,7 +279,7 @@ export const TreeNode2 = ({
   async function getfileId() {
     try {
       result = await getFileByNode(selectedNodeId, customQuery);
-      console.log("R=", result);
+     // console.log("R=", result);
     } catch (error) {
       console.error("Error retrieving file ID:", error);
     }

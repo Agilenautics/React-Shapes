@@ -26,7 +26,7 @@ const createProject = async (
   data: any,
   mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) => {
-  console.log(data);
+ // console.log(data);
   await client.mutate({
     mutation: mutations,
     variables: {
@@ -315,7 +315,7 @@ async function createFolderInMain(
     })
     .then((result) => {
       node = result.data.createFolders.folders[0];
-      console.log(result.data.createFolders);
+     // console.log(result.data.createFolders);
     });
   return node;
 }
@@ -351,7 +351,7 @@ async function createFileInMain(
       },
     })
     .then((result) => {
-      console.log(result.data.updateMains.mains);
+     // console.log(result.data.updateMains.mains);
       const newFile1 = JSON.stringify(result.data.updateMains.mains[0]).replace(
         '"hasContainsFile":',
         '"file":'
@@ -393,11 +393,11 @@ async function createFileInFolder(
         },
       },
       update: (cache, result) => {
-        console.log(result);
+        //// console.log(result);
       },
       refetchQueries: [{ query: getMainByUser }],
       onQueryUpdated(observableQuery) {
-        console.log(observableQuery);
+
         // Define any custom logic for determining whether to refetch
         if (observableQuery) {
           return observableQuery.refetch();
@@ -504,7 +504,8 @@ function transformObject(root: RootObject): RootObject {
 }
 async function getTreeNodeByUser(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  id: string
+  id: string,
+  setLoading: any
 ) {
   var nodes: Main[] = [];
 
@@ -518,6 +519,7 @@ async function getTreeNodeByUser(
       },
     })
     .then((result) => {
+      setLoading(result.loading)
       const mainData = result.data.mains;
       const data = mainData.map((value: any) => {
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
