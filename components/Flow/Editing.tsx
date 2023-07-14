@@ -33,7 +33,7 @@ function ExpandableChip({
   const [isCollapsed, setCollapsed] = useState(true);
   return (
     <div
-      className={`absolute overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
+      className={`absolute overflow-y-auto overflow-x-hidden rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
         isCollapsed ? expTrue : expFalse
       } ${positioningCSS} dark:bg-neutral-900 `}
     >

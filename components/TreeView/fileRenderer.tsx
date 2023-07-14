@@ -57,12 +57,11 @@ export function LinkTree() {
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate an asynchronous operation
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  }, []);
+  // useEffect(() => {
+  //   // Simulate an asynchronous operation
+  //     setIsLoading(false);
+
+  // }, []);
 
   if (isLoading) {
     return (

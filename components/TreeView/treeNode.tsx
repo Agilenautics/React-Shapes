@@ -212,7 +212,7 @@ export const TreeNode = ({
         ) : (
           <span className="flex flex-row text-lg group dark:text-white">
             {name}{" "}
-            {
+            {!state.isSelected &&
               !state.isEditing &&
               accessLevel.toLowerCase() !== "user" && (
                 <div className="flex flex-row pl-2 invisible group-hover:visible">
@@ -221,7 +221,12 @@ export const TreeNode = ({
                   </button>
                   <button
                     onClick={() => {
-                      delete_item(id);
+                      const confirmation = window.confirm('Are you sure you want to delete?');
+                      console.log(confirmation)
+                      
+                      if (confirmation) {
+                        delete_item(id);
+                      }
                     }}
                     className="ml-2"
                   >

@@ -125,6 +125,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         >
           <div className={shapeCSS[2]}>
             {editing ? (
+              <div className={`relative flex-row text-center ${data.links.flag && "mt-7"}`}>
               <Editing
                 isEdge={false}
                 toggleDraggable={toggleDraggable}
@@ -138,11 +139,25 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                 updateDescription={updateDescription}
                 bidirectionalArrows={false}
               />
+               {data.links.flag ? (
+              <div
+                className="flex cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                onClick={linkedTo}
+              >
+                <div className="text-xs"> {data.links.label} </div>
+                <div>
+                  {" "}
+                  <BiArrowToRight className="h-4 w-4" />{" "}
+                </div>
+              </div>
             ) : (
-              <p className="py-1 text-center">{label}</p>
+              <></>
             )}
-            {/* LinkedTo */}
-            {data.links.flag ? (
+              </div>
+            ) : (
+              <div>
+              <p className="py-1 text-center">{label}</p>
+              {data.links.flag ? (
               <div
                 className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                 onClick={linkedTo}
@@ -156,6 +171,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             ) : (
               <></>
             )}
+              </div>
+            )}
+            {/* LinkedTo */}
 
             {/* linked by node  */}
             {

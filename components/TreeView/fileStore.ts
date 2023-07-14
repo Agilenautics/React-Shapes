@@ -172,7 +172,7 @@ const fileStore = create<files>((set) => ({
       const x = searchTree(state.data, id);
       // ? Figure out how to make this work
       // node?.drop();
-
+      
       return { data: state.data };
     }),
   find_file: (id: string) => {
@@ -185,6 +185,18 @@ const fileStore = create<files>((set) => ({
     });
     return x as MyData;
   },
+  
+  update_file: (id: string, updatedFile: MyData) =>
+  set((state) => {
+    console.log(state);
+    
+    const root = new TreeModel().parse(state.data);
+    const node = findById(root, id);
+    if (node) {
+      node.model = updatedFile;
+    }
+    return { data: root.model };
+  }),
 }));
 
 export default fileStore;

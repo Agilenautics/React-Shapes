@@ -36,7 +36,6 @@ import {
 import fileStore from "../TreeView/fileStore";
 import { NodeState } from "./Nodes/nodeStore";
 import { EdgeState } from "./Edges/edgeStore";
-import MiniMapNode from "./MiniMapNode";
 
 const defaultEdgeOptions = {
   type: "customEdge",

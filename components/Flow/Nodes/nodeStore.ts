@@ -180,6 +180,7 @@ const nodeStore = create<NodeState>((set) => ({
   },
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {
+      
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       //@ts-ignore
