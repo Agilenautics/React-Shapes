@@ -31,15 +31,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    let formErrors = {};
-
-    const projectData = {
-      description: formData.desc,
-      name: formData.name,
-      isOpen: true,
-      userName: "",
-      //userId:userData.id
-    };
     // onAddProject(formData.name, formData.desc);
     sendMessage("project created");
     createProject({
@@ -56,6 +47,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
                     description: formData.desc,
                     name: formData.name,
                     isOpen: true,
+                    recycleBin:false,
                     userName: "",
                   },
                 },
@@ -66,7 +58,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       },
       // refetchQueries: [{ query: GET_PROJECTS }],
     });
-
     setFormData({ name: "", desc: "" });
     onClose();
   };

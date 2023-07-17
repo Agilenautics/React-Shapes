@@ -13,13 +13,7 @@ query getProjets {
   }
 }
 `
-const PARMENANT_Delete = gql`
-mutation deleteProject($where: mainWhere) {
-  deleteMains(where: $where) {
-    nodesDeleted
-  }
-}
-`
+
 
 const GET_USER = gql`
 query getUser($where: userWhere) {
@@ -65,7 +59,6 @@ mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
     }
   }
 }
-
 `
 
 
@@ -75,12 +68,24 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
     variables: {
       where: {
         id
+      },
+      update: {
+        recycleBin: true
       }
     },
     refetchQueries: [{ query }],
   })
 
 }
+
+//parmenant delete mutation
+const PARMENANT_DELETE = gql`
+mutation parmenantDelete($where: mainWhere) {
+  deleteMains(where: $where) {
+    nodesDeleted
+  }
+}
+`
 
 //parmenant delete project
 const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
@@ -99,7 +104,7 @@ const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumen
 
 
 const ADD_PROJECT = gql`
-mutation Mutation($where: userWhere, $update: userUpdateInput) {
+mutation addProject($where: userWhere, $update: userUpdateInput) {
   updateUsers(where: $where, update: $update) {
     users {
       emailId
@@ -109,6 +114,7 @@ mutation Mutation($where: userWhere, $update: userUpdateInput) {
         id
         name
         description
+        recycleBin
       }
     }
   }
@@ -141,4 +147,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete,PARMENANT_DELETE }
