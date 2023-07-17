@@ -6,12 +6,10 @@ import { AiOutlineArrowDown } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
 import {
   DELETE_PROJECT,
-  GET_PROJECTS,
   GET_USER,
   EDIT_PROJECT,
   edit_Project,
   delete_Project,
-  get_user_method,
 } from "./gqlProject";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
@@ -25,6 +23,7 @@ interface Project {
   name: string;
   desc: string;
   description: string;
+  recycleBin:Boolean
   users: User[];
 }
 
@@ -283,15 +282,7 @@ function Projects() {
           </thead>
           <tbody>
             {sortedProjects
-              // .filter(
-              //   (project: Project) =>
-              //     project.name
-              //       .toLowerCase()
-              //       .includes(searchTerm.toLowerCase()) ||
-              //     project.description
-              //       .toLowerCase()
-              //       .includes(searchTerm.toLowerCase())
-              // )
+            .filter((value)=>value.recycleBin===false)
               .map((project: Project) => (
                 <tr key={project.id} className="border-b bg-white">
                   <td className="whitespace-nowrap px-4 py-4 font-medium">

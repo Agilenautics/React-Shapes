@@ -18,6 +18,7 @@ const typeDefs = gql`
     description: String
     name: String!
     isOpen: Boolean!
+    recycleBin:Boolean!
     userHas: [user!]! @relationship(type: "hasMain", direction: IN)
     hasContainsFolder: [folder!]!
       @relationship(type: "hasFolder", direction: OUT)

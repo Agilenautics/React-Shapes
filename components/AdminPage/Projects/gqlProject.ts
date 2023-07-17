@@ -13,7 +13,7 @@ query getProjets {
   }
 }
 `
-const DELETE_PROJECT = gql`
+const PARMENANT_Delete = gql`
 mutation deleteProject($where: mainWhere) {
   deleteMains(where: $where) {
     nodesDeleted
@@ -33,6 +33,7 @@ query getUser($where: userWhere) {
       timeStamp
       description
       name
+      recycleBin
     }
   }
 }
@@ -49,13 +50,23 @@ const get_user_method = async (email: String, customQuery: DocumentNode | TypedD
         emailId: email
       }
     }
-  }).then((res)=>{
+  }).then((res) => {
     admin = res.data.users
   })
-
   return admin
-
 }
+
+const DELETE_PROJECT = gql`
+mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
+  updateMains(where: $where, update: $update) {
+    mains {
+      recycleBin
+      name
+    }
+  }
+}
+
+`
 
 
 const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
@@ -66,10 +77,25 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
         id
       }
     },
-    refetchQueries: [{ query}],
+    refetchQueries: [{ query }],
   })
 
 }
+
+//parmenant delete project
+const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id
+      }
+    },
+    refetchQueries: [{ query }],
+  })
+
+}
+
 
 
 const ADD_PROJECT = gql`
@@ -98,7 +124,7 @@ mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
   }
 }
 `
-const edit_Project = async (id: string,projectName:string, projectDesc:string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,customQuery:DocumentNode|TypedDocumentNode<any ,OperationVariables>) => {
+const edit_Project = async (id: string, projectName: string, projectDesc: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation,
     variables: {
@@ -107,13 +133,12 @@ const edit_Project = async (id: string,projectName:string, projectDesc:string, m
       },
       "update": {
         "name": projectName,
-        "description":projectDesc
+        "description": projectDesc,
       }
     },
-    refetchQueries:[{query:customQuery}]
+    refetchQueries: [{ query: customQuery }]
   })
-
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER,get_user_method,edit_Project,EDIT_PROJECT }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete }

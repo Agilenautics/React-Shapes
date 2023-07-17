@@ -28,7 +28,7 @@ interface Project {
   recycleBin: boolean;
 }
 
-function Projects() {
+function RecycleBin() {
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
   const [recycleBin, setRecycleBin] = useState<boolean | null>(null);
@@ -335,4 +335,4 @@ function Projects() {
   );
 }
 
-export default Projects;
+export default RecycleBin;
