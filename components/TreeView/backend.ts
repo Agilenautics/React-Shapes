@@ -115,7 +115,7 @@ export function useBackend() {
       
       const readableData = {...initData}
 
-      console.log(readableData);
+      console.log(readableData.children);
       // getting element index
       const updatedChild = readableData.children?.filter(element=> element.id !==  id)
 
@@ -127,8 +127,7 @@ export function useBackend() {
         // readableData.children = updatedChild
         initData = {...readableData, children:updatedChild}
         
-        console.log(initData);
-        return
+        console.log(initData.children);
         
         setData(initData)
         update()
