@@ -3,11 +3,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FaTrashRestoreAlt } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineArrowDown } from "react-icons/ai";
-import {
-  DELETE_PROJECT,
-  GET_USER,
-  delete_Project,
-} from "./gqlProject";
+import { DELETE_PROJECT, GET_USER, delete_Project } from "./gqlProject";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
@@ -23,7 +19,7 @@ interface Project {
   recycleBin: boolean;
 }
 
-function RecycleBin() {
+function Projects() {
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
   const [projectDeletedAt, setProjectDeletedAt] = useState(""); //TODO defined new state ProjectDeletedAt
@@ -47,7 +43,6 @@ function RecycleBin() {
     },
   });
 
-
   const getProject = async (data: Array<Project>) => {
     // @ts-ignore
     if (data && data.users.length) {
@@ -70,8 +65,10 @@ function RecycleBin() {
     });
   };
   useEffect(() => {
-    const filteredProjects = projectData.filter((project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) && project.recycleBin
+    const filteredProjects = projectData.filter(
+      (project) =>
+        project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        project.recycleBin
     );
     setSortedProjects(filteredProjects);
   }, [projectData, searchTerm]);
@@ -98,8 +95,8 @@ function RecycleBin() {
     setSortedProjects(sortedProjectsCopy);
   };
 
-  //TODO ============================================= 
-// Restoration logic
+  //TODO =============================================
+  // Restoration logic
   //TODO =================================================================
 
   const handleDelete_Project = (projectId: string) => {
@@ -108,20 +105,20 @@ function RecycleBin() {
     setProjectId(projectId);
   };
 
-  const handleConfirm = useCallback(() => {
-    // Delete the project if confirmed
-    setShowConfirmation(false);
-    if (projectId ) {
-      delete_Project(projectId, DELETE_PROJECT, GET_USER);
-      setProjectId(null);
-    }
-  }, [projectId]);
+  // const handleConfirm = useCallback(() => {
+  //   // Delete the project if confirmed
+  //   setShowConfirmation(false);
+  //   if (projectId ) {
+  //     delete_Project(projectId, DELETE_PROJECT, GET_USER);
+  //     setProjectId(null);
+  //   }
+  // }, [projectId]);
 
-  const handleCancel = useCallback(() => {
-    // Cancel the delete operation
-    setShowConfirmation(false);
-    setProjectId(null);
-  }, []);
+  // const handleCancel = useCallback(() => {
+  //   // Cancel the delete operation
+  //   setShowConfirmation(false);
+  //   setProjectId(null);
+  // }, []);
 
   if (loading || isLoading) {
     return (
@@ -160,7 +157,7 @@ function RecycleBin() {
             isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
           }${isNewProjectDisabled ? "opacity-50" : ""}`}
           disabled={isButtonDisabled || isNewProjectDisabled}
-          //TODO onClick logic for empty bin
+          // TODO onClick logic for empty bin
         >
           <AiOutlineDelete />
           <div className="mx-1 my-1">Empty Recycle Bin</div>
@@ -226,54 +223,39 @@ function RecycleBin() {
             </tr>
           </thead>
           <tbody>
-            {sortedProjects
-              .map((project: Project) => (
-                <tr key={project.id} className="border-b bg-white">
-                  <td className="whitespace-nowrap px-4 py-4 font-medium">
-                    {projectId === project.id && project.recycleBin && ( //TODO added recycleBin
-                      <label className="fontWeight-bold">
-                        {project.name}
-                      </label>
-                    )}
-                  </td>
-                  <td className="hidden px-6 py-4 md:table-cell">
-                    {projectId === project.id && project.recycleBin ? (
-                      <input
-                        type="text"
-                        value={projectDeletedAt}
-                        onChange={(e) => setProjectDeletedAt (e.target.value)}
-                        className="w-full border-b focus:border-blue-500 focus:outline-none"
-                      />
-                    ) : (
-                      project.deletedAt
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    {projectId === project.id && project.recycleBin && (
-                      <button
-                       //TODO onClick restore logic here
-                        className={`mr-2 w-3 ${
-                          isButtonDisabled ? "opacity-50" : ""
-                        }`}
-                        disabled={isButtonDisabled}
-                      >
-                        <FaTrashRestoreAlt />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleDelete_Project(project.id)}
-                      className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
-                      disabled={isButtonDisabled}
-                    >
-                      <MdDeleteOutline />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+            {sortedProjects.map((project: Project) => (
+              <tr key={project.id} className="border-b bg-white">
+                <td className="whitespace-nowrap px-4 py-4 font-medium">
+                  {/* //TODO added recycleBin */}
+                  <label className="fontWeight-bold">{project.name}</label>
+                </td>
+                <td className="hidden px-6 py-4 md:table-cell">
+                  {project.deletedAt}
+                </td>
+                <td className="px-6 py-4">
+                  <button
+                    //  TODO onClick restore logic here
+                    className={`mr-2 w-3 ${
+                      isButtonDisabled ? "opacity-50" : ""
+                    }`}
+                    disabled={isButtonDisabled}
+                  >
+                    <FaTrashRestoreAlt />
+                  </button>
+                  <button
+                    onClick={() => handleDelete_Project(project.id)}
+                    className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
+                    disabled={isButtonDisabled}
+                  >
+                    <MdDeleteOutline />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-      {showConfirmation && (
+      {/* {showConfirmation && (
         <div className="popup-container">
           <div className="popup-window">
             <h3>Confirm Deletion</h3>
@@ -288,9 +270,9 @@ function RecycleBin() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
 
-export default RecycleBin;
+export default Projects;
