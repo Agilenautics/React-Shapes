@@ -1,21 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GrAdd } from "react-icons/gr";
-import { BiRename } from "react-icons/bi";
+import { AiOutlineDelete } from "react-icons/ai";
+import { FaTrashRestoreAlt } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineArrowDown } from "react-icons/ai";
 import {
   DELETE_PROJECT,
-  GET_PROJECTS,
   GET_USER,
-  EDIT_PROJECT,
-  edit_Project,
   delete_Project,
-  get_user_method,
 } from "./gqlProject";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
-import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { User } from "../Users/Users";
 
@@ -31,8 +26,6 @@ interface Project {
 function RecycleBin() {
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
-  const [recycleBin, setRecycleBin] = useState<boolean | null>(null);
-  const [projectName, setProjectName] = useState("");
   const [projectDeletedAt, setProjectDeletedAt] = useState(""); //TODO defined new state ProjectDeletedAt
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [accessLevel, setAccessLevel] = useState<string>("");
@@ -106,23 +99,7 @@ function RecycleBin() {
   };
 
   //TODO ============================================= 
-  const handleEditButtonClick = ( // restore button
-    projectId: string,
-    projectName: string,
-    projectDeletedAt: string,
-    recycleBin: boolean,
-  ) => {
-    setProjectId(projectId);
-    setProjectName(projectName);
-    setProjectDeletedAt(projectDeletedAt);
-    setRecycleBin(recycleBin);
-  };
-
-  const handleSaveButtonClick = (projectId: string) => { //restore DB
-    edit_Project(projectId, projectName, projectDeletedAt, EDIT_PROJECT, GET_USER);
-    setProjectId(null);
-    setProjectName("");
-  };
+// Restoration logic
   //TODO =================================================================
 
   const handleDelete_Project = (projectId: string) => {
@@ -134,7 +111,7 @@ function RecycleBin() {
   const handleConfirm = useCallback(() => {
     // Delete the project if confirmed
     setShowConfirmation(false);
-    if (projectId && recycleBin) {
+    if (projectId ) {
       delete_Project(projectId, DELETE_PROJECT, GET_USER);
       setProjectId(null);
     }
@@ -157,7 +134,6 @@ function RecycleBin() {
   if (error) {
     console.log(error.message);
   }
-  
 
   return (
     <div className="bg grey">
@@ -179,11 +155,21 @@ function RecycleBin() {
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
           {sortedProjects && sortedProjects.length}
         </div>
+        <button
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
+            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          }${isNewProjectDisabled ? "opacity-50" : ""}`}
+          disabled={isButtonDisabled || isNewProjectDisabled}
+          //TODO onClick logic for empty bin
+        >
+          <AiOutlineDelete />
+          <div className="mx-1 my-1">Empty Recycle Bin</div>
+        </button>
       </div>
       <div className="ml-10 mt-2">
         <div className="max-w-2xl">
           <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-gray-200 focus-within:shadow-lg">
-            <div className="grid h-full w-12 place-items-center text-gray-600">
+            {/* <div className="grid h-full w-12 place-items-center text-gray-600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -198,7 +184,7 @@ function RecycleBin() {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-            </div>
+            </div> */}
 
             <input
               className="peer h-full w-full bg-gray-200 pr-2 text-base text-black outline-none"
@@ -244,25 +230,14 @@ function RecycleBin() {
               .map((project: Project) => (
                 <tr key={project.id} className="border-b bg-white">
                   <td className="whitespace-nowrap px-4 py-4 font-medium">
-                    {projectId === project.id && recycleBin ? ( //TODO checking recyclebin flag
-                      <input
-                        type="text"
-                        value={projectName}
-                        onChange={(e) => setProjectName(e.target.value)}
-                        className="border-b focus:border-blue-500 focus:outline-none"
-                      />
-                    ) : (
-                      <Link
-                        href={{
-                          pathname: "/projects/" + project.id,
-                        }}
-                      >
+                    {projectId === project.id && project.recycleBin && ( //TODO added recycleBin
+                      <label className="fontWeight-bold">
                         {project.name}
-                      </Link>
+                      </label>
                     )}
                   </td>
                   <td className="hidden px-6 py-4 md:table-cell">
-                    {projectId === project.id && recycleBin ? (
+                    {projectId === project.id && project.recycleBin ? (
                       <input
                         type="text"
                         value={projectDeletedAt}
@@ -274,32 +249,15 @@ function RecycleBin() {
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    {projectId === project.id && recycleBin ? (
+                    {projectId === project.id && project.recycleBin && (
                       <button
-                        onClick={() => handleSaveButtonClick(project.id)}
-                        className={`mr-2 ${
-                          isButtonDisabled ? "opacity-50" : ""
-                        }`}
-                        disabled={isButtonDisabled}
-                      >
-                        Save
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() =>
-                          handleEditButtonClick(
-                            project.id,
-                            project.name,
-                            project.deletedAt,
-                            project.recycleBin
-                          )
-                        }
+                       //TODO onClick restore logic here
                         className={`mr-2 w-3 ${
                           isButtonDisabled ? "opacity-50" : ""
                         }`}
                         disabled={isButtonDisabled}
                       >
-                        <BiRename />
+                        <FaTrashRestoreAlt />
                       </button>
                     )}
                     <button

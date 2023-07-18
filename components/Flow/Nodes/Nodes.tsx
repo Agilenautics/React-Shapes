@@ -91,7 +91,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   }
 
   return (
-    <div className="">
+    <div className="w-auto h-auto">
       <div
         className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
       >
@@ -99,7 +99,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
           <Handle
             type="source"
             key={key}
-            className="handle"
+            className="handle relative"
             position={handlePositions[key]}
             id={key}
           />
@@ -113,7 +113,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         ) : null}
 
         <div
-          className={`${css_props} font-sans ${
+          className={`${css_props} font-sans h-auto ${
             shapeCSS[1]
           } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
             editing ? "cursor-default" : ""
@@ -125,7 +125,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         >
           <div className={shapeCSS[2]}>
             {editing ? (
-              <div className={`relative flex-row text-center ${data.links.flag && "mt-7"}`}>
+              <div className={`relative flex-row text-center h-auto ${data.links.flag && "mt-7"}`}>
               <Editing
                 isEdge={false}
                 toggleDraggable={toggleDraggable}
@@ -141,10 +141,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               />
                {data.links.flag ? (
               <div
-                className="flex cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                className="flex cursor-pointer h-auto rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black h-auto "
                 onClick={linkedTo}
               >
-                <div className="text-xs"> {data.links.label} </div>
+                <div className="text-xs h-auto "> {data.links.label} </div>
                 <div>
                   {" "}
                   <BiArrowToRight className="h-4 w-4" />{" "}
@@ -156,7 +156,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               </div>
             ) : (
               <div>
-              <p className="py-1 text-center">{label}</p>
+              <p className="py-1 text-center ">{label}</p>
               {data.links.flag ? (
               <div
                 className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
@@ -209,7 +209,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 //@ts-ignore
 function BrightblueNode({ data, id }) {
   return <>
-    <NodeResizer minWidth={100} minHeight={30} nodeId= {id} />
+    <NodeResizer minWidth={100} minHeight={40} nodeId= {id} />
     {
       PrototypicalNode(
         "border-node-blue-100 bg-node-blue-200 text-white",
