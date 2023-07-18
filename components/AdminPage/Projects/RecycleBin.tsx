@@ -3,7 +3,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FaTrashRestoreAlt } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineArrowDown } from "react-icons/ai";
-import { DELETE_PROJECT, GET_USER, delete_Project } from "./gqlProject";
+import { CLEAR_RECYCLE_BIN, DELETE_PROJECT, GET_USER, PARMENANT_DELETE, clearRecycleBin, delete_Project, parmenantDelete, recycleProject } from "./gqlProject";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
@@ -101,8 +101,9 @@ function Projects() {
 
   const handleDelete_Project = (projectId: string) => {
     // Display confirmation box
-    setShowConfirmation(true);
-    setProjectId(projectId);
+    // setShowConfirmation(true);
+    // setProjectId(projectId);
+    parmenantDelete(projectId,PARMENANT_DELETE,GET_USER)
   };
 
   // const handleConfirm = useCallback(() => {
@@ -152,12 +153,13 @@ function Projects() {
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
           {sortedProjects && sortedProjects.length}
         </div>
-        <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }${isNewProjectDisabled ? "opacity-50" : ""}`}
+        <button 
+        onClick={()=>clearRecycleBin(CLEAR_RECYCLE_BIN,GET_USER)}
+        
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }${isNewProjectDisabled ? "opacity-50" : ""}`}
           disabled={isButtonDisabled || isNewProjectDisabled}
-          // TODO onClick logic for empty bin
+        // TODO onClick logic for empty bin
         >
           <AiOutlineDelete />
           <div className="mx-1 my-1">Empty Recycle Bin</div>
@@ -184,10 +186,10 @@ function Projects() {
             </div> */}
 
             <input
-              className="peer h-full w-full bg-gray-200 pr-2 text-base text-black outline-none"
+              className="peer h-full w-full bg-gray-200 p-4 text-base text-black outline-none"
               type="text"
               id="search"
-              placeholder="Search"
+              placeholder="Search..."
               autoComplete="off"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -208,9 +210,8 @@ function Projects() {
                 <div className="flex cursor-pointer items-center">
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
+                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
+                      }`}
                   />
                 </div>
               </th>
@@ -234,10 +235,10 @@ function Projects() {
                 </td>
                 <td className="px-6 py-4">
                   <button
+                  onClick={()=>recycleProject(project.id,DELETE_PROJECT,GET_USER)}
                     //  TODO onClick restore logic here
-                    className={`mr-2 w-3 ${
-                      isButtonDisabled ? "opacity-50" : ""
-                    }`}
+                    className={`mr-2 w-3 ${isButtonDisabled ? "opacity-50" : ""
+                      }`}
                     disabled={isButtonDisabled}
                   >
                     <FaTrashRestoreAlt />

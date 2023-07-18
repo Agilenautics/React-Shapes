@@ -75,7 +75,21 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
     },
     refetchQueries: [{ query }],
   })
+}
 
+const recycleProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id
+      },
+      update: {
+        recycleBin: false
+      }
+    },
+    refetchQueries: [{ query }],
+  })
 }
 
 //parmenant delete mutation
@@ -100,6 +114,125 @@ const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumen
   })
 
 }
+
+//clear reCycle bin
+
+const CLEAR_RECYCLE_BIN = gql`
+mutation clearBin($where: mainWhere, $delete: mainDeleteInput) {
+  deleteMains(where: $where, delete: $delete) {
+    relationshipsDeleted
+  }
+}`
+
+const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  client.mutate({
+    mutation,
+    variables: {
+      "where": {
+        "recycleBin": true
+      },
+      "delete": {
+        "hasContainsFile": [
+          {
+            "delete": {
+              "hasflowchart": {
+                "delete": {
+                  "edges": [
+                    {
+                      "delete": {
+                        "hasedgedataEdgedata": {
+                          "delete": {}
+                        }
+                      }
+                    }
+                  ],
+                  "nodes": [
+                    {
+                      "delete": {
+                        "haspositionPosition": {
+                          "delete": {}
+                        },
+                        "hasdataNodedata": {}
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "hasContainsFolder": [
+          {
+            "delete": {
+              "hasFile": [
+                {
+                  "delete": {
+                    "hasflowchart": {
+                      "delete": {
+                        "edges": [
+                          {
+                            "delete": {
+                              "hasedgedataEdgedata": {}
+                            }
+                          }
+                        ],
+                        "nodes": [
+                          {
+                            "delete": {
+                              "haspositionPosition": {},
+                              "hasdataNodedata": {}
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ],
+              "hasFolder": [
+                {
+                  "delete": {
+                    "hasFile": [
+                      {
+                        "delete": {
+                          "hasflowchart": {
+                            "delete": {
+                              "nodes": [
+                                {
+                                  "delete": {
+                                    "hasdataNodedata": {},
+                                    "haspositionPosition": {}
+                                  }
+                                }
+                              ],
+                              "edges": [
+                                {
+                                  "delete": {
+                                    "hasedgedataEdgedata": {}
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    refetchQueries: [{ query }]
+
+  })
+
+
+}
+
+
 
 
 
@@ -147,4 +280,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete,PARMENANT_DELETE }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject,CLEAR_RECYCLE_BIN,clearRecycleBin }
