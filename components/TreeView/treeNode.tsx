@@ -313,7 +313,7 @@ export const TreeNode2 = ({
     <div
       ref={innerRef}
       style={{ ...styles.row, ...nodeStyles }}
-      className={classNames("row", state, disabledCursorClass)}
+      className={`${classNames("row", state, disabledCursorClass)} dark:text-white` }
       onClick={loadFlowNodes(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>

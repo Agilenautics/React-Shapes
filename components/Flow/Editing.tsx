@@ -282,7 +282,7 @@ export function Editing({
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600
-                              dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500"
+                               dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500 dark:text-white"
                           >
                             {linkNodes.nodes[key].hasdataNodedata.label}
                           </button>

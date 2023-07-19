@@ -10,13 +10,13 @@ export function FileTree() {
   const backend = useBackend();
   // const [isLoading, setIsLoading] = useState(true);
 
-const loading = fileStore((state)=> state.loading)
- 
+  const loading = fileStore((state) => state.loading)
+
 
   if (loading) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
-        <LoadingIcon color = "black"/>
+        <LoadingIcon color="black" />
       </div>
     );
   }
@@ -54,16 +54,15 @@ export function LinkTree() {
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   // Simulate an asynchronous operation
-  //     setIsLoading(false);
-
-  // }, []);
+  useEffect(() => {
+    // Simulate an asynchronous operation
+    setIsLoading(false);
+  }, []);
 
   if (isLoading) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
-        <LoadingIcon color = "black"/>
+        <LoadingIcon color="black" />
       </div>
     );
   }
