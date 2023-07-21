@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Editing } from "../Editing";
 import {
+  BaseEdge,
   getSmoothStepPath,
   //getEdgeCenter,
   Position,
@@ -81,7 +82,7 @@ export default function CustomEdge({
 
   return (
     <>
-      <defs>
+      {/* <defs>
         <marker
           key={`circle-${data.id}`}
           id={`circle-${data.id}`}
@@ -125,9 +126,9 @@ export default function CustomEdge({
         onDoubleClick={() => {
           setEditing(true);
         }}
-      />
+      /> */}
 
-      <foreignObject
+      {/* <foreignObject
         width={fOWidth}
         height={fOHeight}
         x={labelX - fOWidth / 2}
@@ -167,7 +168,8 @@ export default function CustomEdge({
             <div></div>
           )}
         </div>
-      </foreignObject>
+      </foreignObject> */}
+      <BaseEdge path= {edgePath} markerEnd= {markerEnd} />
     </>
   );
 }

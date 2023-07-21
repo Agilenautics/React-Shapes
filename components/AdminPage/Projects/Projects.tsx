@@ -17,13 +17,14 @@ import { auth } from "../../../auth";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { User } from "../Users/Users";
+import projectStore from "./projectStore";
 
 interface Project {
   id: string;
   name: string;
   desc: string;
   description: string;
-  recycleBin:Boolean
+  recycleBin: Boolean
   users: User[];
 }
 
@@ -45,6 +46,17 @@ function Projects() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
 
+
+
+  const allProjects = projectStore((state) => state.projects)
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const handleSorting = projectStore((state)=>state.handleSorting);
+  const sortValue = projectStore((state)=>state.sortOrder)
+  const updateSortOrder = projectStore((state)=>state.updateSortOrder);
+
+
+
+
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
       where: {
@@ -58,9 +70,12 @@ function Projects() {
     if (data && data.users.length) {
       //@ts-ignore
       const userType = data.users[0].userType;
+      //@ts-ignore
+      const projectData = data.users[0].hasProjects;
       setAccessLevel(userType);
       //@ts-ignore
-      setProjectData(data.users[0].hasProjects);
+      setProjectData(projectData); //this one not required
+      updateProjects(projectData)
     }
   };
 
@@ -74,53 +89,28 @@ function Projects() {
       }
     });
   };
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const searchValue = e.target.value;
-  //   setSearchTerm(searchValue);
-
-  //   if (searchValue.trim() === "") {
-  //     setProjectData(data.users[0].hasProjects);
-  //     setTotalCount(data.users[0].hasProjects.length);
-  //   } else {
-  //     const filtered = data.users[0].hasProjects.filter(
-  //       //@ts-ignore
-  //       (project) =>
-  //         project.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-  //         project.description.toLowerCase().includes(searchValue.toLowerCase())
-  //     );
-  //     setProjectData(filtered);
-  //     setTotalCount(filtered.length);
-  //   }
-  // };
 
   useEffect(() => {
     const filteredProjects = projectData.filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSortedProjects(filteredProjects);
-  }, [projectData, searchTerm]);
+  }, [searchTerm]);
 
   useEffect(() => {
     verifyAuthToken();
     setIsButtonDisabled(accessLevel.toLowerCase() === "user");
     setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
-  }, [userEmail, getProject]);
+  }, [data]);
 
-  const handleSortClick = () => {
-    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    setSortOrder(newSortOrder);
 
-    const sortedProjectsCopy = [...sortedProjects];
-    sortedProjectsCopy.sort((a, b) => {
-      if (newSortOrder === "asc") {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
-
-    setSortedProjects(sortedProjectsCopy);
+  const handleSortClick = () => { 
+    const newSortOrder = sortValue === "asc" ? "desc" : "asc";
+    updateSortOrder(newSortOrder)
+    handleSorting()
   };
+
+  
 
   const handleEditButtonClick = (
     projectId: string,
@@ -190,6 +180,7 @@ function Projects() {
     console.log(error.message);
   }
 
+
   return (
     <div>
       <div className="mt-4 flex justify-center">
@@ -211,9 +202,8 @@ function Projects() {
           {projectData && projectData.length}
         </div>
         <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }${isNewProjectDisabled ? "opacity-50" : ""}`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }${isNewProjectDisabled ? "opacity-50" : ""}`}
           disabled={isButtonDisabled || isNewProjectDisabled}
           onClick={handleAddProjectClick}
         >
@@ -266,9 +256,8 @@ function Projects() {
                 <div className="flex cursor-pointer items-center">
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
+                    className={`ml-1 text-sm ${sortValue === "asc" ? "rotate-180 transform" : ""
+                      }`}
                   />
                 </div>
               </th>
@@ -281,9 +270,9 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {sortedProjects
-            .filter((value)=>value.recycleBin===false)
-              .map((project: Project) => (
+            {allProjects
+              .filter((value) => value.recycleBin === false)
+              .map((project:any) => (
                 <tr key={project.id} className="border-b bg-white">
                   <td className="whitespace-nowrap px-4 py-4 font-medium">
                     {projectId === project.id ? (
@@ -319,9 +308,8 @@ function Projects() {
                     {projectId === project.id ? (
                       <button
                         onClick={() => handleSaveButtonClick(project.id)}
-                        className={`mr-2 ${
-                          isButtonDisabled ? "opacity-50" : ""
-                        }`}
+                        className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""
+                          }`}
                         disabled={isButtonDisabled}
                       >
                         Save
@@ -335,9 +323,8 @@ function Projects() {
                             project.description
                           )
                         }
-                        className={`mr-2 w-3 ${
-                          isButtonDisabled ? "opacity-50" : ""
-                        }`}
+                        className={`mr-2 w-3 ${isButtonDisabled ? "opacity-50" : ""
+                          }`}
                         disabled={isButtonDisabled}
                       >
                         <BiRename />
