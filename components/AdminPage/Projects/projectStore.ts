@@ -19,15 +19,15 @@ export interface ProjectState {
     handleSorting: () => void;
     loading: Boolean;
     // error: any|null ; // TODO : define type for the errors;
-    searchProduct:string
-    setSearchProduct: (searchTerm:string) => void;
+    searchProduct: string
+    setSearchProduct: (searchTerm: string) => void;
 
 }
 
 const projectStore = create<ProjectState>((set) => ({
     projects: [],
     sortOrder: "asc",
-    searchProduct:"",
+    searchProduct: "",
     updateProjectData: (projects: Array<Project>) =>
         set((state) => {
 
@@ -55,10 +55,10 @@ const projectStore = create<ProjectState>((set) => ({
             const sortedProjects = [...state.projects].sort((a, b) => state.sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
             return { projects: sortedProjects }
         }),
-    setSearchProduct: (searchTerm:string) =>
+    setSearchProduct: (searchTerm: string) =>
         set((state) => {
-            const filteredProject = state.projects.filter((value)=>value.name)
-            return { projects: state.projects }
+            const filteredProject = state.projects.filter((value) => value.name.toLocaleLowerCase().includes(state.searchProduct.toLocaleLowerCase()));
+            return {projects: filteredProject, searchProduct: searchTerm }
         })
 }))
 

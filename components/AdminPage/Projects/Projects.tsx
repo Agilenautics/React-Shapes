@@ -50,9 +50,11 @@ function Projects() {
 
   const allProjects = projectStore((state) => state.projects)
   const updateProjects = projectStore((state) => state.updateProjectData);
-  const handleSorting = projectStore((state)=>state.handleSorting);
-  const sortValue = projectStore((state)=>state.sortOrder)
-  const updateSortOrder = projectStore((state)=>state.updateSortOrder);
+  const handleSorting = projectStore((state) => state.handleSorting);
+  const sortValue = projectStore((state) => state.sortOrder)
+  const updateSortOrder = projectStore((state) => state.updateSortOrder);
+  const searchProduct = projectStore((state) => state.searchProduct);
+  const setSearchProduct = projectStore((state) => state.setSearchProduct)
 
 
 
@@ -90,12 +92,15 @@ function Projects() {
     });
   };
 
-  useEffect(() => {
+
+  const handleSearchProduct = (e: any) => {
+    setSearchTerm(e.target.value)
+
     const filteredProjects = projectData.filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setSortedProjects(filteredProjects);
-  }, [searchTerm]);
+    updateProjects(filteredProjects)
+  }
 
   useEffect(() => {
     verifyAuthToken();
@@ -104,13 +109,13 @@ function Projects() {
   }, [data]);
 
 
-  const handleSortClick = () => { 
+  const handleSortClick = () => {
     const newSortOrder = sortValue === "asc" ? "desc" : "asc";
     updateSortOrder(newSortOrder)
     handleSorting()
   };
 
-  
+
 
   const handleEditButtonClick = (
     projectId: string,
@@ -238,7 +243,7 @@ function Projects() {
               placeholder="Search"
               autoComplete="off"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchProduct}
             />
           </div>
         </div>
@@ -272,7 +277,7 @@ function Projects() {
           <tbody>
             {allProjects
               .filter((value) => value.recycleBin === false)
-              .map((project:any) => (
+              .map((project: any) => (
                 <tr key={project.id} className="border-b bg-white">
                   <td className="whitespace-nowrap px-4 py-4 font-medium">
                     {projectId === project.id ? (
