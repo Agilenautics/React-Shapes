@@ -9,6 +9,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
 import LoadingIcon from "../../LoadingIcon";
 import { User } from "../Users/Users";
+import projectStore from "./projectStore";
 
 interface Project {
   id: string;
@@ -34,6 +35,15 @@ function Projects() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
+
+
+
+  const recycleBin = projectStore((state)=>state.recycleBin)
+
+  console.log(recycleBin)
+
+
+
 
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {

@@ -84,17 +84,17 @@ mutation UpdateUsers($where: userWhere, $update: userUpdateInput) {
 
 
 
-const handleUpdate_User = async (data: Object, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const handleUpdate_User = async (id:string,userType:string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation,
     variables: {
       where: {
         // @ts-ignore
-        id: data.id
+        id
       },
       update: {
         // @ts-ignore
-        userType: data.accessLevel
+        userType
       }
     },
     refetchQueries: [{ query }]

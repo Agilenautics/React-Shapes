@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/client";
-import React, { useState } from "react";
-import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
+import React, { useEffect, useState } from "react";
+import { ADD_PROJECT } from "./gqlProject";
 import { Project } from "reactflow";
-import { auth } from "../../../auth";
 import LoadingIcon from "../../LoadingIcon";
+import projectStore from "./projectStore";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
@@ -14,10 +14,7 @@ interface AddProjectPopupProps {
 }
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
-  onAddProject,
   onClose,
-  projectData,
-  userEmail,
   handleMessage,
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
@@ -28,38 +25,66 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+
+  const addProject = projectStore((state) => state.addProject)
+  const errorFromStore = projectStore((state)=>state.error);
+
+  
+
+  
+
+  
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const id = Math.floor(Math.random() * 26) + Date.now();
+    const newProject = {
+      ...formData,
+      id,
+      recycleBin: false,
+      createdAt: new Date(),
+      timeStamp: new Date(),
+    }
+
+    addProject(newProject)
 
     // onAddProject(formData.name, formData.desc);
     sendMessage("project created");
-    createProject({
-      variables: {
-        where: {
-          emailId: userEmail,
-        },
-        update: {
-          hasProjects: [
-            {
-              create: [
-                {
-                  node: {
-                    description: formData.desc,
-                    name: formData.name,
-                    isOpen: true,
-                    recycleBin:false,
-                    userName: "",
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      },
-      // refetchQueries: [{ query: GET_PROJECTS }],
-    });
+    // createProject({
+    //   variables: {
+    //     where: {
+    //       emailId: userEmail,
+    //     },
+    //     update: {
+    //       hasProjects: [
+    //         {
+    //           create: [
+    //             {
+    //               node: {
+    //                 description: formData.desc,
+    //                 name: formData.name,
+    //                 isOpen: true,
+    //                 recycleBin: false,
+    //                 userName: "",
+    //               },
+    //             },
+    //           ],
+    //         },
+    //       ],
+    //     },
+    //   },
+    //   // refetchQueries: [{ query: GET_PROJECTS }],
+    // });
     setFormData({ name: "", desc: "" });
-    onClose();
+    if(errorFromStore!==""){
+      console.log(errorFromStore,"inside condition")
+      // onClose()
+    }
+    // onClose();
+    console.log(errorFromStore,"inside condition")
+
+    
+
   };
 
   const sendMessage = (message: string) => {

@@ -54,8 +54,11 @@ const DELETE_PROJECT = gql`
 mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
   updateMains(where: $where, update: $update) {
     mains {
-      recycleBin
+      id
+      timeStamp
+      description
       name
+      recycleBin
     }
   }
 }
@@ -73,7 +76,35 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
         recycleBin: true
       }
     },
-    refetchQueries: [{ query }],
+    // update: (cache, { data }) => {
+    //   const existingProjects = cache.readQuery({
+    //     query,
+    //     variables: {
+    //       emailId: "irfan123@gmail.com"
+    //     }
+    //   });
+    //   console.log("existing projects", existingProjects);
+
+    //   cache.writeQuery({
+    //     query,
+    //     variables:{
+    //       emailId:"irfan123@gmail.com"
+
+    //     },
+    //     data: {
+    //       users: [existingProjects?.users]
+    //     }
+
+    //   })
+
+    //   console.log(data)
+
+
+
+    // }
+    refetchQueries(result) {
+      return [GET_USER]
+    },
   })
 }
 
@@ -88,7 +119,11 @@ const recycleProject = async (id: string, mutation: DocumentNode | TypedDocument
         recycleBin: false
       }
     },
-    refetchQueries: [{ query }],
+    refetchQueries: [{
+      query, variables: {
+        emailId: "irfan123@gmail.com"
+      }
+    }],
   })
 }
 
@@ -280,4 +315,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject,CLEAR_RECYCLE_BIN,clearRecycleBin }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin }

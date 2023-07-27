@@ -21,8 +21,10 @@ import { auth } from "../../../auth";
 import {
   get_user_method,
   GET_USER,
-  GET_PROJECTS,
 } from "../Projects/gqlProject";
+import userStore from "./userStore";
+
+//user interface type
 export interface User {
   id: string;
   name: string;
@@ -44,29 +46,47 @@ interface Project {
 }
 
 function Users() {
-  const [editedUser, setEditedUser] = useState<User | null>(null);
+  const [editedUser, setEditedUser] = useState<string | null>(null);
   const [showAddUserPopup, setShowAddUserPopup] = useState(false);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [showManageAccountPopup, setShowManageAccountPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [projectsList, setProjectsList] = useState<Project[]>([]);
-  const [accessLevel, setAccessLevel] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
 
+
+
+
+  //user store
+  const usersList = userStore((state) => state.usersList);
+  const updateUserList = userStore((state) => state.updateUserList);
+  const sortingOrder = userStore((state) => state.sortOrder);
+  const updateSortingOrder = userStore((state) => state.updateSortingOrder);
+  const handleSorting = userStore((state) => state.handleSorting);
+  const deleteUserById = userStore((state) => state.deleteUserById);
+  const updateUser = userStore((state) => state.updateUser);
+  const userType = userStore((state) => state.userType);
+  const updateUserType = userStore((state) => state.updateUserType);
+  const accessLevel = userStore((state) => state.accessLevel)
+  const updateAccessLevele = userStore((state) => state.updateAccessLevel)
+
+
+
+
+
+
+
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         get_user_method(user.email, GET_USER).then((res: any) => {
-          const userType = res[0].userType;
-          setAccessLevel(userType);
-          const userProjects = res[0].hasProjects.map((project: any) => ({
-            id: project.id,
-            name: project.name,
-          }));
+          const { hasProjects, ...userData } = res[0]
+          const userType = userData.userType;
+          updateUserType(userType)
+          const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false)
           setProjectsList(userProjects);
         });
       }
@@ -75,6 +95,7 @@ function Users() {
   useEffect(() => {
     verfiyAuthToken();
   }, []);
+
 
   const handleMessage = (message: any) => {
     setMessage(message);
@@ -86,46 +107,40 @@ function Users() {
   };
 
   const { data, error, loading } = useQuery(ALL_USERS);
-  const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    if (data && data.users) {
-      setUsers(data.users);
-    }
-    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
-    setIsNewUserDisabled(accessLevel.toLowerCase() === "super user");
-  }, [data, accessLevel]);
 
-  const handleEditClick = (user: User) => {
-    setEditedUser(user);
+
+  const handleEditClick = (userId: string) => {
+    setEditedUser(userId);
   };
 
-  const handleSortClick = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    const sortedUsers = [...users].sort((a: User, b: User) => {
-      const nameA = getNameFromEmail(a.emailId).toUpperCase();
-      const nameB = getNameFromEmail(b.emailId).toUpperCase();
-      if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
-      if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
-    setUsers(sortedUsers);
-  };
+  const handleChanges_userType = (e: any) => {
+    updateAccessLevele(e.target.value)
+    // console.log(e.target.value)
+  }
+
 
   const handleSaveClick = () => {
     if (editedUser) {
-      // const updatedUsers = users.map((user) => {
-      //   if (user.id === editedUser.id) {
-      //     return { ...user, accessLevel: editedUser.accessLevel };
-      //   }
-      //   return user;
-      // });
-      handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
-
-      //setUsers(updatedUsers);
+      handleUpdate_User(editedUser,accessLevel, UPDATE_USER, ALL_USERS);
+      updateUser(editedUser, accessLevel)
       setEditedUser(null);
     }
+
   };
+
+
+  const handleSortClick = () => {
+    //from user store
+    const newSortingValue = sortingOrder === "asc" ? "desc" : "asc"
+    updateSortingOrder(newSortingValue)
+    handleSorting()
+  };
+
+
+
+
+
 
   const handleAddUser = (user: User, selectedProjects: string[]) => {
     setShowAddUserPopup(false);
@@ -136,6 +151,7 @@ function Users() {
   };
 
   const handleConfirmDelete = (userId: string) => {
+    deleteUserById(userId)
     handleUser_Delete(userId, DELETE_USER, ALL_USERS);
     setConfirmDeleteId(null);
   };
@@ -143,6 +159,15 @@ function Users() {
   const handleCancelDelete = () => {
     setConfirmDeleteId(null);
   };
+
+  useEffect(() => {
+    if (data && data.users) {
+      updateUserList(data.users)
+    }
+    setIsButtonDisabled(userType.toLowerCase() === "user");
+    setIsNewUserDisabled(userType.toLowerCase() === "super user");
+    handleChanges_userType
+  }, [data]);
 
   if (loading || isLoading)
     return (
@@ -173,9 +198,8 @@ function Users() {
           {data && data.users && data.users.length}
         </div>
         <button
-          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }${isNewUserDisabled ? "opacity-50" : ""}`}
+          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }${isNewUserDisabled ? "opacity-50" : ""}`}
           disabled={isButtonDisabled || isNewUserDisabled}
           onClick={() => setShowAddUserPopup(true)}
         >
@@ -194,7 +218,7 @@ function Users() {
               >
                 <div className="flex items-center">
                   Name
-                  {sortOrder === "asc" ? (
+                  {sortingOrder === "asc" ? (
                     <AiOutlineArrowUp className="ml-2 rotate-180 transform text-gray-600" />
                   ) : (
                     <AiOutlineArrowUp className="ml-2 text-gray-600" />
@@ -213,8 +237,8 @@ function Users() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user: User) => (
-              <tr key={user.id} className="border-b bg-white">
+            {usersList.map((user: any) => {
+              return <tr key={user.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
@@ -225,17 +249,12 @@ function Users() {
                     </span>
                   </div>
                 </td>
-                {}
+                { }
                 <td className="max-w-xs whitespace-nowrap py-4 pl-60 pr-20">
-                  {editedUser?.id === user.id ? (
+                  {editedUser === user.id ? (
                     <select
                       value={accessLevel}
-                      onChange={(e) =>
-                        setEditedUser({
-                          ...editedUser,
-                          accessLevel: e.target.value,
-                        })
-                      }
+                      onChange={handleChanges_userType}
                       className="rounded-md border border-gray-300 p-1"
                     >
                       <option value="User">User</option>
@@ -266,9 +285,9 @@ function Users() {
                     </div>
                   ) : (
                     <>
-                      {editedUser?.id === user.id ? (
+                      {editedUser === user.id ? (
                         <button
-                          className="rounded-md bg-red-600 px-2 py-1 font-semibold text-white"
+                          className="rounded-md bg-green-600 px-2 py-1 font-semibold text-white"
                           onClick={handleSaveClick}
                           disabled={isButtonDisabled}
                         >
@@ -277,7 +296,7 @@ function Users() {
                       ) : (
                         <button
                           className="ml-2 mr-2"
-                          onClick={() => handleEditClick(user)}
+                          onClick={() => handleEditClick(user.id)}
                           disabled={isButtonDisabled}
                         >
                           <AiFillEdit
@@ -308,7 +327,7 @@ function Users() {
                   )}
                 </td>
               </tr>
-            ))}
+            })}
           </tbody>
         </table>
         {message && <div className="mt-4 text-green-500">{message}</div>}

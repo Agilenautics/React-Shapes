@@ -34,7 +34,6 @@ function Projects() {
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState<Project[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -44,7 +43,6 @@ function Projects() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
 
 
 
@@ -53,8 +51,10 @@ function Projects() {
   const handleSorting = projectStore((state) => state.handleSorting);
   const sortValue = projectStore((state) => state.sortOrder)
   const updateSortOrder = projectStore((state) => state.updateSortOrder);
-  const searchProduct = projectStore((state) => state.searchProduct);
-  const setSearchProduct = projectStore((state) => state.setSearchProduct)
+  const deleteProject = projectStore((state)=>state.deleteProject);
+  const updateProject = projectStore((state)=>state.updateProject)
+  
+
 
 
 
@@ -93,14 +93,15 @@ function Projects() {
   };
 
 
-  const handleSearchProduct = (e: any) => {
-    setSearchTerm(e.target.value)
+ 
 
+  useEffect(() => {
     const filteredProjects = projectData.filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    // @ts-ignore
     updateProjects(filteredProjects)
-  }
+  }, [searchTerm])
 
   useEffect(() => {
     verifyAuthToken();
@@ -128,7 +129,9 @@ function Projects() {
   };
 
   const handleSaveButtonClick = (projectId: string) => {
+    const result = {projectName,projectDesc}
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
+    updateProject(projectId,result)
     setProjectId(null);
     setProjectName("");
   };
@@ -144,6 +147,7 @@ function Projects() {
     setShowConfirmation(false);
     if (projectId) {
       delete_Project(projectId, DELETE_PROJECT, GET_USER);
+      deleteProject(projectId)
       setProjectId(null);
     }
   }, [projectId]);
@@ -155,10 +159,12 @@ function Projects() {
   }, []);
 
   const handleAddProjectClick = () => {
+    console.log("Hello...")
     setShowForm(true);
   };
 
   const handleAddProject = (name: string, desc: string) => {
+    console.log("Hello")
     setShowForm(false);
   };
 
@@ -173,7 +179,7 @@ function Projects() {
     }, 5000);
   };
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <LoadingIcon />
@@ -204,7 +210,7 @@ function Projects() {
         <h2 className="inline-block text-xl font-semibold">Projects</h2>
         <p className="ml-8 inline-block">Total</p>
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {projectData && projectData.length}
+          {allProjects && allProjects.length}
         </div>
         <button
           className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
@@ -243,7 +249,7 @@ function Projects() {
               placeholder="Search"
               autoComplete="off"
               value={searchTerm}
-              onChange={handleSearchProduct}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
@@ -276,9 +282,8 @@ function Projects() {
           </thead>
           <tbody>
             {allProjects
-              .filter((value) => value.recycleBin === false)
-              .map((project: any) => (
-                <tr key={project.id} className="border-b bg-white">
+              .map((project: any,index) => (
+                <tr key={index} className="border-b bg-white">
                   <td className="whitespace-nowrap px-4 py-4 font-medium">
                     {projectId === project.id ? (
                       <input

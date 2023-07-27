@@ -6,6 +6,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from '../auth';
 
+
+
 function RecyclePage() {
   const [activeLink, setActiveLink] = useState("RecycleBin");
   const router = useRouter();
