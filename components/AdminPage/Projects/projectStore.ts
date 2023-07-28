@@ -21,6 +21,9 @@ export interface ProjectState {
     loading: Boolean;
     error: string | null; // TODO : define type for the errors;
     recycleBin: Array<Project>;
+    updateRecycleBinProject: (projects: Project) => void;
+    clearRecyleBin: () => void;
+    removeFromRecycleBin: (projectId: String) => void
 
 }
 
@@ -42,12 +45,21 @@ const projectStore = create<ProjectState>((set) => ({
             }
             const updatedProjects = [...state.projects, newProject];
 
-            return { projects: updatedProjects, error: null };
+            return { projects: updatedProjects };
         }),
     updateProjectData: (projects: Array<Project>) =>
         set((state) => {
-            const updatedProjects = projects.filter((values)=>values.recycleBin!==true);
-            return { projects:updatedProjects }
+            const updatedProjects = projects.filter((values) => values.recycleBin !== true);
+            return { projects: updatedProjects }
+        }),
+    updateRecycleBinProject: (projects: any) =>
+        set((state) => {
+            const recycleBinProjects = projects.filter((values: Project) => values.recycleBin === true);
+            return { recycleBin: recycleBinProjects }
+        }),
+    clearRecyleBin: () =>
+        set((state) => {
+            return { recycleBin: [] }
         }),
     deleteProject: (id: string) =>
         set((state) => {
@@ -94,8 +106,18 @@ const projectStore = create<ProjectState>((set) => ({
     handleSorting: () =>
         set((state) => {
             const sortedProjects = [...state.projects].sort((a, b) => state.sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
-            return { projects: sortedProjects }
+            const sortedRecycleBin = [...state.recycleBin].sort((a, b) =>
+                state.sortOrder === "asc"
+                    ? a.name.localeCompare(b.name)
+                    : b.name.localeCompare(a.name)
+            );
+            return { projects: sortedProjects, recycleBin: sortedRecycleBin }
         }),
+    removeFromRecycleBin: (projectId: String) =>
+        set((state) => {
+            const to_be_delete = state.recycleBin.filter((projects) => projects.id !== projectId);
+            return { recycleBin: to_be_delete }
+        })
 }))
 
 export default projectStore

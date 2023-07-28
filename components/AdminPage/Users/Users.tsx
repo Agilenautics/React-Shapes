@@ -23,6 +23,7 @@ import {
   GET_USER,
 } from "../Projects/gqlProject";
 import userStore from "./userStore";
+import projectStore from "../Projects/projectStore";
 
 //user interface type
 export interface User {
@@ -56,6 +57,10 @@ function Users() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
+  
+
+  //project store
+  const projects = projectStore((state)=>state.projects)
 
 
 
@@ -71,7 +76,7 @@ function Users() {
   const userType = userStore((state) => state.userType);
   const updateUserType = userStore((state) => state.updateUserType);
   const accessLevel = userStore((state) => state.accessLevel)
-  const updateAccessLevele = userStore((state) => state.updateAccessLevel)
+  const updateAccessLevele = userStore((state) => state.updateAccessLevel);
 
 
 
@@ -136,6 +141,7 @@ function Users() {
     updateSortingOrder(newSortingValue)
     handleSorting()
   };
+
 
 
 
@@ -336,7 +342,8 @@ function Users() {
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
           //onAddUser={handleAddUser}
-          projectData={projectsList}
+          // @ts-ignore
+          projectData={projects}
           handleMessage={handleMessage}
         />
       )}

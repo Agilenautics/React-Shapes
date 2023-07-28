@@ -3,7 +3,7 @@ import Signout from "../Authentication/Signout/Signout";
 //import { auth } from "../../auth";
 import { AiOutlineMail } from "react-icons/ai";
 import Link from "next/link";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 
@@ -32,9 +32,12 @@ function TopBar() {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    const userEmail = auth.currentUser?.email || "";
-    setEmail(userEmail);
-  });
+    onAuthStateChanged(auth,(user)=>{
+      if(user&&user.email){
+        setEmail(user.email)
+      }
+    })
+  },[auth]);
 
   const navigate = (path: string | UrlObject) => {
     router.push(path)

@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { ADD_PROJECT } from "./gqlProject";
+import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
 import { Project } from "reactflow";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
@@ -15,6 +15,7 @@ interface AddProjectPopupProps {
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onClose,
+  userEmail,
   handleMessage,
 }) => {
   const [formData, setFormData] = useState({ name: "", desc: "" });
@@ -27,13 +28,13 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
 
 
   const addProject = projectStore((state) => state.addProject)
-  const errorFromStore = projectStore((state)=>state.error);
+  const errorFromStore = projectStore((state) => state.error);
 
-  
 
-  
+  console.log(userEmail)
 
-  
+
+
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,17 +74,17 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     //       ],
     //     },
     //   },
-    //   // refetchQueries: [{ query: GET_PROJECTS }],
+    //   refetchQueries: [{ query: GET_PROJECTS }],
     // });
     setFormData({ name: "", desc: "" });
-    if(errorFromStore!==""){
-      console.log(errorFromStore,"inside condition")
-      // onClose()
-    }
-    // onClose();
-    console.log(errorFromStore,"inside condition")
+    // if(errorFromStore){
+    //   console.log(errorFromStore,"inside condition")
+    //   // onClose()
+    // }
+    // // onClose();
+    // console.log(errorFromStore,"inside condition")
 
-    
+
 
   };
 
@@ -95,6 +96,12 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       <LoadingIcon />
     </div>
   );
+
+  useEffect(() => {
+    console.log(errorFromStore)
+  }, [errorFromStore]);
+
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -125,6 +132,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               value={formData.name}
               onChange={handleInputChange}
               className="w-full rounded-lg border px-3 py-2"
+              autoComplete="off"
               required
             />
           </div>
@@ -137,6 +145,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               name="desc"
               value={formData.desc}
               onChange={handleInputChange}
+              autoComplete="off"
               className="w-full rounded-lg border px-3 py-2"
             ></textarea>
           </div>

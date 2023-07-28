@@ -97,11 +97,11 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
 
     //   })
 
-    //   console.log(data)
+    //   // console.log(data)
 
 
 
-    // }
+    // },
     refetchQueries(result) {
       return [GET_USER]
     },
@@ -145,7 +145,9 @@ const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumen
         id
       }
     },
-    refetchQueries: [{ query }],
+    refetchQueries:(result)=>{
+      return [query]
+    },
   })
 
 }

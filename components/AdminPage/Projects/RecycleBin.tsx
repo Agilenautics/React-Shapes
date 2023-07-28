@@ -10,6 +10,7 @@ import { auth } from "../../../auth";
 import LoadingIcon from "../../LoadingIcon";
 import { User } from "../Users/Users";
 import projectStore from "./projectStore";
+import userStore from "../Users/userStore";
 
 interface Project {
   id: string;
@@ -22,25 +23,32 @@ interface Project {
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
-  const [projectId, setProjectId] = useState<string | null>(null);
   const [projectDeletedAt, setProjectDeletedAt] = useState(""); //TODO defined new state ProjectDeletedAt
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState<Project[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
 
 
 
-  const recycleBin = projectStore((state)=>state.recycleBin)
+  const recycleBin = projectStore((state) => state.recycleBin);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
+  const handleSorting = projectStore((state) => state.handleSorting);
+  const sortOrder = projectStore((state) => state.sortOrder);
+  const updateSorOrder = projectStore((state) => state.updateSortOrder);
+  const clearRecycle_Bin = projectStore((state) => state.clearRecyleBin);
+  const removeFromRecycleBin = projectStore((state)=>state.removeFromRecycleBin)
 
-  console.log(recycleBin)
+  const userType = userStore((state) => state.userType);
+  const updateUserType = userStore((state) => state.updateUserType)
+
+
+
+
+
 
 
 
@@ -58,9 +66,11 @@ function Projects() {
     if (data && data.users.length) {
       //@ts-ignore
       const userType = data.users[0].userType;
-      setAccessLevel(userType);
+      updateUserType(userType)
       //@ts-ignore
-      setProjectData(data.users[0].hasProjects);
+      setProjectData(data.users[0].hasProjects);//not required
+      //@ts-ignore
+      updateRecycleBinProject(data.users[0].hasProjects)
     }
   };
 
@@ -80,29 +90,21 @@ function Projects() {
         project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         project.recycleBin
     );
-    setSortedProjects(filteredProjects);
-  }, [projectData, searchTerm]);
+    // @ts-ignore
+    updateRecycleBinProject(filteredProjects)
+  }, [searchTerm]);
 
   useEffect(() => {
     verifyAuthToken();
-    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
-    setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
-  }, [userEmail, getProject]);
+    setIsButtonDisabled(userType.toLowerCase() === "user");
+    setIsNewProjectDisabled(userType.toLowerCase() === "super user");
+  }, [data]);
 
   const handleSortClick = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    setSortOrder(newSortOrder);
+    updateSorOrder(newSortOrder);
+    handleSorting()
 
-    const sortedProjectsCopy = [...sortedProjects];
-    sortedProjectsCopy.sort((a, b) => {
-      if (newSortOrder === "asc") {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
-
-    setSortedProjects(sortedProjectsCopy);
   };
 
   //TODO =============================================
@@ -113,7 +115,8 @@ function Projects() {
     // Display confirmation box
     // setShowConfirmation(true);
     // setProjectId(projectId);
-    parmenantDelete(projectId,PARMENANT_DELETE,GET_USER)
+    removeFromRecycleBin(projectId)
+    parmenantDelete(projectId, PARMENANT_DELETE, GET_USER)
   };
 
   // const handleConfirm = useCallback(() => {
@@ -161,11 +164,15 @@ function Projects() {
         <h2 className="inline-block text-xl font-semibold">Projects</h2>
         <p className="ml-8 inline-block">Total</p>
         <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {sortedProjects && sortedProjects.length}
+          {recycleBin && recycleBin.length}
         </div>
-        <button 
-        onClick={()=>clearRecycleBin(CLEAR_RECYCLE_BIN,GET_USER)}
-        
+        <button
+          onClick={() => {
+            clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER)
+            clearRecycle_Bin()
+            
+          }}
+
           className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
             }${isNewProjectDisabled ? "opacity-50" : ""}`}
           disabled={isButtonDisabled || isNewProjectDisabled}
@@ -207,7 +214,6 @@ function Projects() {
           </div>
         </div>
       </div>
-
       <div className="relative overflow-x-auto sm:rounded-lg">
         <table className="mb-4 ml-8 mt-4 w-11/12 rounded-lg text-left text-sm">
           <thead className="bg-gray-200 text-xs">
@@ -234,7 +240,7 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {sortedProjects.map((project: Project) => (
+            {recycleBin.map((project: any) => (
               <tr key={project.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-4 py-4 font-medium">
                   {/* //TODO added recycleBin */}
@@ -245,7 +251,10 @@ function Projects() {
                 </td>
                 <td className="px-6 py-4">
                   <button
-                  onClick={()=>recycleProject(project.id,DELETE_PROJECT,GET_USER)}
+                    onClick={() => {
+                      recycleProject(project.id, DELETE_PROJECT, GET_USER);
+                      removeFromRecycleBin(project.id);
+                    }}
                     //  TODO onClick restore logic here
                     className={`mr-2 w-3 ${isButtonDisabled ? "opacity-50" : ""
                       }`}

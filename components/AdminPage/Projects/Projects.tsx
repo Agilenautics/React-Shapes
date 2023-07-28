@@ -18,6 +18,7 @@ import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { User } from "../Users/Users";
 import projectStore from "./projectStore";
+import userStore from "../Users/userStore";
 
 interface Project {
   id: string;
@@ -34,7 +35,6 @@ function Projects() {
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState<Project[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
@@ -52,7 +52,16 @@ function Projects() {
   const sortValue = projectStore((state) => state.sortOrder)
   const updateSortOrder = projectStore((state) => state.updateSortOrder);
   const deleteProject = projectStore((state)=>state.deleteProject);
-  const updateProject = projectStore((state)=>state.updateProject)
+  const updateProject = projectStore((state)=>state.updateProject);
+  const updateRecycleBinProject = projectStore((state)=>state.updateRecycleBinProject);
+
+
+
+  // user store
+  const userType = userStore((state)=>state.userType);
+  const updateUserType = userStore((state)=>state.updateUserType)
+
+  
   
 
 
@@ -72,12 +81,14 @@ function Projects() {
     if (data && data.users.length) {
       //@ts-ignore
       const userType = data.users[0].userType;
+      updateUserType(userType)
       //@ts-ignore
       const projectData = data.users[0].hasProjects;
-      setAccessLevel(userType);
+      
       //@ts-ignore
-      setProjectData(projectData); //this one not required
+      setProjectData(projectData); 
       updateProjects(projectData)
+      updateRecycleBinProject(projectData)
     }
   };
 
@@ -93,6 +104,7 @@ function Projects() {
   };
 
 
+
  
 
   useEffect(() => {
@@ -105,8 +117,8 @@ function Projects() {
 
   useEffect(() => {
     verifyAuthToken();
-    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
-    setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
+    setIsButtonDisabled(userType.toLowerCase() === "user");
+    setIsNewProjectDisabled(userType.toLowerCase() === "super user");
   }, [data]);
 
 
