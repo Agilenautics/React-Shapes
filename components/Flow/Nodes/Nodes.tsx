@@ -209,7 +209,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 //@ts-ignore
 function BrightblueNode({ data, id }) {
   return <>
-    <NodeResizer minWidth={100} minHeight={40} nodeId= {id} />
+    <NodeResizer minWidth={100} minHeight={40} maxWidth={200} nodeId= {id} />
     {
       PrototypicalNode(
         "border-node-blue-100 bg-node-blue-200 text-white",

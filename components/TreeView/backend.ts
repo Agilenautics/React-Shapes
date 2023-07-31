@@ -116,15 +116,9 @@ export function useBackend() {
       const readableData = {...initData}
 
       console.log(readableData.children);
-      // getting element index
+    
       const updatedChild = readableData.children?.filter(element=> element.id !==  id)
 
-      
-
-      // updating state in real time
-      
-        // @ts-ignore
-        // readableData.children = updatedChild
         initData = {...readableData, children:updatedChild}
         
         console.log(initData.children);
@@ -132,8 +126,6 @@ export function useBackend() {
         setData(initData)
         update()
 
-        console.log("i got in be");
-      
       delete_item(id)
       
     },
