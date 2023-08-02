@@ -36,7 +36,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   // @ts-ignore
   const description = data.description;
 
-  //console.log(shapeCSS)
+  console.log(shapeCSS)
 
   // const updateNodeData_Links = async () => {
   //console.log(shapeCSS)
