@@ -18,7 +18,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   userEmail,
   handleMessage,
 }) => {
-  const [formData, setFormData] = useState({ name: "", desc: "" });
+  const [formData, setFormData] = useState({ name: "", description: "" });
   const [isFormValid, setIsFormValid] = useState(false);
 
   const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT);
@@ -51,32 +51,32 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
 
     // onAddProject(formData.name, formData.desc);
     sendMessage("project created");
-    // createProject({
-    //   variables: {
-    //     where: {
-    //       emailId: userEmail,
-    //     },
-    //     update: {
-    //       hasProjects: [
-    //         {
-    //           create: [
-    //             {
-    //               node: {
-    //                 description: formData.desc,
-    //                 name: formData.name,
-    //                 isOpen: true,
-    //                 recycleBin: false,
-    //                 userName: "",
-    //               },
-    //             },
-    //           ],
-    //         },
-    //       ],
-    //     },
-    //   },
-    //   refetchQueries: [{ query: GET_PROJECTS }],
-    // });
-    setFormData({ name: "", desc: "" });
+    createProject({
+      variables: {
+        where: {
+          emailId: userEmail,
+        },
+        update: {
+          hasProjects: [
+            {
+              create: [
+                {
+                  node: {
+                    description: formData.description,
+                    name: formData.name,
+                    isOpen: true,
+                    recycleBin: false,
+                    userName: "",
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
+      refetchQueries: [{ query: GET_PROJECTS }],
+    });
+    setFormData({ name: "", description: "" });
     // if(errorFromStore){
     //   console.log(errorFromStore,"inside condition")
     //   // onClose()
@@ -142,8 +142,8 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
             </label>
             <textarea
               id="projectDesc"
-              name="desc"
-              value={formData.desc}
+              name="description"
+              value={formData.description}
               onChange={handleInputChange}
               autoComplete="off"
               className="w-full rounded-lg border px-3 py-2"
