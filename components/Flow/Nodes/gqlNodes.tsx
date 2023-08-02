@@ -5,9 +5,9 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../../apollo-client";
-import { Node, updateEdge } from "react-flow-renderer";
-import { allEdges, getEdges } from "../Edges/gqlEdges";
-import addNode from "./nodeStore";
+import { Node } from "reactflow";
+import { Edge } from "reactflow";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 
 const allNodes = gql`
   query Query($where: flowchartWhere) {
@@ -199,8 +199,10 @@ async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string,
   flowchart: string,
-
-  updateNode: any
+  updateNode: any,
+  symbol: string,
+  name: string,
+  color: string,
 ) {
   var nodes: Array<Node> = [];
   await client
@@ -221,12 +223,12 @@ async function createNode(
                         node: {
                           flowchart: "flowNode",
                           draggable: true,
-                          type: "blueNode",
+                          type: color,
                           hasdataNodedata: {
                             create: {
                               node: {
-                                label: "New Node",
-                                shape: "rectangle",
+                                label: name,
+                                shape: symbol,
                                 description: "",
                                 links: {
                                   create: {

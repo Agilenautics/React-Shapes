@@ -59,55 +59,52 @@ const Sidebar = () => {
       {/* This is where the REAL Sidebar begins */}
       {/* This div also contains CSS for the shadow of the sidebar */}
       <div
-        className={`fixed top-0 left-0 -z-10 h-full w-[20vw] bg-white  shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${
-          showSidebar ? "sidebar-shadow -translate-x-0 " : "-translate-x-full"
+        className={`fixed left-0 top-0 -z-10 h-full w-[18vw] bg-white shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${
+          showSidebar ? "sidebar-shadow translate-x-0" : "-translate-x-full"
         }`}
       >
         <BreadCrumbs />
         <div
           id="sidebar-content"
           className="mt-10 flex flex-col items-center justify-center"
+          style={{
+            marginTop: "-55px",
+          }}
         >
           {/* Logo goes here */}
           <Image
             className="mx-auto"
             src="/assets/flow-chart.png"
-            height={144}
-            width={144}
+            height={124}
+            width={124}
             alt="Company Logo"
           />
-          <h1 className="mt-2 font-['Cormorant_Garamond'] text-4xl tracking-wide ">
-            Flowchart
-          </h1>
         </div>
-        <h3 className="projects "> Projects</h3>
-        <div className="mx-4 my-2 flex">
-          {/* The new folder and new file buttons, respectively */}
+        <div className="mx-4 my-2 flex justify-center">
           <button
             type="button"
-            className="add-buttons peer"
+            className="add-buttons peer w-25 h-8"
             onClick={() => add_folder()}
           >
-            <AiFillFolderAdd className="add-buttons-icon" />
+            Add Folder <AiFillFolderAdd className="add-buttons-icon" />
           </button>
-          <div className="add-buttons-tooltip">Add Folder</div>
-
-          <div className="group">
-            <button
+          <button
               type="button"
-              className="add-buttons peer"
+              className="add-buttons peer w-21 h-8"
               onClick={() => add_file()}
             >
-              <AiFillFileAdd className="add-buttons-icon" />
+            Add File  <AiFillFileAdd className="add-buttons-icon" />
             </button>
-            <div className="add-buttons-tooltip">Add File</div>
-          </div>
         </div>
-        {/* // ? This div controls the height of the file tree */}
-        <div className="h-[50vh]">
+        <div className="h-[58vh]">
           <FileTree />
         </div>
         <DarkModeToggleButton />
+      </div>
+
+      <div
+        className={`pl-14 transition-all ${showSidebar ? "ml-[14.2vw]" : "ml-0"}`}
+      >
       </div>
     </div>
   );

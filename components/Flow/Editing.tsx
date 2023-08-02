@@ -209,7 +209,7 @@ export function Editing({
             expTrue={pEtrue}
             expFalse={sEfalse}
             positioningCSS={"left-16 -top-5"}
-            objects={Object.keys(nodeShapeMap).map((key, _) => (
+            objects={Object.keys(nodeShapeMap).slice(0,4).map((key, _) => (
               <div
                 key={key}
                 // @ts-ignore

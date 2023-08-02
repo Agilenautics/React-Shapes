@@ -12,8 +12,8 @@ import ReactFlow, {
   MiniMap,
   ConnectionMode,
   useReactFlow,
-  useEdges,
-} from "react-flow-renderer";
+  Controls,
+} from "reactflow";
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
 import CustomControls from "./CustomControls";
@@ -117,11 +117,16 @@ function Flow() {
     }
   }
 
-
-  //here iam calling update position methode 
   const onDrag = (event: any, node: Object) => {
-    updatePosition(node)
-  }
+    updatePosition(node);
+    console.log(node);
+  };
+  const onNodeClick = (e: any, nodeData: any) => {
+    updateLinkNodeId(nodeData.id);
+  };
+  const proOptions = { hideAttribution: true };
+
+ 
 
 
   // here iam calling deleteEdge methode inside onDeleteEdge
@@ -132,14 +137,11 @@ function Flow() {
     })
   }
 
-  const onNodeClick = (e:any,nodeData: any) => {
-    updateLinkNodeId(nodeData.id)
-    // updateNodeBackend(nodeId,nodeData)
-  }
+  
   return (
     <div className="absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
-        panOnScroll
+        panOnScroll={true}
         defaultNodes={defaultNodes}
         defaultEdges={defaultEdges}
         defaultEdgeOptions={defaultEdgeOptions}
@@ -152,7 +154,8 @@ function Flow() {
         // snapToGrid
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
-        // @ts-ignore
+        zoomOnScroll={false}
+        //@ts-ignore
         edgeTypes={edgeTypeMap}
         // @ts-ignore
         nodeTypes={nodeTypeMap}
@@ -169,8 +172,12 @@ function Flow() {
         onEdgeClick={onEdgeClick}
         onNodeClick={onNodeClick}
       >
-        <MiniMap />
-        <CustomControls />
+        <MiniMap
+          //nodeComponent={MiniMapNode}
+          zoomable
+        />
+        <Controls /> 
+        {/* <CustomControls /> */}
       </ReactFlow>
     </div>
   );
