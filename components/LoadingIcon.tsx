@@ -8,7 +8,7 @@ const LoadingIcon: React.FC<LoadingIconProps> = ({ color }) => {
   return (
     <div className="animate-spin h-10 w-10 text-gray-500">
       <svg
-        className={`h-10 w-10 ${color ? `text-${color}` : "text-black-500"}`}
+        className={`h-10 w-10 dark:text-white ${color ? `text-${color}` : "text-black-500"}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -18,7 +18,7 @@ const LoadingIcon: React.FC<LoadingIconProps> = ({ color }) => {
           cx="12"
           cy="12"
           r="11"
-          stroke="black"
+          stroke="white"
           strokeWidth="2"
         ></circle>
         <path

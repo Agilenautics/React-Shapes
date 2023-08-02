@@ -204,7 +204,7 @@ export const TreeNode = ({
   }
   if (isLoading) {
     return (
-      <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+      <div className="absolute inset-0 z-50 flex items-center justify-center  bg-opacity-75">
         <LoadingIcon color="black" />
       </div>
     );

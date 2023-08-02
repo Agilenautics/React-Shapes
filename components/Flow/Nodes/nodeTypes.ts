@@ -60,7 +60,7 @@ const nodeShapeMap = {
     "!h-20 w-20 rotate-45 translate-x-6 translate-y-6 rounded-md -rotate-45",
     "-rotate-45",
   ],
-  circle: ["h-30 w-30", "h-30 w-30 bg-gray-500 rounded-full", "rotate-0"],
+  circle: ["h-30 w-30", "!h-20 w-20 rounded-full", "rotate-0"],
   parallelogram: ["h-30 w-30", styles.parallelogram, "rotate-0"],
   screw: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-screw-wrench", "rotate-0"],
   trash: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-trash", "rotate-0"],

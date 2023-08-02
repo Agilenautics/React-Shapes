@@ -95,7 +95,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   }
 
   return (
-    <div className="w-auto h-auto">
+    <div className="">
       <div
         className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
       >
