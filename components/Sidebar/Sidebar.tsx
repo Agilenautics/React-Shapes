@@ -94,20 +94,20 @@ const Sidebar = () => {
             alt="Company Logo"
           />
         </div>
-        <div className="mx-4 my-2 flex justify-center">
+        <div className="grid grid-cols-2 gap-2 p-1">
           <button
             type="button"
             className="add-buttons peer w-25 h-8"
             onClick={() => add_folder()}
           >
-            Add Folder <AiFillFolderAdd className="add-buttons-icon" />
+            <AiFillFolderAdd className="add-buttons-icon" /> Add Folder
           </button>
           <button
               type="button"
               className="add-buttons peer w-21 h-8"
               onClick={() => add_file()}
             >
-            Add File  <AiFillFileAdd className="add-buttons-icon" />
+            <AiFillFileAdd className="add-buttons-icon" />  Add File 
             </button>
         </div>
         <div className="h-[58vh]">
