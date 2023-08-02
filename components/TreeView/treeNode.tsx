@@ -1,18 +1,9 @@
-import classNames from "classnames";
-import React, {
-  useState,
-  FocusEvent,
-  KeyboardEvent,
-  SyntheticEvent,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, SyntheticEvent } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
 import { MyData } from "./backend";
 import { FiEdit2, FiDelete } from "react-icons/fi";
 import { AiOutlineFile, AiFillFolder, AiFillFolderOpen } from "react-icons/ai";
-const size = 18;
 import fileStore from "./fileStore";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import edgeStore from "../Flow/Edges/edgeStore";
@@ -31,6 +22,37 @@ import TreeModel from "tree-model-improved";
 import useBackend from './backend'
 
 // LoadingIcon component
+import classNames from "classnames";
+
+// LoadingIcon component
+
+// ExpandableChip component
+// ExpandableChip component
+function ExpandableChip({ onRename, onDelete }: any) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="expandable-chip">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className={`expand-button ${expanded ? 'expanded' : ''}`}
+      >
+        {expanded ? <span>X</span> : <span>...</span>}
+      </button>
+      {expanded && (
+        <div className="expand-content">
+          <button className="action-button" onClick={onRename}>
+            Rename <FiEdit2 size={18} className="icon" />
+          </button>
+          <button className="action-button" onClick={onDelete}>
+            Delete <FiDelete size={18} className="icon" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -49,39 +71,40 @@ function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
     return <div className="spacer" />;
   }
 }
+
 /**
  * It returns an icon based on the props passed in.
- * @param {any}  - isFolder - whether the node is a folder or not.
- * @param {any}  - isOpen - whether the folder is open or not
+ * @param {any} - isFolder - whether the node is a folder or not.
+ * @param {any} - isOpen - whether the folder is open or not.
  */
 function Icon({ isFolder, isSelected, isOpen }: any) {
   const cname = "rounded text-blue-500 w-5 h-5 pb-[1px]";
   if (isFolder) {
     if (isOpen) {
-      return <AiFillFolderOpen className={cname} size={size} />;
+      return <AiFillFolderOpen className={cname} size={18} />;
     } else {
-      return <AiFillFolder className={cname} size={size} />;
+      return <AiFillFolder className={cname} size={18} />;
     }
   } else {
-    return <AiOutlineFile className={cname} size={size} />;
+    return <AiOutlineFile className={cname} size={18} />;
   }
 }
 
 type FormProps = { defaultValue: string } & NodeHandlers;
 
 /**
- * It's a React component that handles the renaming of a file or folder
- * @param {FormProps}  - FormProps
- * @returns A input field.
+ * It's a React component that handles the renaming of a file or folder.
+ * @param {FormProps} - FormProps
+ * @returns An input field.
  */
 function RenameForm({ defaultValue, submit, reset }: FormProps) {
   const inputProps = {
     defaultValue,
     autoFocus: true,
-    onBlur: (e: FocusEvent<HTMLInputElement>) => {
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
       submit(e.currentTarget.value);
     },
-    onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => {
+    onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
       switch (e.key) {
         case "Enter":
           submit(e.currentTarget.value);
@@ -101,11 +124,6 @@ function RenameForm({ defaultValue, submit, reset }: FormProps) {
     />
   );
 }
-
-// Both functions here are almost idential, save for a few differences between what is shown
-// The split is needed because the two locations where the tree is rendered are not producing
-// idential results
-// ! Find a way to fix the duplication
 
 export const TreeNode = ({
   innerRef,
@@ -160,7 +178,6 @@ export const TreeNode = ({
     handlers: NodeRendererProps<MyData> & {
       select: (e: SyntheticEvent<Element, Event>) => void;
     },
-    //data: NodeRendererProps<MyData> & { children?: MyData[] }
     data: MyData
   ) {
     return (e: SyntheticEvent) => {
@@ -193,6 +210,13 @@ export const TreeNode = ({
     );
   }
 
+  function handleRename() {
+    handlers.edit();
+  }
+
+  function handleDelete() {
+    delete_item(id);
+  }
 
   return (
     <div
@@ -210,7 +234,11 @@ export const TreeNode = ({
           isSelected={state.isSelected}
         />
         <i>
-          <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
+          <Icon
+            isFolder={folder}
+            isSelected={state.isSelected}
+            isOpen={open}
+          />
         </i>
         {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
@@ -335,6 +363,12 @@ export const TreeNode2 = ({
         ) : (
           <span className="flex flex-row">
             {name} {state.isSelected}
+                  {/* <ExpandableChip
+                    onRename={handleRename}
+                    onDelete={handleDelete}
+                  />
+                </div>
+              )} */}
           </span>
         )}
       </div>

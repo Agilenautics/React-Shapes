@@ -9,6 +9,7 @@ import Tags from "./Tags";
 import Progress from "./Progress";
 import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
 import { updateLinksMutation, updateNodeData } from "./gqlNodes";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
@@ -38,14 +39,17 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   //console.log(shapeCSS)
 
   // const updateNodeData_Links = async () => {
+  //console.log(shapeCSS)
+// const updateNodeData_Links = async () => {
   //   if (linkNodeId === id) {
   //     return await updateNodeData(data, id, updateLinksMutation)
   //   }
   // }
+  
+  //useEffect(() => {
+  //  updateNodeData_Links()
+  //}, [updateNodeData_Links])
 
-  // useEffect(() => {
-  //   updateNodeData_Links()
-  // }, [updateNodeData_Links])
 
   const linkedTo = () => {
     const x = findFile(data.links.fileId);
@@ -119,8 +123,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             editing ? "cursor-default" : ""
           }`}
           onDoubleClick={() => {
-            setEditing(true);
-            toggleDraggable(id, false);
+            if (!(shapeCSS[1].substring(0, 4) === "bpmn")){
+              setEditing(true);
+              toggleDraggable(id, false);
+            }
           }}
         >
           <div className={shapeCSS[2]}>
@@ -205,6 +211,15 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 // ! These functions have basically become outdated since you can change
 // ! the CSS directly, so need to phase this out by changing how the nodes
 // ! are updated.
+
+//@ts-ignore
+function defaultNode({ data, id }) {
+  return PrototypicalNode(
+    "",
+    data,
+    id
+  );
+}
 
 //@ts-ignore
 function BrightblueNode({ data, id }) {
@@ -311,6 +326,7 @@ function WelcomeNode({ data, id }) {
   );
 }
 export {
+  defaultNode,
   BrightblueNode,
   blueNode,
   BrightgreenNode,

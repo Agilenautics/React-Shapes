@@ -21,6 +21,7 @@
     "apollo-server-core": "^3.12.0",
     "apollo-server-micro": "^3.10.0",
     "bcryptjs": "^2.4.3",
+    "bpmn-js": "^13.2.1",
     "classnames": "^2.3.1",
     "cors": "^2.8.5",
     "dante3": "^1.0.8",

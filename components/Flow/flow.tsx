@@ -13,7 +13,6 @@ import ReactFlow, {
   useReactFlow,
   Controls,
 } from "reactflow";
-
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
 import CustomControls from "./CustomControls";
@@ -215,16 +214,24 @@ function Flow() {
   };
   const proOptions = { hideAttribution: true };
 
+ 
+
+
+  //TODO here iam calling deleteEdge methode inside onDeleteEdge
+
+  // const onDeleteEdge = (edge: Array<Edge>) => {
+  //   edge.map((CurEle: any) => {
+  //     deleteEdge(CurEle.id, CurEle.data.label)
+  //   })
+  // } 
+
+  
   return (
     <div className="reactflow-wrapper absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
-        draggable
-        nodesDraggable={true}
-        proOptions={proOptions}
-        panOnScroll
-        defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
-        nodes={defaultNodes}
-        edges={defaultEdges}
+        panOnScroll={true}
+        defaultNodes={defaultNodes}
+        defaultEdges={defaultEdges}
         defaultEdgeOptions={defaultEdgeOptions}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -233,6 +240,7 @@ function Flow() {
         connectionLineComponent={ConnectionLine}
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
+        zoomOnScroll={false}
         //@ts-ignore
         edgeTypes={edgeTypeMap}
         nodeTypes={nodeTypeMap}
@@ -251,7 +259,7 @@ function Flow() {
           //nodeComponent={MiniMapNode}
           zoomable
         />
-        <Controls />
+        <Controls /> 
         {/* <CustomControls /> */}
       </ReactFlow>
 
