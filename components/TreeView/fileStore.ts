@@ -2,27 +2,19 @@ import { create } from "zustand";
 // @ts-ignore
 import TreeModel from "tree-model-improved";
 import { MyData, findById } from "./backend";
-import { findNode, allNodes, getNodes } from "../Flow/Nodes/gqlNodes";
-import { allEdges, getEdges } from "../Flow/Edges/gqlEdges";
 import {
   createFolderInMain,
   newFolderInMain,
   createFolderInFolder,
   newFolderInFolder,
-  // getInitData,
-  // getTreeNode,
   createFileInFolder,
   newFileInFolder,
   deleteFileBackend,
   deleteFolderBackend,
   createFileInMain,
   newFileInMain,
-  getTreeNodeByUser,
-  getMainByUser
 } from "./gqlFiles";
-import { auth } from "../../auth";
 
-const userEmail = auth.currentUser?.email || "";
 
 function searchTree(element: any, matchingTitle: any): any {
   if (element.id == matchingTitle) {

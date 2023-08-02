@@ -11,12 +11,6 @@ const link = createHttpLink({
   fetch,
 });
 
-// const client = new ApolloClient({
-//   //ssrMode:true,
-//   uri: "http://localhost:3000/api/graphql",
-//   cache: new InMemoryCache(),
-
-// });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),

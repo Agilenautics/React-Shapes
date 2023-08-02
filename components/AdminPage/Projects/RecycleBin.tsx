@@ -247,7 +247,7 @@ function Projects() {
                   <label className="fontWeight-bold">{project.name}</label>
                 </td>
                 <td className="hidden px-6 py-4 md:table-cell">
-                  {project.deletedAt}
+                  {project.deletedAT}
                 </td>
                 <td className="px-6 py-4">
                   <button

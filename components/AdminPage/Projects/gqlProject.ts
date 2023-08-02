@@ -10,6 +10,7 @@ query getProjets {
     timeStamp
     userName
     description
+    
   }
 }
 `
@@ -28,6 +29,7 @@ query getUser($where: userWhere) {
       description
       name
       recycleBin
+      deletedAT
     }
   }
 }
@@ -59,6 +61,7 @@ mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
       description
       name
       recycleBin
+      deletedAT
     }
   }
 }
@@ -66,6 +69,12 @@ mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
 
 
 const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  var dateObj = new Date();
+  var month = dateObj.getUTCMonth() + 1; //months from 1-12
+  var day = dateObj.getUTCDate();
+  var year = dateObj.getUTCFullYear();
+  
+  const newdate = year + "/" + month + "/" + day;
   await client.mutate({
     mutation,
     variables: {
@@ -73,7 +82,8 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
         id
       },
       update: {
-        recycleBin: true
+        recycleBin: true,
+        deletedAT:newdate
       }
     },
     // update: (cache, { data }) => {
@@ -116,7 +126,8 @@ const recycleProject = async (id: string, mutation: DocumentNode | TypedDocument
         id
       },
       update: {
-        recycleBin: false
+        recycleBin: false,
+        deletedAT:""
       }
     },
     refetchQueries: [{
@@ -285,11 +296,43 @@ mutation addProject($where: userWhere, $update: userUpdateInput) {
         name
         description
         recycleBin
+        deletedAT
       }
     }
   }
 }
 `
+const addProject_Backend =async (email:String,project:any,mutation:DocumentNode | TypedDocumentNode<any, OperationVariables>,query: DocumentNode | TypedDocumentNode<any, OperationVariables>  ) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where:{
+        emailId:email
+      },
+      update: {
+        hasProjects: [
+          {
+            create: [
+              {
+                node: {
+                  description: project.desc,
+                  name: project.name,
+                  isOpen: true,
+                  recycleBin: false,
+                  deletedAT:"",
+                  userName: "",
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    refetchQueries(result) {
+      return [{query}]
+    },
+  })
+}
 const EDIT_PROJECT = gql`
 mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
   updateMains(where: $where, update: $update) {
@@ -317,4 +360,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin,addProject_Backend }

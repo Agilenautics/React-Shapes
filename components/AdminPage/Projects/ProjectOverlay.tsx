@@ -1,13 +1,16 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { ADD_PROJECT, GET_PROJECTS } from "./gqlProject";
+import { ADD_PROJECT, GET_PROJECTS, addProject_Backend } from "./gqlProject";
 import { Project } from "reactflow";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
 
+
+
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
+  notify: () => void;
   projectData: Array<Project>;
   userEmail: String;
   handleMessage: (message: string) => void;
@@ -15,28 +18,32 @@ interface AddProjectPopupProps {
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onClose,
+  notify,
   userEmail,
+  projectData,
   handleMessage,
 }) => {
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [isFormValid, setIsFormValid] = useState(false);
 
   const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT);
-  const [errors, setError] = useState({});
-  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+  const [errors, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
 
   const addProject = projectStore((state) => state.addProject)
-  const errorFromStore = projectStore((state) => state.error);
 
 
-  console.log(userEmail)
+  // successfull message
 
 
 
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+
+
+
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const id = Math.floor(Math.random() * 26) + Date.now();
     const newProject = {
@@ -46,47 +53,27 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       createdAt: new Date(),
       timeStamp: new Date(),
     }
-
-    addProject(newProject)
-
-    // onAddProject(formData.name, formData.desc);
-    sendMessage("project created");
-    createProject({
-      variables: {
-        where: {
-          emailId: userEmail,
-        },
-        update: {
-          hasProjects: [
-            {
-              create: [
-                {
-                  node: {
-                    description: formData.description,
-                    name: formData.name,
-                    isOpen: true,
-                    recycleBin: false,
-                    userName: "",
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      },
-      refetchQueries: [{ query: GET_PROJECTS }],
-    });
-    setFormData({ name: "", description: "" });
-    // if(errorFromStore){
-    //   console.log(errorFromStore,"inside condition")
-    //   // onClose()
-    // }
-    // // onClose();
-    // console.log(errorFromStore,"inside condition")
-
-
-
+    const existanceProject = projectData.find((project) => project.name === formData.name)
+    if (existanceProject) {
+      setError('This Project already exists')
+    } else {
+      addProject_Backend(userEmail, formData, ADD_PROJECT, GET_PROJECTS);
+      addProject(newProject)
+      notify()
+      setFormData({ name: "", description: "" });
+      setError(null)
+      onClose()
+    }
   };
+
+
+
+
+
+
+
+
+
 
   const sendMessage = (message: string) => {
     handleMessage(message);
@@ -97,9 +84,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     </div>
   );
 
-  useEffect(() => {
-    console.log(errorFromStore)
-  }, [errorFromStore]);
 
 
 
@@ -108,12 +92,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   ) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-    setError((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-    }));
-    setSubmitButtonDisabled(false);
-    setIsFormValid(formData.name.trim() !== "");
   };
 
   return (
@@ -121,7 +99,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       <div className="w-96 rounded-lg bg-white p-8">
         <h2 className="mb-4 text-lg font-semibold">Add New Project</h2>
         <form onSubmit={handleFormSubmit}>
-          <div className="mb-4">
+          <div className="">
             <label htmlFor="projectName" className="mb-2 block font-medium">
               Project Name <span className="text-xl text-red-500">*</span>
             </label>
@@ -136,6 +114,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               required
             />
           </div>
+          <div className="p-2 text-red-500"> {errors && <span> {errors} </span>} </div>
           <div className="mb-4">
             <label htmlFor="projectDesc" className="mb-2 block font-medium">
               Project Description
@@ -160,13 +139,14 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
             <button
               type="submit"
               className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-              disabled={!isFormValid}
+              disabled={formData.name === ''}
             >
               Add Project
             </button>
           </div>
         </form>
       </div>
+
     </div>
   );
 };

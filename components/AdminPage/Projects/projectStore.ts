@@ -43,9 +43,9 @@ const projectStore = create<ProjectState>((set) => ({
                 // If a project with the same name exists, update the error message
                 return { error: "A project with the same name already exists" };
             }
-            const updatedProjects = [...state.projects, newProject];
+            const updatedProjects = [newProject,...state.projects];
 
-            return { projects: updatedProjects };
+            return { projects: updatedProjects,error:null };
         }),
     updateProjectData: (projects: Array<Project>) =>
         set((state) => {
@@ -66,7 +66,8 @@ const projectStore = create<ProjectState>((set) => ({
             const newProjects = state.projects?.filter(project => project.id !== id);
             const to_be_deleted = state.projects.filter((project) => project.id === id)[0];
             const to_be_updated = { ...to_be_deleted, recycleBin: true }
-            return { projects: newProjects, recycleBin: [to_be_updated] }
+            const updated_Bin = [...state.recycleBin, to_be_updated];
+            return { projects: newProjects, recycleBin: updated_Bin }
         }),
     updateProject: (id: string, data: any) =>
         set((state) => {

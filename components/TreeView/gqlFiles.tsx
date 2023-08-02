@@ -26,7 +26,6 @@ const createProject = async (
   data: any,
   mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) => {
- // console.log(data);
   await client.mutate({
     mutation: mutations,
     variables: {
@@ -39,19 +38,7 @@ const createProject = async (
     },
   });
 };
-// Update project name and description
-const updateProject = gql`
-  mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
-    updateMains(where: $where, update: $update) {
-      mains {
-        id
-        name
-        description
-        userName
-      }
-    }
-  }
-`;
+
 const File_Fragment = gql`
   ${Node_Fragment}
   ${Edge_Fragment}

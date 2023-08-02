@@ -19,6 +19,8 @@ import LoadingIcon from "../../LoadingIcon";
 import { User } from "../Users/Users";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Project {
   id: string;
@@ -51,19 +53,21 @@ function Projects() {
   const handleSorting = projectStore((state) => state.handleSorting);
   const sortValue = projectStore((state) => state.sortOrder)
   const updateSortOrder = projectStore((state) => state.updateSortOrder);
-  const deleteProject = projectStore((state)=>state.deleteProject);
-  const updateProject = projectStore((state)=>state.updateProject);
-  const updateRecycleBinProject = projectStore((state)=>state.updateRecycleBinProject);
+  const deleteProject = projectStore((state) => state.deleteProject);
+  const updateProject = projectStore((state) => state.updateProject);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
 
 
 
   // user store
-  const userType = userStore((state)=>state.userType);
-  const updateUserType = userStore((state)=>state.updateUserType)
+  const userType = userStore((state) => state.userType);
+  const updateUserType = userStore((state) => state.updateUserType)
+
+
+
+  const notify = () => toast.success("Project Created...");
 
   
-  
-
 
 
 
@@ -84,9 +88,9 @@ function Projects() {
       updateUserType(userType)
       //@ts-ignore
       const projectData = data.users[0].hasProjects;
-      
+
       //@ts-ignore
-      setProjectData(projectData); 
+      setProjectData(projectData);
       updateProjects(projectData)
       updateRecycleBinProject(projectData)
     }
@@ -105,7 +109,7 @@ function Projects() {
 
 
 
- 
+
 
   useEffect(() => {
     const filteredProjects = projectData.filter((project) =>
@@ -141,9 +145,9 @@ function Projects() {
   };
 
   const handleSaveButtonClick = (projectId: string) => {
-    const result = {projectName,projectDesc}
+    const result = { projectName, projectDesc }
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
-    updateProject(projectId,result)
+    updateProject(projectId, result)
     setProjectId(null);
     setProjectName("");
   };
@@ -176,7 +180,6 @@ function Projects() {
   };
 
   const handleAddProject = (name: string, desc: string) => {
-    console.log("Hello")
     setShowForm(false);
   };
 
@@ -294,7 +297,7 @@ function Projects() {
           </thead>
           <tbody>
             {allProjects
-              .map((project: any,index) => (
+              .map((project: any, index) => (
                 <tr key={index} className="border-b bg-white">
                   <td className="whitespace-nowrap px-4 py-4 font-medium">
                     {projectId === project.id ? (
@@ -336,6 +339,8 @@ function Projects() {
                       >
                         Save
                       </button>
+                      
+
                     ) : (
                       <button
                         onClick={() =>
@@ -367,9 +372,11 @@ function Projects() {
       </div>
       {showForm && (
         <ProjectOverlay
+          notify = {notify}
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
-          projectData={data}
+          // @ts-ignore
+          projectData={allProjects}
           userEmail={userEmail}
           handleMessage={handleMessage}
         />
@@ -390,6 +397,7 @@ function Projects() {
           </div>
         </div>
       )}
+      <ToastContainer autoClose= {2500} />
     </div>
   );
 }

@@ -72,6 +72,33 @@ export default function CustomEdge({
 
   return (
     <>
+      <defs>
+        <marker
+          key={`circle-${data.id}`}
+          id={`circle-${data.id}`}
+          fill={lineColor} // Use lineColor variable as fill color
+          viewBox="0 0 10 10"
+          refX="5"
+          refY="5"
+          markerWidth="3"
+          markerHeight="3"
+        >
+          <circle cx="5" cy="5" r="5" />
+        </marker>
+        <marker
+          key={`arrow-${data.id}`}
+          id={`arrow-${data.id}`}
+          fill={lineColor} // Use lineColor variable as fill color
+          viewBox="0 -5 10 10"
+          refX="5"
+          refY="0"
+          markerWidth="5"
+          markerHeight="5"
+          orient="auto-start-reverse"
+        >
+          <path d="M0,-5L10,0L0,5" fill={lineColor} ></path>
+        </marker>
+      </defs>
 
       {/* Edge marker at the end */}
       <marker
@@ -115,8 +142,8 @@ export default function CustomEdge({
           setEditing(true);
         }}
       />
+
       <foreignObject
-        // className="bg-red-200" // ? For debugging purposes
         width={fOWidth}
         height={fOHeight}
         x={labelX - fOWidth / 2}
