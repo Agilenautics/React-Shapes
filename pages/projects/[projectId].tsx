@@ -64,7 +64,9 @@ function SideBar() {
         <SummarySidebar projectId={projectId} />
         <div className="flex w-full flex-col bg-gray-50 pl-8">
           {isLoading ? (
+            <div className="flex justify-center items-center h-full">
             <LoadingIcon />
+            </div>
           ) : (
             <>
               <ProjectOverview

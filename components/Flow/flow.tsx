@@ -229,9 +229,13 @@ function Flow() {
   return (
     <div className="reactflow-wrapper absolute -z-20 h-screen w-screen transition-all duration-100">
       <ReactFlow
-        panOnScroll={true}
-        defaultNodes={defaultNodes}
-        defaultEdges={defaultEdges}
+        draggable
+        nodesDraggable={true}
+        proOptions={proOptions}
+        panOnScroll
+        defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
+        nodes={defaultNodes}
+        edges={defaultEdges}
         defaultEdgeOptions={defaultEdgeOptions}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -240,7 +244,6 @@ function Flow() {
         connectionLineComponent={ConnectionLine}
         snapGrid={snapGrid}
         zoomOnDoubleClick={false}
-        zoomOnScroll={false}
         //@ts-ignore
         edgeTypes={edgeTypeMap}
         nodeTypes={nodeTypeMap}
@@ -259,7 +262,7 @@ function Flow() {
           //nodeComponent={MiniMapNode}
           zoomable
         />
-        <Controls /> 
+        <Controls />
         {/* <CustomControls /> */}
       </ReactFlow>
 

@@ -13,7 +13,7 @@ import 'reactflow/dist/style.css';
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
 import { EdgeTypes } from "reactflow";
-//import { lineColors } from "../constants";
+import { lineColors } from "../constants";
 
 export default function CustomEdge({
   id,
