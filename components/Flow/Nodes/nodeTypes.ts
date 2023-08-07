@@ -57,7 +57,7 @@ const nodeShapeMap = {
   rectangle: ["w-36 h-10", "h-7 rounded-md", ""],
   diamond: [
     "!h-24 w-24",
-    "h-16 w-16 rotate-45 translate-x-[7px] translate-y-[9px] rounded-md -rotate-45",
+    "!h-[77%] w-[70%] rotate-45 translate-x-[10px] translate-y-[9px] rounded-md -rotate-45",
     "-rotate-45",
   ],
   circle: ["h-30 w-30", "!h-20 w-20 rounded-full", "rotate-0"],

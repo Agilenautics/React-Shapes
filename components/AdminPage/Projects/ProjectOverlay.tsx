@@ -16,6 +16,7 @@ interface AddProjectPopupProps {
   handleMessage: (message: string) => void;
 }
 
+
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onClose,
   notify,
@@ -34,11 +35,8 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   const addProject = projectStore((state) => state.addProject)
 
 
+
   // successfull message
-
-
-
-
 
 
 
@@ -53,6 +51,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       createdAt: new Date(),
       timeStamp: new Date(),
     }
+    
     const existanceProject = projectData.find((project) => project.name === formData.name)
     if (existanceProject) {
       setError('This Project already exists')
@@ -67,14 +66,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   };
 
 
-
-
-
-
-
-
-
-
   const sendMessage = (message: string) => {
     handleMessage(message);
   };
@@ -83,8 +74,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       <LoadingIcon />
     </div>
   );
-
-
 
 
   const handleInputChange = (
