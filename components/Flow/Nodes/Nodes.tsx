@@ -36,7 +36,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   // @ts-ignore
   const description = data.description;
 
-  console.log(shapeCSS)
 
   // const updateNodeData_Links = async () => {
   //console.log(shapeCSS)
@@ -95,9 +94,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   }
 
   return (
-    <div className="">
+    <div>
       <div
-        className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
+        className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]}  group relative`}
       >
         {Object.keys(handlePositions).map((key) => (
           <Handle

@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { FileTree } from "../TreeView/fileRenderer";
+import { BacklogsTree, FileTree } from "../TreeView/fileRenderer";
 import { AiFillFolderAdd, AiFillFileAdd } from "react-icons/ai";
 import DarkModeToggleButton from "./DarkModeToggleButton";
 import fileStore from "../TreeView/fileStore";
 import BreadCrumbs from "./BreadCrumbs";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
 import { getMainByUser, getTreeNodeByUser } from "../TreeView/gqlFiles";
-import TopBar from "../AdminPage/TopBar";
+import Link from "next/link";
 
 
 const Sidebar = () => {
@@ -16,6 +15,9 @@ const Sidebar = () => {
   const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
   const [menuOpen, setMenuOpen] = useState("h-0 overflow-hidden");
   const updateInitData = fileStore((state) => state.updateInitData);
+
+
+  
 
   const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
@@ -47,7 +49,7 @@ const Sidebar = () => {
   return (
     <div>
       <div
-        className={`absolute left-8 top-8 z-50 rounded px-1 duration-700 ease-in-out focus:outline-none ${
+        className={` z-50 rounded p-1 duration-700 ease-in-out focus:outline-none ${
           showSidebar ? "bg-transparent" : "bg-white dark:bg-neutral-900"
         }`}
       >
@@ -74,7 +76,7 @@ const Sidebar = () => {
       </div>
 
       <div
-        className={`fixed left-0 top-0 -z-10 h-full w-[18vw] bg-white shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${
+        className={`fixed left-0 top-0 -z-10  w-[18vw] bg-white shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${
           showSidebar ? "sidebar-shadow translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -110,10 +112,17 @@ const Sidebar = () => {
             <AiFillFileAdd className="add-buttons-icon" />  Add File 
             </button>
         </div>
-        <div className="h-[58vh]">
+        <div className="h-[48vh]">
           <FileTree />
+          {/* <BacklogsTree /> */}
+
         </div>
-        <DarkModeToggleButton />
+        <div className="text-center  m-3 rounded-lg mb-6 dark:text-white"><Link href={'/backlogs/'+projectId} > Backlogs </Link></div>
+        {/* <Link href="/backlogs">Backlogs</Link> */}
+
+        <div>
+          <DarkModeToggleButton />
+        </div>
       </div>
 
       <div

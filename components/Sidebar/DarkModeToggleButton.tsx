@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {BsSun,BsMoonStars} from 'react-icons/bs'
 
 /**
  * This custom hook sets the theme to the value of the theme cookie, and then it sets the theme to the opposite of
@@ -40,8 +41,8 @@ function DarkModeToggleButton() {
     setIsDark(e);
   }
   return (
-    <div className="mt-4 ml-4">
-      <label className="flex cursor-pointer items-center">
+    <div className=" ml-4 ">
+      <label className="flex cursor-pointer items-center border">
         <div className="relative">
           <input
             type="checkbox"
@@ -50,9 +51,9 @@ function DarkModeToggleButton() {
             onChange={(e) => toggleDarkModeButton(e.target.checked)}
           />
           <div className="block h-6 w-10 rounded-full bg-gray-700"></div>
-          <div className="dot absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition"></div>
+          <div className=" absolute left-1 top-1 h-4 w-4 rounded-fulltransition"> {isDark?<BsMoonStars  className="translate-x-full bg-white rounded-lg  text-lg" />:<BsSun className="text-gold-500 " />} </div>
         </div>
-        <div className="ml-3 transition dark:text-gray-50">Dark Mode</div>
+        <div className="ml-3 transition dark:text-gray-50">{isDark?"Dark Mode":"Light Mode"}</div>
       </label>
     </div>
   );

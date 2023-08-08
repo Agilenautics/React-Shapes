@@ -219,6 +219,7 @@ export const TreeNode = ({
   }
 
   return (
+    // <> {name} </>
     <div
       ref={innerRef}
       style={styles.row}
@@ -243,7 +244,7 @@ export const TreeNode = ({
         {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
         ) : (
-          <span className="flex flex-row text-sm group dark:text-white font-sans">
+          <span className="flex flex-row text-sm group font-sans dark:text-white">
             {name}{" "}
             {state.isSelected &&
               !state.isEditing &&
@@ -255,11 +256,11 @@ export const TreeNode = ({
                   <button
                     onClick={() => {
                       const confirmation = window.confirm('Are you sure you want to delete?');
-                     // console.log(confirmation)
-                      
+                      // console.log(confirmation)
+
                       if (confirmation) {
 
-                      onDelete(id);
+                        onDelete(id);
 
                       }
                     }}
@@ -275,6 +276,15 @@ export const TreeNode = ({
     </div>
   );
 };
+
+//backlogs
+
+export const BacklogsView = ({ innerRef,data,styles,state,handlers,tree }: NodeRendererProps<MyData>) => {
+  console.log(data)
+  return (
+      <div>{data.name}</div>
+  )
+}
 
 
 export const TreeNode2 = ({
@@ -294,7 +304,7 @@ export const TreeNode2 = ({
 
   if (state.isSelected) {
     selectedNodeId = data.id!;
-   // console.log("S:", selectedNodeId);
+    // console.log("S:", selectedNodeId);
   }
   const customQuery = gql`
     query FindFileById($nodeId: String!) {
@@ -307,7 +317,7 @@ export const TreeNode2 = ({
   async function getfileId() {
     try {
       result = await getFileByNode(selectedNodeId, customQuery);
-     // console.log("R=", result);
+      // console.log("R=", result);
     } catch (error) {
       console.error("Error retrieving file ID:", error);
     }
@@ -341,7 +351,7 @@ export const TreeNode2 = ({
     <div
       ref={innerRef}
       style={{ ...styles.row, ...nodeStyles }}
-      className={`${classNames("row", state, disabledCursorClass)} dark:text-white` }
+      className={`${classNames("row", state, disabledCursorClass)} dark:text-white`}
       onClick={loadFlowNodes(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -363,15 +373,12 @@ export const TreeNode2 = ({
         ) : (
           <span className="flex flex-row">
             {name} {state.isSelected}
-                  {/* <ExpandableChip
-                    onRename={handleRename}
-                    onDelete={handleDelete}
-                  />
-                </div>
-              )} */}
           </span>
         )}
       </div>
     </div>
   );
 };
+
+
+

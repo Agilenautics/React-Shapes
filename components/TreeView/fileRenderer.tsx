@@ -1,16 +1,18 @@
 import AutoSize from "react-virtualized-auto-sizer";
 import { Tree, TreeApi } from "react-arborist";
-import { TreeNode, TreeNode2 } from "./treeNode";
+import { BacklogsView, TreeNode, TreeNode2 } from "./treeNode";
 import { useBackend } from "./backend";
 import LoadingIcon from "../LoadingIcon";
 import React, { useState, useEffect } from "react";
 import fileStore from "./fileStore";
+import useBacklogs from "./backlogsBackend";
 
 export function FileTree() {
   const backend = useBackend();
-  // const [isLoading, setIsLoading] = useState(true);
-
   const loading = fileStore((state) => state.loading)
+
+
+
 
 
   if (loading) {
@@ -97,4 +99,40 @@ export function LinkTree() {
       )}
     </AutoSize>
   );
+}
+
+
+export function BacklogsTree() {
+  const backlogs = useBacklogs();
+  const backend = useBackend()
+  return (
+    <AutoSize>
+      {(props: any) => (
+        <Tree
+
+          //@ts-ignore
+          ref={(tree: TreeApi) => {
+
+            //@ts-ignore
+            global.tree = tree;
+          }}
+          data={backlogs.data}
+          getChildren="children"
+          isOpen="isOpen"
+          hideRoot
+          indent={24}
+
+          // onMove={backend.onMove}
+          // onEdit={backend.onEdit}
+          rowHeight={22}
+          width={props.width}
+          height={props.height}
+        >
+          {BacklogsView}
+        </Tree>
+      )}
+    </AutoSize>
+  )
+
+
 }
