@@ -30,7 +30,14 @@ const typeDefs = gql`
     projects: [main!]!
     getUsers: [user!]!
   }
-
+ type info {
+  description:String
+  assignedTo: String
+  status:String
+  dueDate:String
+ # hasInfo:folder @relationship( type:"hasInfo",direction:OUT)
+ # hasInfo:file @relationship( type:"hasInfo",direction:OUT)
+ }
   type Mutation {
     createProject(newProject: projectInput!): main
     updateProject(projectData: projectInput!): updateData
@@ -70,6 +77,7 @@ const typeDefs = gql`
     isOpen: Boolean!
     timeStamp: DateTime @timestamp
     name: String!
+    hasInfo:info @relationship( type:"hasInfo",direction:IN)
     mainHas: main @relationship(type: "hasFolder", direction: IN)
     hasFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
     hasFile: [file!]! @relationship(type: "hasFile", direction: OUT)
@@ -81,6 +89,7 @@ const typeDefs = gql`
     timeStamp: DateTime! @timestamp
     type: String!
     name: String!
+    hasInfo:info @relationship( type:"hasInfo",direction:IN)
     hasflowchart: flowchart @relationship(type: "hasFlowchart", direction: OUT)
     folderHas: folder @relationship(type: "hasFolder", direction: IN)
     #hasFlownodes: [flowNode!]! @relationship (type:"hasFlownodes", direction:OUT)
@@ -100,6 +109,8 @@ const typeDefs = gql`
     draggable: Boolean!
     flowchart: String!
     type: String!
+    status:String
+    assignedTo:String
     hasdataNodedata: nodeData @relationship(type: "hasData", direction: OUT)
     haspositionPosition: position
       @relationship(type: "hasPosition", direction: OUT)

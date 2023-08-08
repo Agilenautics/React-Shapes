@@ -162,7 +162,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               </div>
             ) : (
               <div>
-              <p className="py-1 text-center ">{label}</p>
+              <p className="py-1 text-center text-[0.6rem]">{label}</p>
               {data.links.flag ? (
               <div
                 className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "

@@ -36,7 +36,7 @@ function SummarySidebar({ projectId }: SummarySidebarProps) {
           <a className={`flex items-center p-4 py-2`}>Flowchart</a>
         </Link>
       </div>
-      <div
+      {/* <div
         className={`ml-0 h-10 w-full ${
           activeLink === "backlogs"
             ? "border-r-2 border-blue-400 bg-blue-300"
@@ -46,7 +46,7 @@ function SummarySidebar({ projectId }: SummarySidebarProps) {
         <Link href={"/backlogs/" + projectId }>
           <a className={`flex items-center p-4 py-2`}>Backlogs</a>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }

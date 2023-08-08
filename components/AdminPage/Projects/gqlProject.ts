@@ -315,7 +315,7 @@ const addProject_Backend =async (email:String,project:any,mutation:DocumentNode 
             create: [
               {
                 node: {
-                  description: project.desc,
+                  description: project.description,
                   name: project.name,
                   isOpen: true,
                   recycleBin: false,

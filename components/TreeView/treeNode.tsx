@@ -243,7 +243,7 @@ export const TreeNode = ({
         {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
         ) : (
-          <span className="flex flex-row text-lg group dark:text-white">
+          <span className="flex flex-row text-sm group dark:text-white font-sans">
             {name}{" "}
             {state.isSelected &&
               !state.isEditing &&

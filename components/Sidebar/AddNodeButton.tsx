@@ -55,8 +55,10 @@ function AddNodeButton() {
               </div>
               {Object.keys(nodeShapeMap).slice(0, 4).map((key, _) => (
                 <div
-                  // @ts-ignore
-                  className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${nodeShapeMap[key][1]}`}
+                  key={key}
+                  className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${
+                    //@ts-ignore
+                    nodeShapeMap[key][1]}`}
                   onClick={() => handleAddNode(key)}
                 ></div>
               ))}
