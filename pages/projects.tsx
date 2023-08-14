@@ -41,7 +41,7 @@ function ProjectPage() {
     <div>
       <TopBar />
       <div className="flex">
-        <Sidebar activeLink={activeLink} onLinkClick={handleLinkClick} />
+        {/* <Sidebar activeLink={activeLink} onLinkClick={handleLinkClick} /> */}
         <div className="flex flex-grow flex-col bg-gray-50">
           <Projects />
         </div>

@@ -17,11 +17,11 @@ const Sidebar = () => {
   const updateInitData = fileStore((state) => state.updateInitData);
 
 
-  
+
 
   const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
-  const setLoading = fileStore((state)=> state.setLoading);
+  const setLoading = fileStore((state) => state.setLoading);
 
   function toggleMenu() {
     setMenuOpen(menuOpen === "h-fit" ? "h-0 overflow-hidden" : "h-fit");
@@ -76,7 +76,7 @@ const Sidebar = () => {
       </div>
 
       <div
-        className={`fixed left-0 top-0 -z-10  w-[18vw] bg-white shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${
+        className={`fixed h-[100%] left-0 top-0 -z-10  w-[18vw] bg-white shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${
           showSidebar ? "sidebar-shadow translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -85,7 +85,7 @@ const Sidebar = () => {
           id="sidebar-content"
           className="mt-10 flex flex-col items-center justify-center"
           style={{
-            marginTop: "-55px",
+            marginTop: "-65px",
           }}
         >
           <Image
@@ -112,7 +112,7 @@ const Sidebar = () => {
             <AiFillFileAdd className="add-buttons-icon" />  Add File 
             </button>
         </div>
-        <div className="h-[48vh]">
+        <div className="h-[5vh]">
           <FileTree />
           {/* <BacklogsTree /> */}
 
@@ -130,6 +130,49 @@ const Sidebar = () => {
       >
       </div>
     </div>
+
+
+    // <div className={` border h-[100vh] border-black duration-500 ease-in-out focus:outline-none ${showSidebar ? "bg-transparent w-[20%] " : "bg-white dark:bg-neutral-900 w-0"} `} >
+
+    //   <div>
+    //     <button
+    //       className=" flex  flex-col items-center border p-1"
+    //       onClick={toggleMenu}
+    //     >
+    //       <div
+    //         className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "translate-y-3 rotate-45" : ""
+    //           }`}
+    //       />
+    //       <div
+    //         className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "opacity-0" : ""
+    //           }`}
+    //       />
+    //       <div
+    //         className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "-translate-y-3 -rotate-45 " : ""
+    //           }`}
+    //       />
+    //     </button>
+    //   </div>
+
+    //   {/* Image */}
+
+    //   <div className={`border border-black text-center  `} >
+    //     <Image
+    //       className="mx-auto"
+    //       src="/assets/flow-chart.png"
+    //       height={124}
+    //       width={124}
+    //       alt="Company Logo"
+    //     />
+
+    //   </div>
+
+
+
+    //   {/* <div className="h-[40%]"> <FileTree /> </div> */}
+    //   <div className={`${showSidebar ? "translate-x-0 " : '-translate-x-full hidden'} duration-700 ease-in-out `}>Baclogs</div>
+
+    // </div>
   );
 };
 

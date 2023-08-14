@@ -44,7 +44,7 @@ function TopBar() {
   }
 
   return (
-    <div className="flex h-14 items-center border-b border-gray-300 text-xl dark:text-white">
+    <div className="flex sticky top-0 right-0 left-0 h-14 items-center border-b border-gray-300 text-xl dark:text-white">
       <a className="ml-6 font-bold text-gray-400">FLOWCHART</a>
       <div className="flex flex-grow items-center justify-center space-x-8 text-lg">
         <a className="hover:text-sky-700">Projects</a>

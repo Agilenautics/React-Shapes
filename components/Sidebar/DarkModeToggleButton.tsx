@@ -41,8 +41,8 @@ function DarkModeToggleButton() {
     setIsDark(e);
   }
   return (
-    <div className=" ml-4 ">
-      <label className="flex cursor-pointer items-center border">
+    <div className=" ml-4">
+      <label className="flex cursor-pointer items-center ">
         <div className="relative">
           <input
             type="checkbox"
@@ -50,8 +50,8 @@ function DarkModeToggleButton() {
             checked={isDark}
             onChange={(e) => toggleDarkModeButton(e.target.checked)}
           />
-          <div className="block h-6 w-10 rounded-full bg-gray-700"></div>
-          <div className=" absolute left-1 top-1 h-4 w-4 rounded-fulltransition"> {isDark?<BsMoonStars  className="translate-x-full bg-white rounded-lg  text-lg" />:<BsSun className="text-gold-500 " />} </div>
+          <div className="block h-6 font-bold  w-16 rounded-full bg-gray-700"></div>
+          <div className={`absolute w-5  h-5 bg-white border ${isDark?'translate-x-full left-[22px]':"left-[2px]"}  top-[2.5px] duration-300 ease-in rounded-full `}> {isDark?<BsMoonStars  className="text-lg p-[2px]" />:<BsSun className="text-lg p-[2px]" />} </div>
         </div>
         <div className="ml-3 transition dark:text-gray-50">{isDark?"Dark Mode":"Light Mode"}</div>
       </label>

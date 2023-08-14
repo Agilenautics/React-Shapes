@@ -14,7 +14,6 @@ export function FileTree() {
 
 
 
-
   if (loading) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
@@ -41,7 +40,7 @@ export function FileTree() {
           onMove={backend.onMove}
           onToggle={backend.onToggle}
           onEdit={backend.onEdit}
-          rowHeight={22}
+          // rowHeight={22}
           width={props.width}
           height={props.height}
         >

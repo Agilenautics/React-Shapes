@@ -259,9 +259,7 @@ export const TreeNode = ({
                       // console.log(confirmation)
 
                       if (confirmation) {
-
                         onDelete(id);
-
                       }
                     }}
                     className="ml-2"

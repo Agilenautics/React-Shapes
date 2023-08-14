@@ -360,13 +360,13 @@ function Users() {
 
 export default Users;
 
-function getInitials(name: string) {
+export function getInitials(name: string) {
   const nameArray = getNameFromEmail(name);
   const initials = [nameArray].map((name) => name.charAt(0)).join("");
   return initials;
 }
 
-const getNameFromEmail = (email: string) => {
+export const getNameFromEmail = (email: string) => {
   let regex = /[^a-z]/gi;
   const name = email.split("@")[0].toLocaleUpperCase();
   return name.replace(regex, "");

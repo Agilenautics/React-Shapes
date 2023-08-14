@@ -1,5 +1,14 @@
 import { create } from "zustand";
 
+interface User {
+    id: string;
+    name: string;
+    emailId: string;
+    userType: string;
+    active: Boolean;
+    userName: string
+}
+
 interface Project {
     id?: string;
     name: string;
@@ -7,6 +16,7 @@ interface Project {
     createdAt: Date | null;
     timeStamp: string;
     description: string;
+    userHas:User[];
 }
 
 export interface ProjectState {

@@ -30,6 +30,10 @@ query getUser($where: userWhere) {
       name
       recycleBin
       deletedAT
+      userHas {
+        emailId
+        userType
+      }
     }
   }
 }
