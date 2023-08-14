@@ -52,7 +52,6 @@ function Users() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [showManageAccountPopup, setShowManageAccountPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [projectsList, setProjectsList] = useState<Project[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +59,12 @@ function Users() {
   
 
   //project store
-  const projects = projectStore((state)=>state.projects)
+  const projects = projectStore((state)=>state.projects);
+  const updateProject = projectStore((state)=>state.updateProjectData)
+
+
+
+
 
 
 
@@ -91,8 +95,8 @@ function Users() {
           const { hasProjects, ...userData } = res[0]
           const userType = userData.userType;
           updateUserType(userType)
-          const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false)
-          setProjectsList(userProjects);
+          const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
+          updateProject(userProjects)
         });
       }
     });
@@ -351,7 +355,8 @@ function Users() {
         <ManageAccountOverlay
           user={selectedUser}
           onClose={() => setShowManageAccountPopup(false)}
-          adminProjects={projectsList}
+          // @ts-ignore
+          adminProjects={projects}
         />
       )}
     </div>

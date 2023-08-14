@@ -8,6 +8,7 @@ import { GET_USER, get_user_method } from '../../AdminPage/Projects/gqlProject';
 import { AiOutlineUser } from 'react-icons/ai'
 import { BiSolidLockAlt, BiLogoFacebook, BiLogoGoogle } from 'react-icons/bi'
 import { TbBrandGithubFilled } from 'react-icons/tb'
+import Link from 'next/link';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -114,46 +115,51 @@ const Login: React.FC = () => {
         // login container
 
 
-        <div className='font-sans grid grid-cols-2'>
+        <div className='font-sans h-screen grid grid-cols-2'>
             {/* image section */}
-            <div className='border'></div>
+            <div className=' bg-no-repeat bg-cover bg-fixed' style={{backgroundImage:`url(/assets/loginImage.jpg)`}}   >
+
+            </div>
             {/* login form section */}
-            <div>
+            <div className='p-8'>
                 <h2 className='text-4xl text-center'>WELCOM</h2>
-                <div>
-
-                    {/* image section */}
-
-                </div>
-
-                <div className='border flex flex-col gap-7 m-12'>
-                    <form action="" onSubmit={handleLogin}>
+                <div className=' flex flex-col gap-7 ml-14 mr-14  p-14 '>
+                    <div className='text-center flex  justify-center'>
+                        <img src="/assets/userpng.png" height='90rem' width='90rem' alt="" />
+                    </div>
+                    <form action="" onSubmit={handleLogin} className=' grid-cols-1 grid gap-6  '>
                         {/* email */}
                         <div className='border flex border-black  p-1'>
                             <div className=' flex items-center text-gray-500'>
                                 <AiOutlineUser />
                             </div>
                             <div className='p-1'>
-                                <input className='outline-none ' type="text" name='email' placeholder='Email Address' id='email' value={email} autoComplete='off' onChange={(e) => setEmail(e.target.value)} />
+                                <input className='outline-none ' type="text" name='email' placeholder='Email Address' id='email' value={email} autoComplete='off' onChange={(e) => setEmail(e.target.value)} required/>
                             </div>
                         </div>
                         {/* password */}
-                        <div className='border flex border-black  p-1'>
-                            <div className='flex items-center text-gray-500'>
-                                <BiSolidLockAlt />
+                        <div>
+                            <div className='border flex border-black  p-1'>
+                                <div className='flex items-center text-gray-500'>
+                                    <BiSolidLockAlt />
+                                </div>
+                                <div className='p-1'>
+                                    <input className='outline-none ' type="password" placeholder='Password' name='password' id='password' value={password} autoComplete='off' onChange={(e) => setPassword(e.target.value)} required />
+                                </div>
                             </div>
-                            <div className='p-1'>
-                                <input className='outline-none ' type="password" placeholder='Password' name='password' id='password' value={password} autoComplete='off' onChange={(e) => setPassword(e.target.value)} />
-                            </div>
+                            {loginError.error && <div className='text-red-500'>{loginError.msg}</div> }
                         </div>
-                        <div className='text-red-500'>error section</div>
+{/* 
                         <div className='bg-blue-700/75 text-white text-center p-2 rounded'>
-                            <input type='submit' value="Login" className='cursor-pointer  ' />
-                        </div>
+                            <input type='submit' value="Login" className='cursor-pointer w-fit ' />
+                        </div> */}
+                        <button type='submit' className='bg-blue-700 text-white p-2 rounded hover:bg-blue-700/75 duration-300'>Login</button>
+
+
                     </form>
                     <div className='flex justify-between'>
-                        <div>FORGOT PASSWORD?</div>
-                        <div>NEW USER? <span>RESISTER</span> </div>
+                        <Link href={`/forgot-password`}>FORGOT PASSWORD?</Link>
+                        <div>NEW USER? <Link href={`/signup`} >RESISTER</Link > </div>
                     </div>
                     <div className='flex gap-4 '>
                         <div>Or Loging Using :</div>

@@ -136,6 +136,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     handleMessage(message);
   };
 
+
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-6/12 rounded-lg bg-white p-8">
