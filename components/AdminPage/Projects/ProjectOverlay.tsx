@@ -84,7 +84,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div onClick={onClose} className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-[45%] rounded bg-white p-8">
         <h2 className="mb-4 text-lg font-semibold">Add New Project</h2>
         <form onSubmit={handleFormSubmit}>

@@ -24,6 +24,7 @@ import {
 } from "../Projects/gqlProject";
 import userStore from "./userStore";
 import projectStore from "../Projects/projectStore";
+import { HiArrowsUpDown } from "react-icons/hi2";
 
 //user interface type
 export interface User {
@@ -56,11 +57,11 @@ function Users() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
-  
+
 
   //project store
-  const projects = projectStore((state)=>state.projects);
-  const updateProject = projectStore((state)=>state.updateProjectData)
+  const projects = projectStore((state) => state.projects);
+  const updateProject = projectStore((state) => state.updateProjectData)
 
 
 
@@ -131,7 +132,7 @@ function Users() {
 
   const handleSaveClick = () => {
     if (editedUser) {
-      handleUpdate_User(editedUser,accessLevel, UPDATE_USER, ALL_USERS);
+      handleUpdate_User(editedUser, accessLevel, UPDATE_USER, ALL_USERS);
       updateUser(editedUser, accessLevel)
       setEditedUser(null);
     }
@@ -195,16 +196,18 @@ function Users() {
   };
 
   return (
-    <div className="relative overflow-x-auto" style={{ overflowX: "hidden" }}>
-      <div className="ml-6 flex items-center">
-        <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
+    <div className=" p-6 border">
+      {/* heading of the table */}
+      <div className="flex items-center">
+        <button className="text-md   rounded text-white bg-sky-500/75 p-2 font-semibold">
           Team Agile
         </button>
       </div>
-      <div className="ml-10 mt-4 flex items-center">
+
+      {/* <div className=" border flex items-center">
         <h2 className="inline-block text-xl font-semibold">Users</h2>
-        <p className="ml-8 inline-block">Total</p>
-        <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
+        <p className="ml-8 inline-block">Total :</p>
+        <div className="">
           {data && data.users && data.users.length}
         </div>
         <button
@@ -216,24 +219,57 @@ function Users() {
           <GrAdd />
           <div className="mx-2 my-1">New User</div>
         </button>
+      </div> */}
+
+      <h2 className="text-2xl font-semibold py-4">Users</h2>
+
+      {/* top bar  */}
+
+      <div className="grid grid-cols-4 bg-white gap-6 p-4 shadow ">
+        <div className="border rounded border-slate-400 p-1 ">
+          <input
+            className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
+            type="text"
+            id="search"
+            placeholder="Search"
+            autoComplete="off"
+          // value={searchTerm}
+          // onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className=" col-span-2  flex justify-end gap-8 items-center">
+          <span> Total : {usersList.length} </span>
+          <button onClick={handleSortClick}>shorting: <HiArrowsUpDown className={`inline ${sortingOrder === 'asc' ? '' : "rotate-180"}`} /> </button>
+          <span>
+            <label htmlFor="">Type : </label>
+            <select className="outline-none  border rounded" name="" id="">
+              <option value="user">All</option>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+              <option value="super user">Super User</option>
+            </select>
+          </span>
+        </div>
+        {/* add user button */}
+        <div className="text-end">
+          <button className={` bg-sky-500/75 p-2 hover:bg-transparent hover:text-sky-500 border border-sky-500/75 duration-300 hover:border-sky-500/75 hover:border rounded text-white ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }${isNewUserDisabled ? "opacity-50" : ""}`}
+            disabled={isButtonDisabled || isNewUserDisabled}
+            onClick={() => setShowAddUserPopup(true)}>Add User</button>
+        </div>
       </div>
+
+
       <div className="relative overflow-x-auto">
-        <table className="ml-10 mt-4 rounded-lg text-left text-sm">
-          <thead className="bg-gray-200 text-xs">
+        <table className="w-full my-6 rounded-lg text-left text-sm">
+          <thead className=" bg-slate-700 text-slate-50 text-xs">
             <tr>
               <th
                 scope="col"
                 className="ml-6 w-60 cursor-pointer px-6 py-3"
-                onClick={handleSortClick}
               >
-                <div className="flex items-center">
-                  Name
-                  {sortingOrder === "asc" ? (
-                    <AiOutlineArrowUp className="ml-2 rotate-180 transform text-gray-600" />
-                  ) : (
-                    <AiOutlineArrowUp className="ml-2 text-gray-600" />
-                  )}
-                </div>
+                Name
               </th>
               <th scope="col" className="py-3 pl-60 pr-20">
                 Access Level
@@ -246,9 +282,9 @@ function Users() {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {usersList.map((user: any) => {
-              return <tr key={user.id} className="border-b bg-white">
+          <tbody className="overflow-y-scroll">
+            {usersList.map((user: any,index) => {
+              return <tr key={user.id} className="border-b border-black bg-white ">
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
@@ -260,7 +296,7 @@ function Users() {
                   </div>
                 </td>
                 { }
-                <td className="max-w-xs whitespace-nowrap py-4 pl-60 pr-20">
+                <td className="max-w-xs whitespace-nowrap py-4 pl-64 ">
                   {editedUser === user.id ? (
                     <select
                       value={accessLevel}
@@ -275,11 +311,11 @@ function Users() {
                   )}
                 </td>
                 <td className="px-16 py-4">{formatDate(user.timeStamp)}</td>
-                <td className="px-10 py-4">
+                <td className="px-4 py-4 ">
                   {confirmDeleteId === user.id ? (
                     <div className="flex items-center">
                       <button
-                        className="text-red-700"
+                        className="text-red-700 "
                         onClick={() => handleConfirmDelete(user.id)}
                         disabled={isButtonDisabled}
                       >
@@ -305,7 +341,7 @@ function Users() {
                         </button>
                       ) : (
                         <button
-                          className="ml-2 mr-2"
+                          className="ml-2 mr-2  rounded-full p-1 hover:bg-slate-200 duration-300"
                           onClick={() => handleEditClick(user.id)}
                           disabled={isButtonDisabled}
                         >
@@ -315,7 +351,7 @@ function Users() {
                         </button>
                       )}
                       <button
-                        className="ml-2 "
+                        className="ml-2 rounded-full p-1 hover:bg-slate-200 duration-300"
                         onClick={() => handleDeleteClick(user.id)}
                         disabled={isButtonDisabled}
                       >
@@ -324,7 +360,7 @@ function Users() {
                         />
                       </button>
                       <button
-                        className="ml-2"
+                        className="ml-2 rounded-full p-1 hover:bg-slate-200 duration-300"
                         type="button"
                         onClick={() => handleManageAccountClick(user)}
                         disabled={isButtonDisabled}
@@ -342,6 +378,29 @@ function Users() {
         </table>
         {message && <div className="mt-4 text-green-500">{message}</div>}
       </div>
+
+
+
+      {/* <div className="grid  gap-4">
+        <div className="shadow flex justify-around bg-white p-2">
+          <div className="border">Name</div>
+          <div className="border">Type</div>
+          <div className="border">Date Added</div>
+          <div className="border">Actions</div>
+        </div>
+        <div className="shadow flex justify-around bg-white p-2">
+          <div className="border">Name</div>
+          <div className="border">Typeajshahdjadjajdhjhdjhj</div>
+          <div className="border">Date Added</div>
+          <div className="border">Actions</div>
+        </div>
+        
+      </div> */}
+
+
+
+
+
       {showAddUserPopup && (
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
@@ -360,6 +419,92 @@ function Users() {
         />
       )}
     </div>
+    // <div className="p-6">
+    //   <button className="text-xl rounded bg-sky-500/75 p-2 text-slate-50">Team Agile</button>
+
+
+    //   {/* heading */}
+
+    //   <h2 className="text-2xl font-semibold py-4">Users</h2>
+
+
+    //   {/* top bar  */}
+
+    //   <div className="grid grid-cols-4 bg-white gap-6 p-4 shadow">
+    //     <div className="border rounded border-slate-400 p-1 ">
+    //       <input
+    //         className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
+    //         type="text"
+    //         id="search"
+    //         placeholder="Search"
+    //         autoComplete="off"
+    //       // value={searchTerm}
+    //       // onChange={(e) => setSearchTerm(e.target.value)}
+    //       />
+    //     </div>
+
+    //     <div className=" col-span-2 border ">
+    //       <span> Total : {usersList.length} </span>
+    //       <button onClick={handleSortClick}>shorting: <HiArrowsUpDown className={`inline ${sortingOrder === 'asc' ? '' : "rotate-180"}`} /> </button>
+    //       <span>
+    //         <label htmlFor="">Type:</label>
+    //         <select className="outline-none  border rounded" name="" id="">
+    //           <option value="user">All</option>
+    //           <option value="user">User</option>
+    //           <option value="admin">Admin</option>
+    //           <option value="super user">Super User</option>
+    //         </select>
+    //       </span>
+    //     </div>
+    //     {/* add user button */}
+    //     <div className="text-end">
+    //       <button className="bg-sky-500/75 p-2 hover:bg-transparent hover:text-sky-500 border border-sky-500/75 duration-300 hover:border-sky-500/75 hover:border rounded text-white">Add User</button>
+    //     </div>
+    //   </div>
+
+
+    //   {/* heading of the table */}
+
+    //   <div className="grid grid-cols-4 gap-6">
+    //     <div className="place-self-center">
+    //       name
+    //     </div>
+    //     <div className="place-self-center">
+    //       type
+    //     </div>
+    //     <div className="place-self-center">
+    //       Date Added
+    //     </div>
+    //     <div className="place-self-center">
+    //       Actions
+    //     </div>
+    //   </div>
+    //   {/* users list */}
+    //   <div>
+    //     {
+    //       usersList.map((users,index)=>{
+    //         const {id,emailId, timeStamp,userType} = users
+    //         console.log(users)
+    //         return(
+    //           <div key={index} className="grid grid-cols-4">
+    //             <div className="">
+    //               <span>{getInitials(emailId)}</span>
+    //               <span> {getNameFromEmail(emailId)} </span>
+    //             </div>
+    //             <div> {userType} </div>
+    //             <div> {formatDate(timeStamp)} </div>
+    //             <div>
+    //               <button></button>
+    //             </div>
+
+
+    //           </div>
+    //         )
+    //       })
+    //     }
+    //   </div>
+
+    // </div>
   );
 }
 

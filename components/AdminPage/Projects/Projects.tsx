@@ -22,7 +22,7 @@ import userStore from "../Users/userStore";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BiDotsVerticalRounded, } from 'react-icons/bi'
-import { HiArrowsUpDown } from 'react-icons/hi2'
+import { HiArrowsUpDown, HiXMark } from 'react-icons/hi2'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 
 import { getNameFromEmail } from "../Users/Users";
@@ -51,6 +51,8 @@ function Projects() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [projectTrackChanges, setProjectTrackChanges] = useState(false);
 
 
 
@@ -211,6 +213,11 @@ function Projects() {
     // .push("/recyclebin");
   }
 
+  const handleDotClick = (id: string | any) => {
+    setProjectTrackChanges(!projectTrackChanges)
+    setProjectId(id)
+  }
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -222,6 +229,8 @@ function Projects() {
   if (error) {
     console.log(error.message);
   }
+
+
 
 
 
@@ -423,11 +432,11 @@ function Projects() {
     // </div>
 
     // container
-    <div className="m-7">
+    <div className="p-7 dark:bg-slate-900 dark:text-slate-100">
 
 
       {/* Greeting to a user  */}
-      <div className="grid shadow-md rounded mb-4 bg-white gap-6 grid-cols-2 item-center justify-center">
+      <div className="grid shadow-md rounded mb-4 bg-white gap-6 grid-cols-2 item-center justify-center dark:bg-slate-600">
 
         <div className=" flex item-center justify-center">
           <img src="/assets/grretingImage.png" height="50%" width='50%' alt="" />
@@ -444,15 +453,14 @@ function Projects() {
       </div>
 
 
-
       {/* Project  heading*/}
       <h2 className="mb-6 text-2xl font-semibold">Projects</h2>
 
       {/* project heading bar (functionality) */}
-      <div id="activities" className="bg-white gap-6 p-4 mb-6 grid grid-cols-4 items-center text-center">
+      <div id="activities" className="bg-white gap-6 p-4 mb-6 shadow grid h-fit grid-cols-4 items-center text-center dark:bg-slate-600">
         <div className="border rounded border-slate-400 p-1">
           <input
-            className=" h-full w-full bg-white-200  text-black outline-none"
+            className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
             type="text"
             id="search"
             placeholder="Search"
@@ -492,16 +500,16 @@ function Projects() {
 
 
       {/* project card */}
-      <div className=" grid grid-cols-3 gap-6 " >
+      <div className=" grid grid-cols-3   gap-6 " >
         {
           allProjects.map((projects, index) => {
             const { name, id, description, userHas } = projects
             return (
-              <div key={id} className="bg-white flex flex-col justify-between shadow-md duration-200  hover:shadow-xl san-sarif p-4 rounded ">
+              <div key={id} className="bg-white z-30 flex flex-col relative justify-between shadow-md  duration-200  hover:shadow-xl san-sarif p-4 rounded dark:bg-slate-600">
                 <div>
                   <div className="flex justify-between">
                     <h3 className="text-lg font-bold"> {name} </h3>
-                    <button className="text-xl"> <BiDotsVerticalRounded /> </button>
+                    <button onClick={() => handleDotClick(id)} className="text-xl"> {projectId === id && projectTrackChanges ? <HiXMark /> : <BiDotsVerticalRounded />} </button>
                   </div>
                   <p className="mt-2 mb-3"> {description} </p>
                 </div>
@@ -512,11 +520,22 @@ function Projects() {
                   </div>
                   <div className="flex justify-end "> {projectAssignedUser(userHas)} </div>
                 </div>
+
+                {projectId === id &&
+                  projectTrackChanges ? (<div className="flex flex-col bg-white absolute -right-[20px] top-10 shadow">
+                    <button className="p-1 text-xs bg-yellow-500 text-white border-b-2">Edit</button>
+                    <button className="p-1 text-xs bg-red-500 text-white">Delete</button>
+                  </div>) : null
+                }
+
+                {/* */}
               </div>
             )
           })
         }
+
       </div>
+
     </div>
   );
 }

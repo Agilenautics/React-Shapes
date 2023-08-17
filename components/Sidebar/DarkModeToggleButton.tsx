@@ -6,7 +6,7 @@ import {BsSun,BsMoonStars} from 'react-icons/bs'
  * the current theme when the user clicks the toggle
  * @returns An array with two elements.
  */
-function useDarkMode() {
+export function useDarkMode() {
   // ! Make the app read the proper theme from cookies
   const [theme, setTheme] = useState(
     typeof window !== "undefined" ? localStorage.theme : "light"

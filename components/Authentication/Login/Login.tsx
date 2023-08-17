@@ -122,7 +122,7 @@ const Login: React.FC = () => {
             </div>
             {/* login form section */}
             <div className='p-8'>
-                <h2 className='text-4xl text-center'>WELCOM</h2>
+                <h2 className='text-4xl text-center'>WELCOME</h2>
                 <div className=' flex flex-col gap-7 ml-14 mr-14  p-14 '>
                     <div className='text-center flex  justify-center'>
                         <img src="/assets/userpng.png" height='90rem' width='90rem' alt="" />

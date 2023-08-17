@@ -6,7 +6,8 @@ interface User {
     emailId: string;
     userType: string;
     active: Boolean;
-    userName: string
+    userName: string;
+    timeStamp:string
 }
 
 export interface userState {
