@@ -1,23 +1,22 @@
 import { useRouter } from "next/router";
-import ProjectBacklogs from "../../components/AdminPage/Projects/ProjectBacklogs";
-import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import TopBar from "../../components/AdminPage/TopBar";
 
 import Sidebar from "../../components/Sidebar/Sidebar";
+import ProjectBoards from "../../components/AdminPage/Projects/ProjectBoards";
 
-const Backlogs = () => {
+const Boards = () => {
   const router = useRouter();
   const projectId = router.query.projectId as string;
 
   return (
       <div className="flex">
         <Sidebar/>
-        <div className="ml-2 w-full">
+        <div className="ml-6 w-full">
           <TopBar/>
-          <ProjectBacklogs />
+          <ProjectBoards/>
         </div>
       </div>
   );
 };
 
-export default Backlogs;
+export default Boards;

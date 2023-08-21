@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { BacklogsTree, FileTree } from "../TreeView/fileRenderer";
-import { AiFillFolderAdd, AiFillFileAdd } from "react-icons/ai";
+import { FileTree } from "../TreeView/fileRenderer";
+import { AiFillFolderAdd, AiFillFileAdd, AiTwotoneHome } from "react-icons/ai";
+import {GiSprint, GiChecklist} from "react-icons/gi"
+import {GrOverview} from "react-icons/gr"
+import {FaChalkboard, FaChevronDown} from "react-icons/fa"
+import {RiFlowChart} from "react-icons/ri"
 import DarkModeToggleButton from "./DarkModeToggleButton";
 import fileStore from "../TreeView/fileStore";
 import BreadCrumbs from "./BreadCrumbs";
 import { useRouter } from "next/router";
 import { getMainByUser, getTreeNodeByUser } from "../TreeView/gqlFiles";
-import Link from "next/link";
-
 
 const Sidebar = () => {
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
   const [menuOpen, setMenuOpen] = useState("h-0 overflow-hidden");
   const updateInitData = fileStore((state) => state.updateInitData);
+  const [insightsOpen, setInsightsOpen] = useState(false);
+
 
 
 
@@ -96,39 +100,101 @@ const Sidebar = () => {
             alt="Company Logo"
           />
         </div>
+        {/* {router.asPath== "/flowchart/"+projectId &&
         <div className="grid grid-cols-2 gap-2 p-1">
           <button
             type="button"
-            className="add-buttons peer w-25 h-8"
+            className="add-buttons w-25 peer h-8"
             onClick={() => add_folder()}
           >
             <AiFillFolderAdd className="add-buttons-icon" /> Add Folder
           </button>
           <button
-              type="button"
-              className="add-buttons peer w-21 h-8"
-              onClick={() => add_file()}
-            >
-            <AiFillFileAdd className="add-buttons-icon" />  Add File 
-            </button>
+            type="button"
+            className="add-buttons w-21 peer h-8"
+            onClick={() => add_file()}
+          >
+            <AiFillFileAdd className="add-buttons-icon" /> Add File
+          </button>
         </div>
-        <div className="h-[5vh]">
-          <FileTree />
-          {/* <BacklogsTree /> */}
-
+} */}
+        
+        <div className="h-[58vh]">
+        <div className="flex flex-col space-y-2">
+        <a className="flex items-center justify-between cursor-pointer font-bold w-[10vw] bg-slate-300 p-1 m-2 rounded shadow-lg hover:bg-slate-400" href={`/projects/`}>
+            Home
+            <AiTwotoneHome/>
+            </a>
+          <a className="flex items-center justify-between cursor-pointer font-bold w-[10vw] bg-slate-300 p-1 m-2 rounded shadow-lg hover:bg-slate-400" href={`/projects/${projectId}`}>
+            Overview
+            <GrOverview/>
+            </a>
+          <div
+            className="flex items-center justify-between cursor-pointer font-bold w-[10vw] bg-slate-300 p-1 m-2 rounded shadow-lg hover:bg-slate-400"
+            onClick={() => setInsightsOpen(!insightsOpen)}
+          >
+            <span>Insights</span>
+            <FaChevronDown className={`transition-transform ${insightsOpen ? "transform rotate-180" : ""}`} />
+          </div>
+          {insightsOpen && (
+            <div className="pl-4 mt-2 space-y-2">
+              <a
+                className="flex items-center font-bold hover:font-black"
+                href={`/boards/${projectId}`}
+              >
+                <FaChalkboard className="mr-2" />
+                Boards
+              </a>
+              <a
+                className="flex items-center font-bold hover:font-black"
+                href={`/backlogs/${projectId}`}
+              >
+                <GiChecklist className="mr-2" />
+                Backlogs
+              </a>
+              <a className="flex items-center font-bold hover:font-black"
+              href={`/sprints/${projectId}`}>
+                <GiSprint className="mr-2" />
+                Sprints
+              </a>
+              <a
+                className="flex items-center font-bold hover:font-black"
+                href={`/flowchart/${projectId}`}
+              >
+                <RiFlowChart className="mr-2" />
+                Business Plan
+              </a>
+            </div>
+          )}
         </div>
-        <div className="text-center  m-3 rounded-lg mb-6 dark:text-white"><Link href={'/backlogs/'+projectId} > Backlogs </Link></div>
-        {/* <Link href="/backlogs">Backlogs</Link> */}
-
-        <div>
-          <DarkModeToggleButton />
+        {router.asPath == "/flowchart/" + projectId && <>
+        <div className="grid grid-cols-2 gap-2 p-1">
+          <button
+            type="button"
+            className="add-buttons w-25 peer h-8"
+            onClick={() => add_folder()}
+          >
+            <AiFillFolderAdd className="add-buttons-icon" /> Add Folder
+          </button>
+          <button
+            type="button"
+            className="add-buttons w-21 peer h-8"
+            onClick={() => add_file()}
+          >
+            <AiFillFileAdd className="add-buttons-icon" /> Add File
+          </button>
         </div>
+        <FileTree />
+        </>}
+      </div>
+        <DarkModeToggleButton />
       </div>
 
       <div
-        className={`pl-14 transition-all ${showSidebar ? "ml-[14.2vw]" : "ml-0"}`}
-      >
-      </div>
+        className={`pl-14 transition-all ${
+          showSidebar ? "ml-[14.2vw]" : "ml-0"
+        }`}
+      ></div>
     </div>
 
 

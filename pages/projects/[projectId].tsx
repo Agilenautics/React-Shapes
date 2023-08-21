@@ -5,11 +5,12 @@ import {
   getTreeNodeByUser,
 } from "../../components/TreeView/gqlFiles";
 import TopBar from "../../components/AdminPage/TopBar";
-import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
+// import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import LoadingIcon from "../../components/LoadingIcon";
-import MembersTable from "../../components/AdminPage/Projects/MembersTable";
+// import MembersTable from "../../components/AdminPage/Projects/MembersTable";
 import ProjectOverview from "../../components/AdminPage/Projects/ProjectOverview";
 import fileStore from "../../components/TreeView/fileStore";
+import Sidebar from "../../components/Sidebar/Sidebar";
 
 interface Project {
   name: string;
@@ -57,28 +58,24 @@ function SideBar() {
   }, [router.query.projectId]);
 
   return (
-    <div>
-      <TopBar />
-      <div className="flex flex-row">
-        <SummarySidebar projectId={projectId} />
-        <div className="flex w-full flex-col bg-gray-50 pl-8">
-          {isLoading ? (
+      <div className="flex">
+        <Sidebar/>
+        <div className="absolute ml-72 w-[75vw]">
+        <TopBar />
+          {isLoading ? 
             <div className="flex justify-center items-center h-full">
             <LoadingIcon />
             </div>
-          ) : (
-            <>
+          : 
               <ProjectOverview
                 projectName={projectName}
                 projectDesc={projectDesc}
                 total={total}
+                details={details}
               />
-              <MembersTable details={details} />
-            </>
-          )}
+          }
         </div>
       </div>
-    </div>
   );
 }
 

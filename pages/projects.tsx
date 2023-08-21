@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import TopBar from "../components/AdminPage/TopBar";
 import Sidebar from "../components/AdminPage/SideBar";
+
 import Projects from "../components/AdminPage/Projects/Projects";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from '../auth';
+// import Sidebar from "../components/Sidebar/Sidebar";
 
 function ProjectPage() {
   const [activeLink, setActiveLink] = useState("Projects");
@@ -43,6 +45,7 @@ function ProjectPage() {
       <div className="flex">
         {/* <Sidebar activeLink={activeLink} onLinkClick={handleLinkClick} /> */}
         <div className="flex flex-grow flex-col bg-gray-50">
+        
           <Projects />
         </div>
       </div>

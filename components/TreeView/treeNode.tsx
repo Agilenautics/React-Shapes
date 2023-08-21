@@ -153,15 +153,19 @@ export const TreeNode = ({
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         get_user_method(user.email, GET_USER).then((res: any) => {
-          setUser(res[0].userType);
+          // setUser(res[0].userType);
           setAccessLevel(res[0].userType);
+          
+          
         });
       } else {
-        setUser([]);
+        // setUser([]);
         setAccessLevel("");
       }
     });
   };
+
+  // console.log(accessLevel);
 
   useEffect(() => {
     verifyAuthToken();

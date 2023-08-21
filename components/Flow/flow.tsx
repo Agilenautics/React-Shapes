@@ -224,7 +224,6 @@ function Flow() {
   //     deleteEdge(CurEle.id, CurEle.data.label)
   //   })
   // } 
-
   
   return (
     <div className="reactflow-wrapper absolute -z-20 h-screen w-screen transition-all duration-100">

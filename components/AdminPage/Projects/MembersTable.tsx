@@ -22,7 +22,7 @@ const getInitials = (name: string) => {
 
 export default function MembersTable({ details }: MembersTableProps) {
   return (
-    <div>
+    <div className="relative">
       <div className="relative mr-4 mt-8 shadow-md sm:rounded-lg">
         <table className="w-full text-left text-sm">
           <thead className="text-md bg-gray-200">

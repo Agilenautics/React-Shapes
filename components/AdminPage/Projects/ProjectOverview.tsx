@@ -1,17 +1,21 @@
+import MembersTable from "./MembersTable";
+
 interface ProjectOverviewProps {
   projectName: string;
   projectDesc: string;
   total: number;
+  details: any;
 }
 
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   projectName,
   projectDesc,
   total,
+  details,
 }) => {
   return (
-    <>
-      <div className="mt-8 flex items-center">
+    <div>
+      <div className="mt-8 flex items-center w-full">
         <div className="min-h-10 min-w-10 flex items-center justify-center rounded-xl bg-blue-500 p-2 text-xl font-semibold text-white">
           {getInitials(projectName)}
         </div>
@@ -28,7 +32,8 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
           {total}
         </p>
       </div>
-    </>
+      <MembersTable details={details} />
+    </div>
   );
 };
 

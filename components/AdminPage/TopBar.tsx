@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
-import { BsFillSunFill } from 'react-icons/bs'
+import { BsFillSunFill } from "react-icons/bs";
 import { useDarkMode } from "../Sidebar/DarkModeToggleButton";
 
 const auth = getAuth();
@@ -23,9 +23,6 @@ const getNameFromEmail = (email: string) => {
   return name.replace(regex, "");
 };
 
-
-
-
 function TopBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [, setTheme] = useDarkMode();
@@ -37,9 +34,7 @@ function TopBar() {
     setIsDark(e);
   }
 
-  console.log(x)
-
-
+  console.log(x);
 
   const router = useRouter();
 
@@ -52,18 +47,16 @@ function TopBar() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
-        setEmail(user.email)
+        setEmail(user.email);
       }
-    })
+    });
   }, [auth]);
 
   const navigate = (path: string | UrlObject) => {
-    router.push(path)
-  }
+    router.push(path);
+  };
 
   // dark mode
-
-
 
   return (
     // <div className="flex sticky top-0 right-0 left-0 h-14 items-center border-b border-gray-300 text-xl dark:text-white">
@@ -89,25 +82,25 @@ function TopBar() {
     //     )}
     //   </div>
     // </div>
-    <div className="sticky font-sans  top-0 right-0 left-0 shadow bg-white z-50 p-2 px-12 flex justify-between dark:bg-slate-600">
+    <div className="sticky left-0  right-0 top-0 z-50 flex justify-between bg-white p-2 px-12 font-sans shadow dark:bg-slate-600">
       {/* logo  */}
       <div className="">
-        <span className=" font-bold text-2xl text-gray-400">
+        <span className=" text-2xl font-bold text-gray-400">
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>
       </div>
       {/* links */}
-      <div className="flex gap-8 text-[1rem] font-normal justify-around  items-center dark:text-white ">
-        <div className=" duration-300  hover:bg-slate-100 hover:text-slate-500 py-1 px-2 rounded transition">
-          <Link href='/projects'>projects</Link>
+      <div className="flex items-center justify-around gap-8 text-[1rem]  font-normal dark:text-white ">
+        <div className=" rounded  px-2 py-1 transition duration-300 hover:bg-slate-100 hover:text-slate-500">
+          <Link href="/projects">projects</Link>
         </div>
-        <div className="duration-300  hover:bg-slate-100 hover:text-slate-500 py-1 px-2 rounded transition">
-          <Link href='/users'>users</Link>
+        <div className="rounded  px-2 py-1 transition duration-300 hover:bg-slate-100 hover:text-slate-500">
+          <Link href="/users">users</Link>
         </div>
-        <div className="duration-300  hover:bg-slate-100 hover:text-slate-500 py-1 px-2 rounded transition">
-          <Link href='/Policies'>policies</Link>
+        <div className="rounded  px-2 py-1 transition duration-300 hover:bg-slate-100 hover:text-slate-500">
+          <Link href="/Policies">policies</Link>
         </div>
-        <div className=" text-slate-500 border border-1 rounded-full p-1 cursor-pointer ">
+        <div className=" border-1 cursor-pointer rounded-full border p-1 text-slate-500 ">
           <div className="relative">
             <input
               type="checkbox"
@@ -116,7 +109,18 @@ function TopBar() {
               onChange={(e) => toggleDarkModeButton(e.target.checked)}
             />
             {/* <div className="block h-6 font-bold  w-16 rounded-full bg-gray-700"></div> */}
-            <div className={`absolute w-5  h-5 bg-white border ${isDark ? 'translate-x-full left-[22px]' : "left-[2px]"}  top-[2.5px] duration-300 ease-in rounded-full `}> {isDark ? <BsFillSunFill className="text-lg p-[2px]" /> : <BsFillSunFill className="text-lg p-[2px]" />} </div>
+            <div
+              className={`absolute h-5  w-5 border bg-white ${
+                isDark ? "left-[22px] translate-x-full" : "left-[2px]"
+              }  top-[2.5px] rounded-full duration-300 ease-in `}
+            >
+              {" "}
+              {isDark ? (
+                <BsFillSunFill className="p-[2px] text-lg" />
+              ) : (
+                <BsFillSunFill className="p-[2px] text-lg" />
+              )}{" "}
+            </div>
           </div>
         </div>
         <div className="relative">
@@ -127,7 +131,7 @@ function TopBar() {
             {getInitials(email)}
           </button>
           {dropdownOpen && (
-            <div className="absolute z-40 right-0 top-12 mr-4 w-48 rounded border border-gray-300 bg-white shadow">
+            <div className="absolute right-0 top-12 z-40 mr-4 w-48 rounded border border-gray-300 bg-white shadow">
               <div className="p-4">
                 <p className="mb-2 text-sm text-gray-600">{email}</p>
                 <Signout />
@@ -135,11 +139,8 @@ function TopBar() {
             </div>
           )}
         </div>
-
       </div>
       {/* user details  */}
-
-
     </div>
   );
 }

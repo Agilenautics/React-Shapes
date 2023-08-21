@@ -4,6 +4,7 @@ import AddNodeButton from "../../components/Sidebar/AddNodeButton";
 import { useRouter } from "next/router";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import TopBar from "../../components/AdminPage/TopBar";
+import ProjectBacklogs from "../../components/AdminPage/Projects/ProjectBacklogs";
 
 const Flowchart = () => {
   const router = useRouter();
