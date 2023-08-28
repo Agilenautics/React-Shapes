@@ -180,8 +180,8 @@ setShowForm(true)
      
 
 
-      {Object.keys(sprintsData).map((sprintName) => (
-        <div className="w-fill overflow-y overflow-x-hidden h-60 mb-5 border rounded shadow-lg">
+      {Object.keys(sprintsData).map((sprintName,index) => (
+        <div key={index} className="w-fill overflow-y overflow-x-hidden h-60 mb-5 border rounded shadow-lg">
           <h2 className="text-xl font-semibold">{sprintName}</h2>
         <table className="w-[1000px] table-auto mr-4">
             <thead>

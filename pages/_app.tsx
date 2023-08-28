@@ -8,6 +8,8 @@ import { registerServiceWorker } from "../authServiceWorker";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from '../auth';
+import Sidebar from "../components/Sidebar/Sidebar";
+import Layout from "../components/AdminPage/Layout";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -21,8 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
-        if(window.location.pathname == "/")
+        if (window.location.pathname == "/")
           router.push("/projects")
       } else {
         const queryString = window.location.search;
@@ -48,8 +49,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <link rel="preconnect" href="https://fonts.gstatic.com/" />
       </Head>
-      <ApolloProvider client={client}>
-        <Component {...pageProps} />
+      <ApolloProvider client={client} >
+        {/* <Sidebar /> */}
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+
       </ApolloProvider>
     </>
   );

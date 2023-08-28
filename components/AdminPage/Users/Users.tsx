@@ -96,8 +96,8 @@ function Users() {
           const { hasProjects, ...userData } = res[0]
           const userType = userData.userType;
           updateUserType(userType)
-          const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
-          updateProject(userProjects)
+          // const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
+          // updateProject(userProjects)
         });
       }
     });
@@ -196,7 +196,7 @@ function Users() {
   };
 
   return (
-    <div className=" p-6 border">
+    <div className=" p-6">
       {/* heading of the table */}
       <div className="flex items-center">
         <button className="text-md   rounded text-white bg-sky-500/75 p-2 font-semibold">
@@ -225,7 +225,7 @@ function Users() {
 
       {/* top bar  */}
 
-      <div className="grid grid-cols-4 bg-white gap-6 p-4 shadow ">
+      <div className="grid grid-cols-4 bg-white gap-6 p-4 rounded shadow dark:bg-slate-600 ">
         <div className="border rounded border-slate-400 p-1 ">
           <input
             className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
@@ -243,7 +243,7 @@ function Users() {
           <button onClick={handleSortClick}>shorting: <HiArrowsUpDown className={`inline ${sortingOrder === 'asc' ? '' : "rotate-180"}`} /> </button>
           <span>
             <label htmlFor="">Type : </label>
-            <select className="outline-none  border rounded" name="" id="">
+            <select className="outline-none  border dark:border-none rounded dark:bg-slate-700 p-1" name="" id="">
               <option value="user">All</option>
               <option value="user">User</option>
               <option value="admin">Admin</option>
@@ -262,7 +262,7 @@ function Users() {
 
 
       <div className="relative overflow-x-auto">
-        <table className="w-full my-6 rounded-lg text-left text-sm">
+        <table className="w-full my-6 text-left text-sm">
           <thead className=" bg-slate-700 text-slate-50 text-xs">
             <tr>
               <th
@@ -284,7 +284,7 @@ function Users() {
           </thead>
           <tbody className="overflow-y-scroll">
             {usersList.map((user: any,index) => {
-              return <tr key={user.id} className="border-b border-black bg-white ">
+              return <tr key={user.id} className="border-b border-black dark:border-slate-200 bg-white dark:bg-slate-600">
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">

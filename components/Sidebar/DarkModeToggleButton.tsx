@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {BsSun,BsMoonStars} from 'react-icons/bs'
+import { BsSun, BsMoonStars } from 'react-icons/bs'
 
 /**
  * This custom hook sets the theme to the value of the theme cookie, and then it sets the theme to the opposite of
@@ -41,20 +41,25 @@ function DarkModeToggleButton() {
     setIsDark(e);
   }
   return (
-    <div className=" ml-4">
-      <label className="flex cursor-pointer items-center ">
-        <div className="relative">
-          <input
-            type="checkbox"
-            className="sr-only"
-            checked={isDark}
-            onChange={(e) => toggleDarkModeButton(e.target.checked)}
-          />
-          <div className="block h-6 font-bold  w-16 rounded-full bg-gray-700"></div>
-          <div className={`absolute w-5  h-5 bg-white border ${isDark?'translate-x-full left-[22px]':"left-[2px]"}  top-[2.5px] duration-300 ease-in rounded-full `}> {isDark?<BsMoonStars  className="text-lg p-[2px]" />:<BsSun className="text-lg p-[2px]" />} </div>
-        </div>
-        <div className="ml-3 transition dark:text-gray-50">{isDark?"Dark Mode":"Light Mode"}</div>
-      </label>
+    // <div className="border p-[2px] rounded-full">
+    //   <label className="flex cursor-pointer border items-center ">
+    //     <div className="flex items-center -space-x-1" onClick={(e) => toggleDarkModeButton(!isDark)}>
+    //       <input
+    //         type="checkbox"
+    //         // className="sr-only"
+    //         checked={isDark}
+    //         onChange={(e) => toggleDarkModeButton(e.target.checked)}
+    //       />
+    //       <span className={` w-5  h-5   top-[2.3px] duration-300 ease-in rounded-full `}> {isDark?<BsMoonStars  className="text-lg p-[2px]" />:<BsSun className="text-lg p-[2px]" />} </span>
+    //     </div>
+    //     <div className="ml-3 transition dark:text-gray-50">{isDark?"Dark Mode":"Light Mode"}</div>
+    //   </label>
+    // </div>
+
+    <div onClick={(e) => toggleDarkModeButton(!isDark)} className="border border-orange-600 flex items-center p-[3px] dark:bg-slate-700 dark:border-none dark:p-1 rounded-full">
+      <button className="duration-300 ease-in">
+        {isDark ? <BsMoonStars className="text-lg " /> : <BsSun className="text-lg  text-orange-600 " />}
+      </button>
     </div>
   );
 }

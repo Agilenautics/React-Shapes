@@ -9,19 +9,19 @@ interface User {
     userName: string
 }
 
-interface Project {
+export interface Project {
     id?: string;
     name: string;
     recycleBin: Boolean;
     createdAt: Date | null;
     timeStamp: string;
     description: string;
-    userHas:User[];
+    userHas: User[];
 }
 
 export interface ProjectState {
     projects: Array<Project>;
-    updateProjectData: (projects: Array<Project>) => void;
+    updateProjectData: (projects: Array<Project>, loading: Boolean) => void;
     addProject: (data: object) => void;
     deleteProject: (projectId: string) => void;
     updateProject: (id: string, project: object) => void;
@@ -33,15 +33,21 @@ export interface ProjectState {
     recycleBin: Array<Project>;
     updateRecycleBinProject: (projects: Project) => void;
     clearRecyleBin: () => void;
-    removeFromRecycleBin: (projectId: String) => void
-
+    removeFromRecycleBin: (projectId: String) => void;
+    search: string;
+    updateSearchItem: (search: string) => void
 }
 
 const projectStore = create<ProjectState>((set) => ({
     projects: [],
+    search: "",
     error: "",
     sortOrder: "asc",
     searchProduct: "",
+    updateSearchItem: (searchQuery: string) =>
+        set((state) => {
+            return {search:searchQuery}
+        }),
     recycleBin: [],
     addProject: (newProject: any) =>
         set((state) => {
@@ -49,18 +55,17 @@ const projectStore = create<ProjectState>((set) => ({
                 (project) => project.name === newProject.name
             );
             if (isDuplicateName) {
-                console.log("heloo")
                 // If a project with the same name exists, update the error message
                 return { error: "A project with the same name already exists" };
             }
-            const updatedProjects = [newProject,...state.projects];
+            const updatedProjects = [newProject, ...state.projects];
 
-            return { projects: updatedProjects,error:null };
+            return { projects: updatedProjects, error: null };
         }),
-    updateProjectData: (projects: Array<Project>) =>
+    updateProjectData: (projects: Array<Project>, loading: Boolean) =>
         set((state) => {
             const updatedProjects = projects.filter((values) => values.recycleBin !== true);
-            return { projects: updatedProjects }
+            return { projects: updatedProjects, loading }
         }),
     updateRecycleBinProject: (projects: any) =>
         set((state) => {

@@ -5,9 +5,12 @@ import { AiOutlineMail } from "react-icons/ai";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
-import { UrlObject } from "url";
+
 import { BsFillSunFill } from "react-icons/bs";
 import { useDarkMode } from "../Sidebar/DarkModeToggleButton";
+import { FaBars } from 'react-icons/fa'
+import { HiMiniXMark } from 'react-icons/hi2'
+import DarkModeToggleButton from "../Sidebar/DarkModeToggleButton";
 
 const auth = getAuth();
 
@@ -23,20 +26,20 @@ const getNameFromEmail = (email: string) => {
   return name.replace(regex, "");
 };
 
-function TopBar() {
+interface Flag {
+  toggleSideBar: () => void
+  flag: Boolean;
+}
+
+function TopBar({ toggleSideBar, flag }: Flag) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [, setTheme] = useDarkMode();
 
-  var x = typeof window !== "undefined" ? localStorage.theme : "light";
-  const [isDark, setIsDark] = useState(x === "dark");
-  function toggleDarkModeButton(e: boolean | any) {
-    e ? setTheme("dark") : setTheme("light");
-    setIsDark(e);
-  }
+  const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
 
-  console.log(x);
 
-  const router = useRouter();
+ 
+
+
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -52,39 +55,37 @@ function TopBar() {
     });
   }, [auth]);
 
-  const navigate = (path: string | UrlObject) => {
-    router.push(path);
-  };
 
-  // dark mode
 
   return (
-    // <div className="flex sticky top-0 right-0 left-0 h-14 items-center border-b border-gray-300 text-xl dark:text-white">
-    //   <a className="ml-6 font-bold text-gray-400">FLOWCHART</a>
-    //   <div className="flex flex-grow items-center justify-center space-x-8 text-lg">
-    //     <a className="hover:text-sky-700">Projects</a>
-    //     <Link href="/Policies">Policies</Link>
-    //   </div>
-    //   <div className="relative">
-    //     <button
-    //       className="mr-12 flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white"
-    //       onClick={toggleDropdown}
-    //     >
-    //       {getInitials(email)}
-    //     </button>
-    //     {dropdownOpen && (
-    //       <div className="absolute z-40 right-0 top-12 mr-4 w-48 rounded border border-gray-300 bg-white shadow">
-    //         <div className="p-4">
-    //           <p className="mb-2 text-sm text-gray-600">{email}</p>
-    //           <Signout />
-    //         </div>
-    //       </div>
-    //     )}
-    //   </div>
-    // </div>
-    <div className="sticky left-0  right-0 top-0 z-50 flex justify-between bg-white p-2 px-12 font-sans shadow dark:bg-slate-600">
+    <div className="sticky left-0  right-0 top-0 shadow-bottom    z-50 flex justify-between bg-white  p-2 px-6 font-sans  dark:bg-slate-600">
       {/* logo  */}
-      <div className="">
+      <div className="flex gap-6">
+        {/* <div
+        className={` z-50 rounded p-1 border duration-700 ease-in-out focus:outline-none ${showSidebar ? "bg-transparent" : "bg-white dark:bg-neutral-900"
+          }`}
+      >
+        <button
+          className="group flex h-10 w-10 flex-col items-center rounded"
+          onClick={toggleSideBar}
+        >
+          <div
+            className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "translate-y-3 rotate-45" : ""
+              }`}
+          />
+          <div
+            className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "opacity-0" : ""
+              }`}
+          />
+          <div
+            className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "-translate-y-3 -rotate-45 " : ""
+              }`}
+          />
+        </button>
+
+      </div> */}
+
+        <button onClick={toggleSideBar} className=" duration-200"> {flag ? <HiMiniXMark className="text-3xl" /> : <FaBars className="text-2xl" />} </button>
         <span className=" text-2xl font-bold text-gray-400">
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>
@@ -100,28 +101,8 @@ function TopBar() {
         <div className="rounded  px-2 py-1 transition duration-300 hover:bg-slate-100 hover:text-slate-500">
           <Link href="/Policies">policies</Link>
         </div>
-        <div className=" border-1 cursor-pointer rounded-full border p-1 text-slate-500 ">
-          <div className="relative">
-            <input
-              type="checkbox"
-              // className="sr-only"
-              checked={isDark}
-              onChange={(e) => toggleDarkModeButton(e.target.checked)}
-            />
-            {/* <div className="block h-6 font-bold  w-16 rounded-full bg-gray-700"></div> */}
-            <div
-              className={`absolute h-5  w-5 border bg-white ${
-                isDark ? "left-[22px] translate-x-full" : "left-[2px]"
-              }  top-[2.5px] rounded-full duration-300 ease-in `}
-            >
-              {" "}
-              {isDark ? (
-                <BsFillSunFill className="p-[2px] text-lg" />
-              ) : (
-                <BsFillSunFill className="p-[2px] text-lg" />
-              )}{" "}
-            </div>
-          </div>
+        <div>
+          <DarkModeToggleButton />
         </div>
         <div className="relative">
           <button

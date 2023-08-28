@@ -23,27 +23,28 @@ interface Project {
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
-  const [projectDeletedAt, setProjectDeletedAt] = useState(""); //TODO defined new state ProjectDeletedAt
-  const [projectData, setProjectData] = useState<Project[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [projectData, setProjectData] = useState([])
   const [searchTerm, setSearchTerm] = useState("");
 
 
 
   const recycleBin = projectStore((state) => state.recycleBin);
-  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
+  const loading = projectStore((state) => state.loading)
   const handleSorting = projectStore((state) => state.handleSorting);
   const sortOrder = projectStore((state) => state.sortOrder);
   const updateSorOrder = projectStore((state) => state.updateSortOrder);
   const clearRecycle_Bin = projectStore((state) => state.clearRecyleBin);
-  const removeFromRecycleBin = projectStore((state)=>state.removeFromRecycleBin)
+  const removeFromRecycleBin = projectStore((state) => state.removeFromRecycleBin);
+  const { updateSearchItem, search, updateRecycleBinProject } = projectStore()
 
   const userType = userStore((state) => state.userType);
-  const updateUserType = userStore((state) => state.updateUserType)
+
+
+  // const handleSearch = (e: React.ReactEventHandler) => {
+  //   setSearchTerm(e.target.value)
+  // }
 
 
 
@@ -53,68 +54,48 @@ function Projects() {
 
 
 
-  const { data, error, loading } = useQuery(GET_USER, {
-    variables: {
-      where: {
-        emailId: userEmail,
-      },
-    },
-  });
 
-  const getProject = async (data: Array<Project>) => {
-    // @ts-ignore
-    if (data && data.users.length) {
-      //@ts-ignore
-      const userType = data.users[0].userType;
-      updateUserType(userType)
-      //@ts-ignore
-      setProjectData(data.users[0].hasProjects);//not required
-      //@ts-ignore
-      updateRecycleBinProject(data.users[0].hasProjects)
-    }
-  };
 
-  //verifying token
-  const verifyAuthToken = async () => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        setUserEmail(user.email);
-        if (loading) return "";
-        getProject(data);
-      }
-    });
-  };
-  useEffect(() => {
-    const filteredProjects = projectData.filter(
-      (project) =>
-        project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        project.recycleBin
-    );
-    // @ts-ignore
-    updateRecycleBinProject(filteredProjects)
-  }, [searchTerm]);
+
+
+
+  // useEffect(() => {
+  //   const filteredProjects = recycleBin.filter(
+  //     (project) =>
+  //       project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  //       project.recycleBin
+  //   );
+  //   // @ts-ignore
+  //   updateRecycleBinProject(filteredProjects)
+  // }, [searchTerm]);
+  // const filterProjects = () => {
+  //   const filteredProjects = recycleBin.filter(
+  //     (project) =>
+  //       project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+  //       project.recycleBin
+  //   );
+  //   return filteredProjects
+  // }
+
+  // useEffect(() => {
+  //   const a = filterProjects()
+  //   console.log(a)
+  //   updateRecycleBinProject(a)
+  // }, [searchTerm])
 
   useEffect(() => {
-    verifyAuthToken();
     setIsButtonDisabled(userType.toLowerCase() === "user");
     setIsNewProjectDisabled(userType.toLowerCase() === "super user");
-  }, [data]);
+  }, [recycleBin]);
 
   const handleSortClick = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
     updateSorOrder(newSortOrder);
     handleSorting()
-
   };
 
-  //TODO =============================================
-  // Restoration logic
-  //TODO =================================================================
 
   const handleDelete_Project = (projectId: string) => {
-    // Display confirmation box
-    // setShowConfirmation(true);
-    // setProjectId(projectId);
     removeFromRecycleBin(projectId)
     parmenantDelete(projectId, PARMENANT_DELETE, GET_USER)
   };
@@ -134,7 +115,7 @@ function Projects() {
   //   setProjectId(null);
   // }, []);
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <LoadingIcon />
@@ -142,19 +123,20 @@ function Projects() {
     );
   }
 
-  if (error) {
-    console.log(error.message);
-  }
+
+  // if (error) {
+  //   console.log(error.message);
+  // }
 
   return (
     <div className="bg grey">
-      <div className="mt-4 flex justify-center">
+      {/* <div className="mt-4 flex justify-center">
         {successMessage && (
           <div className="rounded-md bg-green-200 px-4 py-2 text-green-800">
             {successMessage}
           </div>
         )}
-      </div>
+      </div> */}
       <div className="ml-6 flex items-center">
         <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
           Recycle Bin
@@ -170,7 +152,7 @@ function Projects() {
           onClick={() => {
             clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER)
             clearRecycle_Bin()
-            
+
           }}
 
           className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""

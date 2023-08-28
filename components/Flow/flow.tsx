@@ -226,7 +226,7 @@ function Flow() {
   // } 
   
   return (
-    <div className="reactflow-wrapper absolute -z-20 h-screen w-screen transition-all duration-100">
+    <div className="reactflow-wrapper h-[90vh] transition-all duration-100">
       <ReactFlow
         draggable
         nodesDraggable={true}

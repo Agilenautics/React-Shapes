@@ -31,7 +31,7 @@ function SideBar() {
   const [details, setDetails] = useState<User[]>([]);
   const router = useRouter();
   const projectId = router.query.projectId as string;
-  const setLoading = fileStore((state)=> state.setLoading);
+  const setLoading = fileStore((state) => state.setLoading);
 
   async function fetchData() {
     if (projectId) {
@@ -58,24 +58,21 @@ function SideBar() {
   }, [router.query.projectId]);
 
   return (
-      <div className="flex">
-        <Sidebar/>
-        <div className="absolute ml-72 w-[75vw]">
-        <TopBar />
-          {isLoading ? 
-            <div className="flex justify-center items-center h-full">
-            <LoadingIcon />
-            </div>
-          : 
-              <ProjectOverview
-                projectName={projectName}
-                projectDesc={projectDesc}
-                total={total}
-                details={details}
-              />
-          }
+    <div className="h-screen">
+      {isLoading ?
+        <div className="flex justify-center items-center">
+          <LoadingIcon />
         </div>
-      </div>
+        :
+        <ProjectOverview
+          projectName={projectName}
+          projectDesc={projectDesc}
+          total={total}
+          details={details}
+        />
+      }
+
+    </div>
   );
 }
 

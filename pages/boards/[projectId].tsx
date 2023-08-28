@@ -9,13 +9,9 @@ const Boards = () => {
   const projectId = router.query.projectId as string;
 
   return (
-      <div className="flex">
-        <Sidebar/>
-        <div className="ml-6 w-full">
-          <TopBar/>
-          <ProjectBoards/>
-        </div>
-      </div>
+    <div className="h-screen">
+      <ProjectBoards />
+    </div>
   );
 };
 

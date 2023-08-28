@@ -35,20 +35,9 @@ function ProjectPage() {
     });
   }
 
-  const handleLinkClick = (link: string) => {
-    setActiveLink(link);
-  };
-
   return (
     <div>
-      <TopBar />
-      <div className="flex">
-        {/* <Sidebar activeLink={activeLink} onLinkClick={handleLinkClick} /> */}
-        <div className="flex flex-grow flex-col bg-gray-50">
-        
-          <Projects />
-        </div>
-      </div>
+      <Projects />
     </div>
   );
 }

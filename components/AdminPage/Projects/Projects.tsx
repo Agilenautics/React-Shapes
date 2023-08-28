@@ -17,7 +17,7 @@ import { auth } from "../../../auth";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { User, getInitials } from "../Users/Users";
-import projectStore from "./projectStore";
+import projectStore, { Project } from "./projectStore";
 import userStore from "../Users/userStore";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,14 +28,6 @@ import { MdKeyboardArrowRight } from 'react-icons/md'
 import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
 
-interface Project {
-  id: string;
-  name: string;
-  desc: string;
-  description: string;
-  recycleBin: Boolean
-  users: User[];
-}
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
@@ -47,7 +39,6 @@ function Projects() {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,86 +47,37 @@ function Projects() {
 
 
 
-  const allProjects = projectStore((state) => state.projects)
-  const updateProjects = projectStore((state) => state.updateProjectData);
+  const allProjects = projectStore((state) => state.projects);
   const handleSorting = projectStore((state) => state.handleSorting);
   const sortValue = projectStore((state) => state.sortOrder)
   const updateSortOrder = projectStore((state) => state.updateSortOrder);
   const deleteProject = projectStore((state) => state.deleteProject);
   const updateProject = projectStore((state) => state.updateProject);
-  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
+  const loading = projectStore((state)=>state.loading)
   const recycleBinProject = projectStore((state) => state.recycleBin)
-
 
 
   // user store
   const userType = userStore((state) => state.userType);
-  const updateUserType = userStore((state) => state.updateUserType);
 
 
   const router = useRouter()
-
-
-
   const notify = () => toast.success("Project Created...");
 
 
 
-
-
-
-  const { data, error, loading } = useQuery(GET_USER, {
-    variables: {
-      where: {
-        emailId: userEmail,
-      },
-    },
-  });
-
-  const getProject = async (data: Array<Project>) => {
-    // @ts-ignore
-    if (data && data.users.length) {
-      //@ts-ignore
-      const userType = data.users[0].userType;
-      updateUserType(userType)
-      //@ts-ignore
-      const projectData = data.users[0].hasProjects;
-
-      //@ts-ignore
-      setProjectData(projectData);
-      updateProjects(projectData)
-      updateRecycleBinProject(projectData)
-    }
-  };
-
-  //verifying token
-  const verifyAuthToken = async () => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        setUserEmail(user.email);
-        if (loading) return "";
-        getProject(data);
-      }
-    });
-  };
-
-
-
-
-
   useEffect(() => {
-    const filteredProjects = projectData.filter((project) =>
+    const filteredProjects = allProjects.filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    // @ts-ignore
-    updateProjects(filteredProjects)
+    setProjectData(filteredProjects)
   }, [searchTerm])
 
   useEffect(() => {
-    verifyAuthToken();
     setIsButtonDisabled(userType.toLowerCase() === "user");
     setIsNewProjectDisabled(userType.toLowerCase() === "super user");
-  }, [data]);
+    setProjectData(allProjects)
+  }, [allProjects]);
 
 
   const handleSortClick = () => {
@@ -187,7 +129,6 @@ function Projects() {
   }, []);
 
   const handleAddProjectClick = () => {
-    console.log("Hello...")
     setShowForm(true);
   };
 
@@ -210,7 +151,6 @@ function Projects() {
   // to navigate recycle bin
   const toRecycleBin = () => {
     router.push('/recycleBin')
-    // .push("/recyclebin");
   }
 
   const handleDotClick = (id: string | any) => {
@@ -226,9 +166,9 @@ function Projects() {
     );
   }
 
-  if (error) {
-    console.log(error.message);
-  }
+  // if (error) {
+  //   console.log(error.message);
+  // }
 
 
 
@@ -432,7 +372,7 @@ function Projects() {
     // </div>
 
     // container
-    <div className="p-7 dark:bg-slate-900 dark:text-slate-100">
+    <div className="p-7">
 
 
       {/* Greeting to a user  */}
@@ -502,10 +442,10 @@ function Projects() {
       {/* project card */}
       <div className=" grid grid-cols-3   gap-6 " >
         {
-          allProjects.map((projects, index) => {
+          projectData.map((projects, index) => {
             const { name, id, description, userHas } = projects
             return (
-              <div key={id} className="bg-white z-30 flex flex-col relative justify-between shadow-md  duration-200  hover:shadow-xl san-sarif p-4 rounded dark:bg-slate-600">
+              <div key={id} className="bg-white  flex flex-col relative justify-between shadow-md  duration-200  hover:shadow-xl san-sarif p-4 rounded dark:bg-slate-600">
                 <div>
                   <div className="flex justify-between">
                     <h3 className="text-lg font-bold"> {name} </h3>
@@ -518,13 +458,13 @@ function Projects() {
                     <Link href={`/projects/` + id}>see more</Link>
                     <MdKeyboardArrowRight className="inline" />
                   </div>
-                  <div className="flex justify-end "> {projectAssignedUser(userHas)} </div>
+                  <div className="flex justify-end -space-x-[2%]"> {projectAssignedUser(userHas)} </div>
                 </div>
 
                 {projectId === id &&
                   projectTrackChanges ? (<div className="flex flex-col bg-white absolute -right-[20px] top-10 shadow">
                     <button className="p-1 text-xs bg-yellow-500 text-white border-b-2">Edit</button>
-                    <button className="p-1 text-xs bg-red-500 text-white">Delete</button>
+                    <button className="p-1 text-xs bg-red-500 text-white" onClick={()=>delete_Project(id, DELETE_PROJECT, GET_USER)}>Delete</button>
                   </div>) : null
                 }
 

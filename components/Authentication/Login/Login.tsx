@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { auth } from '../../../auth';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, googleProvider, facebookProvider } from '../../../auth';
+import { signInWithEmailAndPassword, signInWithPopup, GithubAuthProvider, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { useRouter } from "next/router";
 import styles from './Login.module.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
                     // Store the tokens in cookies
                     document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
                     document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
-                    router.push("/projects")
+                    router.push("/projects");
                 });
                 // User logged in 
                 // @ts-ignore
@@ -78,6 +78,46 @@ const Login: React.FC = () => {
                 })
             });
     };
+
+    const handleLoginWithGoogle = () => {
+        const auth = getAuth();
+        signInWithPopup(auth, googleProvider).then((result) => {
+            console.log(result);
+            const cridential = GoogleAuthProvider.credentialFromResult(result);
+            const token = cridential?.accessToken;
+        })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+            });
+
+    }
+
+
+    const handleLoginWithFacebook = () => {
+        signInWithPopup(auth, facebookProvider)
+            .then((result) => {
+                const user = result.user
+                const cridential = FacebookAuthProvider.credentialFromResult(result);
+                const accessToken = cridential?.accessToken;
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = FacebookAuthProvider.credentialFromError(error);
+
+                // ...
+            });
+
+    }
 
     const handleForgotPassword = () => {
         router.push("/forgot-password")
@@ -117,7 +157,7 @@ const Login: React.FC = () => {
 
         <div className='font-sans h-screen grid grid-cols-2'>
             {/* image section */}
-            <div className=' bg-no-repeat bg-cover bg-fixed' style={{backgroundImage:`url(/assets/loginImage.jpg)`}}   >
+            <div className=' bg-no-repeat bg-cover bg-fixed' style={{ backgroundImage: `url(/assets/loginImage.jpg)` }}   >
 
             </div>
             {/* login form section */}
@@ -134,7 +174,7 @@ const Login: React.FC = () => {
                                 <AiOutlineUser />
                             </div>
                             <div className='p-1'>
-                                <input className='outline-none ' type="text" name='email' placeholder='Email Address' id='email' value={email} autoComplete='off' onChange={(e) => setEmail(e.target.value)} required/>
+                                <input className='outline-none ' type="text" name='email' placeholder='Email Address' id='email' value={email} autoComplete='off' onChange={(e) => setEmail(e.target.value)} required />
                             </div>
                         </div>
                         {/* password */}
@@ -147,9 +187,9 @@ const Login: React.FC = () => {
                                     <input className='outline-none ' type="password" placeholder='Password' name='password' id='password' value={password} autoComplete='off' onChange={(e) => setPassword(e.target.value)} required />
                                 </div>
                             </div>
-                            {loginError.error && <div className='text-red-500'>{loginError.msg}</div> }
+                            {loginError.error && <div className='text-red-500'>{loginError.msg}</div>}
                         </div>
-{/* 
+                        {/* 
                         <div className='bg-blue-700/75 text-white text-center p-2 rounded'>
                             <input type='submit' value="Login" className='cursor-pointer w-fit ' />
                         </div> */}
@@ -164,10 +204,10 @@ const Login: React.FC = () => {
                     <div className='flex gap-4 '>
                         <div>Or Loging Using :</div>
                         <div className='rounded-full border border-blue-700 flex items-center text-white hover:bg-transparent hover:text-blue-700 duration-300 bg-blue-700'>
-                            <button className='text-lg p-1'> <BiLogoFacebook /> </button>
+                            <button className='text-lg p-1' onClick={handleLoginWithFacebook} > <BiLogoFacebook /> </button>
                         </div>
                         <div className='rounded-full border border-red-700 flex items-center text-white hover:bg-transparent hover:text-red-700 duration-300 bg-red-700'>
-                            <button className='text-xl p-1'> <BiLogoGoogle /> </button>
+                            <button className='text-xl p-1' onClick={handleLoginWithGoogle} > <BiLogoGoogle /> </button>
                         </div>
                         <div className='rounded-full border border-black flex items-center text-white hover:bg-transparent hover:text-black duration-300 bg-black'>
                             <button className='text-xl p-1'> <TbBrandGithubFilled /> </button>
