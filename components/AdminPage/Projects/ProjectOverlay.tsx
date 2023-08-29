@@ -5,8 +5,6 @@ import { Project } from "reactflow";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
 
-
-
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
@@ -15,7 +13,6 @@ interface AddProjectPopupProps {
   userEmail: String;
   handleMessage: (message: string) => void;
 }
-
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   onClose,
@@ -31,15 +28,9 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   const [errors, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-
-  const addProject = projectStore((state) => state.addProject)
-
-
+  const addProject = projectStore((state) => state.addProject);
 
   // successfull message
-
-
-
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,31 +41,32 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
       recycleBin: false,
       createdAt: new Date(),
       timeStamp: new Date(),
-    }
+    };
 
-    const existanceProject = projectData.find((project) => project.name === formData.name)
+    const existanceProject = projectData.find(
+      (project) => project.name === formData.name
+    );
     if (existanceProject) {
-      setError('This Project already exists')
+      setError("This Project already exists");
     } else {
       addProject_Backend(userEmail, formData, ADD_PROJECT, GET_USER);
       addProject(newProject)
       notify()
       setFormData({ name: "", description: "" });
-      setError(null)
-      onClose()
+      setError(null);
+      onClose();
     }
   };
-
 
   const sendMessage = (message: string) => {
     handleMessage(message);
   };
-  if (loading || isLoading) return (
-    <div className="flex justify-center items-center h-screen">
-      <LoadingIcon />
-    </div>
-  );
-
+  if (loading || isLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <LoadingIcon />
+      </div>
+    );
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -84,7 +76,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   };
 
   return (
-    <div  className="fixed bottom-0 z-10 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-[45%] rounded bg-white p-8">
         <h2 className="mb-4 text-lg font-semibold">Add New Project</h2>
         <form onSubmit={handleFormSubmit}>
@@ -103,7 +95,10 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               required
             />
           </div>
-          <div className="p-2 text-red-500"> {errors && <span> {errors} </span>} </div>
+          <div className="p-2 text-red-500">
+            {" "}
+            {errors && <span> {errors} </span>}{" "}
+          </div>
           <div className="mb-4">
             <label htmlFor="projectDesc" className="mb-2 block font-medium">
               Project Description
@@ -128,14 +123,13 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
             <button
               type="submit"
               className="rounded-lg bg-blue-500 px-4 py-2 text-white"
-              disabled={formData.name === ''}
+              disabled={formData.name === ""}
             >
               Add Project
             </button>
           </div>
         </form>
       </div>
-
     </div>
   );
 };

@@ -25,7 +25,6 @@ import { MdKeyboardArrowRight } from 'react-icons/md'
 import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
 
-
 function Projects() {
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -45,11 +44,9 @@ function Projects() {
 
   const [projectTrackChanges, setProjectTrackChanges] = useState(false);
 
-
-
   const allProjects = projectStore((state) => state.projects);
   const handleSorting = projectStore((state) => state.handleSorting);
-  const sortValue = projectStore((state) => state.sortOrder)
+  const sortValue = projectStore((state) => state.sortOrder);
   const updateSortOrder = projectStore((state) => state.updateSortOrder);
   const deleteProject = projectStore((state) => state.deleteProject);
   const updateProject = projectStore((state) => state.updateProject);
@@ -60,33 +57,27 @@ function Projects() {
   // user store
   const userType = userStore((state) => state.userType);
 
-
-  const router = useRouter()
+  const router = useRouter();
   const notify = () => toast.success("Project Created...");
-
-
 
   useEffect(() => {
     const filteredProjects = allProjects.filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setProjectData(filteredProjects)
-  }, [searchTerm])
+    setProjectData(filteredProjects);
+  }, [searchTerm]);
 
   useEffect(() => {
     setIsButtonDisabled(userType.toLowerCase() === "user");
     setIsNewProjectDisabled(userType.toLowerCase() === "super user");
-    setProjectData(allProjects)
+    setProjectData(allProjects);
   }, [allProjects]);
-
 
   const handleSortClick = () => {
     const newSortOrder = sortValue === "asc" ? "desc" : "asc";
-    updateSortOrder(newSortOrder)
-    handleSorting()
+    updateSortOrder(newSortOrder);
+    handleSorting();
   };
-
-
 
   const handleEditButtonClick = (
     projectId: string,
@@ -99,9 +90,9 @@ function Projects() {
   };
 
   const handleSaveButtonClick = (projectId: string) => {
-    const result = { projectName, projectDesc }
+    const result = { projectName, projectDesc };
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
-    updateProject(projectId, result)
+    updateProject(projectId, result);
     setProjectId(null);
     setProjectName("");
   };
@@ -117,7 +108,7 @@ function Projects() {
     setShowConfirmation(false);
     if (projectId) {
       delete_Project(projectId, DELETE_PROJECT, GET_USER);
-      deleteProject(projectId)
+      deleteProject(projectId);
       setProjectId(null);
     }
   }, [projectId]);
@@ -147,16 +138,15 @@ function Projects() {
     }, 5000);
   };
 
-
   // to navigate recycle bin
   const toRecycleBin = () => {
-    router.push('/recycleBin')
-  }
+    router.push("/recycleBin");
+  };
 
   const handleDotClick = (id: string | any) => {
-    setProjectTrackChanges(!projectTrackChanges)
-    setProjectId(id)
-  }
+    setProjectTrackChanges(!projectTrackChanges);
+    setProjectId(id);
+  };
 
   const handleRecentOpenProject = (id: string | any) => {
     console.log(id)
@@ -176,16 +166,6 @@ function Projects() {
   // if (error) {
   //   console.log(error.message);
   // }
-
-
-
-
-
-
-
-
-
-
 
   return (
     // <div>
@@ -320,7 +300,6 @@ function Projects() {
     //                     Save
     //                   </button>
 
-
     //                 ) : (
     //                   <button
     //                     onClick={() =>
@@ -382,34 +361,49 @@ function Projects() {
 
     // container
     <div className="p-7">
-
-
       {/* Greeting to a user  */}
-      <div className="grid shadow-md rounded mb-4 bg-white gap-6 grid-cols-2 item-center justify-center dark:bg-slate-600">
-
-        <div className=" flex item-center justify-center">
-          <img src="/assets/grretingImage.png" height="50%" width='50%' alt="" />
+      <div className="item-center mb-4 grid grid-cols-2 justify-center gap-6 rounded bg-white shadow-md dark:bg-slate-600">
+        <div className=" item-center flex justify-center">
+          <img
+            src="/assets/grretingImage.png"
+            height="50%"
+            width="50%"
+            alt=""
+          />
         </div>
 
         <div className="flex flex-col justify-around">
           <div>
-            <h2 className="text-4xl"> Welcome! {getNameFromEmail(userEmail)}  </h2>
-            <p className="text-xl m-2">Quality is never an accident; it is always the result of high intention, sincere effort, intelligent direction, and skillful execution</p>
+            <h2 className="text-4xl">
+              {" "}
+              Welcome! {getNameFromEmail(userEmail)}{" "}
+            </h2>
+            <p className="m-2 text-xl">
+              Quality is never an accident; it is always the result of high
+              intention, sincere effort, intelligent direction, and skillful
+              execution
+            </p>
           </div>
-          <a href="#activities" className="text-sky-500 m-2 duration-300 hover:text-sky-700 cursor-pointer underline">see the daily activities</a>
+          <a
+            href="#activities"
+            className="m-2 cursor-pointer text-sky-500 underline duration-300 hover:text-sky-700"
+          >
+            see the daily activities
+          </a>
         </div>
-
       </div>
-
 
       {/* Project  heading*/}
       <h2 className="mb-6 text-2xl font-semibold">Projects</h2>
 
       {/* project heading bar (functionality) */}
-      <div id="activities" className="bg-white gap-6 p-4 mb-6 shadow grid h-fit grid-cols-4 items-center text-center dark:bg-slate-600">
-        <div className="border rounded border-slate-400 p-1">
+      <div
+        id="activities"
+        className="mb-6 grid h-fit grid-cols-4 items-center gap-6 bg-white p-4 text-center shadow dark:bg-slate-600"
+      >
+        <div className="rounded border border-slate-400 p-1">
           <input
-            className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
+            className=" bg-white-200 bg:text-slate-100 h-full w-full outline-none dark:bg-transparent"
             type="text"
             id="search"
             placeholder="Search"
@@ -421,19 +415,39 @@ function Projects() {
 
         <div className=" col-span-2">
           <span className="ml-5">Total : {allProjects.length}</span>
-          <button onClick={handleSortClick} className="ml-5 hover:bg-slate-100 rounded-lg hover:text-slate-500 duration-300 p-2"> sorting:<HiArrowsUpDown className={`inline ${sortValue === 'asc' ? '' : "rotate-180"}`} /> </button>
-          <button onClick={toRecycleBin} className="ml-5 relative p-2  rounded-lg hover:bg-slate-100 rounded-lg hover:text-slate-500 duration-300">
-            RecycleBin: <AiFillDelete className="inline text-xl" /><span className="bg-sky-500 rounded-full text-sm text-white absolute right-[1px] w-4 h-[20px] top-1"> {recycleBinProject.length} </span>
+          <button
+            onClick={handleSortClick}
+            className="ml-5 rounded-lg p-2 duration-300 hover:bg-slate-100 hover:text-slate-500"
+          >
+            {" "}
+            sorting:
+            <HiArrowsUpDown
+              className={`inline ${sortValue === "asc" ? "" : "rotate-180"}`}
+            />{" "}
+          </button>
+          <button
+            onClick={toRecycleBin}
+            className="relative ml-5 rounded-lg  rounded-lg p-2 duration-300 hover:bg-slate-100 hover:text-slate-500"
+          >
+            RecycleBin: <AiFillDelete className="inline text-xl" />
+            <span className="absolute right-[1px] top-1 h-[20px] w-4 rounded-full bg-sky-500 text-sm text-white">
+              {" "}
+              {recycleBinProject.length}{" "}
+            </span>
           </button>
         </div>
 
         <div className="text-end">
-          <button onClick={handleAddProjectClick} className="bg-sky-500/75 p-2 hover:bg-transparent hover:text-sky-500 border border-sky-500/75 duration-300 hover:border-sky-500/75 hover:border rounded text-white">Add Project</button>
+          <button
+            onClick={handleAddProjectClick}
+            className="rounded border border-sky-500/75 bg-sky-500/75 p-2 text-white duration-300 hover:border hover:border-sky-500/75 hover:bg-transparent hover:text-sky-500"
+          >
+            Add Project
+          </button>
         </div>
       </div>
 
       {/* add project form container */}
-
 
       {showForm && (
         <ProjectOverlay
@@ -447,70 +461,89 @@ function Projects() {
         />
       )}
 
-
       {/* project card */}
-      <div className=" grid grid-cols-3   gap-6 " >
-        {
-          projectData.map((projects, index) => {
-            const { name, id, description, userHas, recentProject } = projects
-            return (
-              <div key={index} className="bg-white  flex flex-col relative justify-between shadow-md  duration-200  hover:shadow-xl san-sarif p-4 rounded dark:bg-slate-600">
-                <div>
-                  <div className="flex justify-between">
-                    <h3 className="text-lg font-bold"> {name} </h3>
-                    <button onClick={() => handleDotClick(id)} className="text-xl"> {projectId === id && projectTrackChanges ? <HiXMark /> : <BiDotsVerticalRounded />} </button>
-                  </div>
-                  <p className="mt-2 mb-3"> {description} </p>
+      <div className=" grid grid-cols-3   gap-6 ">
+        {projectData.map((projects, index) => {
+          const { name, id, description, userHas } = projects;
+          return (
+            <div
+              key={id}
+              className="san-sarif  relative flex flex-col justify-between rounded  bg-white  p-4 shadow-md duration-200 hover:shadow-xl dark:bg-slate-600"
+            >
+              <div>
+                <div className="flex justify-between">
+                  <h3 className="text-lg font-bold"> {name} </h3>
+                  <button
+                    onClick={() => handleDotClick(id)}
+                    className="text-xl"
+                  >
+                    {" "}
+                    {projectId === id && projectTrackChanges ? (
+                      <HiXMark />
+                    ) : (
+                      <BiDotsVerticalRounded />
+                    )}{" "}
+                  </button>
                 </div>
-                <div>
-                  <div className="text-sky-500 ">
-                    <Link href={`/projects/` + id}>
-                      <a className="hover:underline duration-300" onClick={()=>handleRecentOpenProject(id)}>see more  <MdKeyboardArrowRight className="inline" /></a>
-                    </Link>
-                   
-                  </div>
-                  <div className="flex justify-end -space-x-[2%]"> { userHas && userHas.length && projectAssignedUser(userHas) } </div>
-                </div>
-
-                {projectId === id &&
-                  projectTrackChanges ? (<div className="flex flex-col bg-white absolute -right-[20px] top-10 shadow">
-                    <button className="p-1 text-xs bg-yellow-500 text-white border-b-2">Edit</button>
-                    <button className="p-1 text-xs bg-red-500 text-white" onClick={() => delete_Project(id, DELETE_PROJECT, GET_USER)}>Delete</button>
-                  </div>) : null
-                }
+                <p className="mb-3 mt-2"> {description} </p>
               </div>
-            )
-          })
-        }
+              <div>
+                <div className="text-sky-500  duration-300 hover:underline">
+                  <Link href={`/projects/` + id}>see more</Link>
+                  <MdKeyboardArrowRight className="inline" />
+                </div>
+                {/* <div className="flex justify-end -space-x-[2%]"> {projectAssignedUser(userHas)} </div> */}
+                <div className="flex justify-end ">
+                  {userHas && userHas.length && projectAssignedUser(userHas)}
+                </div>
+              </div>
 
+              {projectId === id && projectTrackChanges ? (
+                <div className="absolute -right-[20px] top-10 flex flex-col bg-white shadow">
+                  <button className="border-b-2 bg-yellow-500 p-1 text-xs text-white">
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 p-1 text-xs text-white"
+                    onClick={() => delete_Project(id, DELETE_PROJECT, GET_USER)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ) : null}
+
+              {/* */}
+            </div>
+          );
+        })}
       </div>
-
     </div>
   );
 }
 
 export default Projects;
 
-
-
-// userList 
+// userList
 
 export const projectAssignedUser = (userHas: any) => {
   const user = userHas.map((value: User, index: string) => {
     const { emailId } = value
     return (
-      <div style={{ backgroundColor: getRandomColor() }} key={index} className=" rounded-full items-center flex justify-center w-6 group cursor-pointer h-6 text-white">
+      <div
+        style={{ backgroundColor: getRandomColor() }}
+        key={index}
+        className=" group flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white"
+      >
         <span className="">{getInitials(emailId)}</span>
       </div>
-    )
+    );
   });
-  return user
-}
-
+  return user;
+};
 
 export function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
+  var letters = "0123456789ABCDEF";
+  var color = "#";
   for (var i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }

@@ -6,6 +6,13 @@ const Boards = () => {
     <div className="h-screen">
       <ProjectBoards />
     </div>
+      // <div className="flex">
+      //   <Sidebar/>
+      //   <div className="ml-2 w-full">
+      //     <TopBar/>
+      //     <ProjectBoards/>
+      //   </div>
+      // </div>
   );
 };
 
