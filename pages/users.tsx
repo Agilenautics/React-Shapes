@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import TopBar from "../components/AdminPage/TopBar";
 import MembersPage from "../components/AdminPage/Users/MembersPage";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {  onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from '../auth';
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import TopBar from "../components/AdminPage/TopBar";
 import RecycleBin from "../components/AdminPage/Projects/RecycleBin";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from '../auth';
 

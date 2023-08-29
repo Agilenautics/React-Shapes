@@ -32,9 +32,8 @@ interface Flag {
 }
 
 function TopBar({ toggleSideBar, flag }: Flag) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
 
-  const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
 
 
  
@@ -115,7 +114,7 @@ function TopBar({ toggleSideBar, flag }: Flag) {
             <div className="absolute right-0 top-12 z-40 mr-4 w-48 rounded border border-gray-300 bg-white shadow">
               <div className="p-4">
                 <p className="mb-2 text-sm text-gray-600">{email}</p>
-                <Signout />
+                <Signout  />
               </div>
             </div>
           )}

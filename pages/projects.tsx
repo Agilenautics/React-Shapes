@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import TopBar from "../components/AdminPage/TopBar";
-import Sidebar from "../components/AdminPage/SideBar";
 
 import Projects from "../components/AdminPage/Projects/Projects";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from '../auth';
 // import Sidebar from "../components/Sidebar/Sidebar";

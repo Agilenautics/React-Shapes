@@ -15,8 +15,27 @@ query getProjets {
 }
 `
 
+const Project_Fragment = gql`
+  fragment ProjectFragment on main {
+      id
+      timeStamp
+      description
+      name
+      recycleBin
+      recentProject
+      deletedAT
+      userHas {
+        emailId
+        userType
+      }
+  }
+`;
+
+
+
 
 const GET_USER = gql`
+${Project_Fragment}
 query getUser($where: userWhere) {
   users(where: $where) {
     active
@@ -24,16 +43,7 @@ query getUser($where: userWhere) {
     userName
     userType
     hasProjects {
-      id
-      timeStamp
-      description
-      name
-      recycleBin
-      deletedAT
-      userHas {
-        emailId
-        userType
-      }
+    ...ProjectFragment 
     }
   }
 }
@@ -71,13 +81,47 @@ mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
 }
 `
 
+const recentProject_query = gql`
+mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
+  updateRecentProject(where: $where, update: $update) {
+    mains {
+      id
+      timeStamp
+      description
+      name
+      recycleBin
+      deletedAT
+    }
+  }
+}
+
+`
+
+
+const update_recentProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id
+      },
+      update: {
+        recentProject: true,
+      }
+    },
+    refetchQueries(result) {
+      return [GET_USER]
+    },
+  })
+}
+
 
 const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   var dateObj = new Date();
   var month = dateObj.getUTCMonth() + 1; //months from 1-12
   var day = dateObj.getUTCDate();
   var year = dateObj.getUTCFullYear();
-  
+
   const newdate = year + "/" + month + "/" + day;
   await client.mutate({
     mutation,
@@ -87,7 +131,7 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
       },
       update: {
         recycleBin: true,
-        deletedAT:newdate
+        deletedAT: newdate
       }
     },
     // update: (cache, { data }) => {
@@ -131,7 +175,7 @@ const recycleProject = async (id: string, mutation: DocumentNode | TypedDocument
       },
       update: {
         recycleBin: false,
-        deletedAT:""
+        deletedAT: ""
       }
     },
     refetchQueries: [{
@@ -160,7 +204,7 @@ const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumen
         id
       }
     },
-    refetchQueries:(result)=>{
+    refetchQueries: (result) => {
       return [query]
     },
   })
@@ -306,12 +350,12 @@ mutation addProject($where: userWhere, $update: userUpdateInput) {
   }
 }
 `
-const addProject_Backend =async (email:String,project:any,mutation:DocumentNode | TypedDocumentNode<any, OperationVariables>,query: DocumentNode | TypedDocumentNode<any, OperationVariables>  ) => {
+const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation,
     variables: {
-      where:{
-        emailId:email
+      where: {
+        emailId: email
       },
       update: {
         hasProjects: [
@@ -323,7 +367,8 @@ const addProject_Backend =async (email:String,project:any,mutation:DocumentNode 
                   name: project.name,
                   isOpen: true,
                   recycleBin: false,
-                  deletedAT:"",
+                  recentProject: false,
+                  deletedAT: "",
                   userName: "",
                 },
               },
@@ -333,7 +378,7 @@ const addProject_Backend =async (email:String,project:any,mutation:DocumentNode 
       },
     },
     refetchQueries(result) {
-      return [{query}]
+      return [{ query }]
     },
   })
 }
@@ -364,4 +409,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin,addProject_Backend }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_query }

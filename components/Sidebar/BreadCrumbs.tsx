@@ -9,10 +9,10 @@ import nodeStore from "../Flow/Nodes/nodeStore";
  */
 function BCTile(name: string, isFirst: boolean = false) {
   return (
-    <li>
+    <li >
       <div className="flex items-center">
-        {isFirst ? null : <MdOutlineArrowForwardIos className="h-5 w-5" />}
-        <div className="mx-1 ml-2 flex items-center font-sans text-sm justify-center bg-purple-100 p-3 text-lg font-normal text-black-400 rounded-tl-lg rounded-tr-lg shadow-md dark:text-gray-400 dark:hover:text-white breadcrumb-trapezoid-purple dark:text-white">
+        {isFirst ? null : <MdOutlineArrowForwardIos />}
+        <div className="mx-1 flex items-center font-sans text-sm justify-center bg-purple-100 p-2 text-lg font-normal text-black-400 rounded-tl-lg rounded-tr-lg shadow-md dark:text-gray-400 dark:hover:text-white breadcrumb-trapezoid-purple dark:text-white">
           {name}
           <div className="breadcrumb-triangle" />
         </div>
@@ -25,9 +25,9 @@ function BCTile(name: string, isFirst: boolean = false) {
 function BreadCrumbs() {
   const breadCrumbs = nodeStore((state) => state.breadCrumbs);
   return (
-    <div className="relative left-[25vw] top--2" style={{ marginTop: 75 }}>
-      <nav className="flex" aria-label="Breadcrumb">
-        <ol className="flex space-x-3 py-2 pr-2">
+    <div >
+      <nav className="flex fixed top-24" aria-label="Breadcrumb">
+        <ol className="flex space-x-1 px-2">
           {breadCrumbs.map((value: any, index) => {
             return (
               <div key={index}> {BCTile(value, index === 0)} </div>

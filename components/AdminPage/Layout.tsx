@@ -8,6 +8,7 @@ import { GET_USER } from "./Projects/gqlProject";
 import projectStore from "./Projects/projectStore";
 import userStore from "./Users/userStore";
 import RoutingBreadCrumbs from "../RoutingBreadCrumbs";
+import { useRouter } from "next/router";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -35,6 +36,9 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
     }
   });
 
+
+  const router = useRouter()
+
   const getProjects = (response: any) => {
     if (!loading && response && response.users.length) {
       const projects = response.users[0].hasProjects;
@@ -42,9 +46,10 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
       updateUserType(userType)
       updateProjects(projects, loading);
       updateRecycleBinProject(projects);
-
     }
   }
+
+  const path = (router.asPath !== "/signup") && (router.asPath !== '/login') && (router.asPath !== '/forgot-password')
 
 
   const verificationToken = async () => {
@@ -57,7 +62,7 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
   }
   useEffect(() => {
     verificationToken()
-  }, [data])
+  }, [data, auth, error, loading])
 
 
 
@@ -65,16 +70,31 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
     setIsSideBarOpen(!isSideBarOpen);
   };
 
+  if (error) {
+    return <div>Error:{error.message}</div>;
+  }
+
 
   return (
     <div className="flex">
       <div>
-        <Sidebar isOpen={isSideBarOpen} />
+        {
+          email && path && <Sidebar isOpen={isSideBarOpen} />
+        }
       </div>
       <div className="w-full">
-        <TopBar toggleSideBar={toggleSideBar} flag={isSideBarOpen} />
-        <RoutingBreadCrumbs />
-        <div className="flex flex-grow flex-col  bg-gray-50 p-6 dark:bg-slate-900 dark:text-slate-100">
+        {
+          email && path && (
+            <>
+              <TopBar toggleSideBar={toggleSideBar} flag={isSideBarOpen} />
+              <RoutingBreadCrumbs />
+            </>
+          )
+        }
+        <div className="flex flex-grow flex-col  bg-gray-50 dark:bg-slate-900 dark:text-slate-100">
+          {/* {
+            email && path && <RoutingBreadCrumbs />
+          } */}
           {children}
         </div>
       </div>

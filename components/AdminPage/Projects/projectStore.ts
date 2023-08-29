@@ -6,7 +6,8 @@ interface User {
     emailId: string;
     userType: string;
     active: Boolean;
-    userName: string
+    userName: string;
+    
 }
 
 export interface Project {
@@ -17,6 +18,7 @@ export interface Project {
     timeStamp: string;
     description: string;
     userHas: User[];
+    recentProject:Boolean;
 }
 
 export interface ProjectState {

@@ -339,33 +339,31 @@ const Sidebar = ({ isOpen }: SideBar) => {
                           <span> Business Plan</span>
                         </a>
                       </Link>
-
-
-
-
-
-
                     </div>
 
-                    {router.asPath == "/projects/" + projectId + "/business-plan" && <div className="h-[23vh] overflow-auto overflow-x-hidden">
-                      <div className="grid grid-cols-2 gap-2 p-1">
-                        <button
-                          type="button"
-                          className="add-buttons w-25 peer h-8"
-                          onClick={() => add_folder()}
-                        >
-                          <AiFillFolderAdd className="add-buttons-icon" /> Add Folder
-                        </button>
-                        <button
-                          type="button"
-                          className="add-buttons w-21 peer h-8"
-                          onClick={() => add_file()}
-                        >
-                          <AiFillFileAdd className="add-buttons-icon" /> Add File
-                        </button>
-                      </div>
-                      <FileTree />
-                    </div>}
+                    {router.asPath == "/projects/" + projectId + "/business-plan" &&
+                      (
+                        <div className="h-[23vh] overflow-auto overflow-x-hidden ">
+                          <div className=" grid grid-cols-2 gap-2 p-1 sticky top-0  text-white  bg-white z-10  ">
+                            <button
+                              type="button"
+                              className=" rounded flex items-center gap-1 bg-sky-500 hover:bg-sky-600 duration-300 p-1 justify-center"
+                              onClick={() => add_folder()}
+                            >
+                              <AiFillFolderAdd className="text-xl" /> <span>Add Folder</span>
+                            </button>
+                            <button
+                              type="button"
+                              className=" flex items-center rounded gap-1 p-1 bg-sky-500 justify-center hover:bg-sky-600 duration-300"
+                              onClick={() => add_file()}
+                            >
+                              <AiFillFileAdd className="text-xl"/> <span>Add File</span>
+                            </button>
+                          </div>
+                          <FileTree />
+                        </div>
+                      )
+                    }
                   </>
                 )
               }
@@ -374,9 +372,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
         )
       }
     </div>
-
-
-
   );
 };
 

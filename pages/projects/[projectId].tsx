@@ -4,19 +4,12 @@ import {
   getMainByUser,
   getTreeNodeByUser,
 } from "../../components/TreeView/gqlFiles";
-import TopBar from "../../components/AdminPage/TopBar";
 // import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import LoadingIcon from "../../components/LoadingIcon";
 // import MembersTable from "../../components/AdminPage/Projects/MembersTable";
 import ProjectOverview from "../../components/AdminPage/Projects/ProjectOverview";
 import fileStore from "../../components/TreeView/fileStore";
-import Sidebar from "../../components/Sidebar/Sidebar";
 
-interface Project {
-  name: string;
-  id: string;
-  description: string;
-}
 
 interface User {
   email: string;

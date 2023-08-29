@@ -35,6 +35,7 @@ import {
 import fileStore from "../TreeView/fileStore";
 import { NodeState } from "./Nodes/nodeStore";
 import { EdgeState } from "./Edges/edgeStore";
+import BreadCrumbs from "../Sidebar/BreadCrumbs";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -214,7 +215,7 @@ function Flow() {
   };
   const proOptions = { hideAttribution: true };
 
- 
+
 
 
   //TODO here iam calling deleteEdge methode inside onDeleteEdge
@@ -224,73 +225,76 @@ function Flow() {
   //     deleteEdge(CurEle.id, CurEle.data.label)
   //   })
   // } 
-  
-  return (
-    <div className="reactflow-wrapper h-[90vh] transition-all duration-100">
-      <ReactFlow
-        draggable
-        nodesDraggable={true}
-        proOptions={proOptions}
-        panOnScroll
-        defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
-        nodes={defaultNodes}
-        edges={defaultEdges}
-        defaultEdgeOptions={defaultEdgeOptions}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView
-        connectionLineComponent={ConnectionLine}
-        snapGrid={snapGrid}
-        zoomOnDoubleClick={false}
-        //@ts-ignore
-        edgeTypes={edgeTypeMap}
-        nodeTypes={nodeTypeMap}
-        connectionMode={ConnectionMode.Loose}
-        onNodeDragStop={(event, node) => {
-          updateNodes(getNodes());
-          onDrag(event, node);
-        }}
-        onNodesDelete={(selectedNodes) => onNodesDelete(selectedNodes)}
-        onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
-        onEdgeClick={onEdgeClick}
-        onNodeClick={onNodeClick}
-        deleteKeyCode={[]}
-      >
-        <MiniMap
-          //nodeComponent={MiniMapNode}
-          zoomable
-        />
-        <Controls />
-        {/* <CustomControls /> */}
-      </ReactFlow>
 
-      {showConfirmation.show && (
-        <div className="popup-container">
-          <div className="popup-window">
-            <h3>Confirm Deletion</h3>
-            <p>
-              Are you sure you want to delete the selected
-              {showConfirmation.type === "node"
-                ? "node"
-                : // @ts-ignore
-                showConfirmation.type === "links"
-                ? "node with attached links"
-                : "edge"}
-              ?
-            </p>
-            <div>
-              <button className="popup-button" onClick={handleConfirm}>
-                Yes
-              </button>
-              <button className="popup-button" onClick={handleCancel}>
-                No
-              </button>
+  return (
+    <>
+      <div className="reactflow-wrapper h-[86vh] transition-all duration-100">
+        {/* <BreadCrumbs /> */}
+        <ReactFlow
+          draggable
+          nodesDraggable={true}
+          proOptions={proOptions}
+          panOnScroll
+          defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
+          nodes={defaultNodes}
+          edges={defaultEdges}
+          defaultEdgeOptions={defaultEdgeOptions}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          fitView
+          connectionLineComponent={ConnectionLine}
+          snapGrid={snapGrid}
+          zoomOnDoubleClick={false}
+          //@ts-ignore
+          edgeTypes={edgeTypeMap}
+          nodeTypes={nodeTypeMap}
+          connectionMode={ConnectionMode.Loose}
+          onNodeDragStop={(event, node) => {
+            updateNodes(getNodes());
+            onDrag(event, node);
+          }}
+          onNodesDelete={(selectedNodes) => onNodesDelete(selectedNodes)}
+          onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
+          onEdgeClick={onEdgeClick}
+          onNodeClick={onNodeClick}
+          deleteKeyCode={[]}
+        >
+          <MiniMap
+            //nodeComponent={MiniMapNode}
+            zoomable
+          />
+          <Controls />
+          {/* <CustomControls /> */}
+        </ReactFlow>
+
+        {showConfirmation.show && (
+          <div className="popup-container">
+            <div className="popup-window">
+              <h3>Confirm Deletion</h3>
+              <p>
+                Are you sure you want to delete the selected
+                {showConfirmation.type === "node"
+                  ? "node"
+                  : // @ts-ignore
+                  showConfirmation.type === "links"
+                    ? "node with attached links"
+                    : "edge"}
+                ?
+              </p>
+              <div>
+                <button className="popup-button" onClick={handleConfirm}>
+                  Yes
+                </button>
+                <button className="popup-button" onClick={handleCancel}>
+                  No
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 

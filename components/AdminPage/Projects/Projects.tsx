@@ -11,15 +11,12 @@ import {
   edit_Project,
   delete_Project,
 } from "./gqlProject";
-import { useQuery } from "@apollo/client";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../auth";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { User, getInitials } from "../Users/Users";
 import projectStore, { Project } from "./projectStore";
 import userStore from "../Users/userStore";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BiDotsVerticalRounded, } from 'react-icons/bi'
 import { HiArrowsUpDown, HiXMark } from 'react-icons/hi2'
@@ -43,6 +40,9 @@ function Projects() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [recentProjectId, setRecentProjectId] = useState<string | null>(null);
+
+
   const [projectTrackChanges, setProjectTrackChanges] = useState(false);
 
 
@@ -53,7 +53,7 @@ function Projects() {
   const updateSortOrder = projectStore((state) => state.updateSortOrder);
   const deleteProject = projectStore((state) => state.deleteProject);
   const updateProject = projectStore((state) => state.updateProject);
-  const loading = projectStore((state)=>state.loading)
+  const loading = projectStore((state) => state.loading)
   const recycleBinProject = projectStore((state) => state.recycleBin)
 
 
@@ -158,6 +158,13 @@ function Projects() {
     setProjectId(id)
   }
 
+  const handleRecentOpenProject = (id: string | any) => {
+    console.log(id)
+
+    console.log(allProjects)
+
+  }
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -169,6 +176,8 @@ function Projects() {
   // if (error) {
   //   console.log(error.message);
   // }
+
+
 
 
 
@@ -443,9 +452,9 @@ function Projects() {
       <div className=" grid grid-cols-3   gap-6 " >
         {
           projectData.map((projects, index) => {
-            const { name, id, description, userHas } = projects
+            const { name, id, description, userHas, recentProject } = projects
             return (
-              <div key={id} className="bg-white  flex flex-col relative justify-between shadow-md  duration-200  hover:shadow-xl san-sarif p-4 rounded dark:bg-slate-600">
+              <div key={index} className="bg-white  flex flex-col relative justify-between shadow-md  duration-200  hover:shadow-xl san-sarif p-4 rounded dark:bg-slate-600">
                 <div>
                   <div className="flex justify-between">
                     <h3 className="text-lg font-bold"> {name} </h3>
@@ -454,21 +463,21 @@ function Projects() {
                   <p className="mt-2 mb-3"> {description} </p>
                 </div>
                 <div>
-                  <div className="text-sky-500  hover:underline duration-300">
-                    <Link href={`/projects/` + id}>see more</Link>
-                    <MdKeyboardArrowRight className="inline" />
+                  <div className="text-sky-500 ">
+                    <Link href={`/projects/` + id}>
+                      <a className="hover:underline duration-300" onClick={()=>handleRecentOpenProject(id)}>see more  <MdKeyboardArrowRight className="inline" /></a>
+                    </Link>
+                   
                   </div>
-                  <div className="flex justify-end -space-x-[2%]"> {projectAssignedUser(userHas)} </div>
+                  <div className="flex justify-end -space-x-[2%]"> { userHas && userHas.length && projectAssignedUser(userHas) } </div>
                 </div>
 
                 {projectId === id &&
                   projectTrackChanges ? (<div className="flex flex-col bg-white absolute -right-[20px] top-10 shadow">
                     <button className="p-1 text-xs bg-yellow-500 text-white border-b-2">Edit</button>
-                    <button className="p-1 text-xs bg-red-500 text-white" onClick={()=>delete_Project(id, DELETE_PROJECT, GET_USER)}>Delete</button>
+                    <button className="p-1 text-xs bg-red-500 text-white" onClick={() => delete_Project(id, DELETE_PROJECT, GET_USER)}>Delete</button>
                   </div>) : null
                 }
-
-                {/* */}
               </div>
             )
           })
@@ -486,13 +495,9 @@ export default Projects;
 
 // userList 
 
-export const projectAssignedUser = (users: any) => {
-
-
-
-
-  const user = users.map((value: User, index: string) => {
-    const { id, emailId } = value
+export const projectAssignedUser = (userHas: any) => {
+  const user = userHas.map((value: User, index: string) => {
+    const { emailId } = value
     return (
       <div style={{ backgroundColor: getRandomColor() }} key={index} className=" rounded-full items-center flex justify-center w-6 group cursor-pointer h-6 text-white">
         <span className="">{getInitials(emailId)}</span>

@@ -45,7 +45,7 @@ function AddNodeButton() {
   };
 
   return (
-    <div className="absolute bottom-48 right-6">
+    <div className="absolute bottom-44 right-6">
       <div className="flex flex-col items-center space-y-4">
         {isExpandedAdd && (
           <div className="bg-white rounded-lg shadow p-4 max-h-40 overflow-y-auto">
@@ -90,9 +90,9 @@ function AddNodeButton() {
           {isLoading ? (
             //<LoadingIcon color="white" />
             <MdOutlineAdd
-                className="h-6 w-6"
-                style={{ color: "white" }}
-              />
+              className="h-6 w-6"
+              style={{ color: "white" }}
+            />
           ) : (
             <>
               <MdOutlineAdd

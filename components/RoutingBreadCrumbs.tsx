@@ -31,12 +31,12 @@ const RoutingBreadCrumbs = () => {
 
   return (
     <>
-      {breadCrumbs[breadCrumbs.length - 1] !== "business-plan" &&
-        <div className='px-6 py-3 flex  bg-gray-50 text-slate-500 sticky top-12 z-50 '>
+      {
+        <div className='px-6 py-3 flex  bg-gray-50 text-slate-500 sticky top-12 z-10 '>
           {breadCrumbs.map((value, index) => {
             return (
-              <div  key={index}>
-                 {value} 
+              <div key={index}>
+                {value}
                 {value && breadCrumbs.length - index > 1 && " / "}
               </div>
             )
