@@ -3,6 +3,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 // import { FaEdit, FaTrash } from "react-icons/fa";
 import initData from "./staticData/initData";
+import { processedData } from "./staticData/processedData";
 
 function ProjectBoards() {
   const [tasks, setTasks] = useState(initData);
@@ -22,89 +23,7 @@ function ProjectBoards() {
     return "Unknown";
   }
 
-  let initData2 = [];
-  let temproary = [];
-
-  for (let i of tasks) {
-    if (i.type == "folder") {
-      //@ts-ignore
-      for (let j of i.hasFiles) {
-        initData2.push(j);
-        if (j.status == "To-Do")
-          temproary.push({
-            type: j.type,
-            name: j.name,
-            description: j.description,
-            status: "To-Do",
-          });
-        else if (j.status == "In-Progress")
-          temproary.push({
-            type: j.type,
-            name: j.name,
-            description: j.description,
-            status: "In-Progress",
-          });
-        else
-          temproary.push({
-            type: j.type,
-            name: j.name,
-            description: j.description,
-            status: "Completed",
-          });
-      }
-    } else if (i.type == "file") {
-      initData2.push(i);
-      if (i.status == "To-Do")
-        temproary.push({
-          type: i.type,
-          name: i.name,
-          description: i.description,
-          status: "To-Do",
-        });
-      else if (i.status == "In-Progress")
-        temproary.push({
-          type: i.type,
-          name: i.name,
-          description: i.description,
-          status: "In-Progress",
-        });
-      else
-        temproary.push({
-          type: i.type,
-          name: i.name,
-          description: i.description,
-          status: "Completed",
-        });
-    }
-  }
-
-  for (let i of initData2) {
-    if (i.node) {
-      for (let j of i.node) {
-        if (j.status == "To-Do")
-          temproary.push({
-            type: j.type,
-            name: j.label,
-            description: j.description,
-            status: "To-Do",
-          });
-        else if (j.status == "In-Progress")
-          temproary.push({
-            type: j.type,
-            name: j.label,
-            description: j.description,
-            status: "In-Progress",
-          });
-        else
-          temproary.push({
-            type: j.type,
-            name: j.label,
-            description: j.description,
-            status: "Completed",
-          });
-      }
-    }
-  }
+const temproary = processedData(tasks)
 
   const [statuses, setStatuses] = useState(temproary);
 

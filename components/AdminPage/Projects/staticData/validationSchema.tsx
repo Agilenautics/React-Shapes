@@ -11,5 +11,9 @@ export default validationSchema = Yup.object().shape({
       ),
     description: Yup.string().required("Description is required"),
     status: Yup.string().required("Status is required"),
+    startDate: Yup.date().required("Start Date is required"),
+  endDate: Yup.date()
+    .required("End Date is required")
+    .min(Yup.ref("startDate"), "End Date must be later than Start Date"),
   });
   
