@@ -7,7 +7,7 @@ interface User {
     userType: string;
     active: Boolean;
     userName: string;
-    
+
 }
 
 export interface Project {
@@ -18,7 +18,7 @@ export interface Project {
     timeStamp: string;
     description: string;
     userHas: User[];
-    recentProject:Boolean;
+    recentProject: Boolean;
 }
 
 export interface ProjectState {
@@ -48,7 +48,7 @@ const projectStore = create<ProjectState>((set) => ({
     searchProduct: "",
     updateSearchItem: (searchQuery: string) =>
         set((state) => {
-            return {search:searchQuery}
+            return { search: searchQuery }
         }),
     recycleBin: [],
     addProject: (newProject: any) =>

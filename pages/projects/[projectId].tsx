@@ -46,8 +46,11 @@ function SideBar() {
     }
   }
 
+  
+
   useEffect(() => {
     fetchData();
+    console.log(localStorage.getItem("recentPid"),"Hello")
   }, [router.query.projectId]);
 
   return (

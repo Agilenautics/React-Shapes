@@ -11,6 +11,8 @@ const typeDefs = gql`
     hasProjects: [main!]! @relationship(type: "hasMain", direction: OUT)
     active: Boolean!
   }
+
+  #project scheme
   type main {
     id: ID! @id
     timeStamp: DateTime! @timestamp
@@ -27,50 +29,12 @@ const typeDefs = gql`
     hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
   }
 
-  type Query {
-    projects: [main!]!
-    getUsers: [user!]!
-  }
- type info {
-  description:String
-  assignedTo: String
-  status:String
-  dueDate:String
- # hasInfo:folder @relationship( type:"hasInfo",direction:OUT)
- # hasInfo:file @relationship( type:"hasInfo",direction:OUT)
- }
-  type Mutation {
-    createProject(newProject: projectInput!): main
-    updateProject(projectData: projectInput!): updateData
-    addUser(newUser: userInput!): user
-  }
 
-  input userEmail {
-    email: String!
-  }
 
-  input projectInput {
-    name: String!
-    description: String
-    userName: String!
-    isOpen: Boolean!
-  }
 
-  input userInput {
-    userName: String!
-    emailId: String!
-    userType: String
-    active: Boolean!
-  }
 
-  type updateData {
-    id: ID!
-    name: String!
-    description: String!
-    userName: String!
-    isOpen: Boolean!
-  }
 
+  #epic scheme
   type folder {
     id: ID! @id
     #parentId: ID! @id
@@ -84,6 +48,7 @@ const typeDefs = gql`
     hasFile: [file!]! @relationship(type: "hasFile", direction: OUT)
   }
 
+  # story scheme
   type file {
     id: ID! @id
     #parentId: ID! @id
@@ -103,13 +68,15 @@ const typeDefs = gql`
     nodes: [flowNode!]! @relationship(type: "hasFlownodes", direction: OUT)
     edges: [flowEdge!]! @relationship(type: "hasFlowedges", direction: OUT)
   }
-
+  
+  #task scheme
   type flowNode {
     id: ID! @id
     timeStamp: DateTime! @timestamp
     draggable: Boolean!
     flowchart: String!
     type: String!
+    hasInfo:info @relationship( type:"hasInfo",direction:IN)
     status:String
     assignedTo:String
     hasdataNodedata: nodeData @relationship(type: "hasData", direction: OUT)
@@ -122,6 +89,7 @@ const typeDefs = gql`
     flowedgeConnectedto: [flowEdge!]!
       @relationship(type: "connectedTo", direction: IN)
   }
+  
 
   type nodeData {
     label: String!
@@ -183,11 +151,61 @@ const typeDefs = gql`
       @relationship(type: "hasEdgeData", direction: OUT)
   }
 
+  type info {
+    description:String!
+    assignedTo: String!
+    status:String!
+    dueDate:String!
+    sprint:String!
+    # hasInfo:folder @relationship( type:"hasInfo",direction:OUT)
+    # hasInfo:file @relationship( type:"hasInfo",direction:OUT)
+ }
+
   type tasks {
     id: ID! @id
     timeStamp: DateTime! @timestamp
     flownodeHastask: flowNode @relationship(type: "hasTasks", direction: IN)
   }
+
+
+  type Query {
+    projects: [main!]!
+    getUsers: [user!]!
+  }
+
+  type Mutation {
+    createProject(newProject: projectInput!): main
+    updateProject(projectData: projectInput!): updateData
+    addUser(newUser: userInput!): user
+  }
+
+  input userEmail {
+    email: String!
+  }
+
+  input projectInput {
+    name: String!
+    description: String
+    userName: String!
+    isOpen: Boolean!
+  }
+
+  input userInput {
+    userName: String!
+    emailId: String!
+    userType: String
+    active: Boolean!
+  }
+
+  type updateData {
+    id: ID!
+    name: String!
+    description: String!
+    userName: String!
+    isOpen: Boolean!
+  }
+
+  
 `;
 
 export default typeDefs;

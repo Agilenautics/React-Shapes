@@ -10,6 +10,8 @@ import {
   EDIT_PROJECT,
   edit_Project,
   delete_Project,
+  update_recentProject,
+  recentProject_mutation,
 } from "./gqlProject";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
@@ -149,10 +151,8 @@ function Projects() {
   };
 
   const handleRecentOpenProject = (id: string | any) => {
-    console.log(id)
-
-    console.log(allProjects)
-
+    localStorage.setItem("recentPid",id);
+    // update_recentProject(id,recentProject_mutation);
   }
 
   if (loading) {
@@ -163,9 +163,7 @@ function Projects() {
     );
   }
 
-  // if (error) {
-  //   console.log(error.message);
-  // }
+  
 
   return (
     // <div>
@@ -431,8 +429,7 @@ function Projects() {
           >
             RecycleBin: <AiFillDelete className="inline text-xl" />
             <span className="absolute right-[1px] top-1 h-[20px] w-4 rounded-full bg-sky-500 text-sm text-white">
-              {" "}
-              {recycleBinProject.length}{" "}
+              {recycleBinProject.length}
             </span>
           </button>
         </div>
@@ -464,10 +461,10 @@ function Projects() {
       {/* project card */}
       <div className=" grid grid-cols-3   gap-6 ">
         {projectData.map((projects, index) => {
-          const { name, id, description, userHas } = projects;
+          const { name, id, description, userHas, recentProject } = projects;
           return (
             <div
-              key={id}
+              key={index}
               className="san-sarif  relative flex flex-col justify-between rounded  bg-white  p-4 shadow-md duration-200 hover:shadow-xl dark:bg-slate-600"
             >
               <div>
@@ -477,25 +474,22 @@ function Projects() {
                     onClick={() => handleDotClick(id)}
                     className="text-xl"
                   >
-                    {" "}
                     {projectId === id && projectTrackChanges ? (
                       <HiXMark />
                     ) : (
                       <BiDotsVerticalRounded />
-                    )}{" "}
+                    )}
                   </button>
                 </div>
                 <p className="mb-3 mt-2"> {description} </p>
               </div>
               <div>
-                <div className="text-sky-500  duration-300 hover:underline">
-                  <Link href={`/projects/` + id}>see more</Link>
-                  <MdKeyboardArrowRight className="inline" />
+                <div className="text-sky-500 ">
+                  <Link href={`/projects/` + id}>
+                    <a className="hover:underline duration-300" onClick={() => handleRecentOpenProject(id)}>see more  <MdKeyboardArrowRight className="inline" /></a>
+                  </Link>
                 </div>
-                {/* <div className="flex justify-end -space-x-[2%]"> {projectAssignedUser(userHas)} </div> */}
-                <div className="flex justify-end ">
-                  {userHas && userHas.length && projectAssignedUser(userHas)}
-                </div>
+                <div className="flex justify-end -space-x-[2%]"> {userHas && userHas.length && projectAssignedUser(userHas)} </div>
               </div>
 
               {projectId === id && projectTrackChanges ? (
@@ -511,8 +505,6 @@ function Projects() {
                   </button>
                 </div>
               ) : null}
-
-              {/* */}
             </div>
           );
         })}

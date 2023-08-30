@@ -24,7 +24,8 @@ const Sidebar = ({ isOpen }: SideBar) => {
   const [menuOpen, setMenuOpen] = useState("h-0 overflow-hidden");
   const updateInitData = fileStore((state) => state.updateInitData);
   const [insightsOpen, setInsightsOpen] = useState(false);
-  const [projectsFlag, setProjectsFlag] = useState(false)
+  const [projectsFlag, setProjectsFlag] = useState(false);
+  const [recentPid, setRecentPid] = useState<string | null>('')
 
   // search project
   const [searchQuery, setSearchQuery] = useState('')
@@ -59,7 +60,41 @@ const Sidebar = ({ isOpen }: SideBar) => {
       return projects.name.toLowerCase().includes(searchQuery.toLowerCase())
     })
     setProjectData(filteredProject)
-  }, [searchQuery])
+  }, [searchQuery]);
+
+
+
+
+  // fetch recent project
+
+  const fetchRecentProject = (project: any) => {
+    if (typeof window !== 'undefined') {
+      // Perform localStorage action
+      const recentPid = localStorage.getItem('recentPid');
+      setRecentPid(recentPid)
+      const to_be_removed = project.filter((values: Project) => values.id !== recentPid);
+      const to_be_update = project.filter((value: Project) => value.id === recentPid);
+
+
+      const updated_values = [...to_be_update, ...to_be_removed];
+
+
+      setProjectData(updated_values)
+
+
+
+    }
+
+  }
+
+
+
+  const handleRecentOpenProject = (id: string | any) => {
+    localStorage.setItem("recentPid", id);
+    // update_recentProject(id,recentProject_mutation);
+  }
+
+
 
 
 
@@ -77,12 +112,13 @@ const Sidebar = ({ isOpen }: SideBar) => {
       // @ts-ignore
       getProjectId(projectId);
     }
-    setProjectData(allProjects)
+    fetchRecentProject(allProjects)
+
   }, [projectId, allProjects]);
 
 
 
-  // console.log(router.asPath)
+
 
 
 
@@ -237,12 +273,14 @@ const Sidebar = ({ isOpen }: SideBar) => {
               className="hover:bg-sky-500 hover:text-white p-1 px-3 flex items-center justify-between cursor-pointer"
             >
               <span>
-                <LiaProjectDiagramSolid className="inline" />Projects
+                <LiaProjectDiagramSolid className="inline" />  Projects
               </span>
-              <FaChevronDown
-                className={`transition-transform ${projectsFlag ? 'transform rotate-180' : ''
-                  }`}
-              />
+              <div>
+                <FaChevronDown
+                  className={`transition-transform inline ${projectsFlag ? 'transform rotate-180' : ''
+                    }`}
+                />
+              </div>
             </div>
             <div
               className={`max-h-0  overflow-hidden transition-all duration-300 ${projectsFlag ? 'max-h-screen' : ''
@@ -250,16 +288,16 @@ const Sidebar = ({ isOpen }: SideBar) => {
             >
               {!loading && (
                 <div className="h-52 overflow-auto ">
-                  <div className="bg-white sticky  px-2 top-0">
+                  <div className="bg-white sticky  p-2 top-0">
                     <div className="flex items-center active:border-blue-500  border p-1 rounded-full justify-around ">
                       <input type="text" name="searchProduct" placeholder="search project" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="outline-none " />
                       <AiOutlineSearch className="text-2xl " />
                     </div>
                   </div>
                   {projectData.map((project, index) => (
-                    <div key={index} className="p-1  px-3 hover:bg-sky-500 hover:text-white">
+                    <div key={index} className={`p-1  px-3 ${project.id === projectId ? "bg-sky-500 text-white" : "hover:bg-sky-500"} hover:text-white`}>
                       <Link href={`/projects/${project.id}`}>
-                        <a className="w-[90%]  flex items-center ml-7 select-none">{project.name}</a>
+                        <a className="w-[90%]  flex items-center ml-7 select-none" onClick={() => handleRecentOpenProject(project.id)}>{project.name}</a>
                       </Link>
                     </div>
                   ))}
@@ -357,7 +395,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                               className=" flex items-center rounded gap-1 p-1 bg-sky-500 justify-center hover:bg-sky-600 duration-300"
                               onClick={() => add_file()}
                             >
-                              <AiFillFileAdd className="text-xl"/> <span>Add File</span>
+                              <AiFillFileAdd className="text-xl" /> <span>Add File</span>
                             </button>
                           </div>
                           <FileTree />

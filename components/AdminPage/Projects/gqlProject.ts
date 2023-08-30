@@ -81,16 +81,12 @@ mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
 }
 `
 
-const recentProject_query = gql`
+const recentProject_mutation = gql`
+${Project_Fragment}
 mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
-  updateRecentProject(where: $where, update: $update) {
+  updateMains(where: $where, update: $update) {
     mains {
-      id
-      timeStamp
-      description
-      name
-      recycleBin
-      deletedAT
+    ...ProjectFragment
     }
   }
 }
@@ -98,7 +94,7 @@ mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
 `
 
 
-const update_recentProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const update_recentProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,) => {
   await client.mutate({
     mutation,
     variables: {
@@ -109,9 +105,9 @@ const update_recentProject = async (id: string, mutation: DocumentNode | TypedDo
         recentProject: true,
       }
     },
-    refetchQueries(result) {
-      return [GET_USER]
-    },
+    // refetchQueries(result) {
+    //   return [GET_USER]
+    // },
   })
 }
 
@@ -409,4 +405,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_query }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation }
