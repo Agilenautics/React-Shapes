@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GrAdd } from "react-icons/gr";
-import { BiRename } from "react-icons/bi";
-import { MdDeleteOutline } from "react-icons/md";
-import { AiOutlineArrowDown, AiFillDelete } from "react-icons/ai";
+import { AiFillDelete } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
+import { auth } from '../../../auth'
 import {
   DELETE_PROJECT,
   GET_USER,
@@ -12,13 +10,14 @@ import {
   delete_Project,
   update_recentProject,
   recentProject_mutation,
+  GET_PROJECTS,
 } from "./gqlProject";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { User, getInitials } from "../Users/Users";
 import projectStore, { Project } from "./projectStore";
 import userStore from "../Users/userStore";
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BiDotsVerticalRounded, } from 'react-icons/bi'
 import { HiArrowsUpDown, HiXMark } from 'react-icons/hi2'
@@ -26,6 +25,8 @@ import { MdKeyboardArrowRight } from 'react-icons/md'
 
 import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
+import { onAuthStateChanged } from "firebase/auth";
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
@@ -52,28 +53,73 @@ function Projects() {
   const updateSortOrder = projectStore((state) => state.updateSortOrder);
   const deleteProject = projectStore((state) => state.deleteProject);
   const updateProject = projectStore((state) => state.updateProject);
-  const loading = projectStore((state) => state.loading)
+  // const loading = projectStore((state) => state.loading);
   const recycleBinProject = projectStore((state) => state.recycleBin)
-
-
   // user store
   const userType = userStore((state) => state.userType);
+  const loginUser = userStore((state) => state.user);
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
+
+
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state) => state.updateLoginUser)
+
 
   const router = useRouter();
   const notify = () => toast.success("Project Created...");
+  const deleteNotify = () => toast.error("Project Got Deleted...");
+
+
+
+
+
+  const { data, error, loading } = useQuery(GET_USER, {
+    variables: {
+      where: {
+        emailId: userEmail,
+      },
+    },
+    
+  });
+
+  const getProjects = (response: any) => {
+    if (!loading && response && response.users.length) {
+      const projects = response.users[0].hasProjects;
+      const userType = data.users[0].userType;
+      updateLoginUser(data.users)
+      updateUserType(userType)
+      setProjectData(response.users[0].hasProjects);
+      updateProjects(projects, loading);
+      updateRecycleBinProject(projects);
+    }
+  }
+
+  const verificationToken = async () => {
+    onAuthStateChanged(auth, user => {
+      if (user && user.email) {
+        setUserEmail(user.email);
+        getProjects(data)
+      }
+    })
+  }
+
 
   useEffect(() => {
-    const filteredProjects = allProjects.filter((project) =>
+    const filteredProjects = projectData.filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setProjectData(filteredProjects);
+    updateProjects(filteredProjects, false)
   }, [searchTerm]);
 
   useEffect(() => {
     setIsButtonDisabled(userType.toLowerCase() === "user");
     setIsNewProjectDisabled(userType.toLowerCase() === "super user");
-    setProjectData(allProjects);
-  }, [allProjects]);
+    verificationToken()
+    if (loginUser && loginUser.length) {
+      setUserEmail(loginUser[0].emailId)
+    }
+  }, [data]);
 
   const handleSortClick = () => {
     const newSortOrder = sortValue === "asc" ? "desc" : "asc";
@@ -99,17 +145,21 @@ function Projects() {
     setProjectName("");
   };
 
-  const handleDelete_Project = (projectId: string) => {
+  const handleDelete_Project = (id: string) => {
     // Display confirmation box
-    setShowConfirmation(true);
-    setProjectId(projectId);
+    // setShowConfirmation(true);
+    delete_Project(id, DELETE_PROJECT, GET_USER).then((response)=>{
+      setProjectTrackChanges(!projectTrackChanges);
+      deleteNotify()
+    })
+    // setProjectId(projectId);
   };
 
   const handleConfirm = useCallback(() => {
     // Delete the project if confirmed
     setShowConfirmation(false);
     if (projectId) {
-      delete_Project(projectId, DELETE_PROJECT, GET_USER);
+      delete_Project(projectId, DELETE_PROJECT, GET_PROJECTS);
       deleteProject(projectId);
       setProjectId(null);
     }
@@ -151,9 +201,13 @@ function Projects() {
   };
 
   const handleRecentOpenProject = (id: string | any) => {
-    localStorage.setItem("recentPid",id);
+    localStorage.setItem("recentPid", id);
     // update_recentProject(id,recentProject_mutation);
   }
+
+  // if (error) {
+  //   return <div className="text-center text-danger">{error && error.message}</div>
+  // }
 
   if (loading) {
     return (
@@ -163,199 +217,10 @@ function Projects() {
     );
   }
 
-  
+
 
   return (
-    // <div>
-    //   <div className="mt-4 flex justify-center">
-    //     {successMessage && (
-    //       <div className="rounded-md bg-green-200 px-4 py-2 text-green-800">
-    //         {successMessage}
-    //       </div>
-    //     )}
-    //   </div>
-    //   <div className="ml-6 flex items-center">
-    //     <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
-    //       Team Agile
-    //     </button>
-    //   </div>
-    //   <div className="ml-10 mt-4 flex items-center">
-    //     <h2 className="inline-block text-xl font-semibold">Projects</h2>
-    //     <p className="ml-8 inline-block">Total</p>
-    //     <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-    //       {allProjects && allProjects.length}
-    //     </div>
-    //     <button
-    //       className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-    //         }${isNewProjectDisabled ? "opacity-50" : ""}`}
-    //       disabled={isButtonDisabled || isNewProjectDisabled}
-    //       onClick={handleAddProjectClick}
-    //     >
-    //       <GrAdd />
-    //       <div className="mx-1 my-1">New Project</div>
-    //     </button>
-    //   </div>
-    //   <div className="ml-10 mt-2">
-    //     <div className="max-w-2xl">
-    //       <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-gray-200 focus-within:shadow-lg">
-    //         <div className="grid h-full w-12 place-items-center text-gray-600">
-    //           <svg
-    //             xmlns="http://www.w3.org/2000/svg"
-    //             className="h-6 w-6"
-    //             fill="none"
-    //             viewBox="0 0 24 24"
-    //             stroke="currentColor"
-    //           >
-    //             <path
-    //               strokeLinecap="round"
-    //               strokeLinejoin="round"
-    //               strokeWidth="2"
-    //               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-    //             />
-    //           </svg>
-    //         </div>
-
-    //         <input
-    //           className="peer h-full w-full bg-gray-200 pr-2 text-base text-black outline-none"
-    //           type="text"
-    //           id="search"
-    //           placeholder="Search"
-    //           autoComplete="off"
-    //           value={searchTerm}
-    //           onChange={(e) => setSearchTerm(e.target.value)}
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   <div className="relative overflow-x-auto sm:rounded-lg">
-    //     <table className="mb-4 ml-8 mt-4 w-11/12 rounded-lg text-left text-sm">
-    //       <thead className="bg-gray-200 text-xs">
-    //         <tr>
-    //           <th
-    //             scope="col"
-    //             className="w-40 px-4 py-3"
-    //             onClick={handleSortClick}
-    //           >
-    //             <div className="flex cursor-pointer items-center">
-    //               Project name
-    //               <AiOutlineArrowDown
-    //                 className={`ml-1 text-sm ${sortValue === "asc" ? "rotate-180 transform" : ""
-    //                   }`}
-    //               />
-    //             </div>
-    //           </th>
-    //           <th scope="col" className="px-6 py-3">
-    //             Description
-    //           </th>
-    //           <th scope="col" className="px-6 py-3">
-    //             Actions
-    //           </th>
-    //         </tr>
-    //       </thead>
-    //       <tbody>
-    //         {allProjects
-    //           .map((project: any, index) => (
-    //             <tr key={index} className="border-b bg-white">
-    //               <td className="whitespace-nowrap px-4 py-4 font-medium">
-    //                 {projectId === project.id ? (
-    //                   <input
-    //                     type="text"
-    //                     value={projectName}
-    //                     onChange={(e) => setProjectName(e.target.value)}
-    //                     className="border-b focus:border-blue-500 focus:outline-none"
-    //                   />
-    //                 ) : (
-    //                   <Link
-    //                     href={{
-    //                       pathname: "/projects/" + project.id,
-    //                     }}
-    //                   >
-    //                     {project.name}
-    //                   </Link>
-    //                 )}
-    //               </td>
-    //               <td className="hidden px-6 py-4 md:table-cell">
-    //                 {projectId === project.id ? (
-    //                   <input
-    //                     type="text"
-    //                     value={projectDesc}
-    //                     onChange={(e) => setProjectDesc(e.target.value)}
-    //                     className="w-full border-b focus:border-blue-500 focus:outline-none"
-    //                   />
-    //                 ) : (
-    //                   project.description
-    //                 )}
-    //               </td>
-    //               <td className="px-6 py-4">
-    //                 {projectId === project.id ? (
-    //                   <button
-    //                     onClick={() => handleSaveButtonClick(project.id)}
-    //                     className={`mr-2 ${isButtonDisabled ? "opacity-50" : ""
-    //                       }`}
-    //                     disabled={isButtonDisabled}
-    //                   >
-    //                     Save
-    //                   </button>
-
-    //                 ) : (
-    //                   <button
-    //                     onClick={() =>
-    //                       handleEditButtonClick(
-    //                         project.id,
-    //                         project.name,
-    //                         project.description
-    //                       )
-    //                     }
-    //                     className={`mr-2 w-3 ${isButtonDisabled ? "opacity-50" : ""
-    //                       }`}
-    //                     disabled={isButtonDisabled}
-    //                   >
-    //                     <BiRename />
-    //                   </button>
-    //                 )}
-    //                 <button
-    //                   onClick={() => handleDelete_Project(project.id)}
-    //                   className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
-    //                   disabled={isButtonDisabled}
-    //                 >
-    //                   <MdDeleteOutline />
-    //                 </button>
-    //               </td>
-    //             </tr>
-    //           ))}
-    //       </tbody>
-    //     </table>
-    //   </div>
-    //   {showForm && (
-    //     <ProjectOverlay
-    //       notify = {notify}
-    //       onAddProject={handleAddProject}
-    //       onClose={handleCloseForm}
-    //       // @ts-ignore
-    //       projectData={allProjects}
-    //       userEmail={userEmail}
-    //       handleMessage={handleMessage}
-    //     />
-    //   )}
-    //   {showConfirmation && (
-    //     <div className="popup-container">
-    //       <div className="popup-window">
-    //         <h3>Confirm Deletion</h3>
-    //         <p>Are you sure you want to delete the project?</p>
-    //         <div>
-    //           <button className="popup-button" onClick={handleConfirm}>
-    //             Yes
-    //           </button>
-    //           <button className="popup-button" onClick={handleCancel}>
-    //             No
-    //           </button>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   )}
-    //   <ToastContainer autoClose= {2500} />
-    // </div>
+   
 
     // container
     <div className="p-7">
@@ -373,8 +238,7 @@ function Projects() {
         <div className="flex flex-col justify-around">
           <div>
             <h2 className="text-4xl">
-              {" "}
-              Welcome! {getNameFromEmail(userEmail)}{" "}
+              Welcome! {getNameFromEmail(userEmail)}
             </h2>
             <p className="m-2 text-xl">
               Quality is never an accident; it is always the result of high
@@ -417,7 +281,6 @@ function Projects() {
             onClick={handleSortClick}
             className="ml-5 rounded-lg p-2 duration-300 hover:bg-slate-100 hover:text-slate-500"
           >
-            {" "}
             sorting:
             <HiArrowsUpDown
               className={`inline ${sortValue === "asc" ? "" : "rotate-180"}`}
@@ -460,7 +323,7 @@ function Projects() {
 
       {/* project card */}
       <div className=" grid grid-cols-3   gap-6 ">
-        {projectData.map((projects, index) => {
+        {allProjects.map((projects, index) => {
           const { name, id, description, userHas, recentProject } = projects;
           return (
             <div
@@ -499,7 +362,7 @@ function Projects() {
                   </button>
                   <button
                     className="bg-red-500 p-1 text-xs text-white"
-                    onClick={() => delete_Project(id, DELETE_PROJECT, GET_USER)}
+                    onClick={() => handleDelete_Project(id)}
                   >
                     Delete
                   </button>
@@ -509,6 +372,8 @@ function Projects() {
           );
         })}
       </div>
+      {/* toastify to show popup after creating project */}
+      <ToastContainer autoClose={2500} />
     </div>
   );
 }

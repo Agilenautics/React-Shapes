@@ -38,14 +38,28 @@ const createProject = async (
     },
   });
 };
+export const Info_Fragment = gql`
+  fragment InfoFragment on info {
+    description
+    assignedTo
+    status
+    dueDate
+    sprint
+
+  }
+`
 
 const File_Fragment = gql`
   ${Node_Fragment}
   ${Edge_Fragment}
+  ${Info_Fragment}
   fragment FileFragment on file {
     type
     id
     name
+    hasInfo{
+    ...InfoFragment
+    }
     hasflowchart {
       name
       nodes {
@@ -61,6 +75,7 @@ const File_Fragment = gql`
 //Get root using unique userName(UID)
 const getMainByUser = gql`
   ${File_Fragment}
+  ${Info_Fragment}
   query Query($where: mainWhere) {
     mains(where: $where) {
       name
@@ -75,11 +90,17 @@ const getMainByUser = gql`
         type
         isOpen
         name
+        hasInfo{
+         ...InfoFragment
+        }
         hasFolder {
           name
           id
           type
           isOpen
+          hasInfo{
+          ...InfoFragment
+          }
           hasFile {
             ...FileFragment
           }
@@ -127,13 +148,17 @@ const newFolderInFolder = gql`
 `;
 
 const newFolderInMain = gql`
-  mutation Mutation($input: [folderCreateInput!]!) {
+${Info_Fragment}
+  mutation createEpic($input: [folderCreateInput!]!) {
     createFolders(input: $input) {
       folders {
         id
         isOpen
         name
         type
+        hasInfo{
+        ...InfoFragment
+        }
         mainHas {
           name
           id
@@ -143,39 +168,19 @@ const newFolderInMain = gql`
   }
 `;
 const newFileInMain = gql`
-  mutation Mutation($where: mainWhere, $create: mainRelationInput) {
+${File_Fragment}
+  mutation createStory($where: mainWhere, $create: mainRelationInput) {
     updateMains(where: $where, create: $create) {
       mains {
         name
         hasContainsFile {
-          id
-          name
-          type
-          hasflowchart {
-            name
-          }
+          ...FileFragment
         }
       }
     }
   }
 `;
-const newFileInFolder = gql`
-  mutation UpdateFolders($where: folderWhere, $create: folderRelationInput) {
-    updateFolders(where: $where, create: $create) {
-      folders {
-        name
-        hasFile {
-          id
-          name
-          type
-          hasflowchart {
-            name
-          }
-        }
-      }
-    }
-  }
-`;
+
 const updateFiles = gql`
   mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
     updateFiles(where: $where, update: $update) {
@@ -220,24 +225,7 @@ const disconnectFromFolderOnMove = gql`
     }
   }
 `;
-//@ Irfan - check this is needed
-async function createProjectNewUser(
-  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  userName: string
-) {
-  await client.mutate({
-    mutation: mutation,
-    variables: {
-      create: {
-        node: {
-          userName: "Anitha",
-          name: "Anitha s Main",
-          isOpen: false,
-        },
-      },
-    },
-  });
-}
+
 async function createFolderInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string
@@ -287,6 +275,17 @@ async function createFolderInMain(
             type: "folder",
             isOpen: false,
             name: "New Folder",
+            hasInfo: {
+              create: {
+                node: {
+                  status: "Todo",
+                  assignedTo: "",
+                  dueDate: "",
+                  description: "",
+                  sprint: ""
+                }
+              }
+            },
             mainHas: {
               connect: {
                 where: {
@@ -302,7 +301,7 @@ async function createFolderInMain(
     })
     .then((result) => {
       node = result.data.createFolders.folders[0];
-     // console.log(result.data.createFolders);
+      // console.log(result.data.createFolders);
     });
   return node;
 }
@@ -324,6 +323,17 @@ async function createFileInMain(
               node: {
                 type: "file",
                 name: "FileInMain",
+                hasInfo: {
+                  create: {
+                    node: {
+                      status: "Todo",
+                      assignedTo: "",
+                      dueDate: "",
+                      description: "",
+                      sprint: ""
+                    }
+                  }
+                },
                 hasflowchart: {
                   create: {
                     node: {
@@ -338,7 +348,7 @@ async function createFileInMain(
       },
     })
     .then((result) => {
-     // console.log(result.data.updateMains.mains);
+      // console.log(result.data.updateMains.mains);
       const newFile1 = JSON.stringify(result.data.updateMains.mains[0]).replace(
         '"hasContainsFile":',
         '"file":'
@@ -349,6 +359,24 @@ async function createFileInMain(
   return node;
 }
 
+
+// creat story mutation
+const newFileInFolder = gql`
+${File_Fragment}
+  mutation createStory($where: folderWhere, $create: folderRelationInput) {
+    updateFolders(where: $where, create: $create) {
+      folders {
+        name
+        hasFile {
+        ...FileFragment
+        }
+      }
+    }
+  }
+`;
+
+
+// creating story method
 async function createFileInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string
@@ -367,6 +395,17 @@ async function createFileInFolder(
               node: {
                 type: "file",
                 name: "New File",
+                hasInfo: {
+                  create: {
+                    node: {
+                      status: "Todo",
+                      assignedTo: "",
+                      dueDate: "",
+                      description: "",
+                      sprint: ""
+                    }
+                  }
+                },
                 hasflowchart: {
                   create: {
                     node: {
@@ -506,15 +545,17 @@ async function getTreeNodeByUser(
       },
     })
     .then((result) => {
-      setLoading(result.loading)
+
       const mainData = result.data.mains;
       const data = mainData.map((value: any) => {
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
         return { ...rest, children: hasContainsFolder };
       });
 
+
       const res_updated = transformObject(result);
       nodes = res_updated.data.mains;
+      setLoading(result.loading)
     });
   return nodes;
 }

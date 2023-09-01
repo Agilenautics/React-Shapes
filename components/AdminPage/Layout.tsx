@@ -26,28 +26,31 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
   const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
 
 
-  const updateUserType = userStore((state) => state.updateUserType)
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state)=>state.updateLoginUser)
 
-  const { data, loading, error } = useQuery(GET_USER, {
-    variables: {
-      where: {
-        emailId: email
-      }
-    }
-  });
+  // const { data, loading, error } = useQuery(GET_USER, {
+  //   variables: {
+  //     where: {
+  //       emailId: email
+  //     }
+  //   }
+  // });
 
 
   const router = useRouter()
 
-  const getProjects = (response: any) => {
-    if (!loading && response && response.users.length) {
-      const projects = response.users[0].hasProjects;
-      const userType = data.users[0].userType;
-      updateUserType(userType)
-      updateProjects(projects, loading);
-      updateRecycleBinProject(projects);
-    }
-  }
+  // const getProjects = (response: any) => {
+  //   console.log("hi")
+  //   if (!loading && response && response.users.length) {
+  //     const projects = response.users[0].hasProjects;
+  //     const userType = data.users[0].userType;
+  //     updateLoginUser(data.users)
+  //     updateUserType(userType)
+  //     updateProjects(projects, loading);
+  //     updateRecycleBinProject(projects);
+  //   }
+  // }
 
   const path = (router.asPath !== "/signup") && (router.asPath !== '/login') && (router.asPath !== '/forgot-password')
 
@@ -56,13 +59,13 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
     onAuthStateChanged(auth, user => {
       if (user && user.email) {
         setEmail(user.email);
-        getProjects(data)
+        // getProjects(data)
       }
     })
   }
   useEffect(() => {
     verificationToken()
-  }, [data, auth, error, loading])
+  }, [auth])
 
 
 
@@ -70,9 +73,11 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
     setIsSideBarOpen(!isSideBarOpen);
   };
 
-  if (error) {
-    return <div>Error:{error.message}</div>;
-  }
+  
+
+
+ 
+
 
 
   return (

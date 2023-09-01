@@ -155,8 +155,6 @@ export const TreeNode = ({
         get_user_method(user.email, GET_USER).then((res: any) => {
           // setUser(res[0].userType);
           setAccessLevel(res[0].userType);
-          
-          
         });
       } else {
         // setUser([]);

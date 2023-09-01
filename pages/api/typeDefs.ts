@@ -55,7 +55,7 @@ const typeDefs = gql`
     timeStamp: DateTime! @timestamp
     type: String!
     name: String!
-    hasInfo:info @relationship( type:"hasInfo",direction:IN)
+    hasInfo:info! @relationship( type:"hasInfo",direction:IN)
     hasflowchart: flowchart @relationship(type: "hasFlowchart", direction: OUT)
     folderHas: folder @relationship(type: "hasFolder", direction: IN)
     #hasFlownodes: [flowNode!]! @relationship (type:"hasFlownodes", direction:OUT)
@@ -152,11 +152,11 @@ const typeDefs = gql`
   }
 
   type info {
-    description:String!
-    assignedTo: String!
+    description:String
+    assignedTo: String
     status:String!
-    dueDate:String!
-    sprint:String!
+    dueDate:String
+    sprint:String
     # hasInfo:folder @relationship( type:"hasInfo",direction:OUT)
     # hasInfo:file @relationship( type:"hasInfo",direction:OUT)
  }

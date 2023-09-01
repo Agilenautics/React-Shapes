@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { Project } from "../Projects/projectStore";
 
 interface User {
     id: string;
@@ -7,7 +8,8 @@ interface User {
     userType: string;
     active: Boolean;
     userName: string;
-    timeStamp:string
+    timeStamp: string
+    hasProject: Project
 }
 
 export interface userState {
@@ -23,12 +25,19 @@ export interface userState {
     updateUserType: (type: string) => void;
     accessLevel: string;
     updateAccessLevel: (accessType: string) => void;
+    updateLoginUser: (user: User) => void
 }
 
 const userStore = create<userState>((set) => ({
     usersList: [],
     user: [],
     userType: '',
+    updateLoginUser: (loginUser: any) =>
+        set((state) => {
+            const { hasProjects, ...userData } = loginUser[0]
+            return { user: [userData] }
+        })
+    ,
     accessLevel: '',
     updateAccessLevel(accessType) {
         set((state) => {

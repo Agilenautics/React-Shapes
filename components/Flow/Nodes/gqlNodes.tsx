@@ -9,13 +9,29 @@ import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 
+
+const Info_Fragment = gql`
+  fragment InfoFragment on info {
+    description
+    assignedTo
+    status
+    dueDate
+    sprint
+
+  }
+`
+
 export const Node_Fragment = gql`
+${Info_Fragment}
   fragment NodeFragment on flowNode {
     id
     draggable
     flowchart
     type
     timeStamp
+    hasInfo{
+    ...InfoFragment
+    }
     hasdataNodedata {
       label
       shape
@@ -85,47 +101,6 @@ const getNode = gql`
   query FlowNodes($where: flowNodeWhere) {
     flowNodes(where: $where) {
       ...NodeFragment
-      draggable
-      flowchart
-      type
-      id
-      hasdataNodedata {
-        shape
-        label
-        description
-        links {
-          fileId
-          flag
-          id
-          label
-        }
-        linkedBy {
-          fileId
-          flag
-          label
-          id
-        }
-        linksAggregate {
-          count
-          node {
-            label {
-              shortest
-            }
-          }
-        }
-        linkedByAggregate {
-          count
-          node {
-            label {
-              shortest
-            }
-          }
-        }
-      }
-      haspositionPosition {
-        x
-        y
-      }
     }
   }
 `;
@@ -250,6 +225,17 @@ async function createNode(
                           flowchart: "flowNode",
                           draggable: true,
                           type: color,
+                          hasInfo:{
+                            create:{
+                              node:{
+                                description:"",
+                                assignedTo:"",
+                                status:"Todo",
+                                dueDate:"",
+                                sprint:""
+                              }
+                            }
+                          },
                           hasdataNodedata: {
                             create: {
                               node: {

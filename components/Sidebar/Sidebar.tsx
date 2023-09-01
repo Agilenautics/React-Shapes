@@ -13,18 +13,20 @@ import { useRouter } from "next/router";
 import { getMainByUser, getTreeNodeByUser } from "../TreeView/gqlFiles";
 import Link from "next/link";
 import projectStore, { Project } from "../AdminPage/Projects/projectStore";
+import { GET_USER, getUserByEmail } from "../AdminPage/Projects/gqlProject";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../auth";
 
 interface SideBar {
   isOpen: Boolean
 }
 
 const Sidebar = ({ isOpen }: SideBar) => {
-  const [showSidebar, setShowSidebar] = useState(true);
-  const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
-  const [menuOpen, setMenuOpen] = useState("h-0 overflow-hidden");
+  // const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
   const updateInitData = fileStore((state) => state.updateInitData);
   const [insightsOpen, setInsightsOpen] = useState(false);
   const [projectsFlag, setProjectsFlag] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const [recentPid, setRecentPid] = useState<string | null>('')
 
   // search project
@@ -55,6 +57,47 @@ const Sidebar = ({ isOpen }: SideBar) => {
   };
 
 
+  // if (allProjects.length===0) {
+  //   console.log(allProjects.length===0)
+  //   console.log("Hi")
+  //   getUserByEmail(userEmail, GET_USER).then((res) => {
+  //     console.log(res)
+  //   })
+  // }
+
+
+  // const getProjects = (response: any) => {
+  //   if (!loading && response && response.users.length) {
+  //     const projects = response.users[0].hasProjects;
+  //     setProjectData(projects)
+  //     const userType = data.users[0].userType;
+  //     updateLoginUser(data.users)
+  //     updateUserType(userType)
+  //     updateProjects(projects, loading);
+  //     updateRecycleBinProject(projects);
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
+  const verificationToken = async () => {
+    onAuthStateChanged(auth, user => {
+      if (user && user.email && allProjects.length === 0) {
+        setUserEmail(user.email);
+        // getProjects(data)
+      }
+    })
+  }
+
+
+
+
   useEffect(() => {
     const filteredProject = allProjects.filter((projects) => {
       return projects.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -71,18 +114,11 @@ const Sidebar = ({ isOpen }: SideBar) => {
     if (typeof window !== 'undefined') {
       // Perform localStorage action
       const recentPid = localStorage.getItem('recentPid');
-      setRecentPid(recentPid)
+      // setRecentPid(recentPid)
       const to_be_removed = project.filter((values: Project) => values.id !== recentPid);
       const to_be_update = project.filter((value: Project) => value.id === recentPid);
-
-
       const updated_values = [...to_be_update, ...to_be_removed];
-
-
       setProjectData(updated_values)
-
-
-
     }
 
   }
@@ -113,6 +149,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
       getProjectId(projectId);
     }
     fetchRecentProject(allProjects)
+    verificationToken()
 
   }, [projectId, allProjects]);
 
@@ -131,128 +168,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
   return (
 
 
-    // <div>
-    //   <div
-    //     className={` z-50 rounded p-1 duration-700 ease-in-out focus:outline-none ${showSidebar ? "bg-transparent" : "bg-white dark:bg-neutral-900"
-    //       }`}
-    //   >
-    //     <button
-    //       className="group flex h-10 w-10 flex-col items-center rounded"
-    //       onClick={toggleMenu}
-    //     >
-    //       <div
-    //         className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "translate-y-3 rotate-45" : ""
-    //           }`}
-    //       />
-    //       <div
-    //         className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "opacity-0" : ""
-    //           }`}
-    //       />
-    //       <div
-    //         className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "-translate-y-3 -rotate-45 " : ""
-    //           }`}
-    //       />
-    //     </button>
-    //   </div>
 
-    //   <div
-    //     className={`fixed h-[100%] left-0 top-0 -z-10  w-[18vw] bg-white shadow-neutral-300 duration-300 ease-in-out dark:bg-neutral-900 dark:shadow-neutral-700 ${showSidebar ? "sidebar-shadow translate-x-0" : "-translate-x-full"
-    //       }`}
-    //   >
-    //     <BreadCrumbs />
-    //     <div
-    //       id="sidebar-content"
-    //       className="mt-10 flex flex-col items-center justify-center"
-    //       style={{
-    //         marginTop: "-65px",
-    //       }}
-    //     >
-    //       <Image
-    //         className="mx-auto"
-    //         src="/assets/flow-chart.png"
-    //         height={124}
-    //         width={124}
-    //         alt="Company Logo"
-    //       />
-    //     </div>
-
-
-    //     <div className="h-[58vh]">
-    //       <div className="flex flex-col space-y-2">
-    //         <a className="flex items-center justify-between cursor-pointer font-bold w-[10vw] bg-slate-300 p-1 m-2 rounded shadow-lg hover:bg-slate-400" href={`/projects/`}>
-    //           Home
-    //           <AiTwotoneHome />
-    //         </a>
-    //         <a className="flex items-center justify-between cursor-pointer font-bold w-[10vw] bg-slate-300 p-1 m-2 rounded shadow-lg hover:bg-slate-400" href={`/projects/${projectId}`}>
-    //           Overview
-    //           <GrOverview />
-    //         </a>
-    //         <div
-    //           className="flex items-center justify-between cursor-pointer font-bold w-[10vw] bg-slate-300 p-1 m-2 rounded shadow-lg hover:bg-slate-400"
-    //           onClick={() => setInsightsOpen(!insightsOpen)}
-    //         >
-    //           <span>Insights</span>
-    //           <FaChevronDown className={`transition-transform ${insightsOpen ? "transform rotate-180" : ""}`} />
-    //         </div>
-    //         {insightsOpen && (
-    //           <div className="pl-4 mt-2 space-y-2">
-    //             <a
-    //               className="flex items-center font-bold hover:font-black"
-    //               href={`/boards/${projectId}`}
-    //             >
-    //               <FaChalkboard className="mr-2" />
-    //               Boards
-    //             </a>
-    //             <a
-    //               className="flex items-center font-bold hover:font-black"
-    //               href={`/backlogs/${projectId}`}
-    //             >
-    //               <GiChecklist className="mr-2" />
-    //               Backlogs
-    //             </a>
-    //             <a className="flex items-center font-bold hover:font-black"
-    //               href={`/sprints/${projectId}`}>
-    //               <GiSprint className="mr-2" />
-    //               Sprints
-    //             </a>
-    //             <a
-    //               className="flex items-center font-bold hover:font-black"
-    //               href={`/flowchart/${projectId}`}
-    //             >
-    //               <RiFlowChart className="mr-2" />
-    //               Business Plan
-    //             </a>
-    //           </div>
-    //         )}
-    //       </div>
-    //       {router.asPath == "/flowchart/" + projectId && <>
-    //         <div className="grid grid-cols-2 gap-2 p-1">
-    //           <button
-    //             type="button"
-    //             className="add-buttons w-25 peer h-8"
-    //             onClick={() => add_folder()}
-    //           >
-    //             <AiFillFolderAdd className="add-buttons-icon" /> Add Folder
-    //           </button>
-    //           <button
-    //             type="button"
-    //             className="add-buttons w-21 peer h-8"
-    //             onClick={() => add_file()}
-    //           >
-    //             <AiFillFileAdd className="add-buttons-icon" /> Add File
-    //           </button>
-    //         </div>
-    //         <FileTree />
-    //       </>}
-    //     </div>
-    //     <DarkModeToggleButton />
-    //   </div>
-
-    //   <div
-    //     className={`pl-14 transition-all ${showSidebar ? "ml-[14.2vw]" : "ml-0"
-    //       }`}
-    //   ></div>
-    // </div>
 
     <div className={`duration-700  sticky top-0  left-0 shadow ease-in-out text-slate-600 font-sans h-screen ${isOpen ? "w-60" : "w-0"}`}>
       {

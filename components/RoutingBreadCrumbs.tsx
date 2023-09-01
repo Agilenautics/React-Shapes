@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 import projectStore from './AdminPage/Projects/projectStore';
 import Link from 'next/link';
 
-const RoutingBreadCrumbs = () => {
+const RoutingBreadCrumbs = ({ loading }: any) => {
   const [breadCrumbs, setBreadCrumbs] = useState<string[]>([]);
-  const projects = projectStore((state) => state.projects)
+  const projects = projectStore((state) => state.projects);
+
   const router = useRouter();
 
   const getBreadCrumbs = (data: string, projectId: string) => {
@@ -23,6 +24,10 @@ const RoutingBreadCrumbs = () => {
   }, [router.asPath, projects]);
 
 
+
+  if(loading){
+    return ""
+  }
 
 
 

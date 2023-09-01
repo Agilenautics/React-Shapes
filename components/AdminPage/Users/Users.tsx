@@ -379,28 +379,6 @@ function Users() {
         {message && <div className="mt-4 text-green-500">{message}</div>}
       </div>
 
-
-
-      {/* <div className="grid  gap-4">
-        <div className="shadow flex justify-around bg-white p-2">
-          <div className="border">Name</div>
-          <div className="border">Type</div>
-          <div className="border">Date Added</div>
-          <div className="border">Actions</div>
-        </div>
-        <div className="shadow flex justify-around bg-white p-2">
-          <div className="border">Name</div>
-          <div className="border">Typeajshahdjadjajdhjhdjhj</div>
-          <div className="border">Date Added</div>
-          <div className="border">Actions</div>
-        </div>
-        
-      </div> */}
-
-
-
-
-
       {showAddUserPopup && (
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
@@ -419,92 +397,7 @@ function Users() {
         />
       )}
     </div>
-    // <div className="p-6">
-    //   <button className="text-xl rounded bg-sky-500/75 p-2 text-slate-50">Team Agile</button>
-
-
-    //   {/* heading */}
-
-    //   <h2 className="text-2xl font-semibold py-4">Users</h2>
-
-
-    //   {/* top bar  */}
-
-    //   <div className="grid grid-cols-4 bg-white gap-6 p-4 shadow">
-    //     <div className="border rounded border-slate-400 p-1 ">
-    //       <input
-    //         className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
-    //         type="text"
-    //         id="search"
-    //         placeholder="Search"
-    //         autoComplete="off"
-    //       // value={searchTerm}
-    //       // onChange={(e) => setSearchTerm(e.target.value)}
-    //       />
-    //     </div>
-
-    //     <div className=" col-span-2 border ">
-    //       <span> Total : {usersList.length} </span>
-    //       <button onClick={handleSortClick}>shorting: <HiArrowsUpDown className={`inline ${sortingOrder === 'asc' ? '' : "rotate-180"}`} /> </button>
-    //       <span>
-    //         <label htmlFor="">Type:</label>
-    //         <select className="outline-none  border rounded" name="" id="">
-    //           <option value="user">All</option>
-    //           <option value="user">User</option>
-    //           <option value="admin">Admin</option>
-    //           <option value="super user">Super User</option>
-    //         </select>
-    //       </span>
-    //     </div>
-    //     {/* add user button */}
-    //     <div className="text-end">
-    //       <button className="bg-sky-500/75 p-2 hover:bg-transparent hover:text-sky-500 border border-sky-500/75 duration-300 hover:border-sky-500/75 hover:border rounded text-white">Add User</button>
-    //     </div>
-    //   </div>
-
-
-    //   {/* heading of the table */}
-
-    //   <div className="grid grid-cols-4 gap-6">
-    //     <div className="place-self-center">
-    //       name
-    //     </div>
-    //     <div className="place-self-center">
-    //       type
-    //     </div>
-    //     <div className="place-self-center">
-    //       Date Added
-    //     </div>
-    //     <div className="place-self-center">
-    //       Actions
-    //     </div>
-    //   </div>
-    //   {/* users list */}
-    //   <div>
-    //     {
-    //       usersList.map((users,index)=>{
-    //         const {id,emailId, timeStamp,userType} = users
-    //         console.log(users)
-    //         return(
-    //           <div key={index} className="grid grid-cols-4">
-    //             <div className="">
-    //               <span>{getInitials(emailId)}</span>
-    //               <span> {getNameFromEmail(emailId)} </span>
-    //             </div>
-    //             <div> {userType} </div>
-    //             <div> {formatDate(timeStamp)} </div>
-    //             <div>
-    //               <button></button>
-    //             </div>
-
-
-    //           </div>
-    //         )
-    //       })
-    //     }
-    //   </div>
-
-    // </div>
+   
   );
 }
 

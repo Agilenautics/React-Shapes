@@ -42,12 +42,30 @@ query getUser($where: userWhere) {
     id
     userName
     userType
+    emailId
     hasProjects {
     ...ProjectFragment 
     }
   }
 }
 `
+
+const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  let admin = {}
+  await client.query({
+    query: customQuery,
+    variables: {
+      where: {
+        emailId: email
+      }
+    }
+  }).then((res) => {
+    admin = res
+  })
+
+  return admin
+
+}
 
 const get_user_method = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
 
@@ -118,6 +136,8 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
   var day = dateObj.getUTCDate();
   var year = dateObj.getUTCFullYear();
 
+  let deleteData = {}
+
   const newdate = year + "/" + month + "/" + day;
   await client.mutate({
     mutation,
@@ -157,8 +177,12 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
 
     // },
     refetchQueries(result) {
-      return [GET_USER]
+      return [query]
     },
+  }).then((response)=>{
+    console.log('delete response',response)
+    deleteData = response.data.updateMains
+
   })
 }
 
@@ -329,24 +353,22 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
 
 
 const ADD_PROJECT = gql`
+${Project_Fragment}
 mutation addProject($where: userWhere, $update: userUpdateInput) {
   updateUsers(where: $where, update: $update) {
     users {
       emailId
       id
       userType
-      hasProjects {
-        id
-        name
-        description
-        recycleBin
-        deletedAT
-      }
+     hasProjects{
+     ...ProjectFragment
+     }
     }
   }
 }
 `
-const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, addProject: any) => {
+  let data = []
   await client.mutate({
     mutation,
     variables: {
@@ -373,10 +395,14 @@ const addProject_Backend = async (email: String, project: any, mutation: Documen
         ],
       },
     },
-    refetchQueries(result) {
-      return [{ query }]
-    },
-  })
+    // refetchQueries(result) {
+    //   return [{ query }]
+    // },
+  }).then((response) => {
+    addProject(response.data.updateUsers.users[0].hasProjects[0])
+  }
+  )
+    .catch((error) => console.log(error))
 }
 const EDIT_PROJECT = gql`
 mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
@@ -405,4 +431,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail }
