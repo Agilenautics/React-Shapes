@@ -4,7 +4,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import TopBar from "./TopBar";
 import { auth } from "../../auth";
 import { useQuery } from "@apollo/client";
-import { GET_USER } from "./Projects/gqlProject";
+import { GET_USER, UserSheme } from "./Projects/gqlProject";
 import projectStore from "./Projects/projectStore";
 import userStore from "./Users/userStore";
 import RoutingBreadCrumbs from "../RoutingBreadCrumbs";
@@ -15,6 +15,9 @@ interface LayoutProps {
   activeLink: string;
   onLinkClick: (link: string) => void;
 }
+
+
+
 
 
 function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
@@ -29,13 +32,7 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
   const updateUserType = userStore((state) => state.updateUserType);
   const updateLoginUser = userStore((state)=>state.updateLoginUser)
 
-  // const { data, loading, error } = useQuery(GET_USER, {
-  //   variables: {
-  //     where: {
-  //       emailId: email
-  //     }
-  //   }
-  // });
+
 
 
   const router = useRouter()

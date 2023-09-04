@@ -749,6 +749,72 @@ const getFileByNode = async (
   return file;
 };
 
+
+// updating epic hasInfo data only
+
+const uodateEpicMutation = gql`
+${Info_Fragment}
+mutation updateEpic($where: folderWhere, $update: folderUpdateInput) {
+  updateFolders(where: $where, update: $update) {
+    folders {
+      name
+      hasInfo{
+      ...InfoFragment
+      }
+    }
+  }
+}
+`
+
+const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  const { status, description, assignedTo, dueDate, sprint } = epictData
+  await client.mutate({
+    mutation,
+    variables: {
+      "where": {
+        id
+      },
+      update: {
+        hasInfo: {
+          update: {
+            node: {
+              status,
+              sprint,
+              dueDate,
+              description,
+              assignedTo
+            }
+          }
+        }
+      }
+    }
+  })
+
+}
+
+
+//update story  hasInfo data only
+const updateStoryMutation = gql`
+${Info_Fragment}
+  mutation UpdateStory($where: fileWhere, $update: fileUpdateInput) {
+  updateFiles(where: $where, update: $update) {
+    files {
+      name
+      hasInfo {
+       ...InfoFragment
+      }
+    }
+  }
+}
+`
+
+
+
+
+
+
+
+
 export {
   createFolderInMain,
   newFolderInMain,

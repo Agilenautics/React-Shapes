@@ -225,14 +225,14 @@ async function createNode(
                           flowchart: "flowNode",
                           draggable: true,
                           type: color,
-                          hasInfo:{
-                            create:{
-                              node:{
-                                description:"",
-                                assignedTo:"",
-                                status:"Todo",
-                                dueDate:"",
-                                sprint:""
+                          hasInfo: {
+                            create: {
+                              node: {
+                                description: "",
+                                assignedTo: "",
+                                status: "Todo",
+                                dueDate: "",
+                                sprint: ""
                               }
                             }
                           },
@@ -310,6 +310,7 @@ const delNode = gql`
     }
   }
 `;
+
 
 async function deleteNodeBackend(nodeID: string) {
   await client.mutate({
@@ -474,6 +475,50 @@ const updateNodeData = async (
   });
 };
 
+
+const updateTasksMutation = gql`
+${Info_Fragment}
+  mutation updateTasks($where: flowNodeWhere, $update: flowNodeUpdateInput) {
+  updateFlowNodes(where: $where, update: $update) {
+    flowNodes {
+      hasInfo {
+        ...InfoFragment
+      }
+      hasdataNodedata {
+        label
+      }
+    }
+  }
+}
+`
+
+const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode<any ,OperationVariables>) =>{
+  await client.mutate({
+    mutation,
+    variables:{
+      "where": {
+        id
+      },
+      "update": {
+        "hasInfo": {
+          "update": {
+            "node": {
+              "status": null,
+              "sprint": null,
+              "dueDate": null,
+              "description": null,
+              "assignedTo": null
+            }
+          }
+        }
+      }
+    }
+  })
+
+} 
+
+
+
 export {
   allNodes,
   newNode,
@@ -488,4 +533,6 @@ export {
   updateLinkedBy,
   updateLinksMutation,
   updateNodeData,
+  updateTasksMutation,
+  updateTaskMethod
 };

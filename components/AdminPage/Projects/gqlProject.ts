@@ -32,6 +32,16 @@ const Project_Fragment = gql`
 `;
 
 
+const UserSheme = gql`
+query GetUsers {
+  getUsers {
+    emailId
+  }
+}
+
+`
+
+
 
 
 const GET_USER = gql`
@@ -179,8 +189,8 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
     refetchQueries(result) {
       return [query]
     },
-  }).then((response)=>{
-    console.log('delete response',response)
+  }).then((response) => {
+    console.log('delete response', response)
     deleteData = response.data.updateMains
 
   })
@@ -431,4 +441,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail,UserSheme }
