@@ -1,81 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import fileStore from "../../TreeView/fileStore";
 import useBackend from "../../TreeView/backend";
 import { types } from "./staticData/types";
 import { statuses } from "./staticData/statuses";
-import { users } from "./staticData/users";
-import initData from "./staticData/initData";
+// import { users } from "./staticData/users";
+// import initData from "./staticData/initData";
 import { getTypeLabel, getStatusColor } from "./staticData/basicFunctions";
 import AddBacklogs from "./AddBacklogs";
+import { processedData } from "./staticData/processedData";
 
-let items: {
-  label: string;
-  parent: string | undefined;
-  type: string | "file";
-  description: string | undefined;
-  status: string | undefined;
-  sprint: string | undefined;
-  user: string | undefined;
-}[] = [];
 
-for (let i of initData) {
-  if (i.type === "folder") {
-    if (i.hasFiles) {
-      for (let j of i.hasFiles) {
-        items.push({
-          label: j.name,
-          parent: i.name,
-          description: j.description,
-          type: "file",
-          status: j.status,
-          sprint: j.sprint,
-          user: j.user,
-        });
-
-        if (j.node && j.node.length > 0) {
-          for (let node of j.node) {
-            items.push({
-              label: node.label,
-              parent: j.name,
-              description: node.description,
-              type: node.type,
-              status: node.status,
-              sprint: j.sprint,
-              user: j.user,
-            });
-          }
-        }
-      }
-    }
-  } else if (i.type === "file") {
-    items.push({
-      label: i.name,
-      parent: "no parent",
-      description: i.description,
-      type: "file",
-      status: i.status,
-
-      sprint: i.sprint,
-      user: i.user,
-    });
-
-    if (i.node && i.node.length > 0) {
-      for (let node of i.node) {
-        items.push({
-          label: node.label,
-          parent: i.name,
-          description: node.description,
-          type: node.type,
-          status: node.status,
-
-          sprint: i.sprint,
-          user: i.user,
-        });
-      }
-    }
-  }
-}
 
 function ProjectBacklogs() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,19 +20,41 @@ function ProjectBacklogs() {
   const [selectedSprint, setSelectedSprint] = useState("");
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [selectedElement, setSelectedElement] = useState(null);
+  // const [users,setUsers] = useState();
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const loading = fileStore((state) => state.loading);
-  const backend = useBackend();
+  const backend = fileStore(state => state.data)
 
+  if(Object.keys(backend).length==0){
+    return <>
+    Loading
+    </>
+  }  
+
+  const items = processedData(backend.children)
+
+  // console.log(items);
+  
+
+  const users =[{emailId:"All", value:""}, ...backend.userHas] 
+  
+  
   const filteredData = items.filter(
     (element) =>
-      element.label.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (element.label && element.label.toLowerCase().includes(searchQuery.toLowerCase())||element.name && element.name.toLowerCase().includes(searchQuery.toLowerCase())) &&
       (selectedTypes.length === 0 || selectedTypes.includes(element.type)) &&
       (selectedStatus === "" || element.status === selectedStatus) &&
       (selectedUser === "" || element.user === selectedUser) &&
       (selectedSprint === "" || element.sprint === selectedSprint)
   );
+
+  const openFormWithFilledData = (element : any) => {
+    setSelectedElement(element);
+    setShowForm(true);
+  };
+  
 
   return (
     <div className="absolute ml-3 w-fit">
@@ -188,9 +145,9 @@ function ProjectBacklogs() {
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
             >
-              {users.map((user) => (
-                <option key={user.value} value={user.value}>
-                  {user.label}
+              {users.map((user: any) => (
+                <option key={user.value || user.emailId} value={user.emailId}>
+                  {user.emailId}
                 </option>
               ))}
             </select>
@@ -203,7 +160,7 @@ function ProjectBacklogs() {
                 <th className="border bg-gray-200 px-1 py-2">Type</th>
                 <th className="border bg-gray-200 px-1 py-2">Name</th>
                 <th className="border bg-gray-200 px-1 py-2">Description</th>
-                <th className="border bg-gray-200 px-1 py-2">Parent</th>
+                <th className="border bg-gray-200 px-1 py-2">Epic</th>
                 <th className="border bg-gray-200 px-1 py-2">Status</th>
                 <th className="border bg-gray-200 px-1 py-2">Sprint</th>
                 <th className="border bg-gray-200 px-1 py-2">User</th>
@@ -222,8 +179,8 @@ function ProjectBacklogs() {
                     {/* @ts-ignore */}
                     {getTypeLabel(element.type).type}
                   </td>
-                  <td className="rounded-lg border px-1 py-2 text-center">
-                    {element.label}
+                  <td className="rounded-lg border px-1 py-2 text-center cursor-pointer" onClick={() => openFormWithFilledData(element)}>
+                    {element.label||element.name}
                   </td>
                   <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
                     {element.description}
@@ -261,10 +218,11 @@ function ProjectBacklogs() {
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="rounded-lg bg-white p-8 shadow-lg">
             <AddBacklogs
-              types={types}
-              users={users}
-              statuses={statuses}
-              setShowForm={setShowForm}
+             types={types}
+             users={users}
+             statuses={statuses}
+             setShowForm={setShowForm}
+             selectedElement={selectedElement} 
             />
           </div>
         </div>

@@ -398,7 +398,7 @@ async function createFileInFolder(
                 hasInfo: {
                   create: {
                     node: {
-                      status: "Todo",
+                      status: "Completed",
                       assignedTo: "",
                       dueDate: "",
                       description: "",
@@ -752,7 +752,7 @@ const getFileByNode = async (
 
 // updating epic hasInfo data only
 
-const uodateEpicMutation = gql`
+const updateEpicMutation = gql`
 ${Info_Fragment}
 mutation updateEpic($where: folderWhere, $update: folderUpdateInput) {
   updateFolders(where: $where, update: $update) {
@@ -766,7 +766,7 @@ mutation updateEpic($where: folderWhere, $update: folderUpdateInput) {
 }
 `
 
-const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | TypedDocumentNode<any,OperationVariables>) => {
   const { status, description, assignedTo, dueDate, sprint } = epictData
   await client.mutate({
     mutation,
@@ -838,4 +838,7 @@ export {
   createProjectMutation,
   getMainByUser,
   getTreeNodeByUser,
+  updateEpicMutation,
+  updateEpic,
+  updateStoryMutation,
 };

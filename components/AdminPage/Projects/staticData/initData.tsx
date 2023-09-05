@@ -1,6 +1,6 @@
- let initData  : any[] = []
+let initData: any[] = [];
 
-export default  initData =  [
+export default initData = [
   {
     type: "folder",
     name: "epic 1",
@@ -12,6 +12,8 @@ export default  initData =  [
           "This is one of the stories. This is one of the stories. This is one of the stories. This is one of the",
         status: "Completed",
         sprint: "Sprint 1",
+        startDate: "25/08/2023",
+        dueDate: "31/08/2023",
         user: "User 1",
         node: [],
       },
@@ -22,6 +24,8 @@ export default  initData =  [
         status: "To-Do",
         user: "User 2",
         sprint: "Sprint 2",
+        startDate: "25/08/2023",
+        dueDate: "5/09/2023",
         node: [
           {
             type: "BrightBlueNode",
@@ -29,6 +33,8 @@ export default  initData =  [
             description: "node 1 description",
             user: "User 2",
             sprint: "Sprint 2",
+            startDate: "25/08/2023",
+            dueDate: "5/09/2023",
             status: "To-Do",
           },
           {
@@ -37,6 +43,8 @@ export default  initData =  [
             description: "node 2 description",
             user: "User 2",
             sprint: "Sprint 2",
+            startDate: "25/08/2023",
+            dueDate: "5/09/2023",
             status: "In-Progress",
           },
           {
@@ -45,6 +53,8 @@ export default  initData =  [
             description: "node 3 description",
             user: "User 3",
             sprint: "Sprint 2",
+            startDate: "25/08/2023",
+            dueDate: "5/09/2023",
             status: "Completed",
           },
         ],
@@ -56,6 +66,8 @@ export default  initData =  [
         user: "User 1",
         status: "To-Do",
         sprint: "Sprint 2",
+        startDate: "25/08/2023",
+        dueDate: "5/09/2023",
         node: [],
       },
       {
@@ -65,6 +77,8 @@ export default  initData =  [
         user: "User 4",
         status: "In-Progress",
         sprint: "Sprint 1",
+        startDate: "25/08/2023",
+        dueDate: "31/08/2023",
         node: [
           {
             type: "OrangeNode",
@@ -72,6 +86,8 @@ export default  initData =  [
             description: "node 4 description",
             user: "User 4",
             sprint: "Sprint 1",
+            startDate: "25/08/2023",
+            dueDate: "31/08/2023",
             status: "To-Do",
           },
           {
@@ -80,6 +96,8 @@ export default  initData =  [
             description: "node 5 description",
             user: "User 5",
             sprint: "Sprint 1",
+            startDate: "25/08/2023",
+            dueDate: "31/08/2023",
             status: "In-Progress",
           },
         ],
@@ -97,6 +115,8 @@ export default  initData =  [
         user: "User 2",
         status: "To-Do",
         sprint: "Sprint 1",
+        startDate: "25/08/2023",
+        dueDate: "31/08/2023",
         node: [],
       },
       {
@@ -112,6 +132,8 @@ export default  initData =  [
             description: "node 6 description",
             user: "User 3",
             sprint: "Sprint 1",
+            startDate: "25/08/2023",
+            dueDate: "31/08/2023",
             status: "In-Progress",
           },
         ],
@@ -123,6 +145,8 @@ export default  initData =  [
         user: "User 4",
         status: "Completed",
         sprint: "Sprint 1",
+        startDate: "25/08/2023",
+        dueDate: "31/08/2023",
         node: [],
       },
     ],
@@ -133,6 +157,8 @@ export default  initData =  [
     description: "story 8 description",
     user: "User 1",
     sprint: "Sprint 1",
+    startDate: "25/08/2023",
+    dueDate: "31/08/2023",
     status: "In-Progress",
     node: [
       {

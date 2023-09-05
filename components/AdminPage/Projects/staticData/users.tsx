@@ -1,5 +1,6 @@
 
 export interface Users{
+    emailId: string;
     label: string;
     value: string
 }

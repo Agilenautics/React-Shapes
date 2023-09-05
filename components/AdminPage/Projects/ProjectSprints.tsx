@@ -59,7 +59,7 @@ const objWithoutSprint : any[] = []
                 <th className="border bg-gray-200 px-1 py-2">Name</th>
                 <th className="border bg-gray-200 px-1 py-2">Description</th>
                 <th className="border bg-gray-200 px-1 py-2">Status</th>
-                <th className="border bg-gray-200 px-1 py-2">Parent</th>
+                <th className="border bg-gray-200 px-1 py-2">Epic</th>
                 <th className="border bg-gray-200 px-1 py-2">User</th>
                 <th className="border bg-gray-200 px-1 py-2">Due Date</th>
               </tr>

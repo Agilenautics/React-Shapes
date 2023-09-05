@@ -3,21 +3,21 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import validationSchema from "./staticData/validationSchema";
 import { Types } from "./staticData/types"
 import { Statuses } from './staticData/statuses';
-import { Users } from './staticData/users'
+import { updateTaskMethod, updateTasksMutation } from '../../Flow/Nodes/gqlNodes';
 
 
 
-export default function AddBacklogs({ types, statuses, users, setShowForm }: any) {
-
+export default function AddBacklogs({ types, statuses, users, setShowForm, selectedElement }: any) {
+  
   const handleSubmit = (values: object) => {
-    console.log(values)
-    //@ts-ignore
-    if (values.assign === "invite") {
-      //@ts-ignore
-      console.log("Inviting user:", values.assign);
-    } else {
-      console.log("Submitting form:", values);
+    console.log(selectedElement);
+    
+    if(selectedElement.type != "file"){
+      console.log(selectedElement.id);
+      
+      updateTaskMethod(selectedElement.id , updateTasksMutation , values)
     }
+
     setShowForm(false);
   };
 
@@ -27,16 +27,15 @@ export default function AddBacklogs({ types, statuses, users, setShowForm }: any
 
   return (
     <Formik
-      initialValues={{
-        type: "",
-        name: "",
-        description: "",
-        status: "To-Do",
-        assign: "",
-      }}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
+    initialValues={{
+      type: selectedElement ? selectedElement.type : '', 
+      name: selectedElement ? ( selectedElement.name || selectedElement.label) : '',
+      description: selectedElement ? selectedElement.description : '', 
+      status: 'To-Do',
+      assign: selectedElement ? selectedElement.user : '',
+    }}
+              onSubmit={handleSubmit}
+            >
       <Form>
         <h5 className="mb-4 rounded bg-violet-300 p-2 text-xl font-bold shadow-lg">
           Add Backlog
@@ -153,10 +152,10 @@ export default function AddBacklogs({ types, statuses, users, setShowForm }: any
           >
             <option value="">Select User</option>
             {users.map(
-              (user: Users) =>
-                user.label !== "All" && (
-                  <option key={user.value} value={user.value}>
-                    {user.label}
+              (user: any) =>
+                user.emailId !== "All" && (
+                  <option key={user.value} value={user.emailId}>
+                    {user.emailId}
                   </option>
                 )
             )}
@@ -178,7 +177,6 @@ export default function AddBacklogs({ types, statuses, users, setShowForm }: any
             className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
           >
             <option value="">Select Sprint</option>
-            {/* You can map over your sprints and generate options here */}
           </Field>
           <ErrorMessage
             name="addToSprint"
@@ -188,10 +186,10 @@ export default function AddBacklogs({ types, statuses, users, setShowForm }: any
         </div>
         <div className="flex justify-end">
           <button
-            type="submit"
+            type='submit'
             className="mr-2 rounded-lg bg-blue-500 px-4 py-2 text-white"
           >
-            Add Backlog
+            {selectedElement ? "Update Backlog" : "Add Backlog"}
           </button>
           <button
             type="button"

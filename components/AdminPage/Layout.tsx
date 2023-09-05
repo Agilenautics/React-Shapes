@@ -89,7 +89,7 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
           email && path && (
             <>
               <TopBar toggleSideBar={toggleSideBar} flag={isSideBarOpen} />
-              <RoutingBreadCrumbs />
+              {/* <RoutingBreadCrumbs loading={loading} /> */}
             </>
           )
         }

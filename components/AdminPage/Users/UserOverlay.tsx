@@ -31,6 +31,9 @@ interface UserOverlayProps {
   handleMessage: (message: string) => void; // Add the prop for handleMessage function
 }
 
+
+
+
 const UserOverlay: React.FC<UserOverlayProps> = ({
   onClose,
   projectData,
@@ -80,6 +83,8 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
       projects: selectedProjects, // Set the selected projects in the formData state
     }));
   };
+
+  console.log(projectData);
 
   const handleAddUser = () => {
     const newUser = {

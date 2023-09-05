@@ -70,6 +70,7 @@ function Users() {
 
 
 
+
   //user store
   const usersList = userStore((state) => state.usersList);
   const updateUserList = userStore((state) => state.updateUserList);
@@ -96,8 +97,8 @@ function Users() {
           const { hasProjects, ...userData } = res[0]
           const userType = userData.userType;
           updateUserType(userType)
-          // const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
-          // updateProject(userProjects)
+          const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
+          // updateProject(userProjects,loading)
         });
       }
     });

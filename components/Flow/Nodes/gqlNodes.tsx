@@ -492,7 +492,9 @@ ${Info_Fragment}
 }
 `
 
-const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode<any ,OperationVariables>) =>{
+const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode<any ,OperationVariables>,data: any) =>{
+  console.log(id);
+  
   await client.mutate({
     mutation,
     variables:{
@@ -503,11 +505,11 @@ const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode
         "hasInfo": {
           "update": {
             "node": {
-              "status": null,
-              "sprint": null,
-              "dueDate": null,
-              "description": null,
-              "assignedTo": null
+              "status": data.status,
+              "sprint": data.sprint || null,
+              "dueDate": data.dueDate || null,
+              "description": data.description,
+              "assignedTo": data.assign || null
             }
           }
         }
