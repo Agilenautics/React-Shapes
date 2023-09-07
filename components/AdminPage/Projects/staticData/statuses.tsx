@@ -5,7 +5,7 @@ export interface Statuses{
 
 
 export const statuses: Statuses[] = [
-    { label: "All", value: "" },
+    { label: "Select Status", value: "" },
     { label: "Todo", value: "To-Do" },
     { label: "In-Progress", value: "In-Progress" },
     { label: "Completed", value: "Completed" },

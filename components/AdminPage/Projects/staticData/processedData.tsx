@@ -1,16 +1,26 @@
-export function processedData(tasks: any) {
-  let initData2 = [];
-  let temproary = [];
 
+
+export const parents: any[] = ["Select Epic"];
+export const initData2: any[] = [];
+
+export function processedData(tasks: any) {
+  let temproary = [];
+ while(initData2.length){
+  initData2.pop()
+ }
   if (!tasks) {
     return [];
   }
   
   for (let i of tasks) {
     if (i.type == "folder") {
+
+if(!parents.includes(i.name)) parents.push(i.name)
+      
       
       //@ts-ignore
-      for (let j of i.hasFile) {
+      for (let j of i.hasFile) {        
+
         initData2.push({ ...j, parent: i.name });
         if (j.hasInfo.status == "Completed")
           temproary.push({
@@ -61,6 +71,7 @@ export function processedData(tasks: any) {
           temproary.push({
             ...j.hasInfo,
             ...j.hasdataNodedata,
+            description : j.hasInfo.description.length > j.hasdataNodedata.description.length?j.hasInfo.description:j.hasdataNodedata.description,
             id: j.id,
             status: "Completed",
             type: j.type,
@@ -70,6 +81,7 @@ export function processedData(tasks: any) {
           temproary.push({
             ...j.hasInfo,
             ...j.hasdataNodedata,
+            description : j.hasInfo.description.length > j.hasdataNodedata.description.length?j.hasInfo.description:j.hasdataNodedata.description,
             id: j.id,
             status: "In-Progress",
             type: j.type,
@@ -79,6 +91,7 @@ export function processedData(tasks: any) {
           temproary.push({
             ...j.hasInfo,
             ...j.hasdataNodedata,
+            description : j.hasInfo.description.length > j.hasdataNodedata.description.length?j.hasInfo.description:j.hasdataNodedata.description,
             id: j.id,
             status: "To-Do",
             type: j.type,

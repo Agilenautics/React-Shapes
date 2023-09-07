@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import fileStore from "../../TreeView/fileStore";
-import useBackend from "../../TreeView/backend";
+// import useBackend from "../../TreeView/backend";
 import { types } from "./staticData/types";
 import { statuses } from "./staticData/statuses";
 // import { users } from "./staticData/users";
 // import initData from "./staticData/initData";
 import { getTypeLabel, getStatusColor } from "./staticData/basicFunctions";
 import AddBacklogs from "./AddBacklogs";
-import { processedData } from "./staticData/processedData";
+import { processedData, parents } from "./staticData/processedData";
 
 
 
@@ -17,12 +17,16 @@ function ProjectBacklogs() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
+  const [selectedEpic, setSelectedEpic] = useState("");
   const [selectedSprint, setSelectedSprint] = useState("");
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
+  // const [items, setItems] = useState()
   // const [users,setUsers] = useState();
   const router = useRouter();
+  
+const formRef = useRef(null);
   const projectId = router.query.projectId as string;
   const loading = fileStore((state) => state.loading);
   const backend = fileStore(state => state.data)
@@ -31,22 +35,45 @@ function ProjectBacklogs() {
     return <>
     Loading
     </>
-  }  
+  }
 
-  const items = processedData(backend.children)
+  // Add an event listener to the document
+  // useEffect(() => {
+  //   function handleClickOutside(event: any) {
+  //     if (formRef.current && !formRef.current.contains(event.target)) {
+  //       setShowForm(false); // Close the form if clicked outside
+  //       setSelectedElement(null); // Reset selected element
+  //     }
+  //   }
+
+  //   // Bind the event listener
+  //   document.addEventListener("mousedown", handleClickOutside);
+
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [formRef]);
+  
+  
+
+  // useEffect(()=>setItems(processedData(backend.children)),[backend])
+
+  const items = processedData(backend.children);
 
   // console.log(items);
   
 
-  const users =[{emailId:"All", value:""}, ...backend.userHas] 
+  const users =[{emailId:"Select User", value:""}, ...backend.userHas] 
   
   
   const filteredData = items.filter(
-    (element) =>
+    (element:any) =>
       (element.label && element.label.toLowerCase().includes(searchQuery.toLowerCase())||element.name && element.name.toLowerCase().includes(searchQuery.toLowerCase())) &&
       (selectedTypes.length === 0 || selectedTypes.includes(element.type)) &&
+      (selectedEpic === "" || element.parent=== selectedEpic) &&
       (selectedStatus === "" || element.status === selectedStatus) &&
-      (selectedUser === "" || element.user === selectedUser) &&
+      // (selectedUser === "" || element.user === selectedUser) &&
       (selectedSprint === "" || element.sprint === selectedSprint)
   );
 
@@ -127,7 +154,17 @@ function ProjectBacklogs() {
                 </div>
               )}
             </div>
-            <label>Status :</label>
+            <select
+              className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
+              value={selectedEpic}
+              onChange={(e) => setSelectedEpic(e.target.value)}
+            >
+              {parents.map((epic) => (
+                <option key={epic} value={epic=="All"?"":epic}>
+                  {epic}
+                </option>
+              ))}
+            </select>
             <select
               className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
               value={selectedStatus}
@@ -139,7 +176,6 @@ function ProjectBacklogs() {
                 </option>
               ))}
             </select>
-            <label>User :</label>
             <select
               className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
               value={selectedUser}
@@ -167,7 +203,7 @@ function ProjectBacklogs() {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((element, index) => (
+              {filteredData.map((element: any, index: any) => (
                 <tr key={index} className="border-b py-1">
                   {/* @ts-ignore */}
                   <td
@@ -216,7 +252,7 @@ function ProjectBacklogs() {
       </button>
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="rounded-lg bg-white p-8 shadow-lg">
+          <div className="rounded-lg bg-white shadow-lg h-[70vh] w-[50vw] overflow-y-scroll overflow-x-hidden" ref={formRef}>
             <AddBacklogs
              types={types}
              users={users}
