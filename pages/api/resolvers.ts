@@ -1,10 +1,11 @@
 import Project from "./modules/projectModel"
 import User from "./modules/usersModel"
+import driver from "./dbConnection"
 
 const resolvers = {
     Query: {
         // @ts-ignore
-        projects: async (parent: any, {email}:Object) => {
+        projects: async (parent: any, { email }: Object) => {
             const projects = await Project.find({})
             return projects
         },
@@ -115,7 +116,33 @@ const resolvers = {
                 ]
             })
             return newUser
-        }
+        },
+        // deleteNode: async (_: any, nodeId: Object) => {
+        //     // console.log(nodeId.id)
+        //     const session = driver.session();
+        //     await session
+        //         .run('MATCH (n:flowNode {nodeId:$nodeId}) DETACH  DELETE n;', {
+        //             nodeId: nodeId.id
+        //         })
+        //         .subscribe({
+        //             onKeys: keys => {
+        //                 console.log(keys, "keys")
+        //             },
+        //             onNext: record => {
+        //                 console.log(record, "delete successfully")
+        //             },
+        //             onCompleted: () => {
+        //                 session.close() // returns a Promise
+        //             },
+        //             onError: error => {
+        //                 console.log(error)
+        //             }
+        //         })
+
+        //     return true
+
+
+        // }
     }
 }
 

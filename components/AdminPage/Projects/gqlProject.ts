@@ -31,6 +31,23 @@ const Project_Fragment = gql`
   }
 `;
 
+const GET_PROJECTS_BY_ID = gql`
+
+query Projects {
+  projects {
+    id
+    isOpen
+    name
+    recentProject
+    recycleBin
+    timeStamp
+    userName
+    deletedAT
+    description
+  }
+}
+`
+
 
 const UserSheme = gql`
 query GetUsers {
@@ -60,7 +77,8 @@ query getUser($where: userWhere) {
 }
 `
 
-const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>, methods: any) => {
+  const { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject } = methods
   let admin = {}
   await client.query({
     query: customQuery,
@@ -70,6 +88,11 @@ const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDo
       }
     }
   }).then((res) => {
+    console.log(res.data.users[0].hasProjects)
+    updateProjects(res.data.users[0].hasProjects,res.loading);
+    updateRecycleBinProject(res.data.users[0].hasProjects,res.loading);
+    updateLoginUser(res.data.users);
+    updateUserType(res.data.users[0].userType)
     admin = res
   })
 
@@ -441,4 +464,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail,UserSheme }
+export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail, UserSheme, GET_PROJECTS_BY_ID }

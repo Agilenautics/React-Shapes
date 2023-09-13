@@ -773,7 +773,7 @@ mutation updateEpic($where: folderWhere, $update: folderUpdateInput) {
 }
 `
 
-const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | TypedDocumentNode<any,OperationVariables>) => {
+const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   const { status, description, assignedTo, dueDate, sprint } = epictData
   await client.mutate({
     mutation,

@@ -7,6 +7,11 @@ import { types } from "./staticData/types";
 import { allStatus, processedData } from "./staticData/processedData";
 import { updateTaskMethod, updateTasksMutation } from "../../Flow/Nodes/gqlNodes";
 import { updateStoryMethod, updateStoryMutation } from "../../TreeView/gqlFiles";
+import { onAuthStateChanged } from "firebase/auth";
+import { GET_USER, getUserByEmail } from "./gqlProject";
+import { auth } from "../../../auth";
+import projectStore from "./projectStore";
+import userStore from "../Users/userStore";
 
 function ProjectBoards() {
   const [tasks, setTasks] = useState([]);
@@ -17,6 +22,23 @@ function ProjectBoards() {
 
   let backend: any = fileStore((store) => store.data);
   const loading = fileStore((state) => state.loading);
+
+  // let backend = useBackend();
+
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state) => state.updateLoginUser)
+
+
+  const loadingFromFileStore = fileStore((state) => state.loading);
+  const verificationToken = async () => {
+    onAuthStateChanged(auth, user => {
+      if (user && user.email) {
+        getUserByEmail(user.email, GET_USER, { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject })
+      }
+    })
+  }
 
   useEffect(() => {
     setTasks(backend.children);
@@ -30,32 +52,33 @@ function ProjectBoards() {
     setStatuses(filteredStatuses);
   }, [backend.children, selectedTypeFilters]);
 
-  if (loading) {
-    return <div>...loading</div>;
-  }
+  useEffect(() => {
+    verificationToken()
+  }, [])
+
 
   const handleDragStart = (e: any, task: any) => {
-    
+
     localStorage.setItem("task", JSON.stringify(task))
   };
 
-  const handleDragOver = (e: any) => {
+  const handleDragOver = (e:React.MouseEvent) => {
     e.preventDefault();
   };
 
-  const updateStatus = ({id,newStatus}: any)=>{
+  const updateStatus = ({ id, newStatus }: any) => {
 
-    const toBeUpdateData:any = statuses.filter((e:any) => e.id===id)[0]
-    
-    
-    const removeData = statuses.filter((e:any)=> e.id!== id)
-    const afterUpdate = {...toBeUpdateData, status: newStatus}
-    
+    const toBeUpdateData: any = statuses.filter((e: any) => e.id === id)[0]
 
-    const updatedData: any = [...removeData,afterUpdate]
 
-  setStatuses(updatedData)
-     
+    const removeData = statuses.filter((e: any) => e.id !== id)
+    const afterUpdate = { ...toBeUpdateData, status: newStatus }
+
+
+    const updatedData: any = [...removeData, afterUpdate]
+
+    setStatuses(updatedData)
+
   }
 
   const handleDrop = (e: any, columnId: string) => {
@@ -66,23 +89,25 @@ function ProjectBoards() {
     task.status = columnId
 
     console.log(statuses);
-    updateStatus({id:task.id,newStatus : columnId})
+    updateStatus({ id: task.id, newStatus: columnId })
 
-    if(task.type=="file"){
-      updateStoryMethod(task.id,updateStoryMutation,task)
-    }else{
-      updateTaskMethod(task.id,updateTasksMutation,task)
+    if (task.type == "file") {
+      updateStoryMethod(task.id, updateStoryMutation, task)
+    } else {
+      updateTaskMethod(task.id, updateTasksMutation, task)
     }
 
-   localStorage.clear()
-    
+    localStorage.clear()
+
   };
 
+  // console.log(statuses);
 
-  const addBoard = () =>{
 
+  if (loadingFromFileStore) {
+    return <div>...loading</div>;
   }
-  
+
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -164,30 +189,30 @@ function ProjectBoards() {
               className="relative mx-2 min-w-[250px] flex-1 rounded-lg bg-white p-4 shadow-md"
               onDrop={(e) => handleDrop(e, column)}
               onDragOver={(e) => handleDragOver(e)}
-              
+
             >
               <div className="statuses-center mb-2 flex justify-between">
                 <h2 className="text-lg font-semibold">{column}</h2>
               </div>
               <div className="h-80 space-y-2 overflow-y-auto overflow-x-hidden">
-              {statuses.map((task: any) =>
-                task.status === column ? (
-                  <div
-                    key={task.id}
-                    className="bg-slate-100 border-box hover:shadow-lg p-2 rounded cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
-                    draggable="true"
-                    onDrag={(e)=>handleDragStart(e,task)}
-                    
+                {statuses.map((task: any) =>
+                  task.status === column ? (
+                    <div
+                      key={task.id}
+                      className="bg-slate-100 border-box hover:shadow-lg p-2 rounded cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+                      draggable="true"
+                      onDrag={(e) => handleDragStart(e, task)}
+
                     // onDragStart={(e) => handleDragStart(e, task)}
                     // onDragEnd={(e) => handleDrop(e, column.id)}
-                  >
-                    <div className="font-bold">{task.name || task.label}</div>
-                    {/* @ts-ignore */}
-                    <div>{getTypeLabel(task.type).type}</div>
-                  </div>
-                ) : null
-              )}
-            </div>
+                    >
+                      <div className="font-bold">{task.name || task.label}</div>
+                      {/* @ts-ignore */}
+                      <div>{getTypeLabel(task.type).type}</div>
+                    </div>
+                  ) : null
+                )}
+              </div>
             </div>
           ))}
         </div>

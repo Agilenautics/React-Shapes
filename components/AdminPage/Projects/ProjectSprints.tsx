@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // import initData from "./staticData/initData";
 import CreateSprint from "./CreateSprint";
 import { processedData } from "./staticData/processedData";
 import { getTypeLabel } from "./staticData/basicFunctions";
 import fileStore from "../../TreeView/fileStore";
+import projectStore from "./projectStore";
+import userStore from "../Users/userStore";
+import { auth } from "../../../auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { GET_USER, getUserByEmail } from "./gqlProject";
 
 
 
@@ -15,25 +20,42 @@ function ProjectSprints() {
   console.log(initData);
   
 console.log(data);
+  const [showForm, setShowForm] = useState(false);
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state) => state.updateLoginUser)
+
+
+  const verificationToken = async () => {
+    onAuthStateChanged(auth, user => {
+      if (user && user.email) {
+        getUserByEmail(user.email, GET_USER, { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject })
+      }
+    })
+  }
+  useEffect(() => {
+    verificationToken()
+  }, [])
+
 
   // const [sprintsData, setSprintsData] = useState({});
-let sprintsData: any[] = []
+  let sprintsData: any[] = []
 
-const objWithoutSprint : any[] = []
-  data.map(element=>{
-    if(element.sprint){      
+  const objWithoutSprint: any[] = []
+  data.map(element => {
+    if (element.sprint) {
       let elementSprint = element.sprint
-       if(sprintsData[elementSprint]){
+      if (sprintsData[elementSprint]) {
         sprintsData[elementSprint].push(element)
-       }else sprintsData[elementSprint] = [element]
-    }else{
+      } else sprintsData[elementSprint] = [element]
+    } else {
       objWithoutSprint.push(element)
     }
   })
+
+
   
-
-  const [showForm, setShowForm] = useState(false);
-
 
   return (
     <div className="absolute ml-3 w-fit">
@@ -76,7 +98,7 @@ const objWithoutSprint : any[] = []
                       {getTypeLabel(item.type).type}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
-                      {item.name||item.label}
+                      {item.name || item.label}
                     </td>
                     <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
                       {item.description}
@@ -103,7 +125,7 @@ const objWithoutSprint : any[] = []
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="rounded-lg bg-white p-8 shadow-lg">
-            <CreateSprint setShowForm={setShowForm} objWithoutSprint={objWithoutSprint}/>
+            <CreateSprint setShowForm={setShowForm} objWithoutSprint={objWithoutSprint} />
           </div>
         </div>
       )}

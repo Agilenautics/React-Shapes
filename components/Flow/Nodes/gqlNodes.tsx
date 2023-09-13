@@ -10,6 +10,9 @@ import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 
 
+
+
+
 const Info_Fragment = gql`
   fragment InfoFragment on info {
     description
@@ -199,19 +202,18 @@ async function getNodes(
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   updateNode: any,
- data : any
-)
- {
+  data: any
+) {
 
   console.log(data.symbol);
-  
+
   var nodes: Array<Node> = [];
   await client
     .mutate({
       mutation: mutation,
       variables: {
         where: {
-          id : data.story,
+          id: data.story,
         },
         update: {
           hasflowchart: {
@@ -239,8 +241,8 @@ async function createNode(
                           hasdataNodedata: {
                             create: {
                               node: {
-                                label: data.name|| data.label,
-                                shape: data.symbol||"rectangle",
+                                label: data.name || data.label,
+                                shape: data.symbol || "rectangle",
                                 description: data.description,
                                 links: {
                                   create: {
@@ -340,6 +342,28 @@ async function deleteNodeBackend(nodeID: string) {
       },
     },
   });
+  // const session = driver.session();
+  // session
+  // .run('MATCH (n:flowNode {id:$nodeId}) DETACH  DELETE n;', {
+  //   nodeId:nodeID
+  // })
+  // .subscribe({
+  //   onKeys: keys => {
+  //     console.log(keys,"keys")
+  //   },
+  //   onNext: record => {
+  //     console.log(record,"delete successfully")
+  //   },
+  //   onCompleted: () => {
+  //     session.close() // returns a Promise
+  //   },
+  //   onError: error => {
+  //     console.log(error)
+  //   }
+  // })
+  // session.run(`
+  //   MATCH(n:flowNode ${id:nodeID})
+  // `)
 }
 
 // here iam parforming update node position methode
@@ -493,12 +517,10 @@ ${Info_Fragment}
 }
 `
 
-const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode<any ,OperationVariables>,data: any) =>{
-  console.log(data);
-  
+const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, data: any) => {
   await client.mutate({
     mutation,
-    variables:{
+    variables: {
       "where": {
         id
       },
@@ -513,20 +535,22 @@ const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode
             }
           }
         },
-       
-          "hasdataNodedata": {
-            "update" : {
-              "node" : {
-                "label" : data.name,
-            "description" : data.description
+
+        "hasdataNodedata": {
+          "update": {
+            "node": {
+              "label": data.name,
+              "description": data.description
+            }
           }
         }
       }
     }
-    }
+  }).then((res)=>{
+    console.log(res,"iam response")
   })
 
-} 
+}
 
 
 

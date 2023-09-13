@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import "reactflow/dist/style.css";
 import ReactFlow, {
   addEdge,
@@ -68,6 +68,8 @@ function Flow() {
   const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
   const deleteEdge = edgeStore((state) => state.deleteEdge);
   const [nodeId, setNodeId] = useState([]);
+
+  const dragged = useRef(false);
 
   const [showConfirmation, setShowConfirmation] = useState(
     defaultShowConfirmation
@@ -206,10 +208,25 @@ function Flow() {
     }
   }
 
-  const onDrag = (event: any, node: Object) => {
-    updatePosition(node);
-    console.log(node);
-  };
+  const onNodeDrag = useCallback(() => {
+    dragged.current = true;
+  }, []);
+
+  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
+    if (dragged.current) {
+      updatePosition(node);
+    }
+    dragged.current = false;
+  }, []);
+
+  // const onSelectionChange = useCallback(() => {
+  //   console.count("onSelectionChange");
+  // }, []);
+
+  // const onDrag = (event: any, node: Object) => {
+  //   updatePosition(node);
+  //   console.log(node);
+  // };
   const onNodeClick = (e: any, nodeData: any) => {
     updateLinkNodeId(nodeData.id);
   };
@@ -228,7 +245,7 @@ function Flow() {
 
   return (
     <>
-      <div className="reactflow-wrapper h-[86vh] transition-all duration-100">
+      <div className="reactflow-wrapper h-screen transition-all duration-100">
         {/* <BreadCrumbs /> */}
         <ReactFlow
           draggable
@@ -252,8 +269,12 @@ function Flow() {
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
             updateNodes(getNodes());
-            onDrag(event, node);
+            onNodeDragStop(event, node)
           }}
+          onNodeDrag={onNodeDrag} //this event we dont want 
+          // onNodeDragStop={}
+          // onSelectionChange={onSelectionChange}
+          // onNodeMouseMove={(event, node) => onDrag(event, node)}
           onNodesDelete={(selectedNodes) => onNodesDelete(selectedNodes)}
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
           onEdgeClick={onEdgeClick}
@@ -264,7 +285,7 @@ function Flow() {
             //nodeComponent={MiniMapNode}
             zoomable
           />
-          <Controls />
+          <Controls className="" />
           {/* <CustomControls /> */}
         </ReactFlow>
 

@@ -11,6 +11,7 @@ import {
   update_recentProject,
   recentProject_mutation,
   GET_PROJECTS,
+  GET_PROJECTS_BY_ID,
 } from "./gqlProject";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
@@ -73,7 +74,6 @@ function Projects() {
 
 
 
-
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
       where: {
@@ -87,17 +87,20 @@ function Projects() {
     if (!loading && response && response.users.length) {
       const projects = response.users[0].hasProjects;
       const userType = data.users[0].userType;
-      updateLoginUser(data.users)
+      updateProjects(projects, loading);
+      updateLoginUser(data.users);
       updateUserType(userType)
       setProjectData(response.users[0].hasProjects);
-      updateProjects(projects, loading);
       updateRecycleBinProject(projects);
     }
+    
+    
   }
 
   const verificationToken = async () => {
     onAuthStateChanged(auth, user => {
       if (user && user.email) {
+        console.log(user.uid,"userId")
         setUserEmail(user.email);
         getProjects(data)
       }
@@ -205,9 +208,9 @@ function Projects() {
     // update_recentProject(id,recentProject_mutation);
   }
 
-  // if (error) {
-  //   return <div className="text-center text-danger">{error && error.message}</div>
-  // }
+  if (error) {
+    return <div className="text-center text-danger">{error && error.message}</div>
+  }
 
   if (loading) {
     return (

@@ -16,6 +16,8 @@ import projectStore, { Project } from "../AdminPage/Projects/projectStore";
 import { GET_USER, getUserByEmail } from "../AdminPage/Projects/gqlProject";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
+import userStore from "../AdminPage/Users/userStore";
+import { useQuery } from "@apollo/client";
 
 interface SideBar {
   isOpen: Boolean
@@ -34,7 +36,12 @@ const Sidebar = ({ isOpen }: SideBar) => {
   //projects stores
   const allProjects = projectStore((state) => state.projects);
   const loading = projectStore((state) => state.loading);
-  const [projectData, setProjectData] = useState<Project[]>([])
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state) => state.updateLoginUser)
+  const [projectData, setProjectData] = useState<Project[]>([]);
+
 
 
 
@@ -55,27 +62,29 @@ const Sidebar = ({ isOpen }: SideBar) => {
     updateInitData(data);
     return initData;
   };
+  // const { data, error, loading } = useQuery(GET_USER, {
+  //   variables: {
+  //     where: {
+  //       emailId: userEmail,
+  //     },
+  //   },
 
+  // });
 
-  // if (allProjects.length===0) {
-  //   console.log(allProjects.length===0)
-  //   console.log("Hi")
-  //   getUserByEmail(userEmail, GET_USER).then((res) => {
-  //     console.log(res)
-  //   })
-  // }
-
+  
 
   // const getProjects = (response: any) => {
   //   if (!loading && response && response.users.length) {
   //     const projects = response.users[0].hasProjects;
-  //     setProjectData(projects)
   //     const userType = data.users[0].userType;
-  //     updateLoginUser(data.users)
-  //     updateUserType(userType)
   //     updateProjects(projects, loading);
+  //     updateLoginUser(data.users);
+  //     updateUserType(userType)
+  //     setProjectData(response.users[0].hasProjects);
   //     updateRecycleBinProject(projects);
   //   }
+
+
   // }
 
 
@@ -88,9 +97,9 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   const verificationToken = async () => {
     onAuthStateChanged(auth, user => {
-      if (user && user.email && allProjects.length === 0) {
+      if (user && user.email && router.asPath !== "/projects") {
         setUserEmail(user.email);
-        // getProjects(data)
+        // getUserByEmail(user.email,GET_USER,{updateLoginUser,updateProjects,updateUserType,updateRecycleBinProject})
       }
     })
   }
@@ -150,8 +159,8 @@ const Sidebar = ({ isOpen }: SideBar) => {
     }
     fetchRecentProject(allProjects)
     verificationToken()
-
-  }, [projectId, allProjects]);
+    // getProjects();
+  }, [projectId,allProjects]);
 
 
 

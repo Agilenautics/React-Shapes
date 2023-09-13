@@ -10,6 +10,11 @@ import { getTypeLabel, getStatusColor } from "./staticData/basicFunctions";
 import AddBacklogs from "./AddBacklogs";
 import { processedData, parents } from "./staticData/processedData";
 import nodeStore from "../../Flow/Nodes/nodeStore";
+import { auth } from "../../../auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { GET_USER, getUserByEmail } from "./gqlProject";
+import projectStore from "./projectStore";
+import userStore from "../Users/userStore";
 
 
 
@@ -30,20 +35,25 @@ function ProjectBacklogs() {
   
   const projectId = router.query.projectId as string;
   const loading = fileStore((state) => state.loading);
-  const backend = fileStore(state => state.data)
-  // const nodes = nodeStore(state => state.nodes)
+  const backend = fileStore(state => state.data);
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state) => state.updateLoginUser)
 
-  // console.log(nodes);
-  
 
-  // console.log(backend);
-  
-
-  if(Object.keys(backend).length==0){
-    return <>
-    Loading
-    </>
+  const verificationToken = async () => {
+    onAuthStateChanged(auth, user => {
+      if (user && user.email) {
+        getUserByEmail(user.email, GET_USER, { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject })
+      }
+    })
   }
+  useEffect(() => {
+    verificationToken()
+  }, [])
+
+
 
 
 
@@ -52,6 +62,8 @@ function ProjectBacklogs() {
   const items = processedData(backend.children);
 
   // console.log(items);
+
+  console.log(backend.userHas)
   
   
 
@@ -68,14 +80,18 @@ function ProjectBacklogs() {
       (selectedSprint === "" || element.sprint === selectedSprint)
   );
 
-  console.log(selectedEpic);
-  
-
-  const openFormWithFilledData = (element : any) => {
+  const openFormWithFilledData = (element: any) => {
     setSelectedElement(element);
     setShowForm(true);
   };
-  
+
+
+  if (Object.keys(backend).length == 0) {
+    return <>
+      Loading
+    </>
+  }
+
 
   return (
     <div className="absolute ml-3 w-fit">
@@ -204,13 +220,13 @@ function ProjectBacklogs() {
                     className={`px-1 py-2 ${
                       // @ts-ignore
                       getTypeLabel(element.type).color
-                    } text-grey rounded-lg border text-center`}
+                      } text-grey rounded-lg border text-center`}
                   >
                     {/* @ts-ignore */}
                     {getTypeLabel(element.type).type}
                   </td>
                   <td className="rounded-lg border px-1 py-2 text-center cursor-pointer" onClick={() => openFormWithFilledData(element)}>
-                    {element.label||element.name}
+                    {element.label || element.name}
                   </td>
                   <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
                     {element.description}
@@ -249,11 +265,11 @@ function ProjectBacklogs() {
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="rounded-lg bg-white shadow-lg h-[70vh] w-[50vw] overflow-y-scroll overflow-x-hidden" >
             <AddBacklogs
-             types={types}
-             users={users}
-             statuses={statuses}
-             setShowForm={setShowForm}
-             selectedElement={selectedElement} 
+              types={types}
+              users={users}
+              statuses={statuses}
+              setShowForm={setShowForm}
+              selectedElement={selectedElement}
             />
           </div>
         </div>

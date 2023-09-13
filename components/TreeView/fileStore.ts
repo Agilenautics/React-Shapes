@@ -47,7 +47,7 @@ interface files {
   delete_item: (id: string) => void;
   find_file: (id: string) => MyData;
   loading: boolean;
-  setLoading: (load: boolean)=> void;
+  setLoading: (load: boolean) => void;
 }
 const fileStore = create<files>((set) => ({
 
@@ -85,29 +85,29 @@ const fileStore = create<files>((set) => ({
       if (node?.model.type === "folder") {
         const data = {
           name: "New File",
-          description : "Custome description",
+          description: "Custome description",
           status: "To-Do"
         }
-        createFileInFolder(newFileInFolder, parentId,data).then((result) => {
-         
+        createFileInFolder(newFileInFolder, parentId, data).then((result) => {
+
 
           node?.model.children?.push({
             name: result.name,
             id: result.id,
             type: result.type,
           });
-        
+
         });
       } else {
         parentId = root.model.id;
         const data = {
           name: "FileInMain",
           status: "To-Do",
-          description : "Custome description"
+          description: "Custome description"
         }
-        createFileInMain(newFileInMain, parentId,data).then((result) => {
-         
-         
+        createFileInMain(newFileInMain, parentId, data).then((result) => {
+
+
           root.model.children?.push({
             name: result.name,
             id: result.id,
@@ -125,33 +125,44 @@ const fileStore = create<files>((set) => ({
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       let node = findById(root, parentId);
-      
+      console.log(root, "root", node, "node", parentId, "parentId")
+
+
       let data_chk = node?.model.type;
-      
+
       if (node?.model.type === "folder") {
-        createFolderInFolder(newFolderInFolder, parentId).then((result) => {
-          node?.model.children?.push({
-            id: result.id,
-            name: result.name,
-            type: result.type,
-            isOpen: result.isOpen,
-            children: [],
-          });
-        });
+        // createFolderInFolder(newFolderInFolder, parentId).then((result) => {
+        //   node?.model.children?.push({
+        //     id: result.id,
+        //     name: result.name,
+        //     type: result.type,
+        //     isOpen: result.isOpen,
+        //     children: [],
+        //   });
+        // });
+
+
 
       } else {
         parentId = root.model.id;
-        createFolderInMain(newFolderInMain, parentId).then((result) => {
-          
-          root.model.children?.push({
-            id: result.id,
-            name: result.name,
-            type: result.type,
-            isOpen: result.isOpen,
-            children: [],
-          });
+        // createFolderInMain(newFolderInMain, parentId).then((result) => {
 
-        });
+        //   root.model.children?.push({
+        //     id: result.id,
+        //     name: result.name,
+        //     type: result.type,
+        //     isOpen: result.isOpen,
+        //     children: [],
+        //   });
+
+        // });
+
+        node?.parent.model.children?.push({
+          id: Math.floor(Math.random() * 1000 + 1).toString(),
+          name: "New File",
+          type: "flowchart",
+          isOpen: true,
+        })
 
       }
 
@@ -163,52 +174,52 @@ const fileStore = create<files>((set) => ({
     set((state) => {
       const root = new TreeModel().parse(state.data);
 
-      
+
       const node = findById(root, id);
       if (node?.model.type === "folder") {
         deleteFolderBackend(id)
         node?.drop();
-        return {data: state.data}
+        return { data: state.data }
       } else if (node?.model.type === "file") {
         deleteFileBackend(id)
-          node?.drop();
-          return {data: state.data}
-        
+        node?.drop();
+        return { data: state.data }
+
       }
       const x = searchTree(state.data, id);
       // ? Figure out how to make this work
       node?.drop();
-      
+
       return { data: state.data };
     }),
   find_file: (id: string) => {
     var x = {};
     set((state) => {
-      
+
       const targetNode = searchTree(state.data, id);
       x = targetNode;
       return {};
     });
     return x as MyData;
   },
-  
-  update_file: (id: string, updatedFile: MyData) =>
-  set((state) => {
-        
-    const root = new TreeModel().parse(state.data);
-    const node = findById(root, id);
-    if (node) {
-      node.model = updatedFile;
-    }
-    return { data: root.model };
-  }),
 
-loading: true,
-setLoading: (load:boolean) =>
-  set((state)=>{
-    return {loading: load}
-  }
-  )
+  update_file: (id: string, updatedFile: MyData) =>
+    set((state) => {
+
+      const root = new TreeModel().parse(state.data);
+      const node = findById(root, id);
+      if (node) {
+        node.model = updatedFile;
+      }
+      return { data: root.model };
+    }),
+
+  loading: true,
+  setLoading: (load: boolean) =>
+    set((state) => {
+      return { loading: load }
+    }
+    )
 }));
 
 export default fileStore;

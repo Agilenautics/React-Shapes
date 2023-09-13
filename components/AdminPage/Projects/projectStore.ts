@@ -67,7 +67,7 @@ const projectStore = create<ProjectState>((set) => ({
     updateProjectData: (projects: Array<Project>, loading: Boolean) =>
         set((state) => {
             const updatedProjects = projects.filter((values) => values.recycleBin !== true);
-            return { projects: updatedProjects, loading }
+            return { projects: updatedProjects, loading, }
         }),
     updateRecycleBinProject: (projects: any) =>
         set((state) => {

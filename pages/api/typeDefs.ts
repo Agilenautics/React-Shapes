@@ -27,6 +27,7 @@ const typeDefs = gql`
     hasContainsFolder: [folder!]!
       @relationship(type: "hasFolder", direction: OUT)
     hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
+    hasSprint: [sprint!]! @relationship(type:"hasSprint",direction:IN)
   }
 
 
@@ -161,6 +162,23 @@ const typeDefs = gql`
     # hasInfo:file @relationship( type:"hasInfo",direction:OUT)
  }
 
+ type sprint{
+  id: ID! @id
+  timeStamp: DateTime! @timestamp
+  name: String!
+  startDate: String!
+  endDate:String!
+  description: String
+  #Epics
+  folderHas: [folder!]! @relationship(type:"hasSprint",direction:OUT)
+  #stories
+  fileHas: [file!]! @ relationship(type:"hasSprint",direction:OUT)
+  #Task
+  flownodeHas: [flowNode!]! @relationship(type:"hasSprint",direction:OUT)
+  #projects
+  hasProjects:main @relationship(type:"hasProjects",direction:OUT)
+ }
+
   type tasks {
     id: ID! @id
     timeStamp: DateTime! @timestamp
@@ -177,6 +195,11 @@ const typeDefs = gql`
     createProject(newProject: projectInput!): main
     updateProject(projectData: projectInput!): updateData
     addUser(newUser: userInput!): user
+    deleteNode(nodeId:nodeId):Boolean
+  }
+
+  input nodeId{
+  id:String!
   }
 
   input userEmail {
