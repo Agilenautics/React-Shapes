@@ -2,7 +2,7 @@
 
 export const parents: any[] = [{name:"Select Epic",id:""}];
 export const initData2: any[] = [];
-export const allStatus: any[] = [];
+export const allStatus: any[] = ["To-Do", "In-Progress", "Completed"];
 
 export function processedData(tasks: any) {
   let temproary = [];

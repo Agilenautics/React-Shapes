@@ -3,12 +3,12 @@ import { useRouter } from "next/router";
 import fileStore from "../../TreeView/fileStore";
 // import useBackend from "../../TreeView/backend";
 import { types } from "./staticData/types";
-import { statuses } from "./staticData/statuses";
+// import { statuses } from "./staticData/statuses";
 // import { users } from "./staticData/users";
 // import initData from "./staticData/initData";
 import { getTypeLabel, getStatusColor } from "./staticData/basicFunctions";
 import AddBacklogs from "./AddBacklogs";
-import { processedData, parents } from "./staticData/processedData";
+import { processedData, parents, allStatus } from "./staticData/processedData";
 import nodeStore from "../../Flow/Nodes/nodeStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -28,6 +28,7 @@ function ProjectBacklogs() {
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
+  const [statuses, setStatuses] = useState(["Select Status",...allStatus])
 
   // const [items, setItems] = useState()
   // const [users,setUsers] = useState();
@@ -181,8 +182,8 @@ function ProjectBacklogs() {
               onChange={(e) => setSelectedStatus(e.target.value)}
             >
               {statuses.map((status) => (
-                <option key={status.value} value={status.value}>
-                  {status.label}
+                <option key={status} value={status=="Select Status"?"":status}>
+                  {status}
                 </option>
               ))}
             </select>

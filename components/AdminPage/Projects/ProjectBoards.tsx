@@ -14,11 +14,12 @@ import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 
 function ProjectBoards() {
-  const [tasks, setTasks] = useState([]);
   const [selectedTypeFilters, setSelectedTypeFilters] = useState<string[]>([]);
   const [statuses, setStatuses] = useState([]);
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [columns, setColumns] = useState(allStatus);
+  const [showForm, setShowForm] = useState(false);
+  const [newBoardName, setNewBoardName] = useState<string>('')
 
   let backend: any = fileStore((store) => store.data);
   const loading = fileStore((state) => state.loading);
@@ -41,7 +42,6 @@ function ProjectBoards() {
   }
 
   useEffect(() => {
-    setTasks(backend.children);
     const mainData = processedData(backend.children);
     let filteredStatuses: any;
     filteredStatuses = mainData.filter(
@@ -106,6 +106,17 @@ function ProjectBoards() {
 
   if (loadingFromFileStore) {
     return <div>...loading</div>;
+  }
+
+  
+  const addBoard = (name: string) =>{
+    if(name==''){
+      alert("Please give a name")
+      return;
+    }
+   columns.push(name)
+   setNewBoardName('')
+   setShowForm(false)
   }
 
 
@@ -217,10 +228,41 @@ function ProjectBoards() {
           ))}
         </div>
       </div>
-      {/* <button className="m-5 w-48 rounded-lg bg-blue-700 px-4 py-2 text-white shadow-lg"
+      <button className="m-5 w-48 rounded-lg bg-blue-700 px-4 py-2 text-white shadow-lg"
         onClick={() => setShowForm(!showForm)}>
         Add Boards
-      </button> */}
+      </button>
+
+
+      {showForm && (
+        <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Enter Board Name</h2>
+            <input
+              type="text"
+              className="border p-2 w-full rounded"
+              value={newBoardName}
+              onChange={(e) => setNewBoardName(e.target.value)}
+              placeholder="Board Name"
+            />
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+              onClick={() => addBoard(newBoardName)}
+            >
+              Add Board
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 ml-2"
+              onClick={() => setShowForm(!showForm)}
+            >
+             Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+
+
     </DndProvider>
   );
 }

@@ -85,7 +85,6 @@ console.log(data);
                 <th className="border bg-gray-200 px-1 py-2">Name</th>
                 <th className="border bg-gray-200 px-1 py-2">Description</th>
                 <th className="border bg-gray-200 px-1 py-2">Status</th>
-                <th className="border bg-gray-200 px-1 py-2">Epic</th>
                 <th className="border bg-gray-200 px-1 py-2">User</th>
                 <th className="border bg-gray-200 px-1 py-2">Due Date</th>
               </tr>
@@ -105,9 +104,6 @@ console.log(data);
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
                       {item.status}
-                    </td>
-                    <td className="rounded-lg border px-1 py-2 text-center">
-                      {item.epicName}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
                       {item.user}
