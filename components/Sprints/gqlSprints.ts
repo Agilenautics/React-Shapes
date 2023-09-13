@@ -63,8 +63,9 @@ query Sprints($where: sprintWhere) {
   }
 }
 `
-const getSprintByProjectId = (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-    client.query({
+const getSprintByProjectId = async (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>, updateSprints: any) => {
+    let sprint
+    await client.query({
         query: customQuery,
         variables: {
             where: {
@@ -74,7 +75,10 @@ const getSprintByProjectId = (projectId: string, customQuery: DocumentNode | Typ
             }
         }
     }).then((response) => {
-        return response
+        const { data, loading, error } = response
+        console.log(response, "from gqlsprint")
+        updateSprints(data.sprints,loading,error)
+        sprint = response
     })
         .catch((error) => {
             return error
@@ -281,7 +285,7 @@ mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
 //   }
 
 
-export {GET_SPRINTS,getSprintByProjectId,SPRINTS_FOR_BACKLOGS,getSprintToBacklogs}
+export { GET_SPRINTS, getSprintByProjectId, SPRINTS_FOR_BACKLOGS, getSprintToBacklogs }
 
 
 

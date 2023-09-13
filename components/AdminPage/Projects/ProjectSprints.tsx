@@ -10,21 +10,34 @@ import userStore from "../Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "./gqlProject";
+import { GET_SPRINTS, getSprintByProjectId } from "../../Sprints/gqlSprints";
+import sprintStore from "../../Sprints/sprintStore";
+import { useRouter } from "next/router";
+import LoadingIcon from "../../LoadingIcon";
 
 
 
 function ProjectSprints() {
-  const initData = fileStore((state)=> state.data)
+  const initData = fileStore((state) => state.data)
+  const { sprints, updateSprints, loading, error } = sprintStore()
 
   const data = processedData(initData.children)
-  console.log(initData);
-  
-console.log(data);
+
+  const router = useRouter()
+
+  const projectId = router.query.projectId as string
+
+  const getSprint = async (id: string) => {
+    await getSprintByProjectId(id, GET_SPRINTS, updateSprints)
+  }
+
   const [showForm, setShowForm] = useState(false);
   const updateProjects = projectStore((state) => state.updateProjectData);
   const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
   const updateUserType = userStore((state) => state.updateUserType);
-  const updateLoginUser = userStore((state) => state.updateLoginUser)
+  const updateLoginUser = userStore((state) => state.updateLoginUser);
+
+
 
 
   const verificationToken = async () => {
@@ -37,6 +50,12 @@ console.log(data);
   useEffect(() => {
     verificationToken()
   }, [])
+
+  useEffect(() => {
+    if (projectId) {
+      getSprint(projectId)
+    }
+  }, [projectId])
 
 
   // const [sprintsData, setSprintsData] = useState({});
@@ -54,8 +73,16 @@ console.log(data);
     }
   })
 
+  if (loading) {
+    return <LoadingIcon />
+  }
 
-  
+
+  if (error) {
+    return <> {error && <div> {error.message} </div>} </>
+  }
+
+
 
   return (
     <div className="absolute ml-3 w-fit">

@@ -153,7 +153,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId&&router.asPath!=="/projects/06c94e7b-2a73-41b1-9683-61662706823a/sprints") {
       // @ts-ignore
       getProjectId(projectId);
     }
