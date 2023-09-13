@@ -63,16 +63,26 @@ query Sprints($where: sprintWhere) {
   }
 }
 `
-// // input variable for getting sprint
-// {
-//     "where": {
-//       "hasProjects": {
-//         "id": "06c94e7b-2a73-41b1-9683-61662706823a"
-//       }
-//     }
-//   }
+const getSprintByProjectId = (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+    client.query({
+        query: customQuery,
+        variables: {
+            where: {
+                hasProjects: {
+                    id: projectId
+                }
+            }
+        }
+    }).then((response) => {
+        return response
+    })
+        .catch((error) => {
+            return error
+        })
+}
 
-const SPRINTS_FOR_BACKLOGS= gql`
+
+const SPRINTS_FOR_BACKLOGS = gql`
 query Sprints($where: sprintWhere) {
   sprints(where: $where) {
     id
@@ -80,15 +90,21 @@ query Sprints($where: sprintWhere) {
   }
 }
 `
-
-// // input variable for getting sprint
-// {
-//     "where": {
-//       "hasProjects": {
-//         "id": "06c94e7b-2a73-41b1-9683-61662706823a"
-//       }
-//     }
-//   }
+const getSprintToBacklogs = (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+    client.query({
+        query: customQuery,
+        variables: {
+            where: {
+                hasProjects: {
+                    id: projectId
+                }
+            }
+        }
+    }).then((response) => {
+        return response;
+    })
+        .catch((error) => error)
+}
 
 
 
@@ -265,7 +281,7 @@ mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
 //   }
 
 
-
+export {GET_SPRINTS,getSprintByProjectId,SPRINTS_FOR_BACKLOGS,getSprintToBacklogs}
 
 
 
