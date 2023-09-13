@@ -83,7 +83,12 @@ const fileStore = create<files>((set) => ({
       let data_chk = node?.model;
 
       if (node?.model.type === "folder") {
-        createFileInFolder(newFileInFolder, parentId).then((result) => {
+        const data = {
+          name: "New File",
+          description : "Custome description",
+          status: "To-Do"
+        }
+        createFileInFolder(newFileInFolder, parentId,data).then((result) => {
          
 
           node?.model.children?.push({
@@ -95,7 +100,12 @@ const fileStore = create<files>((set) => ({
         });
       } else {
         parentId = root.model.id;
-        createFileInMain(newFileInMain, parentId).then((result) => {
+        const data = {
+          name: "FileInMain",
+          status: "To-Do",
+          description : "Custome description"
+        }
+        createFileInMain(newFileInMain, parentId,data).then((result) => {
          
          
           root.model.children?.push({

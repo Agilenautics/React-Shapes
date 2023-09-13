@@ -9,6 +9,7 @@ import { statuses } from "./staticData/statuses";
 import { getTypeLabel, getStatusColor } from "./staticData/basicFunctions";
 import AddBacklogs from "./AddBacklogs";
 import { processedData, parents } from "./staticData/processedData";
+import nodeStore from "../../Flow/Nodes/nodeStore";
 
 
 
@@ -22,14 +23,21 @@ function ProjectBacklogs() {
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
+
   // const [items, setItems] = useState()
   // const [users,setUsers] = useState();
   const router = useRouter();
   
-const formRef = useRef(null);
   const projectId = router.query.projectId as string;
   const loading = fileStore((state) => state.loading);
   const backend = fileStore(state => state.data)
+  // const nodes = nodeStore(state => state.nodes)
+
+  // console.log(nodes);
+  
+
+  // console.log(backend);
+  
 
   if(Object.keys(backend).length==0){
     return <>
@@ -37,31 +45,14 @@ const formRef = useRef(null);
     </>
   }
 
-  // Add an event listener to the document
-  // useEffect(() => {
-  //   function handleClickOutside(event: any) {
-  //     if (formRef.current && !formRef.current.contains(event.target)) {
-  //       setShowForm(false); // Close the form if clicked outside
-  //       setSelectedElement(null); // Reset selected element
-  //     }
-  //   }
 
-  //   // Bind the event listener
-  //   document.addEventListener("mousedown", handleClickOutside);
 
-  //   // Clean up the event listener when the component unmounts
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, [formRef]);
   
   
-
-  // useEffect(()=>setItems(processedData(backend.children)),[backend])
-
   const items = processedData(backend.children);
 
   // console.log(items);
+  
   
 
   const users =[{emailId:"Select User", value:""}, ...backend.userHas] 
@@ -76,6 +67,9 @@ const formRef = useRef(null);
       // (selectedUser === "" || element.user === selectedUser) &&
       (selectedSprint === "" || element.sprint === selectedSprint)
   );
+
+  console.log(selectedEpic);
+  
 
   const openFormWithFilledData = (element : any) => {
     setSelectedElement(element);
@@ -160,8 +154,8 @@ const formRef = useRef(null);
               onChange={(e) => setSelectedEpic(e.target.value)}
             >
               {parents.map((epic) => (
-                <option key={epic} value={epic=="All"?"":epic}>
-                  {epic}
+                <option key={epic.id} value={epic.name=="Select Epic"?"":epic.name}>
+                  {epic.name}
                 </option>
               ))}
             </select>
@@ -222,6 +216,7 @@ const formRef = useRef(null);
                     {element.description}
                   </td>
                   <td className="rounded-lg border px-1 py-2 text-center">
+                    {/* here epic */}
                     {element.parent}
                   </td>
                   <td
@@ -252,7 +247,7 @@ const formRef = useRef(null);
       </button>
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="rounded-lg bg-white shadow-lg h-[70vh] w-[50vw] overflow-y-scroll overflow-x-hidden" ref={formRef}>
+          <div className="rounded-lg bg-white shadow-lg h-[70vh] w-[50vw] overflow-y-scroll overflow-x-hidden" >
             <AddBacklogs
              types={types}
              users={users}

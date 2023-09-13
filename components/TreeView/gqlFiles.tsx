@@ -278,7 +278,7 @@ async function createFolderInMain(
             hasInfo: {
               create: {
                 node: {
-                  status: "Todo",
+                  status: "To-Do",
                   assignedTo: "",
                   dueDate: "",
                   description: "",
@@ -307,7 +307,8 @@ async function createFolderInMain(
 }
 async function createFileInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  parentId: string
+  parentId: string,
+  data: any
 ) {
   var node: any;
   await client
@@ -322,14 +323,14 @@ async function createFileInMain(
             {
               node: {
                 type: "file",
-                name: "FileInMain",
+                name: data.name,
                 hasInfo: {
                   create: {
                     node: {
-                      status: "Todo",
+                      status: data.status,
                       assignedTo: "",
                       dueDate: "",
-                      description: "",
+                      description: data.descrition,
                       sprint: ""
                     }
                   }
@@ -379,7 +380,8 @@ ${File_Fragment}
 // creating story method
 async function createFileInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  parentId: string
+  parentId: string,
+  data: any
 ) {
   var node: any;
   await client
@@ -394,14 +396,14 @@ async function createFileInFolder(
             {
               node: {
                 type: "file",
-                name: "New File",
+                name: data.name,
                 hasInfo: {
                   create: {
                     node: {
-                      status: "Completed",
+                      status: data.status,
                       assignedTo: "",
                       dueDate: "",
-                      description: "",
+                      description: data.description,
                       sprint: ""
                     }
                   }
@@ -678,19 +680,24 @@ const disconnectFromFolderBackendOnMove = async (fileId: string) => {
   await client.mutate({
     mutation: disconnectFromFolderOnMove,
     variables: {
-      where: {
-        hasFile_SINGLE: {
-          id: fileId,
+        "where": {
+          "hasFile_SINGLE": {
+            "id": fileId
+          }
         },
-      },
-      disconnect: {
-        hasFile: [
-          {
-            disconnect: {},
-          },
-        ],
-      },
-    },
+        "disconnect": {
+          "hasFile": [
+            {
+              
+              "where": {
+                "node": {
+                  "id": fileId
+                }
+              }
+            }
+          ]
+        }
+      }
   });
 };
 
@@ -792,6 +799,32 @@ const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | T
 
 }
 
+const updateStoryMethod = async (id: string, mutation: DocumentNode | TypedDocumentNode<any,OperationVariables>, storyData: any) => {
+  const { status, description, assignedTo, dueDate, sprint } = storyData
+  await client.mutate({
+    mutation,
+    variables: {
+      "where": {
+        id
+      },
+      update: {
+        hasInfo: {
+          update: {
+            node: {
+              status,
+              sprint,
+              dueDate,
+              description,
+              assignedTo
+            }
+          }
+        }
+      }
+    }
+  })
+
+}
+
 
 //update story  hasInfo data only
 const updateStoryMutation = gql`
@@ -840,5 +873,6 @@ export {
   getTreeNodeByUser,
   updateEpicMutation,
   updateEpic,
+  updateStoryMethod,
   updateStoryMutation,
 };

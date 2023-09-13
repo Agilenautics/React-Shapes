@@ -1,13 +1,20 @@
 
 
-export const parents: any[] = ["Select Epic"];
+export const parents: any[] = [{name:"Select Epic",id:""}];
 export const initData2: any[] = [];
+export const allStatus: any[] = [];
 
 export function processedData(tasks: any) {
   let temproary = [];
+  // console.log(tasks);
+  
  while(initData2.length){
   initData2.pop()
  }
+ while(parents.length!=1){
+  parents.pop()
+ }
+
   if (!tasks) {
     return [];
   }
@@ -15,50 +22,33 @@ export function processedData(tasks: any) {
   for (let i of tasks) {
     if (i.type == "folder") {
 
-if(!parents.includes(i.name)) parents.push(i.name)
+ parents.push({name:i.name,id:i.id})
       
       
       //@ts-ignore
       for (let j of i.hasFile) {        
 
         initData2.push({ ...j, parent: i.name });
-        if (j.hasInfo.status == "Completed")
+        if(!allStatus.includes(j.hasInfo.status)){
+          allStatus.push(j.hasInfo.status)
+        }
+
           temproary.push({
             ...j,
-            status: "Completed",
-            parent: i.name,
-          });
-        else if (j.hasInfo.status == "In-Progress")
-          temproary.push({
-            ...j,
-            status: "In-Progress",
-            parent: i.name,
-          });
-        else
-          temproary.push({
-            ...j,
-            status: "To-Do",
+            ...j.hasInfo,
             parent: i.name,
           });
       }
     } else if (i.type == "file") {
       initData2.push({ ...i, parent: "No epic" });
-      if (i.status == "Completed")
+      
+      if(!allStatus.includes(i.hasInfo.status)){
+        allStatus.push(i.hasInfo.status)
+      }
+
         temproary.push({
           ...i,
-          status: "Completed",
-          parent: "No epic",
-        });
-      else if (i.status == "In-Progress")
-        temproary.push({
-          ...i,
-          status: "In-Progress",
-          parent: "No epic",
-        });
-      else
-        temproary.push({
-          ...i,
-          status: "To-Do",
+          ...i.hasInfo,
           parent: "No epic",
         });
     }
@@ -66,39 +56,25 @@ if(!parents.includes(i.name)) parents.push(i.name)
 
   for (let i of initData2) {
     if (i.hasflowchart.nodes) {
-      for (let j of i.hasflowchart.nodes) {        
-        if (j.hasInfo.status == "Completed")
+      for (let j of i.hasflowchart.nodes) {  
+        
+        if(!allStatus.includes(j.hasInfo.status)){
+          allStatus.push(j.hasInfo.status)
+        } 
+
           temproary.push({
             ...j.hasInfo,
             ...j.hasdataNodedata,
-            description : j.hasInfo.description.length > j.hasdataNodedata.description.length?j.hasInfo.description:j.hasdataNodedata.description,
             id: j.id,
-            status: "Completed",
-            type: j.type,
-            parent: i.parent,
-          });
-        else if (j.hasInfo.status == "In-Progress")
-          temproary.push({
-            ...j.hasInfo,
-            ...j.hasdataNodedata,
-            description : j.hasInfo.description.length > j.hasdataNodedata.description.length?j.hasInfo.description:j.hasdataNodedata.description,
-            id: j.id,
-            status: "In-Progress",
-            type: j.type,
-            parent: i.parent,
-          });
-        else
-          temproary.push({
-            ...j.hasInfo,
-            ...j.hasdataNodedata,
-            description : j.hasInfo.description.length > j.hasdataNodedata.description.length?j.hasInfo.description:j.hasdataNodedata.description,
-            id: j.id,
-            status: "To-Do",
             type: j.type,
             parent: i.parent,
           });
       }
     }
   }  
+  // console.log("p",temproary);  
+  // console.log(allStatus);
+  
+  
   return temproary;
 }

@@ -27,8 +27,17 @@ dotenv.config();
 //   neo4j.auth.basic(process.env.USER_NAME, process.env.DB_PASSWORD)
 // );
 
+const neoSchema = new Neo4jGraphQL({ typeDefs, driver, resolvers });
+const apolloServer = new ApolloServer({
+  schema: await neoSchema.getSchema(),
+  introspection: true,
+  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+});
+const server =  apolloServer.start();
+
 // @ts-ignore
 export default async function handler(req, res) {
+  await server
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
@@ -43,13 +52,8 @@ export default async function handler(req, res) {
     return false;
   }
 
-  const neoSchema = new Neo4jGraphQL({ typeDefs, driver, resolvers });
-  const apolloServer = new ApolloServer({
-    schema: await neoSchema.getSchema(),
-    introspection: true,
-    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
-  });
-  await apolloServer.start();
+
+
   await apolloServer.createHandler({
     // ? This is path on which the Apollo server is located
     path: "/api/graphql",

@@ -198,20 +198,20 @@ async function getNodes(
 
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  id: string,
-  flowchart: string,
   updateNode: any,
-  symbol: string,
-  name: string,
-  color: string,
-) {
+ data : any
+)
+ {
+
+  console.log(data.symbol);
+  
   var nodes: Array<Node> = [];
   await client
     .mutate({
       mutation: mutation,
       variables: {
         where: {
-          id,
+          id : data.story,
         },
         update: {
           hasflowchart: {
@@ -224,13 +224,13 @@ async function createNode(
                         node: {
                           flowchart: "flowNode",
                           draggable: true,
-                          type: color,
+                          type: data.type,
                           hasInfo: {
                             create: {
                               node: {
                                 description: "",
                                 assignedTo: "",
-                                status: "Todo",
+                                status: "To-Do",
                                 dueDate: "",
                                 sprint: ""
                               }
@@ -239,9 +239,9 @@ async function createNode(
                           hasdataNodedata: {
                             create: {
                               node: {
-                                label: name,
-                                shape: symbol,
-                                description: "",
+                                label: data.name|| data.label,
+                                shape: data.symbol||"rectangle",
+                                description: data.description,
                                 links: {
                                   create: {
                                     node: {
@@ -485,7 +485,8 @@ ${Info_Fragment}
         ...InfoFragment
       }
       hasdataNodedata {
-        label
+        label,
+        description
       }
     }
   }
@@ -493,7 +494,7 @@ ${Info_Fragment}
 `
 
 const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode<any ,OperationVariables>,data: any) =>{
-  console.log(id);
+  console.log(data);
   
   await client.mutate({
     mutation,
@@ -508,12 +509,20 @@ const updateTaskMethod = async(id:string,mutation:DocumentNode|TypedDocumentNode
               "status": data.status,
               "sprint": data.sprint || null,
               "dueDate": data.dueDate || null,
-              "description": data.description,
               "assignedTo": data.assign || null
             }
           }
+        },
+       
+          "hasdataNodedata": {
+            "update" : {
+              "node" : {
+                "label" : data.name,
+            "description" : data.description
+          }
         }
       }
+    }
     }
   })
 

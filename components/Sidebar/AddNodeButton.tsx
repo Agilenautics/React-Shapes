@@ -27,8 +27,16 @@ function AddNodeButton() {
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
     setIsLoading(true);
+    const data = {
+      story : currentId,
+      symbol,
+      label : "New Node",
+      type : "blueNode",
+      description : "",
+      assignedTo : "",
+    }
     try {
-      await createNode(newNode, currentId, currentFlowchart, updateNode, symbol, "New Node", "blueNode");
+      await createNode(newNode, updateNode, data);
     } finally {
       setIsLoading(false);
     }
@@ -37,8 +45,16 @@ function AddNodeButton() {
   const handleBPMNClick = async (symbol: string) => {
     setIsExpanded(!isExpanded);
     setIsLoading(true);
+    const data = {
+      story : currentId,
+      symbol,
+      label : "",
+      type : "defaultNode",
+      description : "",
+      assignedTo : "",
+    }
     try {
-      await createNode(newNode, currentId, currentFlowchart, updateNode, symbol, "", "defaultNode");
+      await createNode(newNode, updateNode, data);
     } finally {
       setIsLoading(false);
     }

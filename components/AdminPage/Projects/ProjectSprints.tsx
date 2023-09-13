@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 
-import initData from "./staticData/initData";
+// import initData from "./staticData/initData";
 import CreateSprint from "./CreateSprint";
 import { processedData } from "./staticData/processedData";
 import { getTypeLabel } from "./staticData/basicFunctions";
+import fileStore from "../../TreeView/fileStore";
 
 
 
 function ProjectSprints() {
+  const initData = fileStore((state)=> state.data)
 
-  const data = processedData(initData)
+  const data = processedData(initData.children)
+  console.log(initData);
   
+console.log(data);
 
   // const [sprintsData, setSprintsData] = useState({});
 let sprintsData: any[] = []
