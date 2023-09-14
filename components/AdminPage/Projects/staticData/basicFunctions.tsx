@@ -2,6 +2,8 @@ export const  getTypeLabel = (type: string) => {
     switch (type) {
       case "file":
         return { type: "Story", color: "bg-purple-200" };
+        case "folder":
+          return { type: "Epic", color: "bg-blue-400" };
       case "BrightblueNode":
         return { type: "Task", color: "bg-blue-200" };
       case "BrightgreenNode":

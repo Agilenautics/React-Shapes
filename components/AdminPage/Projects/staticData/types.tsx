@@ -5,6 +5,7 @@ export interface Types{
 }
 export const types:Types[] = [
     { label: "Story", value: "file" },
+    { label: "Epic", value: "folder" },
     { label: "Task", value: "BrightblueNode" },
     { label: "Sub-Task", value: "BrightgreenNode" },
     { label: "Issue", value: "BrightorangeNode" },

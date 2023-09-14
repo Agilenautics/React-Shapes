@@ -14,14 +14,24 @@ import { GET_SPRINTS, getSprintByProjectId } from "../../Sprints/gqlSprints";
 import sprintStore from "../../Sprints/sprintStore";
 import { useRouter } from "next/router";
 import LoadingIcon from "../../LoadingIcon";
+import processSprint from "./staticData/sprintProcessing";
 
 
 
 function ProjectSprints() {
-  const initData = fileStore((state) => state.data)
+  // const [data, setData] = useState<any[]>([])
+  // const initData = fileStore((state) => state.data)
   const { sprints, updateSprints, loading, error } = sprintStore()
 
-  const data = processedData(initData.children)
+  // const data = processSprint(sprints)
+
+  // console.log(data);
+  
+
+  // console.log(sprints);
+  
+
+  // const data = processedData(initData.children)
 
   const router = useRouter()
 
@@ -53,28 +63,32 @@ function ProjectSprints() {
 
   useEffect(() => {
     if (projectId) {
-      getSprint(projectId)
+       getSprint(projectId).then(res=>console.log(res,"res")).catch(err=>console.log(err)
+       )  
+       
     }
   }, [projectId])
 
 
   // const [sprintsData, setSprintsData] = useState({});
-  let sprintsData: any[] = []
+  // let sprintsData: any[] = []
 
-  const objWithoutSprint: any[] = []
-  data.map(element => {
-    if (element.sprint) {
-      let elementSprint = element.sprint
-      if (sprintsData[elementSprint]) {
-        sprintsData[elementSprint].push(element)
-      } else sprintsData[elementSprint] = [element]
-    } else {
-      objWithoutSprint.push(element)
-    }
-  })
+  // const objWithoutSprint: any[] = []
+  // data.map(element => {
+  //   if (element.sprint) {
+  //     let elementSprint = element.sprint
+  //     if (sprintsData[elementSprint]) {
+  //       sprintsData[elementSprint].push(element)
+  //     } else sprintsData[elementSprint] = [element]
+  //   } else {
+  //     objWithoutSprint.push(element)
+  //   }
+  // })
 
   if (loading) {
-    return <LoadingIcon />
+    return <div className="flex h-screen items-center justify-center">
+<LoadingIcon />
+    </div> 
   }
 
 
@@ -82,6 +96,7 @@ function ProjectSprints() {
     return <> {error && <div> {error.message} </div>} </>
   }
 
+// console.log(data);
 
 
   return (
@@ -90,21 +105,12 @@ function ProjectSprints() {
         Sprints
       </h1>
 
-      <button
-        onClick={() => {
-          setShowForm(true);
-        }}
-        className="mt-3 rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-      >
-        Create Sprint
-      </button>
-
-      {Object.keys(sprintsData).map((sprintName, index) => (
+      {sprints.map((sprint, index) => (
         <div
           key={index}
           className="w-fill overflow-y mb-5 h-60 overflow-x-hidden rounded border shadow-lg"
         >
-          <h2 className="text-xl font-semibold">{sprintName}</h2>
+          <h2 className="text-xl font-semibold">{sprint.name}</h2>
           <table className="mr-4 w-[1000px] table-auto">
             <thead>
               <tr className="bg-gray-100">
@@ -117,26 +123,77 @@ function ProjectSprints() {
               </tr>
             </thead>
             <tbody>
-              {sprintsData[sprintName].map((item: any) => (
+              {sprint.folderHas.map((item: any) => (
                 <React.Fragment key={item.name}>
                   <tr className="border-b">
                     <td className="rounded-lg border px-1 py-2 text-center">
+                      {/* @ts-ignore */}
                       {getTypeLabel(item.type).type}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
-                      {item.name || item.label}
+                      {item.name}
                     </td>
                     <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
-                      {item.description}
+                      {item.hasInfo.description}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
-                      {item.status}
+                      {item.hasInfo.status}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
                       {item.user}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
-                      {item.dueDate}
+                      {sprint.endDate}
+                    </td>
+                  </tr>
+                </React.Fragment>
+              ))}
+              {sprint.fileHas.map((item: any) => (
+                <React.Fragment key={item.name}>
+                  <tr className="border-b">
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {/* @ts-ignore */}
+                      {getTypeLabel(item.type).type}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {item.name}
+                    </td>
+                    <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
+                      {item.hasInfo.description}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {item.hasInfo.status}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {item.user}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {sprint.endDate}
+                    </td>
+                  </tr>
+                </React.Fragment>
+              ))}
+              {sprint.flownodeHas.map((item: any) => (
+                <React.Fragment key={item.name}>
+                  <tr className="border-b">
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {/* @ts-ignore */}
+                      {getTypeLabel(item.type).type}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {item.hasdataNodedata.label}
+                    </td>
+                    <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
+                      {item.hasdataNodedata.description}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {item.hasInfo.status}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {item.user}
+                    </td>
+                    <td className="rounded-lg border px-1 py-2 text-center">
+                      {sprint.endDate}
                     </td>
                   </tr>
                 </React.Fragment>
@@ -145,10 +202,20 @@ function ProjectSprints() {
           </table>
         </div>
       ))}
+       <button
+        onClick={() => {
+          setShowForm(true);
+        }}
+        className="m-3 rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+      >
+        Create Sprint
+      </button>
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="rounded-lg bg-white p-8 shadow-lg">
-            <CreateSprint setShowForm={setShowForm} objWithoutSprint={objWithoutSprint} />
+            <CreateSprint setShowForm={setShowForm}
+            //  objWithoutSprint={objWithoutSprint}
+              />
           </div>
         </div>
       )}
