@@ -28,19 +28,20 @@ function ProjectBacklogs() {
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
-  const [statuses, setStatuses] = useState(["Select Status",...allStatus])
+  const [statuses, setStatuses] = useState(["Select Status", ...allStatus])
 
   // const [items, setItems] = useState()
   // const [users,setUsers] = useState();
   const router = useRouter();
-  
+
   const projectId = router.query.projectId as string;
   const loading = fileStore((state) => state.loading);
   const backend = fileStore(state => state.data);
   const updateProjects = projectStore((state) => state.updateProjectData);
   const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
   const updateUserType = userStore((state) => state.updateUserType);
-  const updateLoginUser = userStore((state) => state.updateLoginUser)
+  const updateLoginUser = userStore((state) => state.updateLoginUser);
+  const [users, setUsers] = useState<any[]>([])
 
 
   const verificationToken = async () => {
@@ -58,24 +59,32 @@ function ProjectBacklogs() {
 
 
 
-  
-  
+
+
   const items = processedData(backend.children);
 
   // console.log(items);
 
-  console.log(backend.userHas)
-  
-  
 
-  const users =[{emailId:"Select User", value:""}, ...backend.userHas] 
-  
-  
+
+
+
+
+
+  useEffect(() => {
+    if (backend.userHas && backend.userHas.length) {
+      setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas])
+    }
+  }, [backend.userHas]);
+
+
+
+
   const filteredData = items.filter(
-    (element:any) =>
-      (element.label && element.label.toLowerCase().includes(searchQuery.toLowerCase())||element.name && element.name.toLowerCase().includes(searchQuery.toLowerCase())) &&
+    (element: any) =>
+      (element.label && element.label.toLowerCase().includes(searchQuery.toLowerCase()) || element.name && element.name.toLowerCase().includes(searchQuery.toLowerCase())) &&
       (selectedTypes.length === 0 || selectedTypes.includes(element.type)) &&
-      (selectedEpic === "" || element.parent=== selectedEpic) &&
+      (selectedEpic === "" || element.parent === selectedEpic) &&
       (selectedStatus === "" || element.status === selectedStatus) &&
       // (selectedUser === "" || element.user === selectedUser) &&
       (selectedSprint === "" || element.sprint === selectedSprint)
@@ -87,7 +96,7 @@ function ProjectBacklogs() {
   };
 
 
-  if (Object.keys(backend).length == 0) {
+  if (loading) {
     return <>
       Loading
     </>
@@ -171,7 +180,7 @@ function ProjectBacklogs() {
               onChange={(e) => setSelectedEpic(e.target.value)}
             >
               {parents.map((epic) => (
-                <option key={epic.id} value={epic.name=="Select Epic"?"":epic.name}>
+                <option key={epic.id} value={epic.name == "Select Epic" ? "" : epic.name}>
                   {epic.name}
                 </option>
               ))}
@@ -182,7 +191,7 @@ function ProjectBacklogs() {
               onChange={(e) => setSelectedStatus(e.target.value)}
             >
               {statuses.map((status) => (
-                <option key={status} value={status=="Select Status"?"":status}>
+                <option key={status} value={status == "Select Status" ? "" : status}>
                   {status}
                 </option>
               ))}

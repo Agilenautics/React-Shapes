@@ -1,17 +1,17 @@
 import client from "../../apollo-client";
 import {
-    gql, DocumentNode,
-    TypedDocumentNode,
-    OperationVariables,
+  gql, DocumentNode,
+  TypedDocumentNode,
+  OperationVariables,
 } from '@apollo/client'
 
 export interface Sprint {
-    id: string;
-    name?: string | null;
-    description: string;
-    timeStamp: string
-    startDate: string
-    endDate: string
+  id: string;
+  name?: string | null;
+  description: string;
+  timeStamp: string
+  startDate: string
+  endDate: string
 }
 
 
@@ -64,25 +64,24 @@ query Sprints($where: sprintWhere) {
 }
 `
 const getSprintByProjectId = async (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>, updateSprints: any) => {
-    let sprint
-    await client.query({
-        query: customQuery,
-        variables: {
-            where: {
-                hasProjects: {
-                    id: projectId
-                }
-            }
+  let sprint
+  await client.query({
+    query: customQuery,
+    variables: {
+      where: {
+        hasProjects: {
+          id: projectId
         }
-    }).then((response) => {
-        const { data, loading, error } = response
-        console.log(response, "from gqlsprint")
-        updateSprints(data.sprints,loading,error)
-        sprint = response
+      }
+    }
+  }).then((response) => {
+    const { data, loading, error } = response
+    updateSprints(data.sprints, loading, error)
+    sprint = response
+  })
+    .catch((error) => {
+      return error
     })
-        .catch((error) => {
-            return error
-        })
 }
 
 
@@ -95,19 +94,19 @@ query Sprints($where: sprintWhere) {
 }
 `
 const getSprintToBacklogs = (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-    client.query({
-        query: customQuery,
-        variables: {
-            where: {
-                hasProjects: {
-                    id: projectId
-                }
-            }
+  client.query({
+    query: customQuery,
+    variables: {
+      where: {
+        hasProjects: {
+          id: projectId
         }
-    }).then((response) => {
-        return response;
-    })
-        .catch((error) => error)
+      }
+    }
+  }).then((response) => {
+    return response;
+  })
+    .catch((error) => error)
 }
 
 
@@ -131,9 +130,9 @@ mutation CreateSprints($input: [sprintCreateInput!]!, $where: mainWhere) {
 `
 
 const createSPrintBackend = async (projectId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, inputVariables: Sprint) => {
-    // await client.mutate({
-    //     input:[]
-    // })
+  // await client.mutate({
+  //     input:[]
+  // })
 
 }
 

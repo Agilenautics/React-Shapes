@@ -88,7 +88,6 @@ const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDo
       }
     }
   }).then((res) => {
-    console.log(res.data.users[0].hasProjects)
     updateProjects(res.data.users[0].hasProjects,res.loading);
     updateRecycleBinProject(res.data.users[0].hasProjects,res.loading);
     updateLoginUser(res.data.users);

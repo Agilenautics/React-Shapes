@@ -119,7 +119,7 @@ function Flow() {
 
   const [edgeId, setEdgeId] = useState([]);
 
-  const onEdgeClick = (event: any, edge: any) => {
+  const onEdgeClick = (event:React.MouseEvent, edge: any) => {
     setEdgeId(edge.id);
   };
 
@@ -227,7 +227,7 @@ function Flow() {
   //   updatePosition(node);
   //   console.log(node);
   // };
-  const onNodeClick = (e: any, nodeData: any) => {
+  const onNodeClick = (e: React.MouseEvent, nodeData: Node) => {
     updateLinkNodeId(nodeData.id);
   };
   const proOptions = { hideAttribution: true };
