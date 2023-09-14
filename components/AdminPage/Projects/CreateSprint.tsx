@@ -1,10 +1,12 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import validationSchema from './staticData/validationSchema';
+import { sprintValidationSchema } from './staticData/validationSchema';
 
-export default function CreateSprint({ setShowForm, objWithoutSprint }: any) {
-  const handleSubmit = () => {
-    console.log("submitted");
+
+export default function CreateSprint({ setShowForm }: any) {
+  const handleSubmit = (values:any) => {
+    console.log(values);
+    setShowForm(false);
   };
 
   const handleCancel = () => {
@@ -21,9 +23,8 @@ export default function CreateSprint({ setShowForm, objWithoutSprint }: any) {
         assign: "",
         startDate: new Date().toISOString().substr(0, 10),
         endDate: "",
-        selectedBacklog: "", // Initialize the selected backlog
       }}
-      validationSchema={validationSchema}
+      validationSchema={sprintValidationSchema}
       onSubmit={handleSubmit}
     >
       {({ values }) => (
@@ -78,7 +79,7 @@ export default function CreateSprint({ setShowForm, objWithoutSprint }: any) {
               />
             </div>
           </div>
-          <div className="mb-4 mt-2">
+          {/* <div className="mb-4 mt-2">
             <label htmlFor="selectedBacklog" className="block font-semibold">
               Select Backlog:
             </label>
@@ -99,7 +100,7 @@ export default function CreateSprint({ setShowForm, objWithoutSprint }: any) {
               component="div"
               className="mt-1 text-red-500"
             />
-          </div>
+          </div> */}
           <div className="flex justify-end">
             <button
               type="submit"

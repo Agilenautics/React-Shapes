@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-// import initData from "./staticData/initData";
 import CreateSprint from "./CreateSprint";
-import { processedData } from "./staticData/processedData";
 import { getTypeLabel } from "./staticData/basicFunctions";
 import fileStore from "../../TreeView/fileStore";
 import projectStore from "./projectStore";
@@ -10,94 +7,76 @@ import userStore from "../Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "./gqlProject";
-import { GET_SPRINTS, getSprintByProjectId } from "../../Sprints/gqlSprints";
+import { GET_SPRINTS, Sprint, getSprintByProjectId } from "../../Sprints/gqlSprints";
 import sprintStore from "../../Sprints/sprintStore";
 import { useRouter } from "next/router";
 import LoadingIcon from "../../LoadingIcon";
-import processSprint from "./staticData/sprintProcessing";
-
-
 
 function ProjectSprints() {
-  // const [data, setData] = useState<any[]>([])
-  // const initData = fileStore((state) => state.data)
-  const { sprints, updateSprints, loading, error } = sprintStore()
+  const { sprints, updateSprints, loading, error } = sprintStore();
+  const [filteredData, setFilteredData] = useState<any>();
 
-  // const data = processSprint(sprints)
-
-  // console.log(data);
   
+  const router = useRouter();
 
-  // console.log(sprints);
-  
-
-  // const data = processedData(initData.children)
-
-  const router = useRouter()
-
-  const projectId = router.query.projectId as string
+  const projectId = router.query.projectId as string;
 
   const getSprint = async (id: string) => {
-    await getSprintByProjectId(id, GET_SPRINTS, updateSprints)
-  }
+    await getSprintByProjectId(id, GET_SPRINTS, updateSprints);
+  };
 
   const [showForm, setShowForm] = useState(false);
   const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
+  const updateRecycleBinProject = projectStore(
+    (state) => state.updateRecycleBinProject
+  );
   const updateUserType = userStore((state) => state.updateUserType);
   const updateLoginUser = userStore((state) => state.updateLoginUser);
 
-
-
-
   const verificationToken = async () => {
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
-        getUserByEmail(user.email, GET_USER, { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject })
+        getUserByEmail(user.email, GET_USER, {
+          updateLoginUser,
+          updateProjects,
+          updateUserType,
+          updateRecycleBinProject,
+        });
       }
-    })
-  }
+    });
+  };
   useEffect(() => {
-    verificationToken()
-  }, [])
+    verificationToken();
+  }, []);
 
   useEffect(() => {
     if (projectId) {
-       getSprint(projectId).then(res=>console.log(res,"res")).catch(err=>console.log(err)
-       )  
-       
+      getSprint(projectId)
+        .then((res) => console.log(res, "res"))
+        .catch((err) => console.log(err));
     }
-  }, [projectId])
-
-
-  // const [sprintsData, setSprintsData] = useState({});
-  // let sprintsData: any[] = []
-
-  // const objWithoutSprint: any[] = []
-  // data.map(element => {
-  //   if (element.sprint) {
-  //     let elementSprint = element.sprint
-  //     if (sprintsData[elementSprint]) {
-  //       sprintsData[elementSprint].push(element)
-  //     } else sprintsData[elementSprint] = [element]
-  //   } else {
-  //     objWithoutSprint.push(element)
-  //   }
-  // })
+    setFilteredData(sprints[0])
+  }, [projectId, sprints]);
 
   if (loading) {
-    return <div className="flex h-screen items-center justify-center">
-<LoadingIcon />
-    </div> 
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <LoadingIcon />
+      </div>
+    );
   }
-
 
   if (error) {
-    return <> {error && <div> {error.message} </div>} </>
+    return <> {error && <div> {error.message} </div>} </>;
   }
 
-// console.log(data);
-
+  const onFilter = (e: any) => {
+    const selectedSprintName = e.target.value;
+    const selectedSprint = sprints.find(
+      (sprint) => sprint.name === selectedSprintName
+    );
+    if (selectedSprint) setFilteredData(selectedSprint);
+  };
 
   return (
     <div className="absolute ml-3 w-fit">
@@ -105,12 +84,30 @@ function ProjectSprints() {
         Sprints
       </h1>
 
-      {sprints.map((sprint, index) => (
+      {/* Add dropdown here */}
+      <div className="mb-3">
+        <label htmlFor="sprintDropdown" className="mr-2">
+          Select Sprint:
+        </label>
+        <select
+          id="sprintDropdown"
+          onChange={onFilter}
+          value={filteredData ? filteredData.name : ""}
+        >
+          {sprints.map((sprint) => (
+            <option key={sprint.id} value={sprint.name}>
+              {sprint.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {filteredData && (
         <div
-          key={index}
+          key={filteredData.id}
           className="w-fill overflow-y mb-5 h-60 overflow-x-hidden rounded border shadow-lg"
         >
-          <h2 className="text-xl font-semibold">{sprint.name}</h2>
+          <h2 className="text-xl font-semibold">{filteredData.name}</h2>
           <table className="mr-4 w-[1000px] table-auto">
             <thead>
               <tr className="bg-gray-100">
@@ -123,7 +120,7 @@ function ProjectSprints() {
               </tr>
             </thead>
             <tbody>
-              {sprint.folderHas.map((item: any) => (
+              {filteredData.folderHas.map((item: any) => (
                 <React.Fragment key={item.name}>
                   <tr className="border-b">
                     <td className="rounded-lg border px-1 py-2 text-center">
@@ -143,12 +140,12 @@ function ProjectSprints() {
                       {item.user}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
-                      {sprint.endDate}
+                      {filteredData.endDate}
                     </td>
                   </tr>
                 </React.Fragment>
               ))}
-              {sprint.fileHas.map((item: any) => (
+              {filteredData.fileHas.map((item: any) => (
                 <React.Fragment key={item.name}>
                   <tr className="border-b">
                     <td className="rounded-lg border px-1 py-2 text-center">
@@ -168,12 +165,12 @@ function ProjectSprints() {
                       {item.user}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
-                      {sprint.endDate}
+                      {filteredData.endDate}
                     </td>
                   </tr>
                 </React.Fragment>
               ))}
-              {sprint.flownodeHas.map((item: any) => (
+              {filteredData.flownodeHas.map((item: any) => (
                 <React.Fragment key={item.name}>
                   <tr className="border-b">
                     <td className="rounded-lg border px-1 py-2 text-center">
@@ -193,7 +190,7 @@ function ProjectSprints() {
                       {item.user}
                     </td>
                     <td className="rounded-lg border px-1 py-2 text-center">
-                      {sprint.endDate}
+                      {filteredData.endDate}
                     </td>
                   </tr>
                 </React.Fragment>
@@ -201,8 +198,9 @@ function ProjectSprints() {
             </tbody>
           </table>
         </div>
-      ))}
-       <button
+      )}
+
+      <button
         onClick={() => {
           setShowForm(true);
         }}
@@ -213,9 +211,9 @@ function ProjectSprints() {
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="rounded-lg bg-white p-8 shadow-lg">
-            <CreateSprint setShowForm={setShowForm}
-            //  objWithoutSprint={objWithoutSprint}
-              />
+            <CreateSprint
+              setShowForm={setShowForm}
+            />
           </div>
         </div>
       )}

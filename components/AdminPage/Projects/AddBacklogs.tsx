@@ -23,10 +23,10 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
   const handleSubmit = (values: any) => {
 
     if(selectedElement!=null){
-      console.log(selectedElement);
+      // console.log(selectedElement);
       
       if(selectedElement.type != "file"){
-        console.log("node", selectedElement);
+        // console.log("node", selectedElement);
         
         updateTaskMethod(selectedElement.id , updateTasksMutation , values)
       }else{
@@ -41,6 +41,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
         
         createNode(newNode, updateNode, values);
       }
+      values = null
     }
 
     setShowForm(false);
@@ -88,7 +89,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
           }) => (
       <Form>
         <h5 className="mb-4 rounded bg-violet-300 p-2 text-xl font-bold shadow-lg">
-          Add Backlog
+          {selectedElement==null?"Add Backlog":"Update Backlog"}
         </h5>
         <div className="mb-4 flex space-x-4">
           <div className="w-full">

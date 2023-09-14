@@ -19,3 +19,8 @@ const validationSchema = Yup.object().shape({
 });
 
 export default validationSchema;
+
+export const sprintValidationSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  endDate: Yup.date().required("End date is required")
+});
