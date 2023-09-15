@@ -1,4 +1,3 @@
-import { NextApiResponse } from "next";
 import client from "../../apollo-client";
 import {
   gql,
@@ -142,6 +141,7 @@ const getSprintToBacklogs = (
       },
     })
     .then((response) => {
+      console.log(response)
       return response;
     })
     .catch((error) => error);
@@ -282,6 +282,7 @@ const connectToStory = (sprintId: string, storyId: string, mutation: DocumentNod
     },
   })
     .then((response: FetchResult<any>) => {
+      console.log(response)
       // connectToStory(response.data)
     })
     .catch((error: FetchError) => {
@@ -376,7 +377,7 @@ const connectToTask = (sprintId: string, taskId: string, mutation: DocumentNode 
 }
 
 
-export { GET_SPRINTS, getSprintByProjectId, SPRINTS_FOR_BACKLOGS, getSprintToBacklogs, createSPrintBackend, CREATE_SPRINT_MUTATION }
+export { GET_SPRINTS, getSprintByProjectId, SPRINTS_FOR_BACKLOGS, getSprintToBacklogs, createSPrintBackend, CREATE_SPRINT_MUTATION,CONNECT_TO_EPIC,CONNECT_TO_STORY,CONNECT_TO_TASK,connectToEpic,connectToTask,connectToStory,deleteSprintBackend,updateSprintBackend,DELETE_SPRINT,UPDATE_SPRINT_MUTATION }
 
 
 
