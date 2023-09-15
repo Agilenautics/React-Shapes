@@ -81,10 +81,7 @@ export const Sprint_Fragment = gql`
 //get sprint by the project id
 const GET_SPRINTS = gql`
   ${Sprint_Fragment}
-  ${StorySprint_Fragment}
-  ${EpicSprint_Fragment}
-  ${TaskSprint_Fragment}
-  query Sprints($where: sprintWhere) {
+    query Sprints($where: sprintWhere) {
     sprints(where: $where) {
       ...SprintFragment
     }
