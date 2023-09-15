@@ -1,27 +1,65 @@
 import { NextApiResponse } from "next";
 import client from "../../apollo-client";
 import {
-  gql, DocumentNode,
+  gql,
+  DocumentNode,
   TypedDocumentNode,
-  OperationVariables,
-  FetchResult,
-} from '@apollo/client'
+  OperationVariables, FetchResult
+} from "@apollo/client";
 
+import { Info_Fragment } from "../TreeView/gqlFiles";
 export interface Sprint {
   id: string;
   name?: string | null;
   description: string;
-  timeStamp: string
-  startDate: string
-  endDate: string
+  timeStamp: string;
+  startDate: string;
+  endDate: string;
 }
-
-
-
-//get sprint by the project id
-const GET_SPRINTS = gql`
-query Sprints($where: sprintWhere) {
-  sprints(where: $where) {
+//  Epic fragment for Sprints
+export const EpicSprint_Fragment = gql`
+  ${Info_Fragment}
+  fragment EpicSprintFragment on folder {
+    id
+    name
+    type
+    hasInfo {
+      ...InfoFragment
+    }
+  }
+`;
+//  Story fragment for Sprints
+export const StorySprint_Fragment = gql`
+  ${Info_Fragment}
+  fragment StorySprintFragment on file {
+    id
+    name
+    type
+    hasInfo {
+      ...InfoFragment
+    }
+  }
+`;
+//  Task/Issue/subtask/Bug fragment for Sprints
+export const TaskSprint_Fragment = gql`
+  ${Info_Fragment}
+  fragment TaskSprintFragment on flowNode {
+    id
+    type
+    hasInfo {
+      ...InfoFragment
+    }
+    hasdataNodedata {
+      label
+      description
+    }
+  }
+`;
+export const Sprint_Fragment = gql`
+  ${StorySprint_Fragment}
+  ${EpicSprint_Fragment}
+  ${TaskSprint_Fragment}
+  fragment SprintFragment on sprint {
     id
     name
     description
@@ -29,108 +67,98 @@ query Sprints($where: sprintWhere) {
     startDate
     endDate
     folderHas {
-      id
-      name
-      type
-      hasInfo {
-        assignedTo
-        status
-        description
-        dueDate
-      }
+      ...EpicSprintFragment
     }
     fileHas {
-      id
-      name
-      type
-      hasInfo {
-        status
-        description
-        assignedTo
-        dueDate
-      }
+      ...StorySprintFragment
     }
     flownodeHas {
-      id
-      type
-      hasInfo {
-        status
-        assignedTo
-        dueDate
-      }
-      hasdataNodedata {
-        label
-        description
-      }
+      ...TaskSprintFragment
     }
   }
-}
-`
-const getSprintByProjectId = async (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>, updateSprints: any) => {
-  let sprint
-  await client.query({
-    query: customQuery,
-    variables: {
-      where: {
-        hasProjects: {
-          id: projectId
-        }
-      }
-    }
-  }).then((response) => {
-    const { data, loading, error } = response
-    updateSprints(data.sprints, loading, error)
-    sprint = response
-  })
-    .catch((error) => {
-      return error
-    })
-}
+`;
 
+//get sprint by the project id
+const GET_SPRINTS = gql`
+  ${Sprint_Fragment}
+  ${StorySprint_Fragment}
+  ${EpicSprint_Fragment}
+  ${TaskSprint_Fragment}
+  query Sprints($where: sprintWhere) {
+    sprints(where: $where) {
+      ...SprintFragment
+    }
+  }
+`;
+const getSprintByProjectId = async (
+  projectId: string,
+  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  updateSprints: any
+) => {
+  let sprint;
+  await client
+    .query({
+      query: customQuery,
+      variables: {
+        where: {
+          hasProjects: {
+            id: projectId,
+          },
+        },
+      },
+    })
+    .then((response) => {
+      const { data, loading, error } = response;
+      updateSprints(data.sprints, loading, error);
+      sprint = response;
+    })
+    .catch((error) => {
+      return error;
+    });
+};
 
 const SPRINTS_FOR_BACKLOGS = gql`
-query Sprints($where: sprintWhere) {
-  sprints(where: $where) {
-    id
-    name
+  query Sprints($where: sprintWhere) {
+    sprints(where: $where) {
+      id
+      name
+    }
   }
-}
-`
-const getSprintToBacklogs = (projectId: string, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  client.query({
-    query: customQuery,
-    variables: {
-      where: {
-        hasProjects: {
-          id: projectId
+`;
+const getSprintToBacklogs = (
+  projectId: string,
+  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
+  client
+    .query({
+      query: customQuery,
+      variables: {
+        where: {
+          hasProjects: {
+            id: projectId,
+          },
+        },
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => error);
+};
+
+const CREATE_SPRINT_MUTATION = gql`
+  ${Sprint_Fragment}
+  mutation CreateSprints($input: [sprintCreateInput!]!, $where: mainWhere) {
+    createSprints(input: $input) {
+      sprints {
+        ...SprintFragment
+        hasProjects {
+          name
         }
       }
     }
-  }).then((response) => {
-    return response;
-  })
-    .catch((error) => error)
-}
-
-
-
-const CREATE_SPRINT_MUTATION = gql`
-mutation CreateSprints($input: [sprintCreateInput!]!) {
-  createSprints(input: $input) {
-    sprints {
-      id
-      name
-      description
-      startDate
-      endDate
-      timeStamp
-      hasProjects {
-        name
-      }
-    }
   }
-}
-`
+`;
 
 const createSPrintBackend = async (projectId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, inputVariables: Sprint, addSprint: any, handleError: any,sprintCreateMessage:any,hidePopUp:any) => {
   await client.mutate({
@@ -163,17 +191,14 @@ const createSPrintBackend = async (projectId: string, mutation: DocumentNode | T
 }
 
 const UPDATE_SPRINT_MUTATION = gql`
-mutation updateSprint($where: sprintWhere, $update: sprintUpdateInput) {
-  updateSprints(where: $where, update: $update) {
-    sprints {
-      name
-      description
-      startDate
-      endDate
+  mutation updateSprint($where: sprintWhere, $update: sprintUpdateInput) {
+    updateSprints(where: $where, update: $update) {
+      sprints {
+        ...SprintFragment
+      }
     }
   }
-}
-`
+`;
 
 // update sprint
 // {
@@ -189,16 +214,14 @@ mutation updateSprint($where: sprintWhere, $update: sprintUpdateInput) {
 
 //   }
 
-
-
 const DELETE_SPRINT = gql`
-mutation DeleteSprints($where: sprintWhere) {
-  deleteSprints(where: $where) {
-    nodesDeleted
-    relationshipsDeleted
+  mutation DeleteSprints($where: sprintWhere) {
+    deleteSprints(where: $where) {
+      nodesDeleted
+      relationshipsDeleted
+    }
   }
-}
-`
+`;
 
 // delete sprint
 // {
@@ -209,17 +232,17 @@ mutation DeleteSprints($where: sprintWhere) {
 // }
 
 const CONNECT_TO_STORY = gql`
-mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
-  updateSprints(where: $where, connect: $connect) {
-    sprints {
-      name
-      fileHas {
+  mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
+    updateSprints(where: $where, connect: $connect) {
+      sprints {
         name
+        fileHas {
+          name
+        }
       }
     }
   }
-}
-`
+`;
 
 // add story to sprint
 
@@ -243,7 +266,7 @@ mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
 // connect to epic
 
 const CONNECT_TO_EPIC = gql`
-mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
+  mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
     updateSprints(where: $where, connect: $connect) {
       sprints {
         name
@@ -253,7 +276,7 @@ mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
       }
     }
   }
-`
+`;
 
 //sprint connect to epic
 // {
@@ -273,23 +296,22 @@ mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
 //     }
 //   }
 
-
 //sprint to task
 
 const CONNECT_TO_TASK = gql`
-mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
-  updateSprints(where: $where, connect: $connect) {
-    sprints {
-      name
-      flownodeHas {
-        hasdataNodedata {
-          label
+  mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
+    updateSprints(where: $where, connect: $connect) {
+      sprints {
+        name
+        flownodeHas {
+          hasdataNodedata {
+            label
+          }
         }
       }
     }
   }
-}
-`
+`;
 
 // input variables
 // {
