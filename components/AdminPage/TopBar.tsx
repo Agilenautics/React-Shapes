@@ -57,7 +57,7 @@ function TopBar({ toggleSideBar, flag }: Flag) {
 
 
   return (
-    <div className="sticky left-0  right-0 top-0 shadow-bottom    z-10 flex justify-between bg-white  p-2 px-6 font-sans  dark:bg-slate-600">
+    <div className="sticky left-0  right-0 top-0 shadow-bottom    z-10  flex justify-between bg-white  p-2 px-6 font-sans  dark:bg-slate-600">
       {/* logo  */}
       <div className="flex gap-6">
         {/* <div

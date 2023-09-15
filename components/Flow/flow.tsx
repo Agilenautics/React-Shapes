@@ -227,7 +227,7 @@ function Flow() {
   //   updatePosition(node);
   //   console.log(node);
   // };
-  const onNodeClick = (e: React.MouseEvent, nodeData: Node) => {
+  const onNodeClick = (e:React.MouseEvent, nodeData: any) => {
     updateLinkNodeId(nodeData.id);
   };
   const proOptions = { hideAttribution: true };

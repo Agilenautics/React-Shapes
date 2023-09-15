@@ -14,9 +14,9 @@ interface Story {
     hasInfo: Info;
 }
 
-interface NodeData{
-    label:string;
-    description:string
+interface NodeData {
+    label: string;
+    description: string
 }
 
 interface Epic {
@@ -25,11 +25,11 @@ interface Epic {
     type: string;
     hasInfo: Info;
 }
-interface Task{
-    id:string,
-    type:string
-    hasInfo:Info
-    hasdataNodedata:NodeData
+interface Task {
+    id: string,
+    type: string
+    hasInfo: Info
+    hasdataNodedata: NodeData
 }
 
 export interface Sprint {
@@ -41,7 +41,8 @@ export interface Sprint {
     timestamp: string;
     fileHas: Array<Story>;
     flownodeHas: Array<Task>;
-    folderHas:Array<Epic>
+    folderHas: Array<Epic>
+
 }
 
 
@@ -50,15 +51,28 @@ interface SprintState {
     loading: Boolean;
     error: any;
     updateSprints: (sprints: Array<Sprint>, loading: Boolean, error: any) => void;
+    addSprint: (newSprint: Sprint) => void;
+    updateError: (error: any) => void;
 }
 
 const sprintStore = create<SprintState>((set) => ({
     sprints: [],
     loading: true,
     error: null,
+    updateError: (error: any) => (
+        set((state) => {
+            return { error }
+        })
+    ),
     updateSprints: (sprints: Array<Sprint>, loading: Boolean, error: any) => (
         set((state) => {
             return { sprints, loading, error }
+        })
+    ),
+    addSprint: (newSprint: Sprint) => (
+        set((state) => {
+            const updatedSprint = [...state.sprints, newSprint]
+            return { sprints: updatedSprint }
         })
     )
 }));

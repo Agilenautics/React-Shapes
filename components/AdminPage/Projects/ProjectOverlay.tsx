@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { ADD_PROJECT, GET_PROJECTS, GET_USER, addProject_Backend } from "./gqlProject";
+import { ADD_PROJECT, addProject_Backend } from "./gqlProject";
 import { Project } from "reactflow";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
@@ -19,7 +19,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   notify,
   userEmail,
   projectData,
-  handleMessage,
 }) => {
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [isFormValid, setIsFormValid] = useState(false);
@@ -62,9 +61,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     }
   };
 
-  const sendMessage = (message: string) => {
-    handleMessage(message);
-  };
+  
   if (loading || isLoading)
     return (
       <div className="flex h-screen items-center justify-center">

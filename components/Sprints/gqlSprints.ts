@@ -1,8 +1,10 @@
+import { NextApiResponse } from "next";
 import client from "../../apollo-client";
 import {
   gql, DocumentNode,
   TypedDocumentNode,
   OperationVariables,
+  FetchResult,
 } from '@apollo/client'
 
 export interface Sprint {
@@ -13,6 +15,7 @@ export interface Sprint {
   startDate: string
   endDate: string
 }
+
 
 
 //get sprint by the project id
@@ -112,15 +115,15 @@ const getSprintToBacklogs = (projectId: string, customQuery: DocumentNode | Type
 
 
 const CREATE_SPRINT_MUTATION = gql`
-mutation CreateSprints($input: [sprintCreateInput!]!, $where: mainWhere) {
+mutation CreateSprints($input: [sprintCreateInput!]!) {
   createSprints(input: $input) {
     sprints {
       id
       name
       description
-      timeStamp
       startDate
       endDate
+      timeStamp
       hasProjects {
         name
       }
@@ -129,10 +132,33 @@ mutation CreateSprints($input: [sprintCreateInput!]!, $where: mainWhere) {
 }
 `
 
-const createSPrintBackend = async (projectId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, inputVariables: Sprint) => {
-  // await client.mutate({
-  //     input:[]
-  // })
+const createSPrintBackend = async (projectId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, inputVariables: Sprint, addSprint: any, handleError: any,sprintCreateMessage:any,hidePopUp:any) => {
+  await client.mutate({
+    mutation: mutation,
+    variables: {
+      input: [
+        {
+          hasProjects: {
+            connect: {
+              where: {
+                node: {
+                  id: projectId
+                }
+              }
+            }
+          },
+          name: inputVariables.name,
+          description: inputVariables.description||"",
+          startDate: inputVariables.startDate,
+          endDate: inputVariables.endDate
+        }
+      ]
+    }
+  }).then((response: FetchResult<any>) => {
+    addSprint(response.data.createSprints.sprints[0], response.errors)
+    sprintCreateMessage()
+    hidePopUp(false)
+  }).catch((error) => handleError(error))
 
 }
 
@@ -284,7 +310,7 @@ mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
 //   }
 
 
-export { GET_SPRINTS, getSprintByProjectId, SPRINTS_FOR_BACKLOGS, getSprintToBacklogs }
+export { GET_SPRINTS, getSprintByProjectId, SPRINTS_FOR_BACKLOGS, getSprintToBacklogs, createSPrintBackend, CREATE_SPRINT_MUTATION }
 
 
 

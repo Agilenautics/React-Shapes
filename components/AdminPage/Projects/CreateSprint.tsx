@@ -1,12 +1,17 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { sprintValidationSchema } from './staticData/validationSchema';
+import { useRouter } from 'next/router';
+import sprintStore from '../../Sprints/sprintStore';
+import { CREATE_SPRINT_MUTATION, createSPrintBackend } from '../../Sprints/gqlSprints';
 
 
-export default function CreateSprint({ setShowForm }: any) {
-  const handleSubmit = (values:any) => {
-    console.log(values);
-    setShowForm(false);
+export default function CreateSprint({ setShowForm,sprintCreateMessage }: any) {
+  const router = useRouter();
+  const { addSprint,updateError } = sprintStore()
+  const projectId = router.query.projectId as string | ""
+  const handleSubmit = (values: any) => {
+    createSPrintBackend(projectId, CREATE_SPRINT_MUTATION, values, addSprint,updateError,sprintCreateMessage,setShowForm)
   };
 
   const handleCancel = () => {

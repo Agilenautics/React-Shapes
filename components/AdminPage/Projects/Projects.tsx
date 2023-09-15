@@ -186,12 +186,12 @@ function Projects() {
     setShowForm(false);
   };
 
-  const handleMessage = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-  };
+  // const handleMessage = () => {
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 5000);
+  // };
 
   // to navigate recycle bin
   const toRecycleBin = () => {
@@ -320,7 +320,6 @@ function Projects() {
           // @ts-ignore
           projectData={allProjects}
           userEmail={userEmail}
-          handleMessage={handleMessage}
         />
       )}
 

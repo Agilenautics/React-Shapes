@@ -4,6 +4,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import TopBar from "./TopBar";
 import { auth } from "../../auth";
 import { useRouter } from "next/router";
+import 'react-toastify/dist/ReactToastify.css';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -16,7 +17,7 @@ interface LayoutProps {
 
 
 function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
-  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [email, setEmail] = useState('');
 
 

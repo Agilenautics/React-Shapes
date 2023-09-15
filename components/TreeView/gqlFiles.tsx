@@ -535,7 +535,7 @@ async function getTreeNodeByUser(
   id: string,
   setLoading: any
 ) {
-  var nodes: Main[] = [];
+  var nodes: Array<Main> = [];
 
   await client
     .query({
@@ -553,8 +553,6 @@ async function getTreeNodeByUser(
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
         return { ...rest, children: hasContainsFolder };
       });
-
-
       const res_updated = transformObject(result);
       nodes = res_updated.data.mains;
       setLoading(result.loading)
@@ -680,24 +678,24 @@ const disconnectFromFolderBackendOnMove = async (fileId: string) => {
   await client.mutate({
     mutation: disconnectFromFolderOnMove,
     variables: {
-        "where": {
-          "hasFile_SINGLE": {
-            "id": fileId
-          }
-        },
-        "disconnect": {
-          "hasFile": [
-            {
-              
-              "where": {
-                "node": {
-                  "id": fileId
-                }
+      "where": {
+        "hasFile_SINGLE": {
+          "id": fileId
+        }
+      },
+      "disconnect": {
+        "hasFile": [
+          {
+
+            "where": {
+              "node": {
+                "id": fileId
               }
             }
-          ]
-        }
+          }
+        ]
       }
+    }
   });
 };
 
@@ -799,7 +797,7 @@ const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | T
 
 }
 
-const updateStoryMethod = async (id: string, mutation: DocumentNode | TypedDocumentNode<any,OperationVariables>, storyData: any) => {
+const updateStoryMethod = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, storyData: any) => {
   const { status, description, assignedTo, dueDate, sprint } = storyData
   await client.mutate({
     mutation,

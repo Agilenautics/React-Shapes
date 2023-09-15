@@ -11,12 +11,13 @@ import { GET_SPRINTS, Sprint, getSprintByProjectId } from "../../Sprints/gqlSpri
 import sprintStore from "../../Sprints/sprintStore";
 import { useRouter } from "next/router";
 import LoadingIcon from "../../LoadingIcon";
+import { ToastContainer,toast } from "react-toastify";
 
 function ProjectSprints() {
   const { sprints, updateSprints, loading, error } = sprintStore();
   const [filteredData, setFilteredData] = useState<any>();
 
-  
+
   const router = useRouter();
 
   const projectId = router.query.projectId as string;
@@ -52,11 +53,13 @@ function ProjectSprints() {
   useEffect(() => {
     if (projectId) {
       getSprint(projectId)
-        .then((res) => console.log(res, "res"))
-        .catch((err) => console.log(err));
     }
     setFilteredData(sprints[0])
-  }, [projectId, sprints]);
+  }, [projectId, error]);
+
+  const sprintCreateMessage = () => toast.success("New Sprint Created...");
+
+ 
 
   if (loading) {
     return (
@@ -69,6 +72,8 @@ function ProjectSprints() {
   if (error) {
     return <> {error && <div> {error.message} </div>} </>;
   }
+
+
 
   const onFilter = (e: any) => {
     const selectedSprintName = e.target.value;
@@ -213,10 +218,12 @@ function ProjectSprints() {
           <div className="rounded-lg bg-white p-8 shadow-lg">
             <CreateSprint
               setShowForm={setShowForm}
+              sprintCreateMessage={sprintCreateMessage}
             />
           </div>
         </div>
       )}
+      <ToastContainer autoClose = {2500} />
     </div>
   );
 }

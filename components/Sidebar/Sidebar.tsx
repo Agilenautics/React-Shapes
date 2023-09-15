@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FileTree } from "../TreeView/fileRenderer";
 import { AiFillFolderAdd, AiFillFileAdd, AiTwotoneHome, AiOutlineSearch } from "react-icons/ai";
@@ -7,6 +7,7 @@ import { GiSprint, GiChecklist } from "react-icons/gi"
 import { GrOverview } from "react-icons/gr"
 import { LiaProjectDiagramSolid } from 'react-icons/lia'
 import { FaChalkboard, FaChevronDown } from "react-icons/fa"
+import { BsPlus } from 'react-icons/bs'
 import { RiFlowChart } from "react-icons/ri"
 import fileStore from "../TreeView/fileStore";
 import { useRouter } from "next/router";
@@ -18,6 +19,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import userStore from "../AdminPage/Users/userStore";
 import { useQuery } from "@apollo/client";
+import AddProjectPopup from "../AdminPage/Projects/ProjectOverlay";
+import { ToastContainer, toast } from "react-toastify";
 
 interface SideBar {
   isOpen: Boolean
@@ -29,7 +32,10 @@ const Sidebar = ({ isOpen }: SideBar) => {
   const [insightsOpen, setInsightsOpen] = useState(false);
   const [projectsFlag, setProjectsFlag] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-  const [recentPid, setRecentPid] = useState<string | null>('')
+  const tooltipRef = useRef<HTMLSpanElement>(null)
+  const container = useRef<HTMLDivElement>(null)
+  const [addProjectPopUp, setAddProjectPopUp] = useState<Boolean | null>(false)
+
 
   // search project
   const [searchQuery, setSearchQuery] = useState('')
@@ -41,6 +47,9 @@ const Sidebar = ({ isOpen }: SideBar) => {
   const updateUserType = userStore((state) => state.updateUserType);
   const updateLoginUser = userStore((state) => state.updateLoginUser)
   const [projectData, setProjectData] = useState<Project[]>([]);
+
+
+  const notify = () => toast.success("Project Created...");
 
 
 
@@ -71,7 +80,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   // });
 
-  
+
 
   // const getProjects = (response: any) => {
   //   if (!loading && response && response.users.length) {
@@ -132,6 +141,10 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   }
 
+  const onCloseAddProjectPopUp = () => {
+    setAddProjectPopUp(false)
+  }
+
 
 
   const handleRecentOpenProject = (id: string | any) => {
@@ -153,14 +166,14 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
 
   useEffect(() => {
-    if (projectId&&router.asPath!=="/projects/06c94e7b-2a73-41b1-9683-61662706823a/sprints") {
+    if (projectId && router.asPath !== "/projects/06c94e7b-2a73-41b1-9683-61662706823a/sprints") {
       // @ts-ignore
       getProjectId(projectId);
     }
     fetchRecentProject(allProjects)
     verificationToken()
     // getProjects();
-  }, [projectId,allProjects]);
+  }, [projectId, allProjects]);
 
 
 
@@ -179,10 +192,11 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
 
 
-    <div className={`duration-700  sticky top-0  left-0 shadow ease-in-out text-slate-600 font-sans h-screen ${isOpen ? "w-60" : "w-0"}`}>
+    <div className={`duration-700  sticky top-0 z-20 left-0 shadow ease-in-out text-slate-600 font-sans h-screen ${isOpen ? "w-60" : "w-0"}`}>
       {
         isOpen && (
           <nav>
+            {/* top bar image section */}
             <div className="p-4 flex justify-center">
               <Image
                 className="mx-auto"
@@ -193,46 +207,60 @@ const Sidebar = ({ isOpen }: SideBar) => {
               />
             </div>
             {/* projects  */}
-            <div
-              onClick={() => setProjectsFlag(!projectsFlag)}
-              className="hover:bg-sky-500 hover:text-white p-1 px-3 flex items-center justify-between cursor-pointer"
-            >
-              <span>
-                <LiaProjectDiagramSolid className="inline" />  Projects
-              </span>
-              <div>
-                <FaChevronDown
-                  className={`transition-transform inline ${projectsFlag ? 'transform rotate-180' : ''
-                    }`}
-                />
+            <div>
+              <div
+                className="p-1 px-3 flex items-center justify-between "
+              >
+                <span onClick={() => setProjectsFlag(!projectsFlag)} className="cursor-pointer" >
+                  <LiaProjectDiagramSolid className="inline" />  Projects
+                </span>
+                {/* absolute whitespace-nowrap text-sm */}
+                <div
+                  ref={container}
+                  onClick={() => setAddProjectPopUp(!addProjectPopUp)}
+                  onMouseEnter={({ clientX }) => {
+                    if (!tooltipRef.current || !container.current) return;
+                    const { left } = container.current.getBoundingClientRect();
+                    tooltipRef.current.style.left = clientX - left + 'px'
+                  }}
+                  className="cursor-pointer group relative">
+                  <BsPlus className="text-[1.3rem]  bg-slate-100 duration-300 hover:scale-125 rounded" />
+                  <span ref={tooltipRef} className="invisible z-20 group-hover:visible opacity-0 group-hover:opacity-100 transition bg-black p-1 text-white rounded absolute top-full mt-2 whitespace-nowrap text-[0.8rem]">ADD PROJECT</span>
+                </div>
+                <div onClick={() => setProjectsFlag(!projectsFlag)} className="cursor-pointer">
+                  <FaChevronDown
+                    className={`transition-transform inline ${projectsFlag ? 'transform rotate-180' : ''
+                      }`}
+                  />
+                </div>
               </div>
-            </div>
-            <div
-              className={`max-h-0  overflow-hidden transition-all duration-300 ${projectsFlag ? 'max-h-screen' : ''
-                }`}
-            >
-              {!loading && (
-                <div className="h-52 overflow-auto ">
-                  <div className="bg-white sticky  p-2 top-0">
-                    <div className="flex items-center active:border-blue-500  border p-1 rounded-full justify-around ">
-                      <input type="text" name="searchProduct" placeholder="search project" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="outline-none " />
-                      <AiOutlineSearch className="text-2xl " />
+              <div
+                className={`max-h-0  overflow-hidden transition-all duration-300 ${projectsFlag ? 'max-h-screen' : ''
+                  }`}
+              >
+                {!loading && (
+                  <div className="h-full overflow-auto ">
+                    <div className="bg-white sticky  p-2 top-0">
+                      <div className="flex items-center active:border-blue-500  border p-1 rounded-full justify-around ">
+                        <input type="text" name="searchProduct" placeholder="search project" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="outline-none " />
+                        <AiOutlineSearch className="text-2xl " />
+                      </div>
                     </div>
-                  </div>
-                  {projectData.map((project, index) => (
-                    <div key={index} className={`p-1  px-3 ${project.id === projectId ? "bg-sky-500 text-white" : "hover:bg-sky-500"} hover:text-white`}>
-                      <Link href={`/projects/${project.id}`}>
-                        <a className="w-[90%]  flex items-center ml-7 select-none" onClick={() => handleRecentOpenProject(project.id)}>{project.name}</a>
-                      </Link>
-                    </div>
-                  ))}
-                  <div className="bg-white sticky bottom-0 right-0">
+                    {projectData.map((project, index) => (
+                      <div key={index} className={`p-1  px-3 ${project.id === projectId ? "bg-sky-500 text-white" : "hover:bg-sky-500"} hover:text-white`}>
+                        <Link href={`/projects/${project.id}`}>
+                          <a className="w-[90%]  flex items-center ml-7 select-none" onClick={() => handleRecentOpenProject(project.id)}>{project.name}</a>
+                        </Link>
+                      </div>
+                    ))}
+                    {/* <div className="bg-white sticky bottom-0 right-0">
                     <div className=" mx-2  flex items-center justify-center  border rounded-lg  left-0">
                       <button className="p-1 "> Add Project </button>
                     </div>
+                  </div> */}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             <div className=" p-1 px-3 duration-100 hover:bg-sky-500 hover:text-white">
@@ -307,7 +335,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                     {router.asPath == "/projects/" + projectId + "/business-plan" &&
                       (
                         <div className="h-[23vh] overflow-auto overflow-x-hidden ">
-                          <div className=" grid grid-cols-2 gap-2 p-1 sticky top-0  text-white  bg-white z-10  ">
+                          <div className=" grid grid-cols-2 gap-2 p-1 sticky top-0  text-white  bg-white  ">
                             <button
                               type="button"
                               className=" rounded flex items-center gap-1 bg-sky-500 hover:bg-sky-600 duration-300 p-1 justify-center"
@@ -334,6 +362,12 @@ const Sidebar = ({ isOpen }: SideBar) => {
           </nav>
         )
       }
+      {
+        // @ts-ignore
+        addProjectPopUp &&<AddProjectPopup onClose={onCloseAddProjectPopUp} notify={notify} userEmail={userEmail} projectData={projectData} />
+      }
+      {/* <AddProjectPopup /> */}
+      <ToastContainer autoClose={2500} />
     </div>
   );
 };

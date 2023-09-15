@@ -8,6 +8,7 @@ import client from "../../../apollo-client";
 import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import { getMainByUser } from "../../TreeView/gqlFiles";
 
 
 
@@ -204,9 +205,6 @@ async function createNode(
   updateNode: any,
   data: any
 ) {
-
-  console.log(data.symbol);
-
   var nodes: Array<Node> = [];
   await client
     .mutate({
@@ -286,8 +284,10 @@ async function createNode(
           },
         },
       },
+      refetchQueries(result) {
+        return [getMainByUser]
+      },
     })
-
     .then((result) => {
       const nodes1 = JSON.stringify(
         result.data.updateFiles.files[0].hasflowchart.nodes
@@ -301,7 +301,7 @@ async function createNode(
     .catch((error) => {
       console.error(error);
     });
-  client.clearStore();
+  // client.clearStore();
 }
 
 const delNode = gql`
@@ -546,8 +546,8 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
         }
       }
     }
-  }).then((res)=>{
-    console.log(res,"iam response")
+  }).then((res) => {
+    console.log(res, "iam response")
   })
 
 }

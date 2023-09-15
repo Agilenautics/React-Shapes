@@ -15,6 +15,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "./gqlProject";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
+import backlogStore from "../../Backlogs/backlogStore";
 
 
 
@@ -42,6 +43,10 @@ function ProjectBacklogs() {
   const updateUserType = userStore((state) => state.updateUserType);
   const updateLoginUser = userStore((state) => state.updateLoginUser);
   const [users, setUsers] = useState<any[]>([])
+  const [items, setItems] = useState<any[]>([])
+
+  // backlogs store
+  const { backlogs, updateBacklogsData } = backlogStore()
 
 
   const verificationToken = async () => {
@@ -52,29 +57,19 @@ function ProjectBacklogs() {
     })
   }
   useEffect(() => {
+    setItems(backlogs)
+  }, [backlogs])
+
+  useEffect(() => {
     verificationToken()
   }, [])
-
-
-
-
-
-
-
-  const items = processedData(backend.children);
-
-  // console.log(items);
-
-
-
-
-
-
 
   useEffect(() => {
     if (backend.userHas && backend.userHas.length) {
       setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas])
     }
+    // @ts-ignore
+    updateBacklogsData(backend.children)
   }, [backend.userHas]);
 
 
