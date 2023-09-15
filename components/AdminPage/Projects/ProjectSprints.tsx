@@ -11,7 +11,7 @@ import { GET_SPRINTS, Sprint, getSprintByProjectId } from "../../Sprints/gqlSpri
 import sprintStore from "../../Sprints/sprintStore";
 import { useRouter } from "next/router";
 import LoadingIcon from "../../LoadingIcon";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 function ProjectSprints() {
   const { sprints, updateSprints, loading, error } = sprintStore();
@@ -59,7 +59,7 @@ function ProjectSprints() {
 
   const sprintCreateMessage = () => toast.success("New Sprint Created...");
 
- 
+
 
   if (loading) {
     return (
@@ -223,7 +223,7 @@ function ProjectSprints() {
           </div>
         </div>
       )}
-      <ToastContainer autoClose = {2500} />
+      <ToastContainer autoClose={2500} />
     </div>
   );
 }

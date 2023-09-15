@@ -53,6 +53,7 @@ interface SprintState {
     updateSprints: (sprints: Array<Sprint>, loading: Boolean, error: any) => void;
     addSprint: (newSprint: Sprint) => void;
     updateError: (error: any) => void;
+    deleteSprint: (id: string) => void;
 }
 
 const sprintStore = create<SprintState>((set) => ({
@@ -73,6 +74,12 @@ const sprintStore = create<SprintState>((set) => ({
         set((state) => {
             const updatedSprint = [...state.sprints, newSprint]
             return { sprints: updatedSprint }
+        })
+    ),
+    deleteSprint: (id: string) => (
+        set((state) => {
+            const deletedSprint = state.sprints.filter((values: Sprint) => values.id !== id);
+            return { sprints: deletedSprint };
         })
     )
 }));

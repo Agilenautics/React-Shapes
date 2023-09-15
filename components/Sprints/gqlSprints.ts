@@ -8,6 +8,7 @@ import {
 } from "@apollo/client";
 
 import { Info_Fragment } from "../TreeView/gqlFiles";
+import { FetchError } from "node-fetch";
 export interface Sprint {
   id: string;
   name?: string | null;
@@ -74,6 +75,9 @@ export const Sprint_Fragment = gql`
     }
     flownodeHas {
       ...TaskSprintFragment
+    }
+    hasProjects {
+      name
     }
   }
 `;
@@ -145,20 +149,17 @@ const getSprintToBacklogs = (
 
 const CREATE_SPRINT_MUTATION = gql`
   ${Sprint_Fragment}
-  mutation CreateSprints($input: [sprintCreateInput!]!, $where: mainWhere) {
+  mutation CreateSprints($input: [sprintCreateInput!]!) {
     createSprints(input: $input) {
       sprints {
         ...SprintFragment
-        hasProjects {
-          name
-        }
       }
     }
   }
 `;
 
-const createSPrintBackend = async (projectId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, inputVariables: Sprint, addSprint: any, handleError: any,sprintCreateMessage:any,hidePopUp:any) => {
-  await client.mutate({
+const createSPrintBackend = (projectId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, inputVariables: Sprint, addSprint: any, handleError: any, sprintCreateMessage: any, hidePopUp: any) => {
+  client.mutate({
     mutation: mutation,
     variables: {
       input: [
@@ -173,7 +174,7 @@ const createSPrintBackend = async (projectId: string, mutation: DocumentNode | T
             }
           },
           name: inputVariables.name,
-          description: inputVariables.description||"",
+          description: inputVariables.description || "",
           startDate: inputVariables.startDate,
           endDate: inputVariables.endDate
         }
@@ -184,7 +185,6 @@ const createSPrintBackend = async (projectId: string, mutation: DocumentNode | T
     sprintCreateMessage()
     hidePopUp(false)
   }).catch((error) => handleError(error))
-
 }
 
 const UPDATE_SPRINT_MUTATION = gql`
@@ -197,19 +197,29 @@ const UPDATE_SPRINT_MUTATION = gql`
   }
 `;
 
-// update sprint
-// {
-//     "where": {
-//       "id": null
-//     },
-//     "update": {
-//       "name": null,
-//       "description": null,
-//       "startDate": null,
-//       "endDate": null
-//     },
+const updateSprintBackend = async (sprintId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, updatedData: Sprint) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id: sprintId
+      },
+      update: {
+        name: updatedData.name,
+        description: updatedData.description,
+        startDate: updatedData.startDate,
+        endDate: updatedData.endDate
+      }
+    }
+  }).then((response: FetchResult<any>) => {
+    console.log(response)
+  }).catch((error: FetchError) => {
+    console.log(error.message, "update sprint backend ")
+  })
 
-//   }
+}
+
+
 
 const DELETE_SPRINT = gql`
   mutation DeleteSprints($where: sprintWhere) {
@@ -220,113 +230,150 @@ const DELETE_SPRINT = gql`
   }
 `;
 
-// delete sprint
-// {
-//     "where": {
-//      "id":""
-//     }
-//   }
-// }
+const deleteSprintBackend = async (sprintId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, deleteSprint: any) => {
+  await client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id: sprintId
+      }
+    }
+  }).then((response: FetchResult<any>) => {
+    // deleteSprint(id)
+    console.log(response)
+
+  }).catch((error: FetchError) => {
+    console.log(error.message, "delete sprint")
+  })
+
+}
+
+
 
 const CONNECT_TO_STORY = gql`
-  mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
+${Sprint_Fragment}
+  mutation connectToStory($where: sprintWhere, $connect: sprintConnectInput) {
     updateSprints(where: $where, connect: $connect) {
       sprints {
-        name
-        fileHas {
-          name
-        }
+        ...SprintFragment
       }
     }
   }
 `;
 
-// add story to sprint
-
-// {
-//     "where": {
-//     "id": "12bbe55a-bd58-45a4-9dc5-bdb3c4c5ffbe"
-//     },
-//     "connect": {
-//       "fileHas": [
-//         {
-//           "where": {
-//             "node": {
-//             "id": "f32eafd7-911e-433c-a8c9-a4e01afa4eed"
-//             }
-//           }
-//         }
-//       ]
-//     }
-//   }
+const connectToStory = (sprintId: string, storyId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, connectToStoryFromStore: any) => {
+  client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id: sprintId
+      },
+      connect: {
+        fileHas: [
+          {
+            where: {
+              node: {
+                id: storyId
+              }
+            }
+          }
+        ]
+      }
+    },
+  })
+    .then((response: FetchResult<any>) => {
+      // connectToStory(response.data)
+    })
+    .catch((error: FetchError) => {
+      console.log(error.message, "connect sprint to story")
+    })
+}
 
 // connect to epic
 
 const CONNECT_TO_EPIC = gql`
-  mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
+${Sprint_Fragment}
+  mutation connectToEpic($where: sprintWhere, $connect: sprintConnectInput) {
     updateSprints(where: $where, connect: $connect) {
       sprints {
-        name
-        folderHas {
-          name
-        }
+        ...SprintFragment
       }
     }
   }
 `;
 
-//sprint connect to epic
-// {
-//     "where": {
-//       "id": "12bbe55a-bd58-45a4-9dc5-bdb3c4c5ffbe"
-//     },
-//     "connect": {
-//       "folderHas": [
-//         {
-//           "where": {
-//             "node": {
-//               "id": "7426d03f-d1b9-48cc-a5c5-422d1d45258c"
-//             }
-//           }
-//         }
-//       ]
-//     }
-//   }
+
+const connectToEpic = (sprintId: string, epicId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id: sprintId
+      },
+      connect: {
+        folderHas: [
+          {
+            where: {
+              node: {
+                id: epicId
+              }
+            }
+          }
+        ]
+      }
+    }
+  })
+    .then((response: FetchResult<any>) => {
+      console.log(response)
+    })
+    .catch((error: FetchError) => {
+      console.log(error.message, "from connect sprint to epic")
+    })
+}
+
+
 
 //sprint to task
 
 const CONNECT_TO_TASK = gql`
-  mutation UpdateSprints($where: sprintWhere, $connect: sprintConnectInput) {
+${Sprint_Fragment}
+  mutation connectToTask($where: sprintWhere, $connect: sprintConnectInput) {
     updateSprints(where: $where, connect: $connect) {
       sprints {
-        name
-        flownodeHas {
-          hasdataNodedata {
-            label
-          }
-        }
+       ...SprintFragment
       }
     }
   }
 `;
 
-// input variables
-// {
-//     "where": {
-//       "id": "12bbe55a-bd58-45a4-9dc5-bdb3c4c5ffbe"
-//     },
-//     "connect": {
-//       "flownodeHas": [
-//         {
-//           "where": {
-//             "node": {
-//               "id": "6a0557a1-29ee-4816-b56c-986e21fc54e3"
-//             }
-//           }
-//         }
-//       ]
-//     }
-//   }
+const connectToTask = (sprintId: string, taskId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id: sprintId
+      },
+      connect: {
+        flownodeHas: [
+          {
+            where: {
+              node: {
+                id: taskId
+              }
+            }
+          }
+        ]
+      }
+    }
+  })
+  .then((response:FetchResult)=>{
+    console.log(response)
+  })
+  .catch((error:FetchError)=>{
+    console.log(error.message,"connecting sprint to task error")
+  })
+
+}
 
 
 export { GET_SPRINTS, getSprintByProjectId, SPRINTS_FOR_BACKLOGS, getSprintToBacklogs, createSPrintBackend, CREATE_SPRINT_MUTATION }
