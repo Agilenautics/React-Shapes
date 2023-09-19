@@ -277,14 +277,8 @@ export const TreeNode = ({
   );
 };
 
-//backlogs
 
-export const BacklogsView = ({ innerRef,data,styles,state,handlers,tree }: NodeRendererProps<MyData>) => {
-  console.log(data)
-  return (
-      <div>{data.name}</div>
-  )
-}
+
 
 
 export const TreeNode2 = ({
