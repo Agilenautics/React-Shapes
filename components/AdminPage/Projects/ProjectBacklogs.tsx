@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import fileStore from "../../TreeView/fileStore";
 // import useBackend from "../../TreeView/backend";
@@ -8,8 +8,8 @@ import { types } from "./staticData/types";
 // import initData from "./staticData/initData";
 import { getTypeLabel, getStatusColor } from "./staticData/basicFunctions";
 import AddBacklogs from "./AddBacklogs";
-import { processedData, parents, allStatus } from "./staticData/processedData";
-import nodeStore from "../../Flow/Nodes/nodeStore";
+// import { allStatus } from "./staticData/processedData";
+// import nodeStore from "../../Flow/Nodes/nodeStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "./gqlProject";
@@ -29,7 +29,12 @@ function ProjectBacklogs() {
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
+  const allStatus = backlogStore(state => state.allStatus)
   const [statuses, setStatuses] = useState(["Select Status", ...allStatus])
+  const parents = backlogStore(state => state.parents)
+  
+
+  
 
   // const [items, setItems] = useState()
   // const [users,setUsers] = useState();
@@ -49,6 +54,7 @@ function ProjectBacklogs() {
   const { backlogs, updateBacklogsData } = backlogStore()
 
 
+
   const verificationToken = async () => {
     onAuthStateChanged(auth, user => {
       if (user && user.email) {
@@ -62,17 +68,19 @@ function ProjectBacklogs() {
 
   useEffect(() => {
     verificationToken()
+  //  callBack()
   }, [])
 
   useEffect(() => {
     if (backend.userHas && backend.userHas.length) {
       setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas])
     }
+    if(backlogs.length==0){
+      // @ts-ignore
+      updateBacklogsData(backend.children);
+    }
     // @ts-ignore
-    updateBacklogsData(backend.children)
   }, [backend.userHas]);
-
-
 
 
   const filteredData = items.filter(
@@ -95,8 +103,8 @@ function ProjectBacklogs() {
     return <>
       Loading
     </>
-  }
-
+  }    
+  
 
   return (
     <div className="absolute ml-3 w-fit">
@@ -174,7 +182,7 @@ function ProjectBacklogs() {
               value={selectedEpic}
               onChange={(e) => setSelectedEpic(e.target.value)}
             >
-              {parents.map((epic) => (
+              {parents.map((epic: any) => (
                 <option key={epic.id} value={epic.name == "Select Epic" ? "" : epic.name}>
                   {epic.name}
                 </option>
@@ -272,7 +280,7 @@ function ProjectBacklogs() {
             <AddBacklogs
               types={types}
               users={users}
-              statuses={statuses}
+              statuses={allStatus}
               setShowForm={setShowForm}
               selectedElement={selectedElement}
             />

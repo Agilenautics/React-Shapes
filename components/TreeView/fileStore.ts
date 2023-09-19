@@ -131,38 +131,31 @@ const fileStore = create<files>((set) => ({
       let data_chk = node?.model.type;
 
       if (node?.model.type === "folder") {
-        // createFolderInFolder(newFolderInFolder, parentId).then((result) => {
-        //   node?.model.children?.push({
-        //     id: result.id,
-        //     name: result.name,
-        //     type: result.type,
-        //     isOpen: result.isOpen,
-        //     children: [],
-        //   });
-        // });
+        createFolderInFolder(newFolderInFolder, parentId).then((result) => {
+          node?.model.children?.push({
+            id: result.id,
+            name: result.name,
+            type: result.type,
+            isOpen: result.isOpen,
+            children: [],
+          });
+        });
 
 
 
       } else {
         parentId = root.model.id;
-        // createFolderInMain(newFolderInMain, parentId).then((result) => {
+        createFolderInMain(newFolderInMain, parentId).then((result) => {
 
-        //   root.model.children?.push({
-        //     id: result.id,
-        //     name: result.name,
-        //     type: result.type,
-        //     isOpen: result.isOpen,
-        //     children: [],
-        //   });
+          root.model.children?.push({
+            id: result.id,
+            name: result.name,
+            type: result.type,
+            isOpen: result.isOpen,
+            children: [],
+          });
 
-        // });
-
-        node?.parent.model.children?.push({
-          id: Math.floor(Math.random() * 1000 + 1).toString(),
-          name: "New File",
-          type: "flowchart",
-          isOpen: true,
-        })
+        });
 
       }
 

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import CreateSprint from "./CreateSprint";
 import { getTypeLabel } from "./staticData/basicFunctions";
-import fileStore from "../../TreeView/fileStore";
+// import fileStore from "../../TreeView/fileStore";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "./gqlProject";
-import { GET_SPRINTS, Sprint, getSprintByProjectId } from "../../Sprints/gqlSprints";
+import { GET_SPRINTS, getSprintByProjectId } from "../../Sprints/gqlSprints";
 import sprintStore from "../../Sprints/sprintStore";
 import { useRouter } from "next/router";
 import LoadingIcon from "../../LoadingIcon";
@@ -54,8 +54,9 @@ function ProjectSprints() {
     if (projectId) {
       getSprint(projectId)
     }
-    setFilteredData(sprints[0])
-  }, [projectId, error]);
+    sprints.length && setFilteredData(sprints[0])
+  }, [projectId, error]);  
+  
 
   const sprintCreateMessage = () => toast.success("New Sprint Created...");
 
@@ -90,7 +91,7 @@ function ProjectSprints() {
       </h1>
 
       {/* Add dropdown here */}
-      <div className="mb-3">
+      {sprints.length ? <div className="mb-3">
         <label htmlFor="sprintDropdown" className="mr-2">
           Select Sprint:
         </label>
@@ -105,9 +106,7 @@ function ProjectSprints() {
             </option>
           ))}
         </select>
-      </div>
-
-      {filteredData && (
+        {filteredData && (
         <div
           key={filteredData.id}
           className="w-fill overflow-y mb-5 h-60 overflow-x-hidden rounded border shadow-lg"
@@ -126,7 +125,7 @@ function ProjectSprints() {
             </thead>
             <tbody>
               {filteredData.folderHas.map((item: any) => (
-                <React.Fragment key={item.name}>
+                <React.Fragment key={item.id}>
                   <tr className="border-b">
                     <td className="rounded-lg border px-1 py-2 text-center">
                       {/* @ts-ignore */}
@@ -151,7 +150,7 @@ function ProjectSprints() {
                 </React.Fragment>
               ))}
               {filteredData.fileHas.map((item: any) => (
-                <React.Fragment key={item.name}>
+                <React.Fragment key={item.id}>
                   <tr className="border-b">
                     <td className="rounded-lg border px-1 py-2 text-center">
                       {/* @ts-ignore */}
@@ -176,7 +175,7 @@ function ProjectSprints() {
                 </React.Fragment>
               ))}
               {filteredData.flownodeHas.map((item: any) => (
-                <React.Fragment key={item.name}>
+                <React.Fragment key={item.id}>
                   <tr className="border-b">
                     <td className="rounded-lg border px-1 py-2 text-center">
                       {/* @ts-ignore */}
@@ -204,6 +203,10 @@ function ProjectSprints() {
           </table>
         </div>
       )}
+      </div>  : <div>No Sprints to show</div>}
+      
+
+
 
       <button
         onClick={() => {

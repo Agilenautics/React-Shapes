@@ -18,7 +18,6 @@ const ConnectionLine: ConnectionLineComponent = ({
         fill="none"
         stroke="#222"
         strokeWidth={1.5}
-        className="animated"
         d={`M${fromX},${fromY} C ${fromX} ${toY} ${fromX} ${toY} ${toX},${toY}`}
       />
       <circle

@@ -223,7 +223,6 @@ function defaultNode({ data, id }) {
 //@ts-ignore
 function BrightblueNode({ data, id }) {
   return <>
-    <NodeResizer minWidth={100} minHeight={40} maxWidth={200} nodeId= {id} />
     {
       PrototypicalNode(
         "border-node-blue-100 bg-node-blue-200 text-white",

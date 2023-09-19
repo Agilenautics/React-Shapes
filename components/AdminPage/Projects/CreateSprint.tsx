@@ -4,14 +4,21 @@ import { sprintValidationSchema } from './staticData/validationSchema';
 import { useRouter } from 'next/router';
 import sprintStore from '../../Sprints/sprintStore';
 import { CREATE_SPRINT_MUTATION, createSPrintBackend } from '../../Sprints/gqlSprints';
+import sprints from '../../../pages/projects/[projectId]/sprints';
 
 
 export default function CreateSprint({ setShowForm,sprintCreateMessage }: any) {
   const router = useRouter();
-  const { addSprint,updateError } = sprintStore()
+  const  addSprint = sprintStore(state => state.addSprint);
+  const updateError = sprintStore(state => state.updateError);
   const projectId = router.query.projectId as string | ""
   const handleSubmit = (values: any) => {
-    createSPrintBackend(projectId, CREATE_SPRINT_MUTATION, values, addSprint,updateError,sprintCreateMessage,setShowForm)
+   const spr: any = createSPrintBackend(projectId, CREATE_SPRINT_MUTATION, values, addSprint,updateError,sprintCreateMessage,setShowForm)
+  //  console.log(spr);
+  //  if(spr){
+  //   addSprint(values)
+  //  }
+   
   };
 
   const handleCancel = () => {

@@ -1,17 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Types } from "./staticData/types"
-import { Statuses } from './staticData/statuses';
+// import { Statuses } from './staticData/statuses';
 import { createNode, newNode, updateTaskMethod, updateTasksMutation } from '../../Flow/Nodes/gqlNodes';
-import { initData2, parents } from './staticData/processedData';
+import { parents } from './staticData/processedData';
 import { createFileInFolder, createFileInMain, newFileInFolder, newFileInMain, updateStoryMethod, updateStoryMutation } from '../../TreeView/gqlFiles';
 import { useRouter } from 'next/router';
 import validationSchema from './staticData/validationSchema';
 import nodeStore from '../../Flow/Nodes/nodeStore';
+import backlogStore from '../../Backlogs/backlogStore';
+import { SPRINTS_FOR_BACKLOGS, getSprintToBacklogs } from '../../Sprints/gqlSprints';
 
 
 
 export default function AddBacklogs({ types, statuses, users, setShowForm, selectedElement }: any) {
+  const addRow = backlogStore(state => state.addRow);
+  const updateRow = backlogStore(state => state.updateRow);
+  const allStories = backlogStore(state => state.allStories);
+  const parents = backlogStore(state => state.parents);
+  const [sprints, setSprints] = useState<any>([])
 
   const updateNode = nodeStore((state) => state.updateNodes);
   const formRef = useRef(null);
@@ -20,31 +27,31 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
   const projectId = router.query.projectId as string;
 
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: any) => {    
     if (selectedElement != null) {
       if (selectedElement.type != "file") {
-        updateTaskMethod(selectedElement.id, updateTasksMutation, values)
+       updateTaskMethod(selectedElement.id, updateTasksMutation, values)
+       .then(() => updateRow(values));
       } else {
         updateStoryMethod(selectedElement.id, updateStoryMutation, values)
+        .then(() => updateRow(values));
       }
-      selectedElement = null
-    } else {
-      if (values.type == "file") {
-        if (values.epic == projectId) createFileInMain(newFileInMain, values.epic, values)
-        else createFileInFolder(newFileInFolder, values.epic, values)
-      } else {
-        createNode(newNode, updateNode, values);
+    }else{
+      if(values.type=="file"){
+        if(values.epic == projectId) createFileInMain(newFileInMain,values.epic,values)
+        .then(() => addRow(values));
+        else createFileInFolder(newFileInFolder,values.epic,values)
+        .then(() => addRow(values));
+      }else{
+        createNode(newNode, updateNode, values,addRow)
       }
-      values = null
     }
     setShowForm(false);
   };
 
   const handleCancel = () => {
-    selectedElement = {}
     setShowForm(false);
   };
-
 
   useEffect(() => {
     function handleClickOutside(event: any) {
@@ -61,6 +68,15 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
     };
   }, []);
 
+  useEffect(()=>{
+   getSprintToBacklogs(projectId,SPRINTS_FOR_BACKLOGS).then((res:any)=>setSprints(res)
+   )
+  },[])
+
+  // console.log(sprints);
+  
+  
+
   return (
     <div className='p-6' ref={formRef}>
       <Formik
@@ -70,7 +86,8 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
           description: selectedElement ? selectedElement.description : '',
           status: selectedElement ? selectedElement.status : 'To-Do',
           assign: selectedElement ? selectedElement.user : '',
-          epic: selectedElement ? selectedElement.epic : projectId,
+          epic: selectedElement && selectedElement.type=="file" ? selectedElement.parent.id : projectId,
+          story: selectedElement && selectedElement.type!=="file" ? selectedElement.story.id : ''
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -118,10 +135,10 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                   className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
                 >
                   {statuses.map(
-                    (status: Statuses) =>
+                    (status: any) =>
                       status.label !== "All" && (
-                        <option key={status.value} value={status.value}>
-                          {status.label}
+                        <option key={status} value={status}>
+                          {status}
                         </option>
                       )
                   )}
@@ -144,7 +161,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                 className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
               >
                 <option value="">Select Story</option>
-                {initData2.map((story: any) => (
+                {allStories.map((story: any) => (
                   <option key={story.name} value={story.id}>
                     {story.name}
                   </option>
@@ -263,6 +280,15 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                 className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
               >
                 <option value="">Select Sprint</option>
+                {sprints.map(
+                  (sprint: any) =>
+                   (
+                      <option key={sprint.id} value={sprint.name}>
+                        {sprint.name}
+                      </option>
+                    )
+                )}
+                
               </Field>
               <ErrorMessage
                 name="addToSprint"

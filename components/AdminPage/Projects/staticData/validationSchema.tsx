@@ -22,5 +22,6 @@ export default validationSchema;
 
 export const sprintValidationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  endDate: Yup.date().required("End date is required")
+  endDate: Yup.date().required("End date is required").min(new Date(), "End date cannot be before the current date"),
+  startDate : Yup.date().required("Start date is required")
 });

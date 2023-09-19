@@ -14,6 +14,7 @@ import LoadingIcon from "../LoadingIcon";
 //import LoadingIcon from "../LoadingIcon";
 import { nodeShapeMap } from "../Flow/Nodes/nodeTypes";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import backlogStore from "../Backlogs/backlogStore";
 
 function AddNodeButton() {
   const currentFlowchart = fileStore((state) => state.currentFlowchart);
@@ -23,6 +24,7 @@ function AddNodeButton() {
   const [isBPMNLoading, setIsBPMNLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExpandedAdd, setIsExpandedAdd] = useState(false);
+  const addRow = backlogStore(state => state.addRow);
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
@@ -36,7 +38,7 @@ function AddNodeButton() {
       assignedTo : "",
     }
     try {
-      await createNode(newNode, updateNode, data);
+      await createNode(newNode, updateNode, data, addRow);
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +56,7 @@ function AddNodeButton() {
       assignedTo : "",
     }
     try {
-      await createNode(newNode, updateNode, data);
+      await createNode(newNode, updateNode, data, addRow);
     } finally {
       setIsLoading(false);
     }

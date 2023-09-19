@@ -6,6 +6,7 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { Node_Fragment, Edge_Fragment } from "../Flow/Nodes/gqlNodes";
+// import backlogStore from "../Backlogs/backlogStore";
 //@ Irfan we have to create project and connect with Admin na, y we need this?
 const createProjectMutation = gql`
   mutation createProject($input: [mainCreateInput!]!) {
@@ -45,9 +46,8 @@ export const Info_Fragment = gql`
     status
     dueDate
     sprint
-
   }
-`
+`;
 
 const File_Fragment = gql`
   ${Node_Fragment}
@@ -162,7 +162,7 @@ const newFolderInFolder = gql`
 `;
 
 const newFolderInMain = gql`
-${Info_Fragment}
+  ${Info_Fragment}
   mutation createEpic($input: [folderCreateInput!]!) {
     createFolders(input: $input) {
       folders {
@@ -170,8 +170,8 @@ ${Info_Fragment}
         isOpen
         name
         type
-        hasInfo{
-        ...InfoFragment
+        hasInfo {
+          ...InfoFragment
         }
         mainHas {
           name
@@ -182,7 +182,7 @@ ${Info_Fragment}
   }
 `;
 const newFileInMain = gql`
-${File_Fragment}
+  ${File_Fragment}
   mutation createStory($where: mainWhere, $create: mainRelationInput) {
     updateMains(where: $where, create: $create) {
       mains {
@@ -296,9 +296,9 @@ async function createFolderInMain(
                   assignedTo: "",
                   dueDate: "",
                   description: "",
-                  sprint: ""
-                }
-              }
+                  sprint: "",
+                },
+              },
             },
             mainHas: {
               connect: {
@@ -324,8 +324,9 @@ async function createFileInMain(
   parentId: string,
   data: any
 ) {
+  // const addRow = backlogStore((state) => state.addRow);
   var node: any;
-  await client
+   await client
     .mutate({
       mutation: mutation,
       variables: {
@@ -345,9 +346,9 @@ async function createFileInMain(
                       assignedTo: "",
                       dueDate: "",
                       description: data.descrition,
-                      sprint: ""
-                    }
-                  }
+                      sprint: "",
+                    },
+                  },
                 },
                 hasflowchart: {
                   create: {
@@ -370,26 +371,25 @@ async function createFileInMain(
       );
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
+      // addRow(data);
     });
   return node;
 }
 
-
 // creat story mutation
 const newFileInFolder = gql`
-${File_Fragment}
+  ${File_Fragment}
   mutation createStory($where: folderWhere, $create: folderRelationInput) {
     updateFolders(where: $where, create: $create) {
       folders {
         name
         hasFile {
-        ...FileFragment
+          ...FileFragment
         }
       }
     }
   }
 `;
-
 
 // creating story method
 async function createFileInFolder(
@@ -397,6 +397,7 @@ async function createFileInFolder(
   parentId: string,
   data: any
 ) {
+  // const addRow = backlogStore((state) => state.addRow);
   var node: any;
   await client
     .mutate({
@@ -418,9 +419,9 @@ async function createFileInFolder(
                       assignedTo: "",
                       dueDate: "",
                       description: data.description,
-                      sprint: ""
-                    }
-                  }
+                      sprint: "",
+                    },
+                  },
                 },
                 hasflowchart: {
                   create: {
@@ -439,7 +440,6 @@ async function createFileInFolder(
       },
       refetchQueries: [{ query: getMainByUser }],
       onQueryUpdated(observableQuery) {
-
         // Define any custom logic for determining whether to refetch
         if (observableQuery) {
           return observableQuery.refetch();
@@ -452,6 +452,7 @@ async function createFileInFolder(
       ).replace('"hasFile":', '"file":');
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
+      // addRow(data);
     });
   return node;
 }
@@ -561,7 +562,6 @@ async function getTreeNodeByUser(
       },
     })
     .then((result) => {
-
       const mainData = result.data.mains;
       const data = mainData.map((value: any) => {
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
@@ -569,7 +569,7 @@ async function getTreeNodeByUser(
       });
       const res_updated = transformObject(result);
       nodes = res_updated.data.mains;
-      setLoading(result.loading)
+      setLoading(result.loading);
     });
   return nodes;
 }
@@ -692,24 +692,23 @@ const disconnectFromFolderBackendOnMove = async (fileId: string) => {
   await client.mutate({
     mutation: disconnectFromFolderOnMove,
     variables: {
-      "where": {
-        "hasFile_SINGLE": {
-          "id": fileId
-        }
+      where: {
+        hasFile_SINGLE: {
+          id: fileId,
+        },
       },
-      "disconnect": {
-        "hasFile": [
+      disconnect: {
+        hasFile: [
           {
-
-            "where": {
-              "node": {
-                "id": fileId
-              }
-            }
-          }
-        ]
-      }
-    }
+            where: {
+              node: {
+                id: fileId,
+              },
+            },
+          },
+        ],
+      },
+    },
   });
 };
 
@@ -768,30 +767,33 @@ const getFileByNode = async (
   return file;
 };
 
-
 // updating epic hasInfo data only
 
 const updateEpicMutation = gql`
-${Info_Fragment}
-mutation updateEpic($where: folderWhere, $update: folderUpdateInput) {
-  updateFolders(where: $where, update: $update) {
-    folders {
-      name
-      hasInfo{
-      ...InfoFragment
+  ${Info_Fragment}
+  mutation updateEpic($where: folderWhere, $update: folderUpdateInput) {
+    updateFolders(where: $where, update: $update) {
+      folders {
+        name
+        hasInfo {
+          ...InfoFragment
+        }
       }
     }
   }
-}
-`
+`;
 
-const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  const { status, description, assignedTo, dueDate, sprint } = epictData
+const updateEpic = async (
+  id: string,
+  epictData: any,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
+  const { status, description, assignedTo, dueDate, sprint } = epictData;
   await client.mutate({
     mutation,
     variables: {
-      "where": {
-        id
+      where: {
+        id,
       },
       update: {
         hasInfo: {
@@ -801,64 +803,62 @@ const updateEpic = async (id: string, epictData: any, mutation: DocumentNode | T
               sprint,
               dueDate,
               description,
-              assignedTo
-            }
-          }
-        }
-      }
-    }
-  })
-
-}
-
-const updateStoryMethod = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, storyData: any) => {
-  const { status, description, assignedTo, dueDate, sprint } = storyData
-  await client.mutate({
-    mutation,
-    variables: {
-      "where": {
-        id
+              assignedTo,
+            },
+          },
+        },
       },
-      update: {
-        hasInfo: {
-          update: {
-            node: {
-              status,
-              sprint,
-              dueDate,
-              description,
-              assignedTo
-            }
-          }
-        }
-      }
-    }
-  })
+    },
+  });
+};
 
-}
+const updateStoryMethod = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  storyData: any
+) => {
+  // const updateRow = backlogStore((state) => state.updateRow);
+  const { status, description, assignedTo, dueDate, sprint } = storyData;
+  const response = await client
+    .mutate({
+      mutation,
+      variables: {
+        where: {
+          id,
+        },
+        update: {
+          hasInfo: {
+            update: {
+              node: {
+                status,
+                sprint,
+                dueDate,
+                description,
+                assignedTo,
+              },
+            },
+          },
+        },
+      },
+    })
 
+    return response;
+};
 
 //update story  hasInfo data only
 const updateStoryMutation = gql`
-${Info_Fragment}
+  ${Info_Fragment}
   mutation UpdateStory($where: fileWhere, $update: fileUpdateInput) {
-  updateFiles(where: $where, update: $update) {
-    files {
-      name
-      hasInfo {
-       ...InfoFragment
+    updateFiles(where: $where, update: $update) {
+      files {
+        name
+        hasInfo {
+          ...InfoFragment
+        }
       }
     }
   }
-}
-`
-
-
-
-
-
-
-
+`;
 
 export {
   createFolderInMain,

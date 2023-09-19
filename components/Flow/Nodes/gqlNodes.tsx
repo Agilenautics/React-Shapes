@@ -9,8 +9,7 @@ import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import { getMainByUser } from "../../TreeView/gqlFiles";
-
-
+// import backlogStore from "../../Backlogs/backlogStore";
 
 
 
@@ -179,6 +178,7 @@ async function getNodes(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
+  
   var nodes: Array<Node> = [];
   var edges: Array<Edge> = [];
   await client
@@ -210,8 +210,10 @@ async function getNodes(
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   updateNode: any,
-  data: any
+  data: any,
+  addRow: any,
 ) {
+  // const addRow = backlogStore(state=> state.addRow)
   var nodes: Array<Node> = [];
   await client
     .mutate({
@@ -291,9 +293,6 @@ async function createNode(
           },
         },
       },
-      refetchQueries(result) {
-        return [getMainByUser]
-      },
     })
     .then((result) => {
       const nodes1 = JSON.stringify(
@@ -303,6 +302,13 @@ async function createNode(
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes1);
+console.log(data);
+
+
+      data.status = data.status || "To-Do"
+      addRow(data)
+
+      // addRow(data)
       return updateNode(nodes);
     })
     .catch((error) => {
@@ -525,7 +531,8 @@ ${Info_Fragment}
 `
 
 const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, data: any) => {
-  await client.mutate({
+  // const updateRow = backlogStore(state => state.updateRow);
+  const response = await client.mutate({
     mutation,
     variables: {
       "where": {
@@ -553,9 +560,9 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
         }
       }
     }
-  }).then((res) => {
-    console.log(res, "iam response")
   })
+
+  return response;
 
 }
 

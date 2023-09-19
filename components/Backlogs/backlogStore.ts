@@ -29,6 +29,11 @@ interface Backlog {
 }
 
 interface BacklogState {
+    parents: any;
+    updateRow: any;
+    addRow: any;
+    allStories: any;
+    allStatus: any;
     backlogs: Array<Backlog>;
     updateBacklogsData: (backlogs: Array<Backlog>) => void;
     
@@ -37,17 +42,20 @@ interface BacklogState {
 
 const backlogStore = create<BacklogState>((set) => ({
     backlogs: [],
+    allStories: [],
+    parents: [],
+    allStatus: [],
     updateBacklogsData: (backlogs: Array<Backlog>) => (
         // @ts-ignore
         set((state) => {
             const parents: any[] = [{ name: "Select Epic", id: "" }];
-            const initData2: any[] = [];
+            const allStories: any[] = [];
             const allStatus: any[] = ["To-Do", "In-Progress", "Completed"];
             let temproary = [];
             // console.log(backlogs);
 
-            while (initData2.length) {
-                initData2.pop()
+            while (allStories.length) {
+                allStories.pop()
             }
             while (parents.length != 1) {
                 parents.pop()
@@ -66,7 +74,7 @@ const backlogStore = create<BacklogState>((set) => ({
                     //@ts-ignore
                     for (let j of i.hasFile) {
 
-                        initData2.push({ ...j, parent: i.name });
+                        allStories.push({ ...j, parent: i.name });
                         if (!allStatus.includes(j.hasInfo.status)) {
                             allStatus.push(j.hasInfo.status)
                         }
@@ -78,7 +86,7 @@ const backlogStore = create<BacklogState>((set) => ({
                         });
                     }
                 } else if (i.type == "file") {
-                    initData2.push({ ...i, parent: "No epic" });
+                    allStories.push({ ...i, parent: "No epic"});
 
                     if (!allStatus.includes(i.hasInfo.status)) {
                         allStatus.push(i.hasInfo.status)
@@ -87,12 +95,12 @@ const backlogStore = create<BacklogState>((set) => ({
                     temproary.push({
                         ...i,
                         ...i.hasInfo,
-                        parent: "No epic",
+                        parent:  "No epic" ,
                     });
                 }
             }
 
-            for (let i of initData2) {
+            for (let i of allStories) {
                 if (i.hasflowchart.nodes) {
                     for (let j of i.hasflowchart.nodes) {
 
@@ -106,13 +114,23 @@ const backlogStore = create<BacklogState>((set) => ({
                             id: j.id,
                             type: j.type,
                             parent: i.parent,
+                            story:{name:i.name,id: i.id}
                         });
                     }
                 }
             }
-            return { backlogs:temproary }
+            
+            return { backlogs:temproary, allStories, parents, allStatus }
         })
-    )
+    ),
+    addRow: (newRow: any) =>   
+    set((state) => ({         
+      backlogs: [...state.backlogs, { ...newRow, id: newRow.id }],
+    })),
+    updateRow: (newRow: any) =>
+    set((state) => ({
+      backlogs: [...(state.backlogs.filter((element:any)=> element.id !== newRow.id)),{ ...newRow, id: newRow.id }]
+    })),
 
 }))
 
