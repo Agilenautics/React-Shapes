@@ -9,7 +9,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "../../../components/AdminPage/Projects/gqlProject";
 import { useEffect } from "react";
 
-const businessPlan = () => {
+const BusinessPlan = () => {
   const updateProjects = projectStore((state) => state.updateProjectData);
   const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
   const updateUserType = userStore((state) => state.updateUserType);
@@ -36,4 +36,4 @@ const businessPlan = () => {
   );
 };
 
-export default businessPlan;
+export default BusinessPlan;
