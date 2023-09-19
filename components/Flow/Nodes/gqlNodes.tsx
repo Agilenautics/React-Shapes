@@ -33,6 +33,10 @@ ${Info_Fragment}
     flowchart
     type
     timeStamp
+    hasSprint {
+      id
+      name
+    }
     hasInfo{
     ...InfoFragment
     }
@@ -115,6 +119,9 @@ const newNode = gql`
     updateFiles(where: $where, update: $update) {
       files {
         name
+        folderHas {
+         name
+        }
         hasflowchart {
           name
           nodes {

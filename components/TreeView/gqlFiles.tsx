@@ -57,6 +57,10 @@ const File_Fragment = gql`
     type
     id
     name
+    hasSprint {
+      id
+      name
+    }
     hasInfo{
     ...InfoFragment
     }
@@ -82,6 +86,7 @@ const getMainByUser = gql`
       description
       isOpen
       id
+      
       hasContainsFile {
         ...FileFragment
       }
@@ -90,6 +95,11 @@ const getMainByUser = gql`
         type
         isOpen
         name
+        hasSprint {
+         id
+         name
+        }
+        
         hasInfo{
          ...InfoFragment
         }
@@ -98,6 +108,10 @@ const getMainByUser = gql`
           id
           type
           isOpen
+          hasSprint {
+            id
+            name
+          }
           hasInfo{
           ...InfoFragment
           }

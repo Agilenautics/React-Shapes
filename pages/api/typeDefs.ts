@@ -43,6 +43,7 @@ const typeDefs = gql`
     isOpen: Boolean!
     timeStamp: DateTime @timestamp
     name: String!
+    hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
     hasInfo:info @relationship( type:"hasInfo",direction:IN)
     mainHas: main @relationship(type: "hasFolder", direction: IN)
     hasFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
@@ -56,9 +57,10 @@ const typeDefs = gql`
     timeStamp: DateTime! @timestamp
     type: String!
     name: String!
+    hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
     hasInfo:info! @relationship( type:"hasInfo",direction:IN)
     hasflowchart: flowchart @relationship(type: "hasFlowchart", direction: OUT)
-    folderHas: folder @relationship(type: "hasFolder", direction: IN)
+    folderHas: folder @relationship(type: "hasFile", direction: IN)
     #hasFlownodes: [flowNode!]! @relationship (type:"hasFlownodes", direction:OUT)
     mainHas: main @relationship(type: "hasFile", direction: IN)
   }
@@ -77,6 +79,7 @@ const typeDefs = gql`
     draggable: Boolean!
     flowchart: String!
     type: String!
+    hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
     hasInfo:info @relationship( type:"hasInfo",direction:IN)
     status:String
     assignedTo:String

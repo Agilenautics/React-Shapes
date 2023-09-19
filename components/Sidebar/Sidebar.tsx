@@ -204,6 +204,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                 height={124}
                 width={124}
                 alt="Company Logo"
+                priority={false}
               />
             </div>
             {/* projects  */}
@@ -364,7 +365,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
       }
       {
         // @ts-ignore
-        addProjectPopUp &&<AddProjectPopup onClose={onCloseAddProjectPopUp} notify={notify} userEmail={userEmail} projectData={projectData} />
+        addProjectPopUp && <AddProjectPopup onClose={onCloseAddProjectPopUp} notify={notify} userEmail={userEmail} projectData={projectData} />
       }
       {/* <AddProjectPopup /> */}
       <ToastContainer autoClose={2500} />
