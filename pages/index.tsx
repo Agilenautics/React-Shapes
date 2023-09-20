@@ -1,39 +1,39 @@
-// import type { NextPage } from "next";
-// import dynamic from 'next/dynamic'
-// import LoadingIcon from "../components/LoadingIcon";
-// import { ComponentType } from "react";
+import type { NextPage } from "next";
+import dynamic from 'next/dynamic'
+import LoadingIcon from "../components/LoadingIcon";
+import { ComponentType } from "react";
 
-// type LayoutProps = any
+type LayoutProps = any
 
 
-// const DynamicHeader: ComponentType<LayoutProps> = dynamic(() => import('../components/AdminPage/Layout'), {
-//   ssr: false,
-//   loading: () => <LoadingIcon />
-// })
-// const Home: NextPage = () => {
-//   return (
-//     <>
-//       <DynamicHeader />
-//     </>
-//   );
-// };
-
-// export default Home;
-
-import type { ReactElement } from 'react'
-import Layout from '../components/AdminPage/Layout'
-import type { NextPageWithLayout } from './_app'
- 
-const Page: NextPageWithLayout = () => {
-  return <p>hello world</p>
-}
- 
-Page.getLayout = function getLayout(page: ReactElement) {
+const DynamicHeader: ComponentType<LayoutProps> = dynamic(() => import('../components/AdminPage/Layout'), {
+  ssr: false,
+  loading: () => <LoadingIcon />
+})
+const Home: NextPage = () => {
   return (
-    <Layout>
-      {page}
-    </Layout>
-  )
-}
+    <>
+      <DynamicHeader />
+    </>
+  );
+};
+
+export default Home;
+
+// import type { ReactElement } from 'react'
+// import Layout from '../components/AdminPage/Layout'
+// import type { NextPageWithLayout } from './_app'
  
-export default Page
+// const Page: NextPageWithLayout = () => {
+//   return <p>hello world</p>
+// }
+ 
+// Page.getLayout = function getLayout(page: ReactElement) {
+//   return (
+//     <Layout>
+//       {page}
+//     </Layout>
+//   )
+// }
+ 
+// export default Page

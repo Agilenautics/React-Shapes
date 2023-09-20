@@ -85,6 +85,8 @@ EventEmitter.defaultMaxListeners = 15;
 
 dotenv.config();
 
+console.log(process.env.NODE_ENV)
+
 // ? Here we provide authentication details for the Neo4j server
 // * This server is currently for development only, we will need to change
 // * to another server before production
@@ -108,6 +110,8 @@ const startServer = apolloServer.start();
 
 // @ts-ignore
 export default async function handler(req, res) {
+  const { name = 'World' } = req.query;
+  res.send(`Hello ${name}!`);
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
