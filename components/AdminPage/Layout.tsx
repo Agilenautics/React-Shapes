@@ -8,15 +8,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface LayoutProps {
   children: React.ReactNode;
-  activeLink: string;
-  onLinkClick: (link: string) => void;
 }
 
 
 
 
 
-function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
+function Layout({ children }: LayoutProps) {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [email, setEmail] = useState('');
 
@@ -45,10 +43,10 @@ function Layout({ children, activeLink, onLinkClick }: LayoutProps) {
     setIsSideBarOpen(!isSideBarOpen);
   };
 
-  
 
 
- 
+
+
 
 
 
