@@ -21,7 +21,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   projectData,
 }) => {
   const [formData, setFormData] = useState({ name: "", description: "" });
-  const [isFormValid, setIsFormValid] = useState(false);
 
   const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT);
   const [errors, setError] = useState<string | null>(null);
@@ -33,14 +32,6 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const id = Math.floor(Math.random() * 26) + Date.now();
-    const newProject = {
-      ...formData,
-      id,
-      recycleBin: false,
-      createdAt: new Date(),
-      timeStamp: new Date(),
-    };
 
     const existanceProject = projectData.find(
       (project) => project.name === formData.name

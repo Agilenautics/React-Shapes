@@ -42,10 +42,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
   //projects stores
   const allProjects = projectStore((state) => state.projects);
   const loading = projectStore((state) => state.loading);
-  const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
-  const updateUserType = userStore((state) => state.updateUserType);
-  const updateLoginUser = userStore((state) => state.updateLoginUser)
   const [projectData, setProjectData] = useState<Project[]>([]);
 
 
@@ -71,44 +67,13 @@ const Sidebar = ({ isOpen }: SideBar) => {
     updateInitData(data);
     return initData;
   };
-  // const { data, error, loading } = useQuery(GET_USER, {
-  //   variables: {
-  //     where: {
-  //       emailId: userEmail,
-  //     },
-  //   },
-
-  // });
-
-
-
-  // const getProjects = (response: any) => {
-  //   if (!loading && response && response.users.length) {
-  //     const projects = response.users[0].hasProjects;
-  //     const userType = data.users[0].userType;
-  //     updateProjects(projects, loading);
-  //     updateLoginUser(data.users);
-  //     updateUserType(userType)
-  //     setProjectData(response.users[0].hasProjects);
-  //     updateRecycleBinProject(projects);
-  //   }
-
-
-  // }
-
-
-
-
-
-
 
 
 
   const verificationToken = async () => {
     onAuthStateChanged(auth, user => {
-      if (user && user.email && router.asPath !== "/projects") {
+      if (user && user.email) {
         setUserEmail(user.email);
-        // getUserByEmail(user.email,GET_USER,{updateLoginUser,updateProjects,updateUserType,updateRecycleBinProject})
       }
     })
   }
@@ -172,10 +137,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
     }
     fetchRecentProject(allProjects)
     verificationToken()
-    // getProjects();
   }, [projectId, allProjects]);
-
-
 
 
 

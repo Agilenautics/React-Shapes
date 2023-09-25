@@ -400,6 +400,7 @@ mutation addProject($where: userWhere, $update: userUpdateInput) {
 }
 `
 const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, addProject: any) => {
+  console.log(email,"email",project,"project","addProject:",addProject)
   let data = []
   await client.mutate({
     mutation,
@@ -431,6 +432,7 @@ const addProject_Backend = async (email: String, project: any, mutation: Documen
     //   return [{ query }]
     // },
   }).then((response) => {
+    console.log(response)
     addProject(response.data.updateUsers.users[0].hasProjects[0])
   }
   )

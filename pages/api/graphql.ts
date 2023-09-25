@@ -76,6 +76,8 @@ import resolvers from "./resolvers";
 import driver from "./dbConnection";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import typeDefs from "./typeDefs";
+import { NextApiRequest, NextApiResponse } from "next";
+import { graphql } from "graphql";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
@@ -83,7 +85,7 @@ import typeDefs from "./typeDefs";
 
 EventEmitter.defaultMaxListeners = 15;
 
-dotenv.config();
+
 
 console.log(process.env.NODE_ENV)
 
@@ -98,20 +100,18 @@ console.log(process.env.NODE_ENV)
 // );
 
 
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver, resolvers });
+const neoSchema = new Neo4jGraphQL({ typeDefs, driver,resolvers });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
   introspection: true,
-  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+  plugins: [ApolloServerPluginLandingPageLocalDefault()],
 });
 
 
 const startServer = apolloServer.start();
 
-// @ts-ignore
-export default async function handler(req, res) {
-  const { name = 'World' } = req.query;
-  res.send(`Hello ${name}!`);
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  await startServer
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Origin",
@@ -121,7 +121,7 @@ export default async function handler(req, res) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  await startServer
+  
   if (req.method === "OPTIONS") {
     res.end();
     return false;

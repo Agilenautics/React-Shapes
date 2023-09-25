@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev ",
     "build": "next build",
-    "start": "next start",
+    "start:dev": "cross-env NODE_ENV=development next start",
     "lint": "next lint",
     "deploy": "export ENVFILE=.env && firebase deploy",
     "deploy-functions": "export ENVFILE=.env && firebase deploy --only functions"

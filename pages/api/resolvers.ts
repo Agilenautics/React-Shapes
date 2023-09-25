@@ -9,8 +9,24 @@ const resolvers = {
             const projects = await Project.find({})
             return projects
         },
-        getUsers: async () => {
-            return await User.find({})
+        getUsers: async (_: any, { emailId }: any) => {
+            const session = driver.session()
+            try {
+                const result = await session.run('MATCH(u:user {emailId:$emailId}) -->(hasMain)   RETURN u as user,  hasMain as project', { emailId });
+                const users = result.records.map((record) => record.get('user').properties);
+                // const projects = result.records.map((record)=>record.get('project').properties);
+                
+                return users
+
+            }
+            catch (error) {
+                console.log(error)
+
+            }
+            finally {
+                session.close()
+            }
+            driver.close()
         }
     },
     Mutation: {

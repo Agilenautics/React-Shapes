@@ -1,6 +1,11 @@
 import { gql } from "@apollo/client";
 
 const typeDefs = gql`
+
+  type Query {
+    projects: [main!]! 
+    getUsers(emailId:String!): [user]
+  }
   # ! Interfaces only work on relationships!
   type user {
     id: ID! @id
@@ -189,10 +194,6 @@ const typeDefs = gql`
   }
 
 
-  type Query {
-    projects: [main!]!
-    getUsers: [user!]!
-  }
 
   type Mutation {
     createProject(newProject: projectInput!): main
