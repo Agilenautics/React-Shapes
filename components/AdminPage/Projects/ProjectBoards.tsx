@@ -4,7 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import fileStore from "../../TreeView/fileStore";
 import { getTypeLabel } from "./staticData/basicFunctions";
 import { types } from "./staticData/types";
-import { allStatus, processedData } from "./staticData/processedData";
+import { allStatus } from "./staticData/processedData";
 import { updateTaskMethod, updateTasksMutation } from "../../Flow/Nodes/gqlNodes";
 import { updateStoryMethod, updateStoryMutation } from "../../TreeView/gqlFiles";
 import { onAuthStateChanged } from "firebase/auth";
@@ -12,6 +12,8 @@ import { GET_USER, getUserByEmail } from "./gqlProject";
 import { auth } from "../../../auth";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
+import backlogStore from "../../Backlogs/backlogStore";
+// import backlogs from "../../../pages/projects/[projectId]/backlogs";
 
 function ProjectBoards() {
   const [selectedTypeFilters, setSelectedTypeFilters] = useState<string[]>([]);
@@ -22,6 +24,7 @@ function ProjectBoards() {
   const [newBoardName, setNewBoardName] = useState<string>('')
 
   let backend: any = fileStore((store) => store.data);
+  const { backlogs, updateBacklogsData, updateRow } = backlogStore()
   const loading = fileStore((state) => state.loading);
 
   // let backend = useBackend();
@@ -42,15 +45,18 @@ function ProjectBoards() {
   }
 
   useEffect(() => {
-    const mainData = processedData(backend.children);
+
+    if(backlogs.length==0){
+      updateBacklogsData(backend.children)
+      }
     let filteredStatuses: any;
-    filteredStatuses = mainData.filter(
+    filteredStatuses = backlogs.filter(
       (element) =>
         selectedTypeFilters.length === 0 ||
         selectedTypeFilters.includes(element.type)
     );
     setStatuses(filteredStatuses);
-  }, [backend.children, selectedTypeFilters]);
+  }, [backlogs, selectedTypeFilters]);
 
   useEffect(() => {
     verificationToken()
@@ -88,13 +94,15 @@ function ProjectBoards() {
     const task = JSON.parse(localStorage.getItem("task"))
     task.status = columnId
 
-    console.log(statuses);
+    // console.log(statuses);
     updateStatus({ id: task.id, newStatus: columnId })
 
     if (task.type == "file") {
       updateStoryMethod(task.id, updateStoryMutation, task)
+      .then(()=> updateRow(task))
     } else {
       updateTaskMethod(task.id, updateTasksMutation, task)
+      .then(()=> updateRow(task))
     }
 
     localStorage.clear()

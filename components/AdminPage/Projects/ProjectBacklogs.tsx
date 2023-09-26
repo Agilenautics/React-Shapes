@@ -78,7 +78,7 @@ function ProjectBacklogs() {
     if(backlogs.length==0){
       // @ts-ignore
       updateBacklogsData(backend.children);
-    }
+    }    
     // @ts-ignore
   }, [backend.userHas]);
 
@@ -246,7 +246,7 @@ function ProjectBacklogs() {
                   </td>
                   <td className="rounded-lg border px-1 py-2 text-center">
                     {/* here epic */}
-                    {element.parent}
+                    {element.parent.name}
                   </td>
                   <td
                     className={`px-1 py-2 ${getStatusColor(

@@ -74,7 +74,7 @@ const backlogStore = create<BacklogState>((set) => ({
                     //@ts-ignore
                     for (let j of i.hasFile) {
 
-                        allStories.push({ ...j, parent: i.name });
+                        allStories.push({ ...j, parent: {name:i.name, id: i.id}});
                         if (!allStatus.includes(j.hasInfo.status)) {
                             allStatus.push(j.hasInfo.status)
                         }
@@ -82,11 +82,11 @@ const backlogStore = create<BacklogState>((set) => ({
                         temproary.push({
                             ...j,
                             ...j.hasInfo,
-                            parent: i.name,
+                            parent: {name:i.name, id: i.id},
                         });
                     }
                 } else if (i.type == "file") {
-                    allStories.push({ ...i, parent: "No epic"});
+                    allStories.push({ ...i, parent:  {name:"No epic", id: ""}});
 
                     if (!allStatus.includes(i.hasInfo.status)) {
                         allStatus.push(i.hasInfo.status)
@@ -95,7 +95,7 @@ const backlogStore = create<BacklogState>((set) => ({
                     temproary.push({
                         ...i,
                         ...i.hasInfo,
-                        parent:  "No epic" ,
+                        parent:  {name:"No epic", id: ""} ,
                     });
                 }
             }
@@ -106,7 +106,7 @@ const backlogStore = create<BacklogState>((set) => ({
 
                         if (!allStatus.includes(j.hasInfo.status)) {
                             allStatus.push(j.hasInfo.status)
-                        }
+                        }                        
 
                         temproary.push({
                             ...j.hasInfo,

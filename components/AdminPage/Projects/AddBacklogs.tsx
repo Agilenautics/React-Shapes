@@ -24,6 +24,9 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
   const formRef = useRef(null);
   const router = useRouter();
 
+  console.log(selectedElement)
+  
+
   const projectId = router.query.projectId as string;
 
 
@@ -72,6 +75,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
    getSprintToBacklogs(projectId,SPRINTS_FOR_BACKLOGS).then((res:any)=>setSprints(res)
    )
   },[])
+  
 
   // console.log(sprints);
   
@@ -86,7 +90,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
           description: selectedElement ? selectedElement.description : '',
           status: selectedElement ? selectedElement.status : 'To-Do',
           assign: selectedElement ? selectedElement.user : '',
-          epic: selectedElement && selectedElement.type=="file" ? selectedElement.parent.id : projectId,
+          epic: selectedElement && selectedElement.type=="file" ? selectedElement.parent: projectId,
           story: selectedElement && selectedElement.type!=="file" ? selectedElement.story.id : ''
         }}
         validationSchema={validationSchema}
