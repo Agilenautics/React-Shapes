@@ -177,6 +177,10 @@ const newFolderInMain = gql`
           name
           id
         }
+        hasSprint{
+          id
+          name
+        }
       }
     }
   }
@@ -275,6 +279,8 @@ async function createFolderInFolder(
     });
   return node;
 }
+
+// here adding epic and also to sprint 
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string
@@ -309,6 +315,15 @@ async function createFolderInMain(
                 },
               },
             },
+            hasSprint:{
+              connect:{
+                where:{
+                  node:{
+                    id:"" // here you want to add sprint id take as a param
+                  }
+                }
+              }
+            }
           },
         ],
       },
@@ -326,7 +341,7 @@ async function createFileInMain(
 ) {
   // const addRow = backlogStore((state) => state.addRow);
   var node: any;
-   await client
+  await client
     .mutate({
       mutation: mutation,
       variables: {
@@ -842,7 +857,7 @@ const updateStoryMethod = async (
       },
     })
 
-    return response;
+  return response;
 };
 
 //update story  hasInfo data only
