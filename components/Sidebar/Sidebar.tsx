@@ -14,11 +14,8 @@ import { useRouter } from "next/router";
 import { getMainByUser, getTreeNodeByUser } from "../TreeView/gqlFiles";
 import Link from "next/link";
 import projectStore, { Project } from "../AdminPage/Projects/projectStore";
-import { GET_USER, getUserByEmail } from "../AdminPage/Projects/gqlProject";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
-import userStore from "../AdminPage/Users/userStore";
-import { useQuery } from "@apollo/client";
 import AddProjectPopup from "../AdminPage/Projects/ProjectOverlay";
 import { ToastContainer, toast } from "react-toastify";
 

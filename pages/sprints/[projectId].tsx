@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import ProjectSprints from "../../components/AdminPage/Projects/ProjectSprints";
+import ProjectSprints from "../../components/Sprints/ProjectSprints";
 
 const Sprints = () => {
   const router = useRouter();

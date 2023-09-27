@@ -54,6 +54,7 @@ interface SprintState {
     addSprint: (newSprint: Sprint) => void;
     updateError: (error: any) => void;
     deleteSprint: (id: string) => void;
+    hadleFilterSprint:(selectedSprint:string )=>void;
 }
 
 const sprintStore = create<SprintState>((set) => ({
@@ -80,6 +81,12 @@ const sprintStore = create<SprintState>((set) => ({
         set((state) => {
             const deletedSprint = state.sprints.filter((values: Sprint) => values.id !== id);
             return { sprints: deletedSprint };
+        })
+    ),
+    hadleFilterSprint:(selectedSprint:string)=>(
+        set((state)=>{
+            const filterSprints = state.sprints.filter((sprint:Sprint)=>sprint.name===selectedSprint);
+            return {sprints:filterSprints}
         })
     )
 }));
