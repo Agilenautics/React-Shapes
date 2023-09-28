@@ -30,21 +30,36 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
   const projectId = router.query.projectId as string;
 
 
-  const handleSubmit = (values: any) => {    
+  const handleSubmit = (values: any) => {
+    
+    console.log("form values",values);
+    
     if (selectedElement != null) {
       if (selectedElement.type != "file") {
        updateTaskMethod(selectedElement.id, updateTasksMutation, values)
-       .then(() => updateRow(values));
+       .then(() => {
+        values.parent = values.epic
+        updateRow(values)
+       } );
       } else {
         updateStoryMethod(selectedElement.id, updateStoryMutation, values)
-        .then(() => updateRow(values));
+        .then(() => {
+          values.parent = values.epic
+          updateRow(values)
+         } );
       }
     }else{
       if(values.type=="file"){
         if(values.epic == projectId) createFileInMain(newFileInMain,values.epic,values)
-        .then(() => addRow(values));
+        .then(() => {
+          values.parent = values.epic
+          addRow(values)
+         });
         else createFileInFolder(newFileInFolder,values.epic,values)
-        .then(() => addRow(values));
+        .then(() => {
+          values.parent = values.epic
+          addRow(values)
+         });
       }else{
         createNode(newNode, updateNode, values,addRow)
       }
@@ -90,7 +105,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
           description: selectedElement ? selectedElement.description : '',
           status: selectedElement ? selectedElement.status : 'To-Do',
           assign: selectedElement ? selectedElement.user : '',
-          epic: selectedElement && selectedElement.type=="file" ? selectedElement.parent: projectId,
+          epic: selectedElement  ? selectedElement.parent: projectId,
           story: selectedElement && selectedElement.type!=="file" ? selectedElement.story.id : ''
         }}
         validationSchema={validationSchema}
@@ -166,7 +181,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
               >
                 <option value="">Select Story</option>
                 {allStories.map((story: any) => (
-                  <option key={story.name} value={story.id}>
+                  <option key={story.id} value={story.id}>
                     {story.name}
                   </option>
                 ))}
@@ -186,7 +201,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                 className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
               >
                 {parents.map((epic: any) => (
-                  <option key={epic.name} value={epic.name == "Select Epic" ? projectId : epic.id}>
+                  <option key={epic.id} value={epic.id}>
                     {epic.name}
                   </option>
                 ))}

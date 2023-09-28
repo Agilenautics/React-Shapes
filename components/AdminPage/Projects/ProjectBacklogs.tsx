@@ -103,7 +103,7 @@ function ProjectBacklogs() {
     return <>
       Loading
     </>
-  }    
+  }
   
 
   return (
@@ -260,7 +260,7 @@ function ProjectBacklogs() {
                     {element.sprint ? element.sprint : "not added"}
                   </td>
                   <td className="rounded-lg border px-1 py-2 text-center">
-                    {element.user}
+                    {element.assign? element.assign: "Not Assigned"}
                   </td>
                 </tr>
               ))}

@@ -11,7 +11,8 @@ const validationSchema = Yup.object().shape({
     if(type != "file")
       return schema.required("Must enter Story")
     return schema
-  }), epic: Yup.string().when('type', (type, schema) => {
+  }),
+  epic: Yup.object().when('type', (type, schema) => {
     //@ts-ignore
     if (type === 'file') return schema.required('Must enter Epic');
     return schema;
