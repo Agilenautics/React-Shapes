@@ -1,21 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import fileStore from "../../TreeView/fileStore";
+import fileStore from "../TreeView/fileStore";
 // import useBackend from "../../TreeView/backend";
-import { types } from "./staticData/types";
+import { types } from "../AdminPage/Projects/staticData/types";
 // import { statuses } from "./staticData/statuses";
 // import { users } from "./staticData/users";
 // import initData from "./staticData/initData";
-import { getTypeLabel, getStatusColor } from "./staticData/basicFunctions";
+import { getTypeLabel, getStatusColor } from "../AdminPage/Projects/staticData/basicFunctions";
 import AddBacklogs from "./AddBacklogs";
 // import { allStatus } from "./staticData/processedData";
 // import nodeStore from "../../Flow/Nodes/nodeStore";
-import { auth } from "../../../auth";
+import { auth } from "../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { GET_USER, getUserByEmail } from "./gqlProject";
-import projectStore from "./projectStore";
-import userStore from "../Users/userStore";
-import backlogStore from "../../Backlogs/backlogStore";
+import { GET_USER, getUserByEmail } from "../AdminPage/Projects/gqlProject";
+import projectStore from "../AdminPage/Projects/projectStore";
+import userStore from "../AdminPage/Users/userStore";
+import backlogStore from "./backlogStore";
 
 
 
@@ -87,7 +87,7 @@ function ProjectBacklogs() {
     (element: any) =>
       (element.label && element.label.toLowerCase().includes(searchQuery.toLowerCase()) || element.name && element.name.toLowerCase().includes(searchQuery.toLowerCase())) &&
       (selectedTypes.length === 0 || selectedTypes.includes(element.type)) &&
-      (selectedEpic === "" || element.parent === selectedEpic) &&
+      (selectedEpic === "" || element.parent.name === selectedEpic) &&
       (selectedStatus === "" || element.status === selectedStatus) &&
       // (selectedUser === "" || element.user === selectedUser) &&
       (selectedSprint === "" || element.sprint === selectedSprint)

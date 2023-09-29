@@ -13,6 +13,8 @@ import {
   deleteFolderBackend,
   createFileInMain,
   newFileInMain,
+  createFile,
+  createFileMutation,
 } from "./gqlFiles";
 
 
@@ -50,7 +52,6 @@ interface files {
   setLoading: (load: boolean) => void;
 }
 const fileStore = create<files>((set) => ({
-
   // @ts-ignore
   data: {},
   updateInitData: (data: MyData) =>
@@ -74,13 +75,19 @@ const fileStore = create<files>((set) => ({
       return { linkNodeId: nodeId }
     })
   },
-  add_file: () =>
+  add_file: () => {
     set((state) => {
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       let node = findById(root, parentId);
+      const projectId = state.data.id
+
+
 
       let data_chk = node?.model;
+
+
+      
 
       if (node?.model.type === "folder") {
         const data = {
@@ -88,37 +95,43 @@ const fileStore = create<files>((set) => ({
           description: "Custome description",
           status: "To-Do"
         }
-        createFileInFolder(newFileInFolder, parentId, data).then((result) => {
+        const updated_data = [...node.model.children, data];
+        const updated_file_in_folder = { ...node.model, children: updated_data };
+        const updated_main = { ...state.data, children: [updated_file_in_folder] }
+        return { data: updated_main }
 
 
-          node?.model.children?.push({
-            name: result.name,
-            id: result.id,
-            type: result.type,
-          });
-
-        });
+        // createFileInFolder(newFileInFolder, parentId, data).then((result) => {
+        //   node?.model.children?.push({
+        //     name: result.name,
+        //     id: result.id,
+        //     type: result.type,
+        //   });
+        // });
       } else {
-        parentId = root.model.id;
+        // parentId = root.model.id;
         const data = {
           name: "FileInMain",
           status: "To-Do",
-          description: "Custome description"
+          description: "Custome description",
         }
-        createFileInMain(newFileInMain, parentId, data).then((result) => {
+        const updated_data = [...root.model.children, data];
+        // createFileInMain(newFileInMain, parentId, data).then((result) => {
+        //   root.model.children?.push({
+        //     name: result.name,
+        //     id: result.id,
+        //     type: result.type,
+        //   });
+        // });
 
-
-          root.model.children?.push({
-            name: result.name,
-            id: result.id,
-            type: result.type,
-          });
-        });
-
+        const updated_main = { ...state.data, children: updated_data }
+        return { data: updated_main }
       }
 
-      return { data: state.data };
-    }),
+      // return { data: state.data };
+    })
+  }
+  ,
 
   add_folder: () =>
     set((state) => {
@@ -166,18 +179,20 @@ const fileStore = create<files>((set) => ({
   delete_item: (id: string) =>
     set((state) => {
       const root = new TreeModel().parse(state.data);
-
-
       const node = findById(root, id);
+      console.log(node,"node")
+      console.log("root",root)
       if (node?.model.type === "folder") {
-        deleteFolderBackend(id)
+        const to_be_deleted = state.data.children?.filter((value)=>value.id!==id)
+        
+        // deleteFolderBackend(id)
         node?.drop();
         return { data: state.data }
       } else if (node?.model.type === "file") {
-        deleteFileBackend(id)
-        node?.drop();
+        // const to_be_delete = 
+        // deleteFileBackend(id)
+        
         return { data: state.data }
-
       }
       const x = searchTree(state.data, id);
       // ? Figure out how to make this work

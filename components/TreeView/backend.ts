@@ -43,14 +43,14 @@ export function useBackend() {
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
-  const delete_item = fileStore((state)=> state.delete_item);
+  const delete_item = fileStore((state) => state.delete_item);
 
-  
+
   // console.log(initData);
-  
+
 
   useEffect(() => {
-    setData(initData); 
+    setData(initData);
     update;
   }, [initData, update]);
   return {
@@ -86,53 +86,48 @@ export function useBackend() {
       const node = find(id);
 
       // making writable copy
-      const updatedData = {...node?.model,name}
+      const updatedData = { ...node?.model, name }
 
       // getting element index
-      const ind = initData.children?.findIndex(element=> element.id==id)
+      const ind = initData.children?.findIndex(element => element.id == id)
 
       // updating state in real time
-      
-        // @ts-ignore
-        initData.children[ind] = updatedData
-        setData(initData)
-        update()
-      
-      
-      
+
+      // @ts-ignore
+      initData.children[ind] = updatedData
+      setData(initData)
+      update()
+
+
+
       const { type } = node?.model
       if (type === "folder") {
-       await updateFolderBackend(id, name);
+        await updateFolderBackend(id, name);
       }
       if (type === "file") {
-         await updateFileBackend(id, name);
-         
+        await updateFileBackend(id, name);
+
       }
-      
+
     },
 
     onDelete: async (id: string) => {
 
-      
-      const readableData = {...initData}
 
-      console.log(readableData.children);
-    
-      const updatedChild = readableData.children?.filter(element=> element.id !==  id)
+      const readableData = { ...initData }
 
-        initData = {...readableData, children:updatedChild}
-        
-        console.log(initData.children);
-        
-        setData(initData)
-        update()
 
+      const updatedChild = readableData.children?.filter(element => element.id !== id)
+
+      initData = { ...readableData, children: updatedChild }
+      setData(initData)
+      update()
       delete_item(id)
-      
+
     },
 
   };
-  
+
 }
 
 export default useBackend;

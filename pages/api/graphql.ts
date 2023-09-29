@@ -104,6 +104,7 @@ const neoSchema = new Neo4jGraphQL({ typeDefs, driver,resolvers });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
   introspection: true,
+  persistedQueries:false,
   plugins: [ApolloServerPluginLandingPageLocalDefault()],
 });
 

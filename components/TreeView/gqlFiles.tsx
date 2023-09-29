@@ -6,39 +6,8 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { Node_Fragment, Edge_Fragment } from "../Flow/Nodes/gqlNodes";
-// import backlogStore from "../Backlogs/backlogStore";
-//@ Irfan we have to create project and connect with Admin na, y we need this?
-const createProjectMutation = gql`
-  mutation createProject($input: [mainCreateInput!]!) {
-    createMains(input: $input) {
-      mains {
-        name
-        description
-        isOpen
-        userName
-        id
-      }
-    }
-  }
-`;
-//@ Irfan check this too
-// create project methode
-const createProject = async (
-  data: any,
-  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
-) => {
-  await client.mutate({
-    mutation: mutations,
-    variables: {
-      input: {
-        name: data.name,
-        description: data.description,
-        userName: "",
-        isOpen: true,
-      },
-    },
-  });
-};
+
+
 export const Info_Fragment = gql`
   fragment InfoFragment on info {
     description
@@ -61,6 +30,14 @@ const File_Fragment = gql`
       id
       name
     }
+    mainHas {
+      id
+      name
+    }
+    folderHas {
+      id
+      name
+    }
     hasInfo{
     ...InfoFragment
     }
@@ -75,6 +52,78 @@ const File_Fragment = gql`
     }
   }
 `;
+
+
+const createFileMutation = gql`
+${File_Fragment}
+  mutation CreateFiles($input: [fileCreateInput!]!) {
+  createFiles(input: $input) {
+    files{
+      ...FileFragment
+    }
+  }
+}
+`
+
+
+// create File (story)
+
+const createFile =async (mainId: string, folderId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, fileData: any) => {
+  let data
+ await client.mutate({
+    mutation,
+    variables: {
+      input: {
+        name: fileData.name,
+        type: fileData.type || "file",
+        hasInfo: {
+          create: {
+            node: {
+              status: "To-Do",
+              assignedTo: "",
+              dueDate: "",
+              // @ts-ignore
+              description: fileData.discription||"",
+              sprint: "",
+            }
+          }
+        },
+        folderHas: {
+          connect: {
+            where: {
+              node: {
+                id: folderId || ""
+              }
+            }
+          }
+        },
+        mainHas: {
+          connect: {
+            where: {
+              node: {
+                id: mainId || ""
+              }
+            }
+          }
+        },
+        hasflowchart: {
+          create: {
+            node: {
+              name: "flowchart",
+            },
+          },
+        },
+      }
+    }
+  }).then((response) => {
+    data = response.data.createFiles
+    return response.data.createFiles
+  })
+  return data
+}
+
+
+
 
 //Get root using unique userName(UID)
 const getMainByUser = gql`
@@ -130,20 +179,14 @@ const getMainByUser = gql`
     }
   }
 `;
-const deleteFolders = gql`
-  mutation DeleteFolders($where: folderWhere, $delete: folderDeleteInput) {
-    deleteFolders(where: $where, delete: $delete) {
-      nodesDeleted
-    }
-  }
-`;
-const deleteFiles = gql`
-  mutation DeleteFiles($where: fileWhere, $delete: fileDeleteInput) {
-    deleteFiles(where: $where, delete: $delete) {
-      nodesDeleted
-    }
-  }
-`;
+
+
+
+
+
+
+
+
 
 const newFolderInFolder = gql`
   mutation Mutation($where: folderWhere, $create: folderRelationInput) {
@@ -161,88 +204,7 @@ const newFolderInFolder = gql`
   }
 `;
 
-const newFolderInMain = gql`
-  ${Info_Fragment}
-  mutation createEpic($input: [folderCreateInput!]!) {
-    createFolders(input: $input) {
-      folders {
-        id
-        isOpen
-        name
-        type
-        hasInfo {
-          ...InfoFragment
-        }
-        mainHas {
-          name
-          id
-        }
-        hasSprint{
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-const newFileInMain = gql`
-  ${File_Fragment}
-  mutation createStory($where: mainWhere, $create: mainRelationInput) {
-    updateMains(where: $where, create: $create) {
-      mains {
-        name
-        hasContainsFile {
-          ...FileFragment
-        }
-      }
-    }
-  }
-`;
 
-const updateFiles = gql`
-  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
-    updateFiles(where: $where, update: $update) {
-      files {
-        id
-        name
-      }
-    }
-  }
-`;
-const updateFolders = gql`
-  mutation UpdateFolders($where: folderWhere, $update: folderUpdateInput) {
-    updateFolders(where: $where, update: $update) {
-      folders {
-        id
-        name
-      }
-    }
-  }
-`;
-const connectToFolderOnMove = gql`
-  mutation Mutation($where: folderWhere, $connect: folderConnectInput) {
-    updateFolders(where: $where, connect: $connect) {
-      folders {
-        name
-        hasFile {
-          name
-        }
-      }
-    }
-  }
-`;
-const disconnectFromFolderOnMove = gql`
-  mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
-    updateFolders(where: $where, disconnect: $disconnect) {
-      folders {
-        name
-        hasFile {
-          name
-        }
-      }
-    }
-  }
-`;
 
 async function createFolderInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -280,6 +242,32 @@ async function createFolderInFolder(
   return node;
 }
 
+
+const newFolderInMain = gql`
+  ${Info_Fragment}
+  mutation createEpic($input: [folderCreateInput!]!) {
+    createFolders(input: $input) {
+      folders {
+        id
+        isOpen
+        name
+        type
+        hasInfo {
+          ...InfoFragment
+        }
+        mainHas {
+          name
+          id
+        }
+        hasSprint{
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
 // here adding epic and also to sprint 
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -315,11 +303,11 @@ async function createFolderInMain(
                 },
               },
             },
-            hasSprint:{
-              connect:{
-                where:{
-                  node:{
-                    id:"" // here you want to add sprint id take as a param
+            hasSprint: {
+              connect: {
+                where: {
+                  node: {
+                    id: "" // here you want to add sprint id take as a param
                   }
                 }
               }
@@ -334,6 +322,21 @@ async function createFolderInMain(
     });
   return node;
 }
+
+const newFileInMain = gql`
+  ${File_Fragment}
+  mutation createStory($where: mainWhere, $create: mainRelationInput) {
+    updateMains(where: $where, create: $create) {
+      mains {
+        name
+        hasContainsFile {
+          ...FileFragment
+        }
+      }
+    }
+  }
+`;
+
 async function createFileInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string,
@@ -412,7 +415,6 @@ async function createFileInFolder(
   parentId: string,
   data: any
 ) {
-  // const addRow = backlogStore((state) => state.addRow);
   var node: any;
   await client
     .mutate({
@@ -475,6 +477,7 @@ async function createFileInFolder(
 interface File {
   name: string;
   id: string;
+  
   hasflowchart: any;
   flowchart: any;
   type: "file";
@@ -589,6 +592,15 @@ async function getTreeNodeByUser(
   return nodes;
 }
 
+
+const deleteFiles = gql`
+  mutation DeleteFiles($where: fileWhere, $delete: fileDeleteInput) {
+    deleteFiles(where: $where, delete: $delete) {
+      nodesDeleted
+    }
+  }
+`;
+
 async function deleteFileBackend(fileID: string) {
   await client.mutate({
     mutation: deleteFiles,
@@ -625,6 +637,14 @@ async function deleteFileBackend(fileID: string) {
     },
   });
 }
+
+const deleteFolders = gql`
+  mutation DeleteFolders($where: folderWhere, $delete: folderDeleteInput) {
+    deleteFolders(where: $where, delete: $delete) {
+      nodesDeleted
+    }
+  }
+`;
 
 async function deleteFolderBackend(folderID: string) {
   await client.mutate({
@@ -669,6 +689,17 @@ async function deleteFolderBackend(folderID: string) {
   });
 }
 
+const updateFolders = gql`
+  mutation UpdateFolders($where: folderWhere, $update: folderUpdateInput) {
+    updateFolders(where: $where, update: $update) {
+      folders {
+        id
+        name
+      }
+    }
+  }
+`;
+
 const updateFolderBackend = async (folderId: string, name: string) => {
   await client.mutate({
     mutation: updateFolders,
@@ -682,6 +713,21 @@ const updateFolderBackend = async (folderId: string, name: string) => {
     },
   });
 };
+
+const connectToFolderOnMove = gql`
+  mutation Mutation($where: folderWhere, $connect: folderConnectInput) {
+    updateFolders(where: $where, connect: $connect) {
+      folders {
+        name
+        hasFile {
+          name
+        }
+      }
+    }
+  }
+`;
+
+
 const connectToFolderBackendOnMove = async (folderId: any, fileId: string) => {
   await client.mutate({
     mutation: connectToFolderOnMove,
@@ -703,6 +749,22 @@ const connectToFolderBackendOnMove = async (folderId: any, fileId: string) => {
     },
   });
 };
+
+
+const disconnectFromFolderOnMove = gql`
+  mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
+    updateFolders(where: $where, disconnect: $disconnect) {
+      folders {
+        name
+        hasFile {
+          name
+        }
+      }
+    }
+  }
+`;
+
+
 const disconnectFromFolderBackendOnMove = async (fileId: string) => {
   await client.mutate({
     mutation: disconnectFromFolderOnMove,
@@ -726,6 +788,17 @@ const disconnectFromFolderBackendOnMove = async (fileId: string) => {
     },
   });
 };
+
+const updateFiles = gql`
+  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
+    updateFiles(where: $where, update: $update) {
+      files {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const updateFileBackend = async (fileId: string, flowchart: string) => {
   await client.mutate({
@@ -894,12 +967,12 @@ export {
   connectToFolderBackendOnMove,
   getFile,
   getFileByNode,
-  createProject,
-  createProjectMutation,
   getMainByUser,
   getTreeNodeByUser,
   updateEpicMutation,
   updateEpic,
   updateStoryMethod,
   updateStoryMutation,
+  createFile,
+  createFileMutation
 };

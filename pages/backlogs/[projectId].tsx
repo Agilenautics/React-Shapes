@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import ProjectBacklogs from "../../components/AdminPage/Projects/ProjectBacklogs";
+import ProjectBacklogs from "../../components/Backlogs/ProjectBacklogs";
 
 
 const Backlogs = () => {

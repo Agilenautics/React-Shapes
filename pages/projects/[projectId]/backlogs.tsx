@@ -1,5 +1,5 @@
 import React from 'react'
-import ProjectBacklogs from '../../../components/AdminPage/Projects/ProjectBacklogs'
+import ProjectBacklogs from '../../../components/Backlogs/ProjectBacklogs'
 
 const backlogs = () => {
   return (

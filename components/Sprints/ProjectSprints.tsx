@@ -82,6 +82,8 @@ function ProjectSprints() {
     return <> {error && <div> {error.message} </div>} </>;
   }
 
+  console.log("sprintpage",sprints)
+
 
 
   const onFilter = (e: any) => {

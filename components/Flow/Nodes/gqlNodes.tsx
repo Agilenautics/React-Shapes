@@ -8,8 +8,6 @@ import client from "../../../apollo-client";
 import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-import { getMainByUser } from "../../TreeView/gqlFiles";
-// import backlogStore from "../../Backlogs/backlogStore";
 
 
 
@@ -112,6 +110,10 @@ const getNode = gql`
   }
 `;
 
+//createNode 
+
+
+
 const newNode = gql`
   ${Node_Fragment}
   mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
@@ -178,7 +180,7 @@ async function getNodes(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
-  
+
   var nodes: Array<Node> = [];
   var edges: Array<Edge> = [];
   await client
@@ -302,7 +304,7 @@ async function createNode(
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes1);
-console.log(data);
+      console.log(data);
 
 
       data.status = data.status || "To-Do"
@@ -518,8 +520,13 @@ ${Info_Fragment}
   mutation updateTasks($where: flowNodeWhere, $update: flowNodeUpdateInput) {
   updateFlowNodes(where: $where, update: $update) {
     flowNodes {
+      id
+      type
       hasInfo {
         ...InfoFragment
+      }
+      hasSprint{
+        name
       }
       hasdataNodedata {
         label,
@@ -557,7 +564,18 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
               "description": data.description
             }
           }
+        },
+        hasSprint: {
+          connect: {
+            where: {
+              node: {
+                id: data.addToSprint || ""
+              }
+            }
+
+          }
         }
+
       }
     }
   })

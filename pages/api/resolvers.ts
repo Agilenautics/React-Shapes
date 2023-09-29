@@ -4,18 +4,25 @@ import driver from "./dbConnection"
 
 const resolvers = {
     Query: {
+       
+        // projects: async (parent: any, { email }: Object) => {
+        //     try {
+        //         const projects = await Project.find({})
+        //         return projects
+
+        //     } catch (err) {
+        //         console.error("error", err)
+        //         return []
+        //     }
+        // },
         // @ts-ignore
-        projects: async (parent: any, { email }: Object) => {
-            const projects = await Project.find({})
-            return projects
-        },
         getUsers: async (_: any, { emailId }: any) => {
             const session = driver.session()
             try {
                 const result = await session.run('MATCH(u:user {emailId:$emailId}) -->(hasMain)   RETURN u as user,  hasMain as project', { emailId });
                 const users = result.records.map((record) => record.get('user').properties);
                 // const projects = result.records.map((record)=>record.get('project').properties);
-                
+
                 return users
 
             }

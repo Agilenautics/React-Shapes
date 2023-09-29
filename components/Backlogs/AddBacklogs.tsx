@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Types } from "./staticData/types"
-// import { Statuses } from './staticData/statuses';
-import { createNode, newNode, updateTaskMethod, updateTasksMutation } from '../../Flow/Nodes/gqlNodes';
-import { parents } from './staticData/processedData';
-import { createFileInFolder, createFileInMain, newFileInFolder, newFileInMain, updateStoryMethod, updateStoryMutation } from '../../TreeView/gqlFiles';
+import { Types } from "../AdminPage/Projects/staticData/types"
+import { createNode, newNode, updateTaskMethod, updateTasksMutation } from '../Flow/Nodes/gqlNodes';
+import { createFileInFolder, createFileInMain, newFileInFolder, newFileInMain, updateStoryMethod, updateStoryMutation } from '../TreeView/gqlFiles';
 import { useRouter } from 'next/router';
-import validationSchema from './staticData/validationSchema';
-import nodeStore from '../../Flow/Nodes/nodeStore';
-import backlogStore from '../../Backlogs/backlogStore';
-import { SPRINTS_FOR_BACKLOGS, getSprintToBacklogs } from '../../Sprints/gqlSprints';
+import validationSchema from '../AdminPage/Projects/staticData/validationSchema';
+import nodeStore from '../Flow/Nodes/nodeStore';
+import backlogStore from './backlogStore';
+// import sprintStore from '../Sprints/sprintStore'
+import { SPRINTS_FOR_BACKLOGS, getSprintToBacklogs, CONNECT_TO_STORY, connectToStory, getSprintByProjectId, GET_SPRINTS } from '../Sprints/gqlSprints';
+import sprintStore from '../Sprints/sprintStore';
 
 
 
@@ -18,50 +18,51 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
   const updateRow = backlogStore(state => state.updateRow);
   const allStories = backlogStore(state => state.allStories);
   const parents = backlogStore(state => state.parents);
-  const [sprints, setSprints] = useState<any>([])
+
+  // sprint store
+  const addTaskOrEpicOrStoryToSprint = sprintStore((state) => state.addTaskOrEpicOrStoryToSprint);
+  const updateSprints = sprintStore((state)=>state.updateSprints);
+  const sprints = sprintStore((state)=>state.sprints)
 
   const updateNode = nodeStore((state) => state.updateNodes);
   const formRef = useRef(null);
   const router = useRouter();
 
-  console.log(selectedElement)
-  
+
 
   const projectId = router.query.projectId as string;
 
 
   const handleSubmit = (values: any) => {
-    
-    console.log("form values",values);
-    
     if (selectedElement != null) {
       if (selectedElement.type != "file") {
-       updateTaskMethod(selectedElement.id, updateTasksMutation, values)
-       .then(() => {
-        values.parent = values.epic
-        updateRow(values)
-       } );
+        updateTaskMethod(selectedElement.id, updateTasksMutation, values)
+          .then((res) => {
+            addTaskOrEpicOrStoryToSprint(values.addToSprint, res.data.updateFlowNodes.flowNodes)
+            values.parent = values.epic
+            updateRow(values)
+          });
       } else {
         updateStoryMethod(selectedElement.id, updateStoryMutation, values)
-        .then(() => {
-          values.parent = values.epic
-          updateRow(values)
-         } );
+          .then(() => {
+            values.parent = values.epic
+            updateRow(values)
+          });
       }
-    }else{
-      if(values.type=="file"){
-        if(values.epic == projectId) createFileInMain(newFileInMain,values.epic,values)
-        .then(() => {
-          values.parent = values.epic
-          addRow(values)
-         });
-        else createFileInFolder(newFileInFolder,values.epic,values)
-        .then(() => {
-          values.parent = values.epic
-          addRow(values)
-         });
-      }else{
-        createNode(newNode, updateNode, values,addRow)
+    } else {
+      if (values.type == "file") {
+        if (values.epic == projectId) createFileInMain(newFileInMain, values.epic, values)
+          .then(() => {
+            values.parent = values.epic
+            addRow(values)
+          });
+        else createFileInFolder(newFileInFolder, values.epic, values)
+          .then(() => {
+            values.parent = values.epic
+            addRow(values)
+          });
+      } else {
+        createNode(newNode, updateNode, values, addRow)
       }
     }
     setShowForm(false);
@@ -86,15 +87,13 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
     };
   }, []);
 
-  useEffect(()=>{
-   getSprintToBacklogs(projectId,SPRINTS_FOR_BACKLOGS).then((res:any)=>setSprints(res)
-   )
-  },[])
-  
+  useEffect(() => {
+    getSprintByProjectId(projectId,GET_SPRINTS,updateSprints)
+  }, [])
 
-  // console.log(sprints);
-  
-  
+
+
+
 
   return (
     <div className='p-6' ref={formRef}>
@@ -105,8 +104,8 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
           description: selectedElement ? selectedElement.description : '',
           status: selectedElement ? selectedElement.status : 'To-Do',
           assign: selectedElement ? selectedElement.user : '',
-          epic: selectedElement  ? selectedElement.parent: projectId,
-          story: selectedElement && selectedElement.type!=="file" ? selectedElement.story.id : ''
+          epic: selectedElement ? selectedElement.parent : projectId,
+          story: selectedElement && selectedElement.type !== "file" ? selectedElement.story.id : ''
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
@@ -301,13 +300,13 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                 <option value="">Select Sprint</option>
                 {sprints.map(
                   (sprint: any) =>
-                   (
-                      <option key={sprint.id} value={sprint.name}>
-                        {sprint.name}
-                      </option>
-                    )
+                  (
+                    <option key={sprint.id} value={sprint.id}>
+                      {sprint.name}
+                    </option>
+                  )
                 )}
-                
+
               </Field>
               <ErrorMessage
                 name="addToSprint"
