@@ -57,6 +57,7 @@ interface SprintState {
     deleteSprint: (id: string) => void;
     hadleFilterSprint: (selectedSprint: string) => void;
     addTaskOrEpicOrStoryToSprint: (sprintId: string, newData: Sprint) => void;
+    
 }
 
 
@@ -72,6 +73,7 @@ const sprintStore = create<SprintState>((set) => ({
     updateSprints: (sprints: Array<Sprint>, loading: Boolean, error: any) => (
         set((state) => {
             // getSprintByProjectId(projectId,GET_SPRINTS,state.updateSprints)
+            console.log(sprints,"update sprint")
             return { sprints, loading, error }
         })
     ),
@@ -93,29 +95,30 @@ const sprintStore = create<SprintState>((set) => ({
             return { sprints: filterSprints }
         })
     ),
-    addTaskOrEpicOrStoryToSprint: (sprintId: string, newData: any) => (
+    addTaskOrEpicOrStoryToSprint: (sprintId: string, newData: any) => {
         set((state) => {
-            const { id, type } = newData[0]
-            const { hasSprint, ...hasFlownode } = newData[0]
-            const sprint = state.sprints.filter((values) => values.id === sprintId)[0];
+            const { id, type, hasInfo } = newData;
+            const { hasSprint, ...hasFlownode } = newData[0];
+        
+            // Find the sprint to update
+            const sprintIndex = state.sprints.findIndex((s) => s.id === sprintId);
+        
+            if (sprintIndex !== -1 && type !== 'file' && !state.sprints[sprintIndex].flownodeHas.some(item => item.id === id)) {
+              const updatedSprint = { ...state.sprints[sprintIndex], flownodeHas: [...state.sprints[sprintIndex].flownodeHas, hasFlownode] };
+        
+              const updatedSprints = [...state.sprints];
+              updatedSprints[sprintIndex] = updatedSprint;
 
-            if (type !== 'file' && sprintId) {
-                const existanceTask = sprint.flownodeHas.some((value) => value.id === id);
-                if (!existanceTask) {
-                    const updatedFlownode = [...sprint.flownodeHas, hasFlownode];
-                    const updateSprint = { ...sprint, flownodeHas: updatedFlownode };
-                    const updated_sprints = state.sprints.map((values) => values.id === sprintId ? updateSprint : values);
-                    state.sprints = updated_sprints
-                }
-            } else {
-                console.log('file')
+              state.sprints = updatedSprints
+        
+            //   return { sprints: updatedSprints };
             }
-            console.log(state.sprints)
-            return {sprints:state.sprints}
 
-
-        })
-    )
+            console.log(state.sprints,"sprints")
+        
+            return {sprints:state.sprints};
+          })
+    }
 }));
 
 

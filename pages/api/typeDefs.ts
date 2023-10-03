@@ -13,6 +13,7 @@ const typeDefs = gql`
     userName: String
     emailId: String!
     userType: String
+    comments:comments  @relationship(type:"hasUser",direction:IN)
     hasProjects: [main!]! @relationship(type: "hasMain", direction: OUT)
     active: Boolean!
   }
@@ -48,6 +49,7 @@ const typeDefs = gql`
     isOpen: Boolean!
     timeStamp: DateTime @timestamp
     name: String!
+    comments:[comments!]! @relationship(type:"folderHas",direction:IN)
     hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
     hasInfo:info @relationship( type:"hasInfo",direction:IN)
     mainHas: main @relationship(type: "hasFolder", direction: IN)
@@ -88,6 +90,7 @@ const typeDefs = gql`
     hasInfo:info @relationship( type:"hasInfo",direction:IN)
     status:String
     assignedTo:String
+    comments:[comments!]!@relationship(type:"hasFlownodes",direction:OUT)
     hasdataNodedata: nodeData @relationship(type: "hasData", direction: OUT)
     haspositionPosition: position
       @relationship(type: "hasPosition", direction: OUT)
@@ -185,6 +188,16 @@ const typeDefs = gql`
   flownodeHas: [flowNode!]! @relationship(type:"hasSprint",direction:OUT)
   #projects
   hasProjects:main @relationship(type:"hasProjects",direction:OUT)
+ }
+
+ type comments{
+  message:String!
+  timeStamp: DateTime! @timestamp
+  user:user @relationship(type:"hasUser",direction:OUT)
+  task:flowNode @relationship(type:"hasFlownodes",direction:OUT)
+  story:file @relationship(type:"hasFile",direction:OUT)
+  epic:folder @relationship(type:"hasFolder",direction:OUT)
+  sprint:sprint @relationship(type:"hasSprint",direction:OUT)
  }
 
   type tasks {

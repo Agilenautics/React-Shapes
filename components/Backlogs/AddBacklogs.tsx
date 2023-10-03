@@ -21,8 +21,8 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
 
   // sprint store
   const addTaskOrEpicOrStoryToSprint = sprintStore((state) => state.addTaskOrEpicOrStoryToSprint);
-  const updateSprints = sprintStore((state)=>state.updateSprints);
-  const sprints = sprintStore((state)=>state.sprints)
+  const updateSprints = sprintStore((state) => state.updateSprints);
+  const sprints = sprintStore((state) => state.sprints)
 
   const updateNode = nodeStore((state) => state.updateNodes);
   const formRef = useRef(null);
@@ -88,7 +88,7 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
   }, []);
 
   useEffect(() => {
-    getSprintByProjectId(projectId,GET_SPRINTS,updateSprints)
+    getSprintByProjectId(projectId, GET_SPRINTS, updateSprints)
   }, [])
 
 
@@ -227,7 +227,8 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                 className="mt-1 text-red-500"
               />
             </div>
-            <div className="mb-4 flex w-[500px] space-x-4">
+            <div className="mb-4">
+
               <div className="w-full">
                 <label
                   htmlFor="description"
@@ -250,9 +251,16 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                 <label htmlFor="discussion" className="block font-semibold">
                   Discussion:
                 </label>
+                <div className='p-1 my-2 flex gap-2'>
+                  <div className='text-white bg-black rounded-full w-6 text-center'> I </div>
+                  <div> Hi <b>@sandeep</b> Please check this task </div>
+                  <div className='px-12'  > 4.30pm </div>
+
+                </div>
                 <Field
                   as="textarea"
                   name="discussion"
+                  placeholder="comments.."
                   className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
                 />
                 <ErrorMessage
@@ -306,7 +314,6 @@ export default function AddBacklogs({ types, statuses, users, setShowForm, selec
                     </option>
                   )
                 )}
-
               </Field>
               <ErrorMessage
                 name="addToSprint"

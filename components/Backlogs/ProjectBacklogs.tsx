@@ -276,7 +276,7 @@ function ProjectBacklogs() {
       </button>
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="rounded-lg bg-white shadow-lg h-[70vh] w-[50vw] overflow-y-scroll overflow-x-hidden" >
+          <div className="rounded-lg bg-white shadow-lg h-screen w-screen overflow-y-scroll overflow-x-hidden" >
             <AddBacklogs
               types={types}
               users={users}
