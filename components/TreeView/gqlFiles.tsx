@@ -6,6 +6,7 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { Node_Fragment, Edge_Fragment } from "../Flow/Nodes/gqlNodes";
+import { NextApiResponse } from "next";
 
 
 export const Info_Fragment = gql`
@@ -26,6 +27,7 @@ const File_Fragment = gql`
     type
     id
     name
+    uid
     hasSprint {
       id
       name
@@ -68,9 +70,9 @@ ${File_Fragment}
 
 // create File (story)
 
-const createFile =async (mainId: string, folderId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, fileData: any) => {
+const createFile = async (mainId: string, folderId: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, fileData: any) => {
   let data
- await client.mutate({
+  await client.mutate({
     mutation,
     variables: {
       input: {
@@ -83,7 +85,7 @@ const createFile =async (mainId: string, folderId: string, mutation: DocumentNod
               assignedTo: "",
               dueDate: "",
               // @ts-ignore
-              description: fileData.discription||"",
+              description: fileData.discription || "",
               sprint: "",
             }
           }
@@ -144,6 +146,7 @@ const getMainByUser = gql`
         type
         isOpen
         name
+        uid
         hasSprint {
          id
          name
@@ -157,6 +160,7 @@ const getMainByUser = gql`
           id
           type
           isOpen
+          uid
           hasSprint {
             id
             name
@@ -477,7 +481,7 @@ async function createFileInFolder(
 interface File {
   name: string;
   id: string;
-  
+
   hasflowchart: any;
   flowchart: any;
   type: "file";
@@ -948,6 +952,81 @@ const updateStoryMutation = gql`
   }
 `;
 
+//getting uid 
+const getUidQuery = gql`
+  query Uids {
+  uids {
+    id
+    uid
+  }
+}
+`
+const getUidMethode = (customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+
+  return client.query({
+    query: customQuery
+  }).then((respons: NextApiResponse | any) => {
+    return respons
+  })
+    .catch((err) => {
+      console.log(err, "getUid")
+    })
+}
+
+
+const createUidMutation = gql`
+mutation CreateUids($input: [uidCreateInput!]!) {
+  createUids(input: $input) {
+    uids {
+      uid
+      id
+    }
+  }
+}
+`
+
+
+const createUidMethode = (mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  return client.mutate({
+    mutation,
+    variables: {
+      input: [
+        {
+          uid: 1
+        }
+      ]
+    }
+  }).then((res) => {
+    return res
+  }).catch((err) => console.log(err, "error while creating uid"))
+
+}
+const updateUidMutation = gql`
+mutation UpdateUids($where: uidWhere) {
+  updateUids(where: $where) {
+    uids {
+      id
+      uid
+    }
+  }
+}
+`
+const updateUidMethode = (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  return client.mutate({
+    mutation,
+    variables: {
+      where: {
+        id
+      },
+      update: {
+        uid_INCREMENT: 1
+      }
+    }
+  }).then((response) => {
+    return response
+  })
+    .catch((err) => console.log(err, "error while updating uids"))
+}
 export {
   createFolderInMain,
   newFolderInMain,
@@ -974,5 +1053,11 @@ export {
   updateStoryMethod,
   updateStoryMutation,
   createFile,
-  createFileMutation
+  createFileMutation,
+  getUidQuery,
+  getUidMethode,
+  createUidMethode,
+  createUidMutation,
+  updateUidMethode,
+  updateUidMutation
 };

@@ -16,6 +16,7 @@ import { GET_USER, getUserByEmail } from "../AdminPage/Projects/gqlProject";
 import projectStore from "../AdminPage/Projects/projectStore";
 import userStore from "../AdminPage/Users/userStore";
 import backlogStore from "./backlogStore";
+import generateUid from "../getUid";
 
 
 
@@ -31,7 +32,11 @@ function ProjectBacklogs() {
   const [selectedElement, setSelectedElement] = useState(null);
   const allStatus = backlogStore(state => state.allStatus)
   const [statuses, setStatuses] = useState(["Select Status", ...allStatus])
-  const parents = backlogStore(state => state.parents)
+  const parents = backlogStore(state => state.parents);
+
+  const uid = generateUid([1,9])
+
+  console.log(uid)
   
 
   

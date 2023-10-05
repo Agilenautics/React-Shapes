@@ -100,7 +100,7 @@ console.log(process.env.NODE_ENV)
 // );
 
 
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver,resolvers });
+const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
   introspection: true,

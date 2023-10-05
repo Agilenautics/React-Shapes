@@ -30,6 +30,7 @@ ${Info_Fragment}
     flowchart
     type
     timeStamp
+    uid
     hasSprint {
       id
       name
@@ -236,6 +237,7 @@ async function createNode(
                           flowchart: "flowNode",
                           draggable: true,
                           type: data.type,
+                          uid:data.uid,
                           hasInfo: {
                             create: {
                               node: {

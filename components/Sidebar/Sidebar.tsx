@@ -11,7 +11,7 @@ import { BsPlus } from 'react-icons/bs'
 import { RiFlowChart } from "react-icons/ri"
 import fileStore from "../TreeView/fileStore";
 import { useRouter } from "next/router";
-import { getMainByUser, getTreeNodeByUser } from "../TreeView/gqlFiles";
+import { createUidMethode, createUidMutation, getMainByUser, getTreeNodeByUser, getUidMethode, getUidQuery } from "../TreeView/gqlFiles";
 import Link from "next/link";
 import projectStore, { Project } from "../AdminPage/Projects/projectStore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -53,6 +53,12 @@ const Sidebar = ({ isOpen }: SideBar) => {
   const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
   const setLoading = fileStore((state) => state.setLoading);
+  const updateUids = fileStore((state)=>state.updateUid);
+  const idOfuid = fileStore((state)=>state.idofUid);
+
+  console.log(idOfuid)
+  
+
 
   const router = useRouter();
   const projectId = router.query.projectId || "";
@@ -65,6 +71,15 @@ const Sidebar = ({ isOpen }: SideBar) => {
     return initData;
   };
 
+  const getuniqId = async()=>{
+    const uniqId = await getUidMethode(getUidQuery)
+    updateUids(uniqId.data.uids)
+    if(uniqId.data.uids.length===0 ){
+      await createUidMethode(createUidMutation);
+    }
+  }
+
+
 
 
   const verificationToken = async () => {
@@ -76,6 +91,12 @@ const Sidebar = ({ isOpen }: SideBar) => {
   }
 
 
+  useEffect(()=>{
+    getuniqId()
+  },[]);
+
+
+  
 
 
   useEffect(() => {
@@ -84,6 +105,9 @@ const Sidebar = ({ isOpen }: SideBar) => {
     })
     setProjectData(filteredProject)
   }, [searchQuery]);
+
+
+
 
 
 

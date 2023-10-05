@@ -1,11 +1,8 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { updateEdge, useReactFlow } from "reactflow";
 import { MdOutlineAdd } from "react-icons/md";
 import { newNode, createNode } from "../Flow/Nodes/gqlNodes";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import fileStore from "../TreeView/fileStore";
-import LoadingIcon from "../LoadingIcon";
 
 /**
  * This is a FAB that is positioned over the minimap view.
@@ -17,14 +14,13 @@ import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import backlogStore from "../Backlogs/backlogStore";
 
 function AddNodeButton() {
-  const currentFlowchart = fileStore((state) => state.currentFlowchart);
   const currentId = fileStore((state) => state.Id);
   const updateNode = nodeStore((state) => state.updateNodes);
   const [isLoading, setIsLoading] = useState(false);
-  const [isBPMNLoading, setIsBPMNLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExpandedAdd, setIsExpandedAdd] = useState(false);
   const addRow = backlogStore(state => state.addRow);
+  const uid = fileStore((state)=>state.uid);
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
@@ -36,6 +32,7 @@ function AddNodeButton() {
       type : "blueNode",
       description : "",
       assignedTo : "",
+      uid
     }
     try {
       await createNode(newNode, updateNode, data, addRow);
@@ -54,6 +51,7 @@ function AddNodeButton() {
       type : "defaultNode",
       description : "",
       assignedTo : "",
+      uid
     }
     try {
       await createNode(newNode, updateNode, data, addRow);

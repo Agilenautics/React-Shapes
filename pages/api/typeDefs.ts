@@ -49,6 +49,7 @@ const typeDefs = gql`
     isOpen: Boolean!
     timeStamp: DateTime @timestamp
     name: String!
+    uid:Int!
     comments:[comments!]! @relationship(type:"folderHas",direction:IN)
     hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
     hasInfo:info @relationship( type:"hasInfo",direction:IN)
@@ -64,6 +65,7 @@ const typeDefs = gql`
     timeStamp: DateTime! @timestamp
     type: String!
     name: String!
+    uid:Int!
     hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
     hasInfo:info! @relationship( type:"hasInfo",direction:IN)
     hasflowchart: flowchart @relationship(type: "hasFlowchart", direction: OUT)
@@ -86,6 +88,7 @@ const typeDefs = gql`
     draggable: Boolean!
     flowchart: String!
     type: String!
+    uid:Int!
     hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
     hasInfo:info @relationship( type:"hasInfo",direction:IN)
     status:String
@@ -180,6 +183,7 @@ const typeDefs = gql`
   startDate: String!
   endDate:String!
   description: String
+  uid:Int!
   #Epics
   folderHas: [folder!]! @relationship(type:"hasSprint",direction:OUT)
   #stories
@@ -198,6 +202,12 @@ const typeDefs = gql`
   story:file @relationship(type:"hasFile",direction:OUT)
   epic:folder @relationship(type:"hasFolder",direction:OUT)
   sprint:sprint @relationship(type:"hasSprint",direction:OUT)
+ }
+
+ type uid{
+ id:ID! @id
+ uid:Int!
+ flownode:flowNode @relationship(type:"hasId",direction:OUT)
  }
 
   type tasks {
