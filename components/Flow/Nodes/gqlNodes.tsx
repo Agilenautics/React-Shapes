@@ -242,7 +242,7 @@ async function createNode(
                             create: {
                               node: {
                                 description: "",
-                                assignedTo: "",
+                                assignedTo: data.assign,
                                 status: "To-Do",
                                 dueDate: "",
                                 sprint: ""
@@ -306,10 +306,12 @@ async function createNode(
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes1);
-      console.log(data);
+      console.log(result);
+
 
 
       data.status = data.status || "To-Do"
+      // data.uid = result.data.updateFiles.files[0].hasflowchart.nodes[0].uid
       addRow(data)
 
       // addRow(data)

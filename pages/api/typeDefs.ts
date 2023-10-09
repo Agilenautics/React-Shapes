@@ -183,7 +183,6 @@ const typeDefs = gql`
   startDate: String!
   endDate:String!
   description: String
-  uid:Int!
   #Epics
   folderHas: [folder!]! @relationship(type:"hasSprint",direction:OUT)
   #stories

@@ -12,6 +12,7 @@ import fileStore from "../TreeView/fileStore";
 import { nodeShapeMap } from "../Flow/Nodes/nodeTypes";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import backlogStore from "../Backlogs/backlogStore";
+import { updateUidMethode, updateUidMutation } from "../TreeView/gqlFiles";
 
 function AddNodeButton() {
   const currentId = fileStore((state) => state.Id);
@@ -21,6 +22,7 @@ function AddNodeButton() {
   const [isExpandedAdd, setIsExpandedAdd] = useState(false);
   const addRow = backlogStore(state => state.addRow);
   const uid = fileStore((state)=>state.uid);
+  const idofUid = fileStore(state => state.idofUid);
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
@@ -35,7 +37,9 @@ function AddNodeButton() {
       uid
     }
     try {
-      await createNode(newNode, updateNode, data, addRow);
+       createNode(newNode, updateNode, data, addRow).then(()=>{
+        updateUidMethode(idofUid,updateUidMutation)
+       })
     } finally {
       setIsLoading(false);
     }

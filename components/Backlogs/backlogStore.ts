@@ -45,7 +45,7 @@ const backlogStore = create<BacklogState>((set) => ({
     allStories: [],
     parents: [],
     allStatus: [],
-    updateBacklogsData: (backlogs: Array<Backlog>) => (
+    updateBacklogsData: (backlogs: Array<Backlog>) => (        
         // @ts-ignore
         set((state) => {
             const parents: any[] = [{ name: "Select Epic", id: "" }];
@@ -106,20 +106,22 @@ const backlogStore = create<BacklogState>((set) => ({
 
                         if (!allStatus.includes(j.hasInfo.status)) {
                             allStatus.push(j.hasInfo.status)
-                        }                        
+                        }  
+                        console.log(i.parent,"prnt");
+                                              
 
                         temproary.push({
                             ...j.hasInfo,
                             ...j.hasdataNodedata,
                             id: j.id,
                             type: j.type,
+                            uid: j.uid,
                             parent: i.parent,
                             story:{name:i.name,id: i.id}
                         });
                     }
                 }
-            }
-            
+            }            
             return { backlogs:temproary, allStories, parents, allStatus }
         })
     ),

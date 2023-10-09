@@ -7,6 +7,7 @@ import {
 import client from "../../apollo-client";
 import { Node_Fragment, Edge_Fragment } from "../Flow/Nodes/gqlNodes";
 import { NextApiResponse } from "next";
+import fileStore from "./fileStore";
 
 
 export const Info_Fragment = gql`
@@ -287,6 +288,7 @@ async function createFolderInMain(
             type: "folder",
             isOpen: false,
             name: "New Folder",
+            uid: 1,
             hasInfo: {
               create: {
                 node: {
@@ -322,6 +324,8 @@ async function createFolderInMain(
     })
     .then((result) => {
       node = result.data.createFolders.folders[0];
+      const idofUid = fileStore(state => state.idofUid)
+      updateUidMethode(idofUid,updateUidMutation)
       // console.log(result.data.createFolders);
     });
   return node;
@@ -345,8 +349,7 @@ async function createFileInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string,
   data: any
-) {
-  // const addRow = backlogStore((state) => state.addRow);
+) {  
   var node: any;
   await client
     .mutate({
@@ -361,11 +364,12 @@ async function createFileInMain(
               node: {
                 type: "file",
                 name: data.name,
+                uid : data.uid,
                 hasInfo: {
                   create: {
                     node: {
                       status: data.status,
-                      assignedTo: "",
+                      assignedTo: data.assign,
                       dueDate: "",
                       description: data.descrition,
                       sprint: "",
@@ -393,6 +397,8 @@ async function createFileInMain(
       );
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
+      const idofUid = fileStore(state => state.idofUid)
+      updateUidMethode(idofUid,updateUidMutation)
       // addRow(data);
     });
   return node;
@@ -433,11 +439,12 @@ async function createFileInFolder(
               node: {
                 type: "file",
                 name: data.name,
+                uid : data.uid,
                 hasInfo: {
                   create: {
                     node: {
                       status: data.status,
-                      assignedTo: "",
+                      assignedTo: data.assign,
                       dueDate: "",
                       description: data.description,
                       sprint: "",
@@ -473,6 +480,8 @@ async function createFileInFolder(
       ).replace('"hasFile":', '"file":');
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
+      const idofUid = fileStore(state => state.idofUid)
+      updateUidMethode(idofUid,updateUidMutation)
       // addRow(data);
     });
   return node;
@@ -1002,8 +1011,8 @@ const createUidMethode = (mutation: DocumentNode | TypedDocumentNode<any, Operat
 
 }
 const updateUidMutation = gql`
-mutation UpdateUids($where: uidWhere) {
-  updateUids(where: $where) {
+mutation UpdateUids($where: uidWhere, $update: uidUpdateInput) {
+  updateUids(where: $where, update: $update) {
     uids {
       id
       uid

@@ -12,11 +12,12 @@ import sprintStore from "./sprintStore";
 import { useRouter } from "next/router";
 import LoadingIcon from "../LoadingIcon";
 import { ToastContainer, toast } from "react-toastify";
+import SprintBoard from "./SprintBoard";
 
 function ProjectSprints() {
   const { sprints, updateSprints, loading, error } = sprintStore();
   const [filteredData, setFilteredData] = useState<any>();
-
+  const [boardView, setBoardView] = useState(false)
 
   const router = useRouter();
 
@@ -54,7 +55,6 @@ function ProjectSprints() {
     if (projectId) {
       getSprint(projectId)
     }
-    // sprints.length && setFilteredData(sprints[0])
   }, [projectId, error]);
 
   useEffect(() => {
@@ -62,12 +62,24 @@ function ProjectSprints() {
       setFilteredData(sprints[0]);
     } else {
       setFilteredData(null);
-    }
+    } 
   }, [sprints]);
 
 
   const sprintCreateMessage = () => toast.success("New Sprint Created...");
 
+  const handleBoardView = ()=>{
+    setBoardView(!boardView)
+  }  
+
+
+  const onFilter = (e: any) => {
+    const selectedSprintName = e.target.value;
+    const selectedSprint = sprints.find(
+      (sprint) => sprint.name === selectedSprintName
+    );
+    if (selectedSprint) setFilteredData(selectedSprint);
+  };
 
 
   if (loading) {
@@ -81,18 +93,6 @@ function ProjectSprints() {
   if (error) {
     return <> {error && <div> {error.message} </div>} </>;
   }
-
-  console.log("sprintpage",sprints)
-
-
-
-  const onFilter = (e: any) => {
-    const selectedSprintName = e.target.value;
-    const selectedSprint = sprints.find(
-      (sprint) => sprint.name === selectedSprintName
-    );
-    if (selectedSprint) setFilteredData(selectedSprint);
-  };
 
   return (
     <div className="absolute ml-3 w-fit">
@@ -116,7 +116,14 @@ function ProjectSprints() {
             </option>
           ))}
         </select>
+        <button
+  className={`ml-5 px-4 py-2 rounded-md bg-blue-500 text-white`}
+  onClick={handleBoardView}
+>
+  {boardView ? 'Table View' : 'Board View'}
+</button>
         {filteredData && (
+          !boardView ?
           <div
             key={filteredData.id}
             className="w-fill overflow-y mb-5 h-60 overflow-x-hidden rounded border shadow-lg"
@@ -211,7 +218,10 @@ function ProjectSprints() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </div>:
+          <div className="flex">
+            <SprintBoard data={filteredData}/>
+            </div>
         )}
       </div> : <div>No Sprints to show</div>}
 
