@@ -25,7 +25,6 @@ function AddNodeButton() {
   const idofUid = fileStore(state => state.idofUid);
   const updateUid = fileStore((state) => state.updateUid)
 
-  console.log(uid)
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);

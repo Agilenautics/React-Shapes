@@ -188,16 +188,28 @@ const fileStore = create<files>((set) => ({
       console.log("root", root)
       if (node?.model.type === "folder") {
         const to_be_deleted = state.data.children?.filter((value) => value.id !== id);
+        console.log("Hoooo")
 
 
         // deleteFolderBackend(id)
         node?.drop();
         return { data: state.data }
       } else if (node?.model.type === "file") {
+        console.log(node.getPath())
+
+
+
+
+
+
+
+        // if its file in main
+
         const to_be_deleted = state.data.children?.filter((value) => value.id !== id);
+        console.log(to_be_deleted)
         const updated_children = { ...state.data, children: to_be_deleted, hasContainsFile: to_be_deleted, }
         // deleteFileBackend(id)
-        return { data: updated_children}
+        return { data: updated_children }
       }
       const x = searchTree(state.data, id);
       // ? Figure out how to make this work
@@ -233,7 +245,6 @@ const fileStore = create<files>((set) => ({
       let uid = arrayOfUids.reduce((a, b) => Math.max(a, b), 0);
       const filterUids = collectionofIds.filter((values) => values.uid === uid)[0]
       let updated_uid = uid === 0 ? 1 : uid
-      console.log(updated_uid)
       return { uid: updated_uid, idofUid: filterUids.id }
     }),
   loading: true,

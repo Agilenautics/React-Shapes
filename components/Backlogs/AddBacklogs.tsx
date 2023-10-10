@@ -104,12 +104,12 @@ export default function AddBacklogs({
         //   addRow(values);
         // });
         else
-          createFileInFolder(newFileInFolder, values.epic, values).then(() => {
+          createFileInFolder(newFileInFolder, values.epic, values).then(async () => {
             values.parent = values.epic;
             addRow(values)
-           const updateUidRespon =  updateUidMethode(idofUid, updateUidMutation) as any;
-           updateUid(updateUidRespon.data.updateUids.uids)
-            
+            const updateUidRespon = await updateUidMethode(idofUid, updateUidMutation) as any;
+            updateUid(updateUidRespon.data.updateUids.uids)
+
           });
       } else {
         try {
