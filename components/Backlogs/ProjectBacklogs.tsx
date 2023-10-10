@@ -73,7 +73,6 @@ function ProjectBacklogs() {
   //  callBack()
   }, [])
 
-  console.log(backend.children,"bec");
   
 
   useEffect(() => {
@@ -118,7 +117,6 @@ function ProjectBacklogs() {
     })
   };
 
-  console.log(filteredData);
   
   
 

@@ -324,8 +324,6 @@ async function createFolderInMain(
     })
     .then((result) => {
       node = result.data.createFolders.folders[0];
-      const idofUid = fileStore(state => state.idofUid)
-      updateUidMethode(idofUid,updateUidMutation)
       // console.log(result.data.createFolders);
     });
   return node;
@@ -397,8 +395,6 @@ async function createFileInMain(
       );
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
-      const idofUid = fileStore(state => state.idofUid)
-      updateUidMethode(idofUid,updateUidMutation)
       // addRow(data);
     });
   return node;
@@ -480,8 +476,6 @@ async function createFileInFolder(
       ).replace('"hasFile":', '"file":');
       const nodes1 = JSON.parse(newFile1);
       node = nodes1.file[0];
-      const idofUid = fileStore(state => state.idofUid)
-      updateUidMethode(idofUid,updateUidMutation)
       // addRow(data);
     });
   return node;

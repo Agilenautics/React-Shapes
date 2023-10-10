@@ -21,26 +21,32 @@ function AddNodeButton() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExpandedAdd, setIsExpandedAdd] = useState(false);
   const addRow = backlogStore(state => state.addRow);
-  const uid = fileStore((state)=>state.uid);
+  const uid = fileStore((state) => state.uid);
   const idofUid = fileStore(state => state.idofUid);
+  const updateUid = fileStore((state) => state.updateUid)
+
+  console.log(uid)
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
     setIsLoading(true);
     const data = {
-      story : currentId,
+      story: currentId,
       symbol,
-      label : "New Node",
-      type : "blueNode",
-      description : "",
-      assignedTo : "",
+      label: "New Node",
+      type: "blueNode",
+      description: "",
+      assignedTo: "",
       uid
     }
     try {
-       createNode(newNode, updateNode, data, addRow).then(()=>{
-        updateUidMethode(idofUid,updateUidMutation)
-       })
-    } finally {
+      await createNode(newNode, updateNode, data, addRow);
+      const updateUidResponse = await updateUidMethode(idofUid, updateUidMutation) as any;
+      updateUid(updateUidResponse.data.updateUids.uids)
+    }catch(err){
+      console.log(err,"while creating node")
+    }
+    finally {
       setIsLoading(false);
     }
   };
@@ -49,17 +55,26 @@ function AddNodeButton() {
     setIsExpanded(!isExpanded);
     setIsLoading(true);
     const data = {
-      story : currentId,
+      story: currentId,
       symbol,
-      label : "",
-      type : "defaultNode",
-      description : "",
-      assignedTo : "",
+      label: "",
+      type: "defaultNode",
+      description: "",
+      assignedTo: "",
       uid
     }
     try {
       await createNode(newNode, updateNode, data, addRow);
-    } finally {
+      const updateUidResponse = updateUidMethode(idofUid, updateUidMutation) as any;
+      if (!updateUidResponse?.errors && !updateUidResponse?.data) { return null }
+      //       else{return <div>Error</div>}
+      //      console.log("Update Uid Response : ", JSON.stringify({...updateUidResponse}))
+      updateUid(updateUidResponse.data.updateUids.uids)
+    }
+    catch(err){
+      console.log(err,"while creating bpmn symbole")
+    }
+     finally {
       setIsLoading(false);
     }
   };

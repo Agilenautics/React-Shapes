@@ -46,6 +46,7 @@ export default function AddBacklogs({
   const parents = backlogStore((state) => state.parents);
   const idofUid = fileStore(state => state.idofUid);
   const uid = fileStore(state => state.uid);
+  const updateUid = fileStore((state) => state.updateUid)
 
   // sprint store
   const addTaskOrEpicOrStoryToSprint = sprintStore(
@@ -59,7 +60,7 @@ export default function AddBacklogs({
 
   const projectId = router.query.projectId as string;
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = async (values: any) => {
     if (selectedElement != null) {
       if (selectedElement.type != 'file') {
         updateTaskMethod(selectedElement.id, updateTasksMutation, values).then(
@@ -82,26 +83,48 @@ export default function AddBacklogs({
       }
     } else {
       values.uid = uid
-      
+
       if (values.type == 'file') {
         if (values.epic == projectId)
-          createFileInMain(newFileInMain, values.epic, values).then(() => {
-            values.parent = values.epic;
-             updateUidMethode(idofUid,updateUidMutation).then(res =>{
-              console.log(res,"updatedUid");
-             })
-            addRow(values);
-          });
+          try {
+            const createFileResponse = await createFileInMain(newFileInMain, values.epic, values);
+            console.log(createFileResponse, "file")
+            const updatedUidResponse = await updateUidMethode(idofUid, updateUidMutation);
+            // @ts-ignore
+            updateUid(updatedUidResponse.data.updateUids.uids)
+
+          } catch (error) {
+            console.log(error, "while creating fileinmain in add backlogs page ")
+          }
+        // createFileInMain(newFileInMain, values.epic, values).then(() => {
+        //   values.parent = values.epic;
+        //    updateUidMethode(idofUid,updateUidMutation).then(res =>{
+        //     console.log(res,"updatedUid");
+        //    })
+        //   addRow(values);
+        // });
         else
           createFileInFolder(newFileInFolder, values.epic, values).then(() => {
             values.parent = values.epic;
-            updateUidMethode(idofUid,updateUidMutation);
-            addRow(values);
+            addRow(values)
+           const updateUidRespon =  updateUidMethode(idofUid, updateUidMutation) as any;
+           updateUid(updateUidRespon.data.updateUids.uids)
+            
           });
       } else {
-        createNode(newNode, updateNode, values, addRow).then(()=>{
-          updateUidMethode(idofUid,updateUidMutation);
-        })
+        try {
+          await createNode(newNode, updateNode, values, addRow);
+          const updateUidRespon = await updateUidMethode(idofUid, updateUidMutation) as any;
+          updateUid(updateUidRespon.data.updateUids.uids);
+        }
+        catch (error) {
+          console.log(error, "while adding new node inside add baclogs page")
+        }
+
+
+        // createNode(newNode, updateNode, values, addRow).then(() => {
+        //   updateUidMethode(idofUid, updateUidMutation);
+        // })
       }
     }
     router.push({
@@ -118,6 +141,8 @@ export default function AddBacklogs({
   useEffect(() => {
     getSprintByProjectId(projectId, GET_SPRINTS, updateSprints);
   }, []);
+
+  console.log(uid, "uid")
 
   return (
     <div className="p-6">
@@ -193,54 +218,54 @@ export default function AddBacklogs({
               </div>
             </div>
             <div className="mb-4 flex space-x-4">
-                <div className="mb-4 w-full">
-                  <label htmlFor="assign" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
-                    Assign
-                  </label>
-                  <Field
-                    as="select"
-                    name="assign"
-                    className="w-full rounded-lg px-4 py-2 focus:outline-none hover:bg-gray-200"
-                  >
-                    {users.map(
-                      (user: any) =>
-                        user.emailId !== 'All' && (
-                          <option key={user.value} value={user.emailId}>
-                            {user.emailId}
-                          </option>
-                        )
-                    )}
-                    <option value="invite">Invite User</option>
-                  </Field>
-                  <ErrorMessage
-                    name="assign"
-                    component="div"
-                    className="mt-1 text-red-500"
-                  />
-                </div>
-                <div className="mb-4 w-full">
-                  <label htmlFor="addToSprint" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
-                    Add to Sprint
-                  </label>
-                  <Field
-                    as="select"
-                    name="addToSprint"
-                    className="w-full rounded-lg px-4 py-2 focus:outline-none hover:bg-gray-200"
-                  >
-                    <option value="">Select Sprint</option>
-                    {sprints.map((sprint: any) => (
-                      <option key={sprint.id} value={sprint.id}>
-                        {sprint.name}
-                      </option>
-                    ))}
-                  </Field>
-                  <ErrorMessage
-                    name="addToSprint"
-                    component="div"
-                    className="mt-1 text-red-500"
-                  />
-                </div>
+              <div className="mb-4 w-full">
+                <label htmlFor="assign" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
+                  Assign
+                </label>
+                <Field
+                  as="select"
+                  name="assign"
+                  className="w-full rounded-lg px-4 py-2 focus:outline-none hover:bg-gray-200"
+                >
+                  {users.map(
+                    (user: any) =>
+                      user.emailId !== 'All' && (
+                        <option key={user.value} value={user.emailId}>
+                          {user.emailId}
+                        </option>
+                      )
+                  )}
+                  <option value="invite">Invite User</option>
+                </Field>
+                <ErrorMessage
+                  name="assign"
+                  component="div"
+                  className="mt-1 text-red-500"
+                />
               </div>
+              <div className="mb-4 w-full">
+                <label htmlFor="addToSprint" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
+                  Add to Sprint
+                </label>
+                <Field
+                  as="select"
+                  name="addToSprint"
+                  className="w-full rounded-lg px-4 py-2 focus:outline-none hover:bg-gray-200"
+                >
+                  <option value="">Select Sprint</option>
+                  {sprints.map((sprint: any) => (
+                    <option key={sprint.id} value={sprint.id}>
+                      {sprint.name}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="addToSprint"
+                  component="div"
+                  className="mt-1 text-red-500"
+                />
+              </div>
+            </div>
             {/* if story require epic or project id else story */}
             {values.type != 'file' ? (
               <div className="mb-4">

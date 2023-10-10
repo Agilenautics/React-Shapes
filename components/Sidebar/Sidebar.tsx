@@ -54,9 +54,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
   const add_file = fileStore((state) => state.add_file);
   const setLoading = fileStore((state) => state.setLoading);
   const updateUids = fileStore((state)=>state.updateUid);
-  const idOfuid = fileStore((state)=>state.idofUid);
 
-  console.log(idOfuid)
   
 
 
