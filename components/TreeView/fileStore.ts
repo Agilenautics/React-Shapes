@@ -149,7 +149,7 @@ const fileStore = create<files>((set) => ({
       let root = new TreeModel().parse(state.data);
       const getChildren = root.model?.children;
       const getFolder =root.model?.hasContainsFolder;
-      const to_be_update = [,updatedData,...getChildren];
+      const to_be_update = [updatedData,...getChildren];
       const updatedFolders = [...getFolder,updatedData];
       const updatedState = {...state.data,children:to_be_update,hasContainsFolder:updatedFolders}
       console.log(updatedState)
