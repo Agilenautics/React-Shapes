@@ -11,6 +11,7 @@ import {
   newFileInFolder,
   createFileInMain,
   newFileInMain,
+  Folder,
 } from "./gqlFiles";
 
 
@@ -42,7 +43,7 @@ interface files {
   linkNodes: { nodes: any; fileID: string };
   updateLinkNodes: (nodes: Object, fileID: string) => void;
   add_file: () => void;
-  add_folder: () => void;
+  add_folder: (newFolder:Folder) => void;
   delete_item: (id: string) => void;
   find_file: (id: string) => MyData;
   loading: boolean;
@@ -137,43 +138,22 @@ const fileStore = create<files>((set) => ({
   }
   ,
 
-  add_folder: () =>
+  add_folder: (newFolder:Folder) =>
     set((state) => {
-      let parentId = state.Id;
-      let root = new TreeModel().parse(state.data);
-      let node = findById(root, parentId);
-      console.log(root, "root", node, "node", parentId, "parentId")
-
-
-      let data_chk = node?.model.type;
-
-      if (node?.model.type === "folder") {
-        createFolderInFolder(newFolderInFolder, parentId).then((result) => {
-          node?.model.children?.push({
-            id: result.id,
-            name: result.name,
-            type: result.type,
-            isOpen: result.isOpen,
-            children: [],
-          });
-        });
-      } else {
-        parentId = root.model.id;
-        createFolderInMain(newFolderInMain, parentId).then((result) => {
-
-          root.model.children?.push({
-            id: result.id,
-            name: result.name,
-            type: result.type,
-            isOpen: result.isOpen,
-            children: [],
-          });
-
-        });
-
+      const updatedData = {
+        ...newFolder,
+        children:[],
+        hasFile:[],
+        hasFolder:[]
       }
-
-      return { data: state.data };
+      let root = new TreeModel().parse(state.data);
+      const getChildren = root.model?.children;
+      const getFolder =root.model?.hasContainsFolder;
+      const to_be_update = [,updatedData,...getChildren];
+      const updatedFolders = [...getFolder,updatedData];
+      const updatedState = {...state.data,children:to_be_update,hasContainsFolder:updatedFolders}
+      console.log(updatedState)
+      return { data: updatedState };
     }),
 
   // ? This function seems to work, but may contain bugs w.r.t. state
@@ -184,7 +164,7 @@ const fileStore = create<files>((set) => ({
       if (node?.model.type === "folder") {
         const to_be_deleted = state.data.children?.filter((value) => value.id !== id);
         // @ts-ignore
-        const hasFolder = state.data.hasContainsFolder.filter((value:any) => value.id !== id);
+        const hasFolder = state.data.hasContainsFolder.filter((value: any) => value.id !== id);
         const updated_children = { ...state.data, children: to_be_deleted, hasContainsFolder: hasFolder };
         return { data: updated_children }
       } else if (node?.model.type === "file") {
@@ -193,8 +173,8 @@ const fileStore = create<files>((set) => ({
         const getParent = node.parent?.model
         const removeFileParent = getParent.children.filter((values: any) => values.id !== id);
         const to_be_updateParent = { ...getParent, children: removeFileParent, hasFile: removeFileParent };
-        const updated_parent_children = state.data.children?.map((values)=>{
-          if(values.id===getParentId){
+        const updated_parent_children = state.data.children?.map((values) => {
+          if (values.id === getParentId) {
             return {
               ...to_be_updateParent
             }

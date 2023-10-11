@@ -75,6 +75,7 @@ const nodeStore = create<NodeState>((set) => ({
     })),
   updateNodes: (nodes) =>
     set((state) => {
+      console.log(nodes)
       // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
       return { nodes: nodes };
     }),

@@ -11,7 +11,7 @@ import { BsPlus } from 'react-icons/bs'
 import { RiFlowChart } from "react-icons/ri"
 import fileStore from "../TreeView/fileStore";
 import { useRouter } from "next/router";
-import { createUidMethode, createUidMutation, getMainByUser, getTreeNodeByUser, getUidMethode, getUidQuery } from "../TreeView/gqlFiles";
+import { createFolderInMain, createUidMethode, createUidMutation, getMainByUser, getTreeNodeByUser, getUidMethode, getUidQuery, newFolderInMain, updateUidMethode, updateUidMutation } from "../TreeView/gqlFiles";
 import Link from "next/link";
 import projectStore, { Project } from "../AdminPage/Projects/projectStore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -53,13 +53,15 @@ const Sidebar = ({ isOpen }: SideBar) => {
   const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
   const setLoading = fileStore((state) => state.setLoading);
-  const updateUids = fileStore((state)=>state.updateUid);
+  const updateUids = fileStore((state) => state.updateUid);
+  const uid = fileStore((state) => state.uid);
+  const idOfUid = fileStore((state) => state.idofUid)
 
-  
+
 
 
   const router = useRouter();
-  const projectId = router.query.projectId || "";
+  const projectId = router.query.projectId as string || "";
 
   const getProjectId = async (id: string) => {
     const initData = await getTreeNodeByUser(getMainByUser, id, setLoading);
@@ -69,10 +71,10 @@ const Sidebar = ({ isOpen }: SideBar) => {
     return initData;
   };
 
-  const getuniqId = async()=>{
+  const getuniqId = async () => {
     const uniqId = await getUidMethode(getUidQuery)
     updateUids(uniqId.data.uids)
-    if(uniqId.data.uids.length===0 ){
+    if (uniqId.data.uids.length === 0) {
       await createUidMethode(createUidMutation);
     }
   }
@@ -89,12 +91,12 @@ const Sidebar = ({ isOpen }: SideBar) => {
   }
 
 
-  useEffect(()=>{
+  useEffect(() => {
     getuniqId()
-  },[]);
+  }, []);
 
 
-  
+
 
 
   useEffect(() => {
@@ -158,6 +160,20 @@ const Sidebar = ({ isOpen }: SideBar) => {
     verificationToken()
   }, [projectId, allProjects]);
 
+
+
+
+  const handleAddFolder = async () => {
+    const newFolder = {
+      name: "New Folder",
+      uid,
+      isOpen: false
+    }
+    const updatedFolderResponse = await createFolderInMain(newFolderInMain, projectId, newFolder);
+    add_folder(updatedFolderResponse)
+    const uidResponse = await updateUidMethode(idOfUid, updateUidMutation) as any
+    updateUids(uidResponse.data.updateUids.uids)
+  }
 
 
 
@@ -321,7 +337,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                             <button
                               type="button"
                               className=" rounded flex items-center gap-1 bg-sky-500 hover:bg-sky-600 duration-300 p-1 justify-center"
-                              onClick={() => add_folder()}
+                              onClick={handleAddFolder}
                             >
                               <AiFillFolderAdd className="text-xl" /> <span>Add Folder</span>
                             </button>

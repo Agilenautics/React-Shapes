@@ -33,9 +33,6 @@ import {
   updateEdgeMutation,
 } from "./Edges/gqlEdges";
 import fileStore from "../TreeView/fileStore";
-import { NodeState } from "./Nodes/nodeStore";
-import { EdgeState } from "./Edges/edgeStore";
-import BreadCrumbs from "../Sidebar/BreadCrumbs";
 
 const defaultEdgeOptions = {
   type: "customEdge",

@@ -256,6 +256,7 @@ const newFolderInMain = gql`
         isOpen
         name
         type
+        uid
         hasInfo {
           ...InfoFragment
         }
@@ -275,7 +276,8 @@ const newFolderInMain = gql`
 // here adding epic and also to sprint 
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  parentId: string
+  parentId: string,
+  newFolderData:Folder|any
 ) {
   var node: any;
   await client
@@ -285,9 +287,9 @@ async function createFolderInMain(
         input: [
           {
             type: "folder",
-            isOpen: false,
-            name: "New Folder",
-            uid: 1,
+            isOpen: newFolderData.isOpen,
+            name:newFolderData.name,
+            uid: newFolderData.uid,
             hasInfo: {
               create: {
                 node: {
@@ -324,7 +326,9 @@ async function createFolderInMain(
     .then((result) => {
       node = result.data.createFolders.folders[0];
       // console.log(result.data.createFolders);
-    });
+    }).catch((error)=>{
+      console.log("Error in creating folder",error);
+    })
   return node;
 }
 
@@ -494,6 +498,7 @@ export interface Folder {
   type: "folder";
   isOpen: boolean;
   name: string;
+  uid:number
   hasFolder: Folder[];
   hasFile: File[];
   children: (Folder | File)[];
