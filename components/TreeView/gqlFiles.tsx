@@ -348,6 +348,8 @@ async function createFileInMain(
   parentId: string,
   data: any
 ) {  
+  console.log(data,"mthd");
+  
   var node: any;
   await client
     .mutate({
@@ -369,7 +371,7 @@ async function createFileInMain(
                       status: data.status,
                       assignedTo: data.assign,
                       dueDate: "",
-                      description: data.descrition,
+                      description: data.description,
                       sprint: "",
                     },
                   },

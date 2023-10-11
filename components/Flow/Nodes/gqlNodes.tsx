@@ -312,6 +312,7 @@ async function createNode(
 
       data.status = data.status || "To-Do"
       // data.uid = result.data.updateFiles.files[0].hasflowchart.nodes[0].uid
+      data.parent = data.epic
       addRow(data)
 
       // addRow(data)

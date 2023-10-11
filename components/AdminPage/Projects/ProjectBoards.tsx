@@ -236,10 +236,26 @@ function ProjectBoards() {
           ))}
         </div>
       </div>
-      <button className="m-5 w-48 rounded-lg bg-blue-700 px-4 py-2 text-white shadow-lg"
-        onClick={() => setShowForm(!showForm)}>
-        Add Boards
-      </button>
+      <button
+      data-tooltip-target="tooltip-default"
+  className="m-5 w-12 h-12 rounded-full bg-blue-700 text-white shadow-lg flex items-center justify-center"
+  onClick={() => setShowForm(!showForm)}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+    />
+  </svg>
+</button>
 
 
       {showForm && (

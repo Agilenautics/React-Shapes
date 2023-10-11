@@ -15,6 +15,7 @@ interface Flowchart {
 }
 
 interface Backlog {
+    uid: any;
     id: string;
     type: string;
     name: string;
@@ -82,6 +83,7 @@ const backlogStore = create<BacklogState>((set) => ({
                         temproary.push({
                             ...j,
                             ...j.hasInfo,
+                            uid: j.uid,
                             parent: {name:i.name, id: i.id},
                         });
                     }
@@ -95,6 +97,7 @@ const backlogStore = create<BacklogState>((set) => ({
                     temproary.push({
                         ...i,
                         ...i.hasInfo,
+                        uid : i.uid,
                         parent:  {name:"No epic", id: ""} ,
                     });
                 }
