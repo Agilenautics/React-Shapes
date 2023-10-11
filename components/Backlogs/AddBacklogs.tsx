@@ -89,6 +89,8 @@ export default function AddBacklogs({
           try {
             const createFileResponse = await createFileInMain(newFileInMain, values.epic, values);
             console.log(createFileResponse, "file")
+            values.parent = values.epic;
+            addRow(values);
             const updatedUidResponse = await updateUidMethode(idofUid, updateUidMutation);
             // @ts-ignore
             updateUid(updatedUidResponse.data.updateUids.uids)
@@ -120,8 +122,6 @@ export default function AddBacklogs({
         catch (error) {
           console.log(error, "while adding new node inside add baclogs page")
         }
-
-
         // createNode(newNode, updateNode, values, addRow).then(() => {
         //   updateUidMethode(idofUid, updateUidMutation);
         // })

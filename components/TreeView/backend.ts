@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
-import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, getMainByUser, getTreeNodeByUser, deleteFileBackend, deleteFolderBackend } from "./gqlFiles";
+import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, getMainByUser, getTreeNodeByUser, deleteFileBackend, deleteFolderBackend, Folder } from "./gqlFiles";
 
 /**
  * It returns the first node in the tree that has a model with an id property that matches the id
@@ -32,6 +32,10 @@ export type MyData = {
   name: string;
   children?: Array<MyData>;
   type: string;
+  // hasContainsFile:Array<File>
+
+  hasContainsFolder: Array<Folder>
+  // hasContainsFile:Array<File>
 };
 
 /**
@@ -44,6 +48,7 @@ export function useBackend() {
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
   const delete_item = fileStore((state) => state.delete_item);
+
 
 
   // console.log(initData);
@@ -112,6 +117,9 @@ export function useBackend() {
     },
 
     onDelete: async (id: string) => {
+      const node = find(id);
+      const { type } = node?.model
+      console.log(node?.model, "hi")
 
 
       const readableData = { ...initData }
@@ -122,8 +130,13 @@ export function useBackend() {
       initData = { ...readableData, children: updatedChild }
       setData(initData)
       update()
-      delete_item(id)
+      if (type === "folder") {
+        await deleteFolderBackend(id, delete_item)
+      }
+      if (type === "file") {
+        await deleteFileBackend(id, delete_item);
 
+      }
     },
 
   };

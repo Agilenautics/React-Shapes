@@ -157,9 +157,6 @@ const fileStore = create<files>((set) => ({
             children: [],
           });
         });
-
-
-
       } else {
         parentId = root.model.id;
         createFolderInMain(newFolderInMain, parentId).then((result) => {
@@ -184,37 +181,39 @@ const fileStore = create<files>((set) => ({
     set((state) => {
       const root = new TreeModel().parse(state.data);
       const node = findById(root, id);
-      console.log(node, "node")
-      console.log("root", root)
       if (node?.model.type === "folder") {
         const to_be_deleted = state.data.children?.filter((value) => value.id !== id);
-        console.log("Hoooo")
-
-
-        // deleteFolderBackend(id)
-        node?.drop();
-        return { data: state.data }
+        // @ts-ignore
+        const hasFolder = state.data.hasContainsFolder.filter((value:any) => value.id !== id);
+        const updated_children = { ...state.data, children: to_be_deleted, hasContainsFolder: hasFolder };
+        return { data: updated_children }
       } else if (node?.model.type === "file") {
-        console.log(node.getPath())
-
-
-
-
-
-
-
-        // if its file in main
-
+        //  if file in folder
+        const getParentId = node.parent?.model.id;
+        const getParent = node.parent?.model
+        const removeFileParent = getParent.children.filter((values: any) => values.id !== id);
+        const to_be_updateParent = { ...getParent, children: removeFileParent, hasFile: removeFileParent };
+        const updated_parent_children = state.data.children?.map((values)=>{
+          if(values.id===getParentId){
+            return {
+              ...to_be_updateParent
+            }
+          }
+          return values
+        });
         const to_be_deleted = state.data.children?.filter((value) => value.id !== id);
-        console.log(to_be_deleted)
+        const flag = to_be_deleted?.length === state.data.children?.length
+        // file in folder
+        const updated_state = { ...state.data, children: updated_parent_children }
+        // if its file in main
         const updated_children = { ...state.data, children: to_be_deleted, hasContainsFile: to_be_deleted, }
         // deleteFileBackend(id)
-        return { data: updated_children }
+        const updatedValues = flag ? updated_state : updated_children;
+        return { data: updatedValues }
       }
       const x = searchTree(state.data, id);
       // ? Figure out how to make this work
-      node?.drop();
-
+      const drp = node?.drop();
       return { data: state.data };
     }),
   find_file: (id: string) => {

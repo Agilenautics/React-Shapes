@@ -7,7 +7,6 @@ import {
 import client from "../../apollo-client";
 import { Node_Fragment, Edge_Fragment } from "../Flow/Nodes/gqlNodes";
 import { NextApiResponse } from "next";
-import fileStore from "./fileStore";
 
 
 export const Info_Fragment = gql`
@@ -347,9 +346,7 @@ async function createFileInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string,
   data: any
-) {  
-  console.log(data,"mthd");
-  
+) {
   var node: any;
   await client
     .mutate({
@@ -364,7 +361,7 @@ async function createFileInMain(
               node: {
                 type: "file",
                 name: data.name,
-                uid : data.uid,
+                uid: data.uid,
                 hasInfo: {
                   create: {
                     node: {
@@ -437,7 +434,7 @@ async function createFileInFolder(
               node: {
                 type: "file",
                 name: data.name,
-                uid : data.uid,
+                uid: data.uid,
                 hasInfo: {
                   create: {
                     node: {
@@ -483,17 +480,16 @@ async function createFileInFolder(
   return node;
 }
 
-interface File {
+export interface File {
   name: string;
   id: string;
-
   hasflowchart: any;
   flowchart: any;
   type: "file";
   __typename: "file";
 }
 
-interface Folder {
+export interface Folder {
   id: string;
   type: "folder";
   isOpen: boolean;
@@ -610,8 +606,8 @@ const deleteFiles = gql`
   }
 `;
 
-async function deleteFileBackend(fileID: string) {
-  await client.mutate({
+async function deleteFileBackend(fileID: string, deleteItem: any) {
+  client.mutate({
     mutation: deleteFiles,
     variables: {
       where: {
@@ -644,7 +640,16 @@ async function deleteFileBackend(fileID: string) {
         },
       },
     },
-  });
+  }).then((res) => {
+    if (res.data) {
+      deleteItem(fileID)
+    }
+    if (res.errors) {
+      return res.errors && <div> {res.errors.map((vales) => vales.message)} </div>
+    }
+  }).catch((error) => {
+    console.error('Error deleting the file', error);
+  })
 }
 
 const deleteFolders = gql`
@@ -655,8 +660,8 @@ const deleteFolders = gql`
   }
 `;
 
-async function deleteFolderBackend(folderID: string) {
-  await client.mutate({
+async function deleteFolderBackend(folderID: string, deleteItem: any) {
+  return client.mutate({
     mutation: deleteFolders,
     variables: {
       where: {
@@ -695,7 +700,17 @@ async function deleteFolderBackend(folderID: string) {
         ],
       },
     },
-  });
+  }).then((res) => {
+    if (res.data) {
+      deleteItem(folderID)
+    }
+    if (res.errors) {
+      return res.errors && <div>{res.errors.map((values) => values.message)}</div>
+    }
+  })
+  .catch((error)=>{
+    console.log('error while deleting folder',error)
+  })
 }
 
 const updateFolders = gql`
