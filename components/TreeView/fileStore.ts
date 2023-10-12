@@ -42,8 +42,8 @@ interface files {
   updateCurrentFlowchart: (currentFlowchart: string, Id: string) => void;
   linkNodes: { nodes: any; fileID: string };
   updateLinkNodes: (nodes: Object, fileID: string) => void;
-  add_file: () => void;
-  add_folder: (newFolder:Folder) => void;
+  add_file: (newFile: File) => void;
+  add_folder: (newFolder: Folder) => void;
   delete_item: (id: string) => void;
   find_file: (id: string) => MyData;
   loading: boolean;
@@ -64,11 +64,18 @@ const fileStore = create<files>((set) => ({
   currentFlowchart: "",
   updateCurrentFlowchart: (currentFlowchart, Id) =>
     set((state) => {
-      return { currentFlowchart: currentFlowchart, Id: Id };
+      let root = new TreeModel().parse(state.data);
+      let node = findById(root, Id);
+      if (node?.model.type === "folder") {
+        return { currentFlowchart, Id }
+      } else {
+        return { currentFlowchart, Id: "" }
+      }
     }),
   linkNodes: { nodes: {}, fileID: "" },
   updateLinkNodes: (nodes, id) =>
     set((state) => {
+      console.log(id, "linknode")
       return { linkNodes: { nodes: nodes, fileID: id } };
     }),
   updateLinkNodeId(nodeId) {
@@ -76,83 +83,61 @@ const fileStore = create<files>((set) => ({
       return { linkNodeId: nodeId }
     })
   },
-  add_file: () => {
+  add_file: (newFile: any) => {
     set((state) => {
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       let node = findById(root, parentId);
-      const projectId = state.data.id
-
-
-
-      let data_chk = node?.model;
-
-
-
-
       if (node?.model.type === "folder") {
-        const data = {
-          name: "New File",
-          description: "Custome description",
-          status: "To-Do",
-          uid: state.uid
-        }
-        const updated_data = [...node.model.children, data];
-        const updated_file_in_folder = { ...node.model, children: updated_data };
-        const updated_main = { ...state.data, children: [updated_file_in_folder] }
-        // return { data: updated_main }
 
+        const getFolder = node.model;
+        const getChildren = node.model?.children;
+        const updated_children = [newFile, ...getChildren];
 
-        createFileInFolder(newFileInFolder, parentId, data).then((result) => {
-          node?.model.children?.push({
-            name: result.name,
-            id: result.id,
-            type: result.type,
-            uid: result.uid
-          });
-        });
+        const updatedFolder = { ...getFolder, children: updated_children, hasFile: [newFile, ...getFolder.hasFile] }
+        const updatedState = state.data.children?.map((values) => {
+          if (values.id === parentId) {
+            return {
+              ...updatedFolder
+            }
+          }
+          return values
+        })
+        const updatedHasFolder = state.data.hasContainsFolder.map((values) => {
+          if (values.id === parentId) {
+            return {
+              ...updatedFolder
+            }
+          }
+          return values
+        })
+        const updated_main = { ...state.data, children: updatedState, hasContainsFolder: updatedHasFolder }
+        return { data: updated_main }
       } else {
-        // parentId = root.model.id;
-        const data = {
-          name: "FileInMain",
-          status: "To-Do",
-          description: "Custome description",
-          uid: state.uid
-        }
-        const updated_data = [...root.model.children, data];
-        createFileInMain(newFileInMain, parentId, data).then((result) => {
-          root.model.children?.push({
-            name: result.name,
-            id: result.id,
-            type: result.type,
-            uid: result.uid
-          });
-        });
-
+        const getChildren = root.model?.children;
+        const updated_data = [...getChildren, newFile]
         const updated_main = { ...state.data, children: updated_data }
         return { data: updated_main }
       }
 
-      return { data: state.data };
     })
   }
   ,
 
-  add_folder: (newFolder:Folder) =>
+  add_folder: (newFolder: Folder) =>
     set((state) => {
       const updatedData = {
         ...newFolder,
-        children:[],
-        hasFile:[],
-        hasFolder:[]
+        children: [],
+        hasFile: [],
+        hasFolder: []
       }
       let root = new TreeModel().parse(state.data);
       const getChildren = root.model?.children;
-      const getFolder =root.model?.hasContainsFolder;
-      const to_be_update = [updatedData,...getChildren];
-      const updatedFolders = [...getFolder,updatedData];
-      const updatedState = {...state.data,children:to_be_update,hasContainsFolder:updatedFolders}
-      console.log(updatedState)
+      const getFolder = root.model?.hasContainsFolder;
+      const to_be_update = [updatedData, ...getChildren];
+      const updatedFolders = [...getFolder, updatedData];
+      const updatedState = { ...state.data, children: to_be_update, hasContainsFolder: updatedFolders }
       return { data: updatedState };
     }),
 

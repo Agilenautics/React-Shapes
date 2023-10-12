@@ -131,7 +131,7 @@ const createFile = async (mainId: string, folderId: string, mutation: DocumentNo
 const getMainByUser = gql`
   ${File_Fragment}
   ${Info_Fragment}
-  query Query($where: mainWhere) {
+  query getMainByUser($where: mainWhere) {
     mains(where: $where) {
       name
       description
@@ -277,7 +277,7 @@ const newFolderInMain = gql`
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string,
-  newFolderData:Folder|any
+  newFolderData: Folder | any
 ) {
   var node: any;
   await client
@@ -288,7 +288,7 @@ async function createFolderInMain(
           {
             type: "folder",
             isOpen: newFolderData.isOpen,
-            name:newFolderData.name,
+            name: newFolderData.name,
             uid: newFolderData.uid,
             hasInfo: {
               create: {
@@ -322,12 +322,28 @@ async function createFolderInMain(
           },
         ],
       },
+      update: (cache, { data: { createFolders: { folders } } }) => {
+        console.log(cache);
+        try {
+          const existingData = cache.readQuery(
+            {
+              query: getMainByUser,
+              variables: {
+                emailId: "irfan123@gmail.com"
+              }
+            }
+          );
+          console.log(existingData)
+        } catch (error) {
+          console.log(error, 'while creating folder')
+        }
+      }
     })
     .then((result) => {
       node = result.data.createFolders.folders[0];
       // console.log(result.data.createFolders);
-    }).catch((error)=>{
-      console.log("Error in creating folder",error);
+    }).catch((error) => {
+      console.log("Error in creating folder", error);
     })
   return node;
 }
@@ -463,9 +479,16 @@ async function createFileInFolder(
         },
       },
       update: (cache, result) => {
-        //// console.log(result);
+        const main = cache.readQuery({
+          query: getMainByUser,
+          variables: {
+            emailId: "irfan123@gmail.com",
+          }
+        });
+        console.log(main)
+        console.log(result);
       },
-      refetchQueries: [{ query: getMainByUser }],
+      // refetchQueries: [{ query: getMainByUser }],
       onQueryUpdated(observableQuery) {
         // Define any custom logic for determining whether to refetch
         if (observableQuery) {
@@ -498,7 +521,7 @@ export interface Folder {
   type: "folder";
   isOpen: boolean;
   name: string;
-  uid:number
+  uid: number
   hasFolder: Folder[];
   hasFile: File[];
   children: (Folder | File)[];
@@ -713,9 +736,9 @@ async function deleteFolderBackend(folderID: string, deleteItem: any) {
       return res.errors && <div>{res.errors.map((values) => values.message)}</div>
     }
   })
-  .catch((error)=>{
-    console.log('error while deleting folder',error)
-  })
+    .catch((error) => {
+      console.log('error while deleting folder', error)
+    })
 }
 
 const updateFolders = gql`

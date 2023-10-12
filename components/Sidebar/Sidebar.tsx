@@ -11,7 +11,7 @@ import { BsPlus } from 'react-icons/bs'
 import { RiFlowChart } from "react-icons/ri"
 import fileStore from "../TreeView/fileStore";
 import { useRouter } from "next/router";
-import { createFolderInMain, createUidMethode, createUidMutation, getMainByUser, getTreeNodeByUser, getUidMethode, getUidQuery, newFolderInMain, updateUidMethode, updateUidMutation } from "../TreeView/gqlFiles";
+import { createFileInFolder, createFileInMain, createFolderInMain, createUidMethode, createUidMutation, getMainByUser, getTreeNodeByUser, getUidMethode, getUidQuery, newFileInFolder, newFileInMain, newFolderInMain, updateUidMethode, updateUidMutation } from "../TreeView/gqlFiles";
 import Link from "next/link";
 import projectStore, { Project } from "../AdminPage/Projects/projectStore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -50,12 +50,13 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
 
 
-  const add_folder = fileStore((state) => state.add_folder);
   const add_file = fileStore((state) => state.add_file);
+  const add_folder = fileStore((state) => state.add_folder);
   const setLoading = fileStore((state) => state.setLoading);
   const updateUids = fileStore((state) => state.updateUid);
   const uid = fileStore((state) => state.uid);
-  const idOfUid = fileStore((state) => state.idofUid)
+  const idOfUid = fileStore((state) => state.idofUid);
+  const selectedFolderId = fileStore((state) => state.Id)
 
 
 
@@ -160,6 +161,11 @@ const Sidebar = ({ isOpen }: SideBar) => {
     verificationToken()
   }, [projectId, allProjects]);
 
+  const handleUidUpdates = async () => {
+    const uidResponse = await updateUidMethode(idOfUid, updateUidMutation) as any
+    updateUids(uidResponse.data.updateUids.uids)
+  }
+
 
 
 
@@ -171,8 +177,42 @@ const Sidebar = ({ isOpen }: SideBar) => {
     }
     const updatedFolderResponse = await createFolderInMain(newFolderInMain, projectId, newFolder);
     add_folder(updatedFolderResponse)
-    const uidResponse = await updateUidMethode(idOfUid, updateUidMutation) as any
-    updateUids(uidResponse.data.updateUids.uids)
+    handleUidUpdates()
+
+  }
+
+  console.log("Iam Id",selectedFolderId)
+
+
+  const handleAddFile = async () => {
+    try {
+      if (selectedFolderId) {
+        const data = {
+          name: "New File",
+          description: "Custome description",
+          status: "To-Do",
+          uid
+        }
+        console.log("iam in if condition")
+        const fileInFolderResponse = await createFileInFolder(newFileInFolder, selectedFolderId, data);
+        console.log(fileInFolderResponse)
+        add_file(fileInFolderResponse)
+        handleUidUpdates()
+
+      } else {
+        const newFile = {
+          name: "FileInMain",
+          status: "To-Do",
+          description: "Custome description",
+          uid
+        }
+        const fileInMainResponse = await createFileInMain(newFileInMain, projectId, newFile)
+        add_file(fileInMainResponse)
+        handleUidUpdates()
+      }
+    } catch (error) {
+      console.log(error, "while creating file in main in bussiness plan")
+    }
   }
 
 
@@ -344,7 +384,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                             <button
                               type="button"
                               className=" flex items-center rounded gap-1 p-1 bg-sky-500 justify-center hover:bg-sky-600 duration-300"
-                              onClick={() => add_file()}
+                              onClick={handleAddFile}
                             >
                               <AiFillFileAdd className="text-xl" /> <span>Add File</span>
                             </button>
