@@ -37,8 +37,6 @@ function ProjectBacklogs() {
   const uid = generateUid([1,9])
   
 
-  // const [items, setItems] = useState()
-  // const [users,setUsers] = useState();
   const router = useRouter();
 
   const projectId = router.query.projectId as string;
@@ -116,7 +114,6 @@ function ProjectBacklogs() {
       query : {id:element.id}
     })
   };
-
   
   
 
@@ -128,11 +125,11 @@ function ProjectBacklogs() {
   
 
   return (
-    <div className="absolute ml-3 w-fit">
-      <h1 className="mb-4 rounded-lg bg-pink-300 p-2 text-2xl font-bold shadow-lg">
+    <div className="mt-3 ml-3">
+      <h1 className="mb-4 rounded-lg p-2 text-2xl font-bold shadow-lg bg-gray-200">
         Backlogs
       </h1>
-      <div className="m-1 mr-5 overflow-x-auto rounded-lg bg-white shadow-md">
+      <div className="m-1 mr-5 rounded-lg bg-white shadow-md">
         <div className="m-1 flex items-center justify-between bg-gray-100">
           <input
             type="text"
@@ -141,6 +138,12 @@ function ProjectBacklogs() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+                <button
+        className="inline-flex w-fit justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm text-[1.07rem] text-gray-700 hover:bg-gray-200"
+        onClick={handleAddBacklogsClick}
+      >
+        New item +
+      </button>
           
             <div className="relative inline-block text-left">
               <div className="bg-gray-100 hover:bg-gray-200">
@@ -233,43 +236,43 @@ function ProjectBacklogs() {
             </select>
           
         </div>
-        <div className="w-fill overflow-y h-60 overflow-x-hidden">
-          <table className="mr-4 w-[1000px] table-auto">
+        <div className="overflow-y max-h-screen overflow-x-hidden">
+          <table className="mr-4 w-full table-auto">
             <thead>
               <tr>
-              <th className="border bg-gray-200 px-1 py-2">Id</th>
-                <th className="border bg-gray-200 px-1 py-2">Type</th>
-                <th className="border bg-gray-200 px-1 py-2">Name</th>
-                <th className="border bg-gray-200 px-1 py-2">Description</th>
-                <th className="border bg-gray-200 px-1 py-2">Epic</th>
-                <th className="border bg-gray-200 px-1 py-2">Status</th>
-                <th className="border bg-gray-200 px-1 py-2">Sprint</th>
-                <th className="border bg-gray-200 px-1 py-2">User</th>
+              <th className="bg-gray-200 px-1 py-2">Id</th>
+                <th className="bg-gray-200 px-1 py-2">Type</th>
+                <th className="bg-gray-200 px-1 py-2">Name</th>
+                <th className="bg-gray-200 px-1 py-2">Description</th>
+                <th className="bg-gray-200 px-1 py-2">Epic</th>
+                <th className="bg-gray-200 px-1 py-2">Status</th>
+                <th className="bg-gray-200 px-1 py-2">Sprint</th>
+                <th className="bg-gray-200 px-1 py-2">User</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((element: any, index: any) => (
-                <tr key={index} className="border-b py-1">
+                <tr key={index} className="py-1">
                   {/* @ts-ignore */}
-                  <td className="rounded-lg px-1 py-2 text-center cursor-pointer">
+                  <td className="px-1 py-2 text-center cursor-pointer">
                     {element.uid}
                   </td>
                   <td
                     className={`px-1 py-2 ${
                       // @ts-ignore
                       getTypeLabel(element.type).color
-                      } text-grey rounded-lg border text-center`}
+                      } text-grey rounded-lg text-center`}
                   >
                     {/* @ts-ignore */}
                     {getTypeLabel(element.type).type}
                   </td>
-                  <td className="rounded-lg px-1 py-2 text-center cursor-pointer" onClick={() => openFormWithFilledData(element)}>
+                  <td className="px-1 py-2 text-center cursor-pointer hover:text-blue-500 hover:underline" onClick={() => openFormWithFilledData(element)}>
                     {element.label || element.name}
                   </td>
-                  <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
+                  <td className="description-cell break-all px-1 py-2 text-center">
                     {element.description}
                   </td>
-                  <td className="rounded-lg px-1 py-2 text-center">
+                  <td className="px-1 py-2 text-center">
                     {/* here epic */}
                     {element.parent && element.parent.name=="No epic" ? "-": element.parent.name}
                   </td>
@@ -281,10 +284,10 @@ function ProjectBacklogs() {
                   >
                     {element.status}
                   </td>
-                  <td className="rounded-lg px-1 py-2 text-center">
+                  <td className="px-1 py-2 text-center">
                     {element.sprint ? element.sprint : "-"}
                   </td>
-                  <td className="rounded-lg border px-1 py-2 text-center">
+                  <td className="px-1 py-2 text-center">
                     {element.assignedTo? element.assignedTo: "-"}
                   </td>
                 </tr>
@@ -292,13 +295,14 @@ function ProjectBacklogs() {
             </tbody>
           </table>
         </div>
-      </div>
-      <button
+        {/* <button
         className="m-5 w-48 rounded-lg bg-blue-700 px-4 py-2 text-white shadow-lg"
         onClick={handleAddBacklogsClick}
       >
         Add backlog +
-      </button>
+      </button> */}
+      </div>
+
     </div>
   );
 }

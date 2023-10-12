@@ -152,7 +152,7 @@ export default function AddBacklogs({
           name: selectedElement ? selectedElement.name || selectedElement.label : '',
           description: selectedElement ? selectedElement.description : '',
           status: selectedElement ? selectedElement.status : 'To-Do',
-          assign: selectedElement ? selectedElement.user : '',
+          assignedTo: selectedElement ? selectedElement.assignedTo : '',
           epic: selectedElement ? selectedElement.parent : projectId,
           story:
             selectedElement && selectedElement.type !== 'file'
@@ -164,8 +164,8 @@ export default function AddBacklogs({
       >
         {({ values }) => (
           <Form>
-            <h5 className="mb-4 rounded bg-violet-300 p-2 text-xl font-bold shadow-lg">
-              {selectedElement == null ? 'Add Backlog' : 'Update Backlog'}
+            <h5 className="mb-4 rounded bg-gray-200 p-2 text-xl font-bold shadow-lg">
+              {selectedElement == null ? 'Add Item' : 'Update Item'}
             </h5>
             <div className="mb-4 flex space-x-4">
               {typeDropdown && (
@@ -219,12 +219,12 @@ export default function AddBacklogs({
             </div>
             <div className="mb-4 flex space-x-4">
               <div className="mb-4 w-full">
-                <label htmlFor="assign" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
+                <label htmlFor="assignedTo" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
                   Assign
                 </label>
                 <Field
                   as="select"
-                  name="assign"
+                  name="assignedTo"
                   className="w-full rounded-lg px-4 py-2 focus:outline-none hover:bg-gray-200"
                 >
                   {users.map(
@@ -238,7 +238,7 @@ export default function AddBacklogs({
                   <option value="invite">Invite User</option>
                 </Field>
                 <ErrorMessage
-                  name="assign"
+                  name="assignedTo"
                   component="div"
                   className="mt-1 text-red-500"
                 />
@@ -371,7 +371,7 @@ export default function AddBacklogs({
                 type="submit"
                 className="mr-2 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
-                {selectedElement ? 'Update Backlog' : 'Add Backlog'}
+                Save
               </button>
               <button
                 type="button"
