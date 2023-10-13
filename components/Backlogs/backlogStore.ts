@@ -110,9 +110,6 @@ const backlogStore = create<BacklogState>((set) => ({
                         if (!allStatus.includes(j.hasInfo.status)) {
                             allStatus.push(j.hasInfo.status)
                         }  
-                        console.log(i.parent,"prnt");
-                                              
-
                         temproary.push({
                             ...j.hasInfo,
                             ...j.hasdataNodedata,

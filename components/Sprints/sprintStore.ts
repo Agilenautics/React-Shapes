@@ -57,7 +57,7 @@ interface SprintState {
     deleteSprint: (id: string) => void;
     hadleFilterSprint: (selectedSprint: string) => void;
     addTaskOrEpicOrStoryToSprint: (sprintId: string, newData: Sprint) => void;
-    
+
 }
 
 
@@ -73,7 +73,6 @@ const sprintStore = create<SprintState>((set) => ({
     updateSprints: (sprints: Array<Sprint>, loading: Boolean, error: any) => (
         set((state) => {
             // getSprintByProjectId(projectId,GET_SPRINTS,state.updateSprints)
-            console.log(sprints,"update sprint")
             return { sprints, loading, error }
         })
     ),
@@ -99,25 +98,25 @@ const sprintStore = create<SprintState>((set) => ({
         set((state) => {
             const { id, type, hasInfo } = newData;
             const { hasSprint, ...hasFlownode } = newData[0];
-        
+
             // Find the sprint to update
             const sprintIndex = state.sprints.findIndex((s) => s.id === sprintId);
-        
-            if (sprintIndex !== -1 && type !== 'file' && !state.sprints[sprintIndex].flownodeHas.some(item => item.id === id)) {
-              const updatedSprint = { ...state.sprints[sprintIndex], flownodeHas: [...state.sprints[sprintIndex].flownodeHas, hasFlownode] };
-        
-              const updatedSprints = [...state.sprints];
-              updatedSprints[sprintIndex] = updatedSprint;
 
-              state.sprints = updatedSprints
-        
-            //   return { sprints: updatedSprints };
+            if (sprintIndex !== -1 && type !== 'file' && !state.sprints[sprintIndex].flownodeHas.some(item => item.id === id)) {
+                const updatedSprint = { ...state.sprints[sprintIndex], flownodeHas: [...state.sprints[sprintIndex].flownodeHas, hasFlownode] };
+
+                const updatedSprints = [...state.sprints];
+                updatedSprints[sprintIndex] = updatedSprint;
+
+                state.sprints = updatedSprints
+
+                //   return { sprints: updatedSprints };
             }
 
-            console.log(state.sprints,"sprints")
-        
-            return {sprints:state.sprints};
-          })
+            console.log(state.sprints, "sprints")
+
+            return { sprints: state.sprints };
+        })
     }
 }));
 

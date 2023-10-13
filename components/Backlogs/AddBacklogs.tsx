@@ -142,7 +142,6 @@ export default function AddBacklogs({
     getSprintByProjectId(projectId, GET_SPRINTS, updateSprints);
   }, []);
 
-  console.log(uid, "uid")
 
   return (
     <div className="p-6">

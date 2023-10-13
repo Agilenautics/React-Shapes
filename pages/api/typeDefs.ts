@@ -67,6 +67,7 @@ const typeDefs = gql`
     name: String!
     uid:Int!
     hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
+    comments:[comments!]! @relationship(type:"hasFile",direction:IN)
     hasInfo:info! @relationship( type:"hasInfo",direction:IN)
     hasflowchart: flowchart @relationship(type: "hasFlowchart", direction: OUT)
     folderHas: folder @relationship(type: "hasFile", direction: IN)
@@ -194,7 +195,8 @@ const typeDefs = gql`
  }
 
  type comments{
-  message:String!
+  id:ID! @id
+  message:String
   timeStamp: DateTime! @timestamp
   user:user @relationship(type:"hasUser",direction:OUT)
   task:flowNode @relationship(type:"hasFlownodes",direction:OUT)

@@ -181,7 +181,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   }
 
-  console.log("Iam Id",selectedFolderId)
 
 
   const handleAddFile = async () => {
@@ -193,7 +192,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
           status: "To-Do",
           uid
         }
-        console.log("iam in if condition")
         const fileInFolderResponse = await createFileInFolder(newFileInFolder, selectedFolderId, data);
         console.log(fileInFolderResponse)
         add_file(fileInFolderResponse)

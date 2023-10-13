@@ -31,6 +31,12 @@ ${Info_Fragment}
     type
     timeStamp
     uid
+    comments {
+      message
+      user {
+       emailId
+      }
+    }
     hasSprint {
       id
       name
@@ -237,7 +243,25 @@ async function createNode(
                           flowchart: "flowNode",
                           draggable: true,
                           type: data.type,
-                          uid:data.uid,
+                          uid: data.uid,
+                          "comments": {
+                            "create": [
+                              {
+                                "node": {
+                                  "message": data.discussion,
+                                  "user": {
+                                    "connect": {
+                                      "where": {
+                                        "node": {
+                                          "emailId": "irfan123@gmail.com"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          },
                           hasInfo: {
                             create: {
                               node: {
@@ -537,6 +561,12 @@ ${Info_Fragment}
         label,
         description
       }
+      comments {
+        message
+        user {
+          emailId
+        }
+      }
     }
   }
 }
@@ -579,7 +609,27 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
             }
 
           }
-        }
+        },
+        "comments": [
+          {
+            "create": [
+              {
+                "node": {
+                  "message": data.discussion,
+                  "user": {
+                    "connect": {
+                      "where": {
+                        "node": {
+                          "emailId": "irfan123@gmail.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
 
       }
     }

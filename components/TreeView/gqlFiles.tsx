@@ -36,6 +36,12 @@ const File_Fragment = gql`
       id
       name
     }
+    comments {
+      message
+      user {
+        emailId
+      }
+    }
     folderHas {
       id
       name
@@ -151,6 +157,7 @@ const getMainByUser = gql`
          id
          name
         }
+        
         
         hasInfo{
          ...InfoFragment
@@ -367,6 +374,7 @@ async function createFileInMain(
   parentId: string,
   data: any
 ) {
+  console.log(data)
   var node: any;
   await client
     .mutate({
@@ -400,6 +408,24 @@ async function createFileInMain(
                     },
                   },
                 },
+                "comments": {
+                  "create": [
+                    {
+                      "node": {
+                        "message": data.discussion,
+                        "user": {
+                          "connect": {
+                            "where": {
+                              "node": {
+                                "emailId":"irfan123@gmail.com"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
               },
             },
           ],
@@ -455,6 +481,24 @@ async function createFileInFolder(
                 type: "file",
                 name: data.name,
                 uid: data.uid,
+                "comments": {
+                  "create": [
+                    {
+                      "node": {
+                        "message":data.discussion,
+                        "user": {
+                          "connect": {
+                            "where": {
+                              "node": {
+                                "emailId":"irfan123@gmail.com"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
                 hasInfo: {
                   create: {
                     node: {
@@ -958,7 +1002,7 @@ const updateStoryMethod = async (
   storyData: any
 ) => {
   // const updateRow = backlogStore((state) => state.updateRow);
-  const { status, description, assignedTo, dueDate, sprint } = storyData;
+  const { status, description, assignedTo, dueDate, sprint,discussion } = storyData;
   const response = await client
     .mutate({
       mutation,
@@ -978,6 +1022,26 @@ const updateStoryMethod = async (
               },
             },
           },
+          "comments": [
+            {
+              "create": [
+                {
+                  "node": {
+                    "message": discussion,
+                    "user": {
+                      "connect": {
+                        "where": {
+                          "node": {
+                            "emailId":"irfan123@gmail.com"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         },
       },
     })
@@ -992,6 +1056,12 @@ const updateStoryMutation = gql`
     updateFiles(where: $where, update: $update) {
       files {
         name
+        comments {
+          message
+          user {
+           emailId
+          }
+        }
         hasInfo {
           ...InfoFragment
         }
