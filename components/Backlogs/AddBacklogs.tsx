@@ -31,6 +31,7 @@ import {
 } from '../Sprints/gqlSprints';
 import sprintStore from '../Sprints/sprintStore';
 import fileStore from '../TreeView/fileStore';
+import Discussion from './Discussion';
 
 
 export default function AddBacklogs({
@@ -46,7 +47,11 @@ export default function AddBacklogs({
   const parents = backlogStore((state) => state.parents);
   const idofUid = fileStore(state => state.idofUid);
   const uid = fileStore(state => state.uid);
-  const updateUid = fileStore((state) => state.updateUid)
+  const updateUid = fileStore((state) => state.updateUid);
+
+
+  console.log(selectedElement)
+
 
   // sprint store
   const addTaskOrEpicOrStoryToSprint = sprintStore(
@@ -346,6 +351,7 @@ export default function AddBacklogs({
                   className="mt-1 text-red-500"
                 />
               </div>
+              <Discussion comments = {selectedElement.comments} />
               <div className="w-full">
                 <label htmlFor="discussion" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
                   Discussion

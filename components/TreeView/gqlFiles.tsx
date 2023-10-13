@@ -37,7 +37,9 @@ const File_Fragment = gql`
       name
     }
     comments {
+      id
       message
+      timeStamp
       user {
         emailId
       }
@@ -417,7 +419,7 @@ async function createFileInMain(
                           "connect": {
                             "where": {
                               "node": {
-                                "emailId":"irfan123@gmail.com"
+                                "emailId": "irfan123@gmail.com"
                               }
                             }
                           }
@@ -485,12 +487,12 @@ async function createFileInFolder(
                   "create": [
                     {
                       "node": {
-                        "message":data.discussion,
+                        "message": data.discussion,
                         "user": {
                           "connect": {
                             "where": {
                               "node": {
-                                "emailId":"irfan123@gmail.com"
+                                "emailId": "irfan123@gmail.com"
                               }
                             }
                           }
@@ -1002,7 +1004,7 @@ const updateStoryMethod = async (
   storyData: any
 ) => {
   // const updateRow = backlogStore((state) => state.updateRow);
-  const { status, description, assignedTo, dueDate, sprint,discussion } = storyData;
+  const { status, description, assignedTo, dueDate, sprint, discussion } = storyData;
   const response = await client
     .mutate({
       mutation,
@@ -1032,7 +1034,7 @@ const updateStoryMethod = async (
                       "connect": {
                         "where": {
                           "node": {
-                            "emailId":"irfan123@gmail.com"
+                            "emailId": "irfan123@gmail.com"
                           }
                         }
                       }
@@ -1057,7 +1059,9 @@ const updateStoryMutation = gql`
       files {
         name
         comments {
+          id
           message
+          timeStamp
           user {
            emailId
           }

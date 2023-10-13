@@ -562,7 +562,9 @@ ${Info_Fragment}
         description
       }
       comments {
+        id
         message
+        timeStamp
         user {
           emailId
         }
