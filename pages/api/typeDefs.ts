@@ -13,7 +13,7 @@ const typeDefs = gql`
     userName: String
     emailId: String!
     userType: String
-    comments:comments  @relationship(type:"hasUser",direction:IN)
+    comments:[comments!]!  @relationship(type:"hasUser",direction:IN)
     hasProjects: [main!]! @relationship(type: "hasMain", direction: OUT)
     active: Boolean!
   }

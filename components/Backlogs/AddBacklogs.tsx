@@ -22,10 +22,6 @@ import validationSchema from '../AdminPage/Projects/staticData/validationSchema'
 import nodeStore from '../Flow/Nodes/nodeStore';
 import backlogStore from './backlogStore';
 import {
-  SPRINTS_FOR_BACKLOGS,
-  getSprintToBacklogs,
-  CONNECT_TO_STORY,
-  connectToStory,
   getSprintByProjectId,
   GET_SPRINTS,
 } from '../Sprints/gqlSprints';
@@ -50,7 +46,6 @@ export default function AddBacklogs({
   const updateUid = fileStore((state) => state.updateUid);
 
 
-  console.log(selectedElement)
 
 
   // sprint store
@@ -351,11 +346,14 @@ export default function AddBacklogs({
                   className="mt-1 text-red-500"
                 />
               </div>
-              <Discussion comments = {selectedElement.comments} />
+
               <div className="w-full">
                 <label htmlFor="discussion" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
                   Discussion
                 </label>
+                {
+                  router.pathname !== "/projects/[projectId]/backlogs/add" && <Discussion comments={selectedElement.comments} />
+                }
                 <div className="p-1 my-2 flex gap-2">
                 </div>
                 <Field
