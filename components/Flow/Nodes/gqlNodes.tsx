@@ -302,6 +302,17 @@ async function createNode(
                               },
                             },
                           },
+                          hasSprint: {
+                            connect: [
+                              {
+                                where: {
+                                  node: {
+                                    id: data.sprint,
+                                  },
+                                },
+                              },
+                            ],
+                          },
                           haspositionPosition: {
                             create: {
                               node: {
@@ -604,14 +615,15 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
           }
         },
         hasSprint: {
-          connect: {
-            where: {
-              node: {
-                id: data.addToSprint || ""
-              }
-            }
-
-          }
+          connect: [
+            {
+              where: {
+                node: {
+                  id: data.sprint||"",
+                },
+              },
+            },
+          ],
         },
         "comments": [
           {

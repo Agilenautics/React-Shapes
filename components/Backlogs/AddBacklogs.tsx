@@ -158,7 +158,7 @@ export default function AddBacklogs({
           status: selectedElement ? selectedElement.status : 'To-Do',
           assignedTo: selectedElement ? selectedElement.assignedTo : '',
           sprint: selectedElement ? selectedElement.addToSprint :'',
-          epic: selectedElement ? selectedElement.parent : projectId,
+          epic: selectedElement ? selectedElement.parent.id : projectId,
           story:
             selectedElement && selectedElement.type !== 'file'
               ? selectedElement.story.id

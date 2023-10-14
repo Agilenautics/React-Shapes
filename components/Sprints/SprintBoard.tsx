@@ -62,7 +62,7 @@ export default function SprintBoard(data: any) {
                             <ul>
                                 {statusObject[e].map((item: any) => (
                                     <li key={item.id} className="text-sm">
-                                        {item.hasdataNodedata.label || item.name}
+                                        {item.name || item.hasdataNodedata.label}
                                     </li>
                                 ))}
                             </ul>

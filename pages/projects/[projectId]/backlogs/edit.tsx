@@ -4,6 +4,7 @@ import backlogStore from '../../../../components/Backlogs/backlogStore'
 import { types } from '../../../../components/AdminPage/Projects/staticData/types'
 import fileStore from '../../../../components/TreeView/fileStore'
 import { useRouter } from 'next/router'
+import LoadingIcon from '../../../../components/LoadingIcon'
 
 export default function Edit() {
   const router = useRouter()
@@ -32,7 +33,9 @@ setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas])
 
 if (loading || selectedElement.length==0) {
   return <>
-    Loading
+    <div className="flex h-screen items-center justify-center">
+      <LoadingIcon />
+    </div>
   </>
 }
 

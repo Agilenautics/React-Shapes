@@ -410,6 +410,17 @@ async function createFileInMain(
                     },
                   },
                 },
+                hasSprint: {
+                  connect: [
+                    {
+                      where: {
+                        node: {
+                          id: data.sprint||"",
+                        },
+                      },
+                    },
+                  ],
+                },
                 "comments": {
                   "create": [
                     {
@@ -500,6 +511,17 @@ async function createFileInFolder(
                       }
                     }
                   ]
+                },
+                hasSprint: {
+                  connect: [
+                    {
+                      where: {
+                        node: {
+                          id: data.sprint||"",
+                        },
+                      },
+                    },
+                  ],
                 },
                 hasInfo: {
                   create: {
@@ -1004,7 +1026,8 @@ const updateStoryMethod = async (
   storyData: any
 ) => {
   // const updateRow = backlogStore((state) => state.updateRow);
-  const { status, description, assignedTo, dueDate, sprint, discussion } = storyData;
+  const {name, status, description, assignedTo, dueDate, sprint, discussion } = storyData;
+  
   const response = await client
     .mutate({
       mutation,
@@ -1023,6 +1046,17 @@ const updateStoryMethod = async (
                 assignedTo,
               },
             },
+          },
+          hasSprint: {
+            connect: [
+              {
+                where: {
+                  node: {
+                    id: sprint||"",
+                  },
+                },
+              },
+            ],
           },
           "comments": [
             {

@@ -66,11 +66,12 @@ const fileStore = create<files>((set) => ({
     set((state) => {
       let root = new TreeModel().parse(state.data);
       let node = findById(root, Id);
-      if (node?.model.type === "folder") {
-        return { currentFlowchart, Id }
-      } else {
-        return { currentFlowchart, Id: "" }
-      }
+      // if (node?.model.type === "folder") {
+      //   return { currentFlowchart, Id }
+      // } else {
+      //   return { currentFlowchart, Id: "" }
+      // }
+      return {currentFlowchart,Id}
     }),
   linkNodes: { nodes: {}, fileID: "" },
   updateLinkNodes: (nodes, id) =>
