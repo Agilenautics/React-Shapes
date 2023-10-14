@@ -266,7 +266,7 @@ async function createNode(
                             create: {
                               node: {
                                 description: "",
-                                assignedTo: data.assign,
+                                assignedTo: data.assignedTo,
                                 status: "To-Do",
                                 dueDate: "",
                                 sprint: ""
@@ -337,6 +337,7 @@ async function createNode(
       data.status = data.status || "To-Do"
       // data.uid = result.data.updateFiles.files[0].hasflowchart.nodes[0].uid
       data.parent = data.epic
+      data.id = result.data.id
       addRow(data)
 
       // addRow(data)
@@ -589,7 +590,7 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
               "status": data.status,
               "sprint": data.sprint || null,
               "dueDate": data.dueDate || null,
-              "assignedTo": data.assign || null
+              "assignedTo": data.assignedTo || null
             }
           }
         },

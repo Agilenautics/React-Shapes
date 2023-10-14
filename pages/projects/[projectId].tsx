@@ -55,7 +55,7 @@ function SideBar() {
   return (
     <div className="h-screen">
       {isLoading ?
-        <div className="flex justify-center items-center">
+        <div className="h-screen flex items-center justify-center">
           <LoadingIcon />
         </div>
         :

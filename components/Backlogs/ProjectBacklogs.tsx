@@ -17,6 +17,8 @@ import projectStore from "../AdminPage/Projects/projectStore";
 import userStore from "../AdminPage/Users/userStore";
 import backlogStore from "./backlogStore";
 import generateUid from "../getUid";
+import LoadingIcon from "../LoadingIcon";
+import {RiArrowDropDownLine} from "react-icons/ri"
 
 
 
@@ -103,9 +105,12 @@ function ProjectBacklogs() {
       (selectedTypes.length === 0 || selectedTypes.includes(element.type)) &&
       (selectedEpic === "" || element.parent.name === selectedEpic) &&
       (selectedStatus === "" || element.status === selectedStatus) &&
-       (selectedUser === "" || element.assign === selectedUser) &&
+       (selectedUser === "" || element.assignedTo === selectedUser) &&
       (selectedSprint === "" || element.sprint === selectedSprint)
   );
+
+  console.log(filteredData);
+  
 
   const openFormWithFilledData = (element: any) => {
      setSelectedElement(element);    
@@ -114,17 +119,18 @@ function ProjectBacklogs() {
       query : {id:element.id}
     })
   };
-  
-  
 
-  if (loading) {
-    return <>
-      Loading
-    </>
+  const getSprintName: any = (id: string) =>{
+    if(id==''|| id==null) return '-';
+
   }
   
-
-  return (
+  return loading ?
+   <div className="h-screen flex items-center justify-center">
+  <LoadingIcon />
+</div> 
+: 
+(
     <div className="mt-3 ml-3">
       <h1 className="mb-4 rounded-lg p-2 text-2xl font-bold shadow-lg bg-gray-200">
         Backlogs
@@ -139,7 +145,7 @@ function ProjectBacklogs() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
                 <button
-        className="inline-flex w-fit justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm text-[1.07rem] text-gray-700 hover:bg-gray-200"
+        className="inline-flex w-fit justify-center rounded-lg bg-gray-100 px-4 py-2 text-[1rem] text-gray-700 hover:bg-gray-200"
         onClick={handleAddBacklogsClick}
       >
         New item +
@@ -147,31 +153,21 @@ function ProjectBacklogs() {
           
             <div className="relative inline-block text-left">
               <div className="bg-gray-100 hover:bg-gray-200">
-                <span className="rounded-md shadow-sm">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowTypeDropdown((prevState) => !prevState)
-                    }
-                    className="inline-flex w-full justify-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                  >
-                    Select Types
-                    <svg
-                      className="-mr-1 ml-2 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
+                <span className="shadow-sm">
+                <button
+  type="button"
+  onClick={() => setShowTypeDropdown((prevState) => !prevState)}
+  className="flex relative bg-gray-100 text-gray-700  hover:bg-gray-200"
+>
+  <span className="block w-full pl-3 pr-10 py-2 text-left text-base">
+    Select Types
+  </span>
+  <span className="mt-2">
+  <RiArrowDropDownLine className="w-7 h-7" />
+</span>
+  
+</button>
+
                 </span>
               </div>
               {showTypeDropdown && (
@@ -285,7 +281,7 @@ function ProjectBacklogs() {
                     {element.status}
                   </td>
                   <td className="px-1 py-2 text-center">
-                    {element.sprint ? element.sprint : "-"}
+                    {(element.hasSprint && element.hasSprint.length) ? element.hasSprint[0].name : "-"}
                   </td>
                   <td className="px-1 py-2 text-center">
                     {element.assignedTo? element.assignedTo: "-"}

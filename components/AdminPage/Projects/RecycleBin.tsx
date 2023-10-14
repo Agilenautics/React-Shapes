@@ -25,12 +25,12 @@ function Projects() {
   // Access Level controlled by the server-side or additional validation
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
-  const [projectData, setProjectData] = useState([])
   const [searchTerm, setSearchTerm] = useState("");
 
 
 
   const recycleBin = projectStore((state) => state.recycleBin);
+  const [projectData, setProjectData] = useState(recycleBin)
   const loading = projectStore((state) => state.loading)
   const handleSorting = projectStore((state) => state.handleSorting);
   const sortOrder = projectStore((state) => state.sortOrder);
@@ -42,21 +42,20 @@ function Projects() {
   const userType = userStore((state) => state.userType);
 
 
+
+  useEffect(()=>{
+    const filteredData = recycleBin.filter(
+      (element: any) =>
+        (element.name && element.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    setProjectData(filteredData)
+
+  },[searchTerm])
+
   // const handleSearch = (e: React.ReactEventHandler) => {
   //   setSearchTerm(e.target.value)
   // }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   // useEffect(() => {
@@ -222,7 +221,7 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {recycleBin.map((project: any) => (
+            {projectData.map((project: any) => (
               <tr key={project.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-4 py-4 font-medium">
                   {/* //TODO added recycleBin */}

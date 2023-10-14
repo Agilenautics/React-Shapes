@@ -80,7 +80,7 @@ function ProjectSprints() {
     );
     if (selectedSprint) setFilteredData(selectedSprint);
   };
-
+  
 
   if (loading) {
     return (
@@ -158,7 +158,7 @@ function ProjectSprints() {
                         {item.hasInfo.status}
                       </td>
                       <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.user}
+                        {item.hasInfo.assignedTo}
                       </td>
                       <td className="rounded-lg border px-1 py-2 text-center">
                         {filteredData.endDate}
@@ -183,7 +183,7 @@ function ProjectSprints() {
                         {item.hasInfo.status}
                       </td>
                       <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.user}
+                        {item.hasInfo.assignedTo}
                       </td>
                       <td className="rounded-lg border px-1 py-2 text-center">
                         {filteredData.endDate}
@@ -208,7 +208,7 @@ function ProjectSprints() {
                         {item.hasInfo.status}
                       </td>
                       <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.user}
+                        {item.hasInfo.assignedTo}
                       </td>
                       <td className="rounded-lg border px-1 py-2 text-center">
                         {filteredData.endDate}

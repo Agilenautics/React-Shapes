@@ -5,6 +5,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   description: Yup.string().required("Description is required"),
   status: Yup.string().required("Status is required"),
+  sprint: Yup.string(),
   assign: Yup.string().email(),
   story: Yup.string().when("type", (type, schema) => {
     //@ts-ignore

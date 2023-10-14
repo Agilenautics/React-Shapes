@@ -15,6 +15,8 @@ interface Flowchart {
 }
 
 interface Backlog {
+    timeStamp: any;
+    hasSprint: any;
     uid: any;
     id: string;
     type: string;
@@ -83,7 +85,9 @@ const backlogStore = create<BacklogState>((set) => ({
                         temproary.push({
                             ...j,
                             ...j.hasInfo,
+                            hasSprint: j.hasSprint,
                             uid: j.uid,
+                            timeStamp: j.timeStamp,
                             parent: {name:i.name, id: i.id},
                         });
                     }
@@ -97,7 +101,9 @@ const backlogStore = create<BacklogState>((set) => ({
                     temproary.push({
                         ...i,
                         ...i.hasInfo,
+                        hasSprint: i.hasSprint,
                         uid : i.uid,
+                        timeStamp: i.timeStamp,
                         parent:  {name:"No epic", id: ""} ,
                     });
                 }
@@ -113,10 +119,12 @@ const backlogStore = create<BacklogState>((set) => ({
                         temproary.push({
                             ...j.hasInfo,
                             ...j.hasdataNodedata,
+                            hasSprint: j.hasSprint,
                             id: j.id,
                             type: j.type,
                             uid: j.uid,
                             parent: i.parent,
+                            timeStamp: j.timeStamp,
                             story:{name:i.name,id: i.id}
                         });
                     }
@@ -131,7 +139,7 @@ const backlogStore = create<BacklogState>((set) => ({
     })),
     updateRow: (newRow: any) =>
     set((state) => ({
-      backlogs: [...(state.backlogs.filter((element:any)=> element.id !== newRow.id)),{ ...newRow, id: newRow.id }]
+      backlogs: [...(state.backlogs.filter((element:any)=> element.id !== newRow.id)),{ ...newRow }]
     })),
 
 }))

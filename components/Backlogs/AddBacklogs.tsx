@@ -61,6 +61,10 @@ export default function AddBacklogs({
   const projectId = router.query.projectId as string;
 
   const handleSubmit = async (values: any) => {
+
+    console.log("SE", selectedElement);
+    
+
     if (selectedElement != null) {
       if (selectedElement.type != 'file') {
         updateTaskMethod(selectedElement.id, updateTasksMutation, values).then(
@@ -75,7 +79,7 @@ export default function AddBacklogs({
         );
       } else {
         updateStoryMethod(selectedElement.id, updateStoryMutation, values).then(
-          () => {
+          (res) => {
             values.parent = values.epic;
             updateRow(values);
           }
@@ -90,6 +94,7 @@ export default function AddBacklogs({
             const createFileResponse = await createFileInMain(newFileInMain, values.epic, values);
             console.log(createFileResponse, "file")
             values.parent = values.epic;
+            values.id = createFileResponse.id
             addRow(values);
             const updatedUidResponse = await updateUidMethode(idofUid, updateUidMutation);
             // @ts-ignore
@@ -106,8 +111,9 @@ export default function AddBacklogs({
         //   addRow(values);
         // });
         else
-          createFileInFolder(newFileInFolder, values.epic, values).then(async () => {
+          createFileInFolder(newFileInFolder, values.epic, values).then(async (res) => {
             values.parent = values.epic;
+            values.id = res.id
             addRow(values)
             const updateUidRespon = await updateUidMethode(idofUid, updateUidMutation) as any;
             updateUid(updateUidRespon.data.updateUids.uids)
@@ -142,7 +148,6 @@ export default function AddBacklogs({
     getSprintByProjectId(projectId, GET_SPRINTS, updateSprints);
   }, []);
 
-
   return (
     <div className="p-6">
       <Formik
@@ -152,13 +157,14 @@ export default function AddBacklogs({
           description: selectedElement ? selectedElement.description : '',
           status: selectedElement ? selectedElement.status : 'To-Do',
           assignedTo: selectedElement ? selectedElement.assignedTo : '',
+          sprint: selectedElement ? selectedElement.addToSprint :'',
           epic: selectedElement ? selectedElement.parent : projectId,
           story:
             selectedElement && selectedElement.type !== 'file'
               ? selectedElement.story.id
               : '',
         }}
-        // validationSchema={validationSchema}
+        validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({ values }) => (
@@ -200,7 +206,13 @@ export default function AddBacklogs({
                   name="status"
                   className="w-full rounded-lg px-4 py-2 focus:outline-none hover:bg-gray-200"
                 >
-                  {statuses.map(
+                  {selectedElement == null &&
+                    <option key={"To-Do"} value={"To-Do"}>
+                    To-Do
+                  </option>
+
+                  }
+                  {selectedElement !== null && statuses.map(
                     (status: any) =>
                       status.label !== 'All' && (
                         <option key={status} value={status}>
@@ -243,12 +255,12 @@ export default function AddBacklogs({
                 />
               </div>
               <div className="mb-4 w-full">
-                <label htmlFor="addToSprint" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
+                <label htmlFor="sprint" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
                   Add to Sprint
                 </label>
                 <Field
                   as="select"
-                  name="addToSprint"
+                  name="sprint"
                   className="w-full rounded-lg px-4 py-2 focus:outline-none hover:bg-gray-200"
                 >
                   <option value="">Select Sprint</option>
@@ -259,7 +271,7 @@ export default function AddBacklogs({
                   ))}
                 </Field>
                 <ErrorMessage
-                  name="addToSprint"
+                  name="sprint"
                   component="div"
                   className="mt-1 text-red-500"
                 />
