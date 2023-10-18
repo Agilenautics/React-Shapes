@@ -1,32 +1,33 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GrAdd } from "react-icons/gr";
-import { BiRename } from "react-icons/bi";
-import { MdDeleteOutline } from "react-icons/md";
-import { AiOutlineArrowDown } from "react-icons/ai";
+import { AiFillDelete } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
+import { auth } from '../../../auth'
 import {
   DELETE_PROJECT,
-  GET_PROJECTS,
   GET_USER,
   EDIT_PROJECT,
   edit_Project,
   delete_Project,
-  get_user_method,
+  update_recentProject,
+  recentProject_mutation,
+  GET_PROJECTS,
+  GET_PROJECTS_BY_ID,
 } from "./gqlProject";
-import { useQuery } from "@apollo/client";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../auth";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
-import { User } from "../Users/Users";
+import { User, getInitials } from "../Users/Users";
+import projectStore, { Project } from "./projectStore";
+import userStore from "../Users/userStore";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { BiDotsVerticalRounded, } from 'react-icons/bi'
+import { HiArrowsUpDown, HiXMark } from 'react-icons/hi2'
+import { MdKeyboardArrowRight } from 'react-icons/md'
 
-interface Project {
-  id: string;
-  name: string;
-  desc: string;
-  description: string;
-  users: User[];
-}
+import { getNameFromEmail } from "../Users/Users";
+import { useRouter } from "next/router";
+import { useQuery } from "@apollo/client";
+import { onAuthStateChanged } from "firebase/auth";
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
@@ -34,17 +35,43 @@ function Projects() {
   const [projectName, setProjectName] = useState("");
   const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [accessLevel, setAccessLevel] = useState<string>("");
   const [projectData, setProjectData] = useState<Project[]>([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
+
+  const [recentProjectId, setRecentProjectId] = useState<string | null>(null);
+
+
+  const [projectTrackChanges, setProjectTrackChanges] = useState(false);
+
+  const allProjects = projectStore((state) => state.projects);
+  const handleSorting = projectStore((state) => state.handleSorting);
+  const sortValue = projectStore((state) => state.sortOrder);
+  const updateSortOrder = projectStore((state) => state.updateSortOrder);
+  const deleteProject = projectStore((state) => state.deleteProject);
+  const updateProject = projectStore((state) => state.updateProject);
+  // const loading = projectStore((state) => state.loading);
+  const recycleBinProject = projectStore((state) => state.recycleBin)
+  // user store
+  const userType = userStore((state) => state.userType);
+  const loginUser = userStore((state) => state.user);
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
+
+
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state) => state.updateLoginUser)
+
+
+  const router = useRouter();
+  const notify = () => toast.success("Project Created...");
+  const deleteNotify = () => toast.error("Project Got Deleted...");
+
+
+
 
   const { data, error, loading } = useQuery(GET_USER, {
     variables: {
@@ -52,75 +79,54 @@ function Projects() {
         emailId: userEmail,
       },
     },
+    
   });
 
-  const getProject = async (data: Array<Project>) => {
-    // @ts-ignore
-    if (data && data.users.length) {
-      //@ts-ignore
+  const getProjects = (response: any) => {
+    if (!loading && response && response.users.length) {
+      const projects = response.users[0].hasProjects;
       const userType = data.users[0].userType;
-      setAccessLevel(userType);
-      //@ts-ignore
-      setProjectData(data.users[0].hasProjects);
+      updateProjects(projects, loading);
+      updateLoginUser(data.users);
+      updateUserType(userType)
+      setProjectData(response.users[0].hasProjects);
+      updateRecycleBinProject(projects);
     }
-  };
+    
+    
+  }
 
-  //verifying token
-  const verifyAuthToken = async () => {
-    onAuthStateChanged(auth, (user) => {
+  const verificationToken = async () => {
+    onAuthStateChanged(auth, user => {
       if (user && user.email) {
+        console.log(user.uid,"userId")
         setUserEmail(user.email);
-        if (loading) return "";
-        getProject(data);
+        getProjects(data)
       }
-    });
-  };
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const searchValue = e.target.value;
-  //   setSearchTerm(searchValue);
+    })
+  }
 
-  //   if (searchValue.trim() === "") {
-  //     setProjectData(data.users[0].hasProjects);
-  //     setTotalCount(data.users[0].hasProjects.length);
-  //   } else {
-  //     const filtered = data.users[0].hasProjects.filter(
-  //       //@ts-ignore
-  //       (project) =>
-  //         project.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-  //         project.description.toLowerCase().includes(searchValue.toLowerCase())
-  //     );
-  //     setProjectData(filtered);
-  //     setTotalCount(filtered.length);
-  //   }
-  // };
 
   useEffect(() => {
     const filteredProjects = projectData.filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setSortedProjects(filteredProjects);
-  }, [projectData, searchTerm]);
+    updateProjects(filteredProjects, false)
+  }, [searchTerm]);
 
   useEffect(() => {
-    verifyAuthToken();
-    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
-    setIsNewProjectDisabled(accessLevel.toLowerCase() === "super user");
-  }, [userEmail, getProject]);
+    setIsButtonDisabled(userType.toLowerCase() === "user");
+    setIsNewProjectDisabled(userType.toLowerCase() === "super user");
+    verificationToken()
+    if (loginUser && loginUser.length) {
+      setUserEmail(loginUser[0].emailId)
+    }
+  }, [data]);
 
   const handleSortClick = () => {
-    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    setSortOrder(newSortOrder);
-
-    const sortedProjectsCopy = [...sortedProjects];
-    sortedProjectsCopy.sort((a, b) => {
-      if (newSortOrder === "asc") {
-        return a.name.localeCompare(b.name);
-      } else {
-        return b.name.localeCompare(a.name);
-      }
-    });
-
-    setSortedProjects(sortedProjectsCopy);
+    const newSortOrder = sortValue === "asc" ? "desc" : "asc";
+    updateSortOrder(newSortOrder);
+    handleSorting();
   };
 
   const handleEditButtonClick = (
@@ -134,22 +140,29 @@ function Projects() {
   };
 
   const handleSaveButtonClick = (projectId: string) => {
+    const result = { projectName, projectDesc };
     edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
+    updateProject(projectId, result);
     setProjectId(null);
     setProjectName("");
   };
 
-  const handleDelete_Project = (projectId: string) => {
+  const handleDelete_Project = (id: string) => {
     // Display confirmation box
-    setShowConfirmation(true);
-    setProjectId(projectId);
+    // setShowConfirmation(true);
+    delete_Project(id, DELETE_PROJECT, GET_USER).then((response)=>{
+      setProjectTrackChanges(!projectTrackChanges);
+      deleteNotify()
+    })
+    // setProjectId(projectId);
   };
 
   const handleConfirm = useCallback(() => {
     // Delete the project if confirmed
     setShowConfirmation(false);
     if (projectId) {
-      delete_Project(projectId, DELETE_PROJECT, GET_USER);
+      delete_Project(projectId, DELETE_PROJECT, GET_PROJECTS);
+      deleteProject(projectId);
       setProjectId(null);
     }
   }, [projectId]);
@@ -172,14 +185,33 @@ function Projects() {
     setShowForm(false);
   };
 
-  const handleMessage = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
+  // const handleMessage = () => {
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 5000);
+  // };
+
+  // to navigate recycle bin
+  const toRecycleBin = () => {
+    router.push("/recycleBin");
   };
 
-  if (loading || isLoading) {
+  const handleDotClick = (id: string | any) => {
+    setProjectTrackChanges(!projectTrackChanges);
+    setProjectId(id);
+  };
+
+  const handleRecentOpenProject = (id: string | any) => {
+    localStorage.setItem("recentPid", id);
+    // update_recentProject(id,recentProject_mutation);
+  }
+
+  if (error) {
+    return <div className="text-center text-danger">{error && error.message}</div>
+  }
+
+  if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <LoadingIcon />
@@ -187,211 +219,191 @@ function Projects() {
     );
   }
 
-  if (error) {
-    console.log(error.message);
-  }
+
 
   return (
-    <div>
-      <div className="mt-4 flex justify-center">
-        {successMessage && (
-          <div className="rounded-md bg-green-200 px-4 py-2 text-green-800">
-            {successMessage}
-          </div>
-        )}
-      </div>
-      <div className="ml-6 flex items-center">
-        <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
-          Team Agile
-        </button>
-      </div>
-      <div className="ml-10 mt-4 flex items-center">
-        <h2 className="inline-block text-xl font-semibold">Projects</h2>
-        <p className="ml-8 inline-block">Total</p>
-        <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {projectData && projectData.length}
-        </div>
-        <button
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }${isNewProjectDisabled ? "opacity-50" : ""}`}
-          disabled={isButtonDisabled || isNewProjectDisabled}
-          onClick={handleAddProjectClick}
-        >
-          <GrAdd />
-          <div className="mx-1 my-1">New Project</div>
-        </button>
-      </div>
-      <div className="ml-10 mt-2">
-        <div className="max-w-2xl">
-          <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-gray-200 focus-within:shadow-lg">
-            <div className="grid h-full w-12 place-items-center text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
+   
 
-            <input
-              className="peer h-full w-full bg-gray-200 pr-2 text-base text-black outline-none"
-              type="text"
-              id="search"
-              placeholder="Search"
-              autoComplete="off"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+    // container
+    <div className="p-7">
+      {/* Greeting to a user  */}
+      <div className="item-center mb-4 grid grid-cols-2 justify-center gap-6 rounded bg-white shadow-md dark:bg-slate-600">
+        <div className=" item-center flex justify-center">
+          <img
+            src="/assets/grretingImage.png"
+            height="50%"
+            width="50%"
+            alt=""
+          />
+        </div>
+
+        <div className="flex flex-col justify-around">
+          <div>
+            <h2 className="text-4xl">
+              Welcome! {getNameFromEmail(userEmail)}
+            </h2>
+            <p className="m-2 text-xl">
+              Quality is never an accident; it is always the result of high
+              intention, sincere effort, intelligent direction, and skillful
+              execution
+            </p>
           </div>
+          <a
+            href="#activities"
+            className="m-2 cursor-pointer text-sky-500 underline duration-300 hover:text-sky-700"
+          >
+            see the daily activities
+          </a>
         </div>
       </div>
 
-      <div className="relative overflow-x-auto sm:rounded-lg">
-        <table className="mb-4 ml-8 mt-4 w-11/12 rounded-lg text-left text-sm">
-          <thead className="bg-gray-200 text-xs">
-            <tr>
-              <th
-                scope="col"
-                className="w-40 px-4 py-3"
-                onClick={handleSortClick}
-              >
-                <div className="flex cursor-pointer items-center">
-                  Project name
-                  <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${
-                      sortOrder === "asc" ? "rotate-180 transform" : ""
-                    }`}
-                  />
-                </div>
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Description
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedProjects
-              // .filter(
-              //   (project: Project) =>
-              //     project.name
-              //       .toLowerCase()
-              //       .includes(searchTerm.toLowerCase()) ||
-              //     project.description
-              //       .toLowerCase()
-              //       .includes(searchTerm.toLowerCase())
-              // )
-              .map((project: Project) => (
-                <tr key={project.id} className="border-b bg-white">
-                  <td className="whitespace-nowrap px-4 py-4 font-medium">
-                    {projectId === project.id ? (
-                      <input
-                        type="text"
-                        value={projectName}
-                        onChange={(e) => setProjectName(e.target.value)}
-                        className="border-b focus:border-blue-500 focus:outline-none"
-                      />
-                    ) : (
-                      <Link
-                        href={{
-                          pathname: "/projects/" + project.id,
-                        }}
-                      >
-                        {project.name}
-                      </Link>
-                    )}
-                  </td>
-                  <td className="hidden px-6 py-4 md:table-cell">
-                    {projectId === project.id ? (
-                      <input
-                        type="text"
-                        value={projectDesc}
-                        onChange={(e) => setProjectDesc(e.target.value)}
-                        className="w-full border-b focus:border-blue-500 focus:outline-none"
-                      />
-                    ) : (
-                      project.description
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    {projectId === project.id ? (
-                      <button
-                        onClick={() => handleSaveButtonClick(project.id)}
-                        className={`mr-2 ${
-                          isButtonDisabled ? "opacity-50" : ""
-                        }`}
-                        disabled={isButtonDisabled}
-                      >
-                        Save
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() =>
-                          handleEditButtonClick(
-                            project.id,
-                            project.name,
-                            project.description
-                          )
-                        }
-                        className={`mr-2 w-3 ${
-                          isButtonDisabled ? "opacity-50" : ""
-                        }`}
-                        disabled={isButtonDisabled}
-                      >
-                        <BiRename />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleDelete_Project(project.id)}
-                      className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
-                      disabled={isButtonDisabled}
-                    >
-                      <MdDeleteOutline />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+      {/* Project  heading*/}
+      <h2 className="mb-6 text-2xl font-semibold">Projects</h2>
+
+      {/* project heading bar (functionality) */}
+      <div
+        id="activities"
+        className="mb-6 grid h-fit grid-cols-4 items-center gap-6 bg-white p-4 text-center shadow dark:bg-slate-600"
+      >
+        <div className="rounded border border-slate-400 p-1">
+          <input
+            className=" bg-white-200 bg:text-slate-100 h-full w-full outline-none dark:bg-transparent"
+            type="text"
+            id="search"
+            placeholder="Search"
+            autoComplete="off"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className=" col-span-2">
+          <span className="ml-5">Total : {allProjects.length}</span>
+          <button
+            onClick={handleSortClick}
+            className="ml-5 rounded-lg p-2 duration-300 hover:bg-slate-100 hover:text-slate-500"
+          >
+            sorting:
+            <HiArrowsUpDown
+              className={`inline ${sortValue === "asc" ? "" : "rotate-180"}`}
+            />{" "}
+          </button>
+          <button
+            onClick={toRecycleBin}
+            className="relative ml-5 rounded-lg  rounded-lg p-2 duration-300 hover:bg-slate-100 hover:text-slate-500"
+          >
+            RecycleBin: <AiFillDelete className="inline text-xl" />
+            <span className="absolute right-[1px] top-1 h-[20px] w-4 rounded-full bg-sky-500 text-sm text-white">
+              {recycleBinProject.length}
+            </span>
+          </button>
+        </div>
+
+        <div className="text-end">
+          <button
+            onClick={handleAddProjectClick}
+            className="rounded border border-sky-500/75 bg-sky-500/75 p-2 text-white duration-300 hover:border hover:border-sky-500/75 hover:bg-transparent hover:text-sky-500"
+          >
+            Add Project
+          </button>
+        </div>
       </div>
+
+      {/* add project form container */}
+
       {showForm && (
         <ProjectOverlay
+          notify={notify}
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
-          projectData={data}
+          // @ts-ignore
+          projectData={allProjects}
           userEmail={userEmail}
-          handleMessage={handleMessage}
         />
       )}
-      {showConfirmation && (
-        <div className="popup-container">
-          <div className="popup-window">
-            <h3>Confirm Deletion</h3>
-            <p>Are you sure you want to delete the project?</p>
-            <div>
-              <button className="popup-button" onClick={handleConfirm}>
-                Yes
-              </button>
-              <button className="popup-button" onClick={handleCancel}>
-                No
-              </button>
+
+      {/* project card */}
+      <div className=" grid grid-cols-3   gap-6 ">
+        {allProjects.map((projects, index) => {
+          const { name, id, description, userHas, recentProject } = projects;
+          return (
+            <div
+              key={index}
+              className="san-sarif  relative flex flex-col justify-between rounded  bg-white  p-4 shadow-md duration-200 hover:shadow-xl dark:bg-slate-600"
+            >
+              <div>
+                <div className="flex justify-between">
+                  <h3 className="text-lg font-bold"> {name} </h3>
+                  <button
+                    onClick={() => handleDotClick(id)}
+                    className="text-xl"
+                  >
+                    {projectId === id && projectTrackChanges ? (
+                      <HiXMark />
+                    ) : (
+                      <BiDotsVerticalRounded />
+                    )}
+                  </button>
+                </div>
+                <p className="mb-3 mt-2"> {description} </p>
+              </div>
+              <div>
+                <div className="text-sky-500 ">
+                  <Link href={`/projects/` + id}>
+                    <a className="hover:underline duration-300" onClick={() => handleRecentOpenProject(id)}>see more  <MdKeyboardArrowRight className="inline" /></a>
+                  </Link>
+                </div>
+                <div className="flex justify-end -space-x-[2%]"> {userHas && userHas.length && projectAssignedUser(userHas)} </div>
+              </div>
+
+              {projectId === id && projectTrackChanges ? (
+                <div className="absolute -right-[20px] top-10 flex flex-col bg-white shadow">
+                  <button className="border-b-2 bg-yellow-500 p-1 text-xs text-white">
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 p-1 text-xs text-white"
+                    onClick={() => handleDelete_Project(id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ) : null}
             </div>
-          </div>
-        </div>
-      )}
+          );
+        })}
+      </div>
+      {/* toastify to show popup after creating project */}
+      <ToastContainer autoClose={2500} />
     </div>
   );
 }
 
 export default Projects;
+
+// userList
+
+export const projectAssignedUser = (userHas: any) => {
+  const user = userHas.map((value: User, index: string) => {
+    const { emailId } = value
+    return (
+      <div
+        style={{ backgroundColor: getRandomColor() }}
+        key={index}
+        className=" group flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white"
+      >
+        <span className="">{getInitials(emailId)}</span>
+      </div>
+    );
+  });
+  return user;
+};
+
+export function getRandomColor() {
+  var letters = "0123456789ABCDEF";
+  var color = "#";
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}

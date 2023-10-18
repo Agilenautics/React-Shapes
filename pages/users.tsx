@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import TopBar from "../components/AdminPage/TopBar";
-import Sidebar from "../components/AdminPage/SideBar";
 import MembersPage from "../components/AdminPage/Users/MembersPage";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {  onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from '../auth';
 
@@ -39,13 +37,7 @@ function ProjectPage() {
 
   return (
     <div>
-      <TopBar />
-      <div className="flex">
-        <Sidebar activeLink={activeLink} onLinkClick={handleLinkClick} />
-        <div className="flex flex-grow flex-col bg-gray-50">
-          <MembersPage />
-        </div>
-      </div>
+      <MembersPage />
     </div>
   );
 }

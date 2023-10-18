@@ -7,14 +7,43 @@ import {
 import client from "../../../apollo-client";
 import { Node } from "reactflow";
 import { Edge } from "reactflow";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+
+
+
+const Info_Fragment = gql`
+  fragment InfoFragment on info {
+    description
+    assignedTo
+    status
+    dueDate
+    sprint
+
+  }
+`
 
 export const Node_Fragment = gql`
+${Info_Fragment}
   fragment NodeFragment on flowNode {
     id
     draggable
     flowchart
     type
     timeStamp
+    uid
+    comments {
+      message
+      user {
+       emailId
+      }
+    }
+    hasSprint {
+      id
+      name
+    }
+    hasInfo{
+    ...InfoFragment
+    }
     hasdataNodedata {
       label
       shape
@@ -84,50 +113,13 @@ const getNode = gql`
   query FlowNodes($where: flowNodeWhere) {
     flowNodes(where: $where) {
       ...NodeFragment
-      draggable
-      flowchart
-      type
-      id
-      hasdataNodedata {
-        shape
-        label
-        description
-        links {
-          fileId
-          flag
-          id
-          label
-        }
-        linkedBy {
-          fileId
-          flag
-          label
-          id
-        }
-        linksAggregate {
-          count
-          node {
-            label {
-              shortest
-            }
-          }
-        }
-        linkedByAggregate {
-          count
-          node {
-            label {
-              shortest
-            }
-          }
-        }
-      }
-      haspositionPosition {
-        x
-        y
-      }
     }
   }
 `;
+
+//createNode 
+
+
 
 const newNode = gql`
   ${Node_Fragment}
@@ -135,6 +127,9 @@ const newNode = gql`
     updateFiles(where: $where, update: $update) {
       files {
         name
+        folderHas {
+         name
+        }
         hasflowchart {
           name
           nodes {
@@ -192,6 +187,7 @@ async function getNodes(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
+
   var nodes: Array<Node> = [];
   var edges: Array<Edge> = [];
   await client
@@ -222,18 +218,18 @@ async function getNodes(
 
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  id: string,
-  flowchart: string,
-
-  updateNode: any
+  updateNode: any,
+  data: any,
+  addRow: any,
 ) {
+  // const addRow = backlogStore(state=> state.addRow)
   var nodes: Array<Node> = [];
   await client
     .mutate({
       mutation: mutation,
       variables: {
         where: {
-          id,
+          id: data.story,
         },
         update: {
           hasflowchart: {
@@ -246,13 +242,43 @@ async function createNode(
                         node: {
                           flowchart: "flowNode",
                           draggable: true,
-                          type: "blueNode",
+                          type: data.type,
+                          uid: data.uid,
+                          "comments": {
+                            "create": [
+                              {
+                                "node": {
+                                  "message": data.discussion,
+                                  "user": {
+                                    "connect": {
+                                      "where": {
+                                        "node": {
+                                          "emailId": "irfan123@gmail.com"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          hasInfo: {
+                            create: {
+                              node: {
+                                description: "",
+                                assignedTo: data.assignedTo,
+                                status: "To-Do",
+                                dueDate: "",
+                                sprint: ""
+                              }
+                            }
+                          },
                           hasdataNodedata: {
                             create: {
                               node: {
-                                label: "New Node",
-                                shape: "rectangle",
-                                description: "",
+                                label: data.name || data.label,
+                                shape: data.symbol || "rectangle",
+                                description: data.description,
                                 links: {
                                   create: {
                                     node: {
@@ -276,6 +302,17 @@ async function createNode(
                               },
                             },
                           },
+                          hasSprint: {
+                            connect: [
+                              {
+                                where: {
+                                  node: {
+                                    id: data.sprint,
+                                  },
+                                },
+                              },
+                            ],
+                          },
                           haspositionPosition: {
                             create: {
                               node: {
@@ -296,7 +333,6 @@ async function createNode(
         },
       },
     })
-
     .then((result) => {
       const nodes1 = JSON.stringify(
         result.data.updateFiles.files[0].hasflowchart.nodes
@@ -305,12 +341,23 @@ async function createNode(
         .replaceAll('"haspositionPosition":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes1);
+      console.log(result);
+
+
+
+      data.status = data.status || "To-Do"
+      // data.uid = result.data.updateFiles.files[0].hasflowchart.nodes[0].uid
+      data.parent = data.epic
+      data.id = result.data.id
+      addRow(data)
+
+      // addRow(data)
       return updateNode(nodes);
     })
     .catch((error) => {
       console.error(error);
     });
-  client.clearStore();
+  // client.clearStore();
 }
 
 const delNode = gql`
@@ -321,6 +368,7 @@ const delNode = gql`
     }
   }
 `;
+
 
 async function deleteNodeBackend(nodeID: string) {
   await client.mutate({
@@ -350,6 +398,28 @@ async function deleteNodeBackend(nodeID: string) {
       },
     },
   });
+  // const session = driver.session();
+  // session
+  // .run('MATCH (n:flowNode {id:$nodeId}) DETACH  DELETE n;', {
+  //   nodeId:nodeID
+  // })
+  // .subscribe({
+  //   onKeys: keys => {
+  //     console.log(keys,"keys")
+  //   },
+  //   onNext: record => {
+  //     console.log(record,"delete successfully")
+  //   },
+  //   onCompleted: () => {
+  //     session.close() // returns a Promise
+  //   },
+  //   onError: error => {
+  //     console.log(error)
+  //   }
+  // })
+  // session.run(`
+  //   MATCH(n:flowNode ${id:nodeID})
+  // `)
 }
 
 // here iam parforming update node position methode
@@ -485,6 +555,107 @@ const updateNodeData = async (
   });
 };
 
+
+const updateTasksMutation = gql`
+${Info_Fragment}
+  mutation updateTasks($where: flowNodeWhere, $update: flowNodeUpdateInput) {
+  updateFlowNodes(where: $where, update: $update) {
+    flowNodes {
+      id
+      type
+      hasInfo {
+        ...InfoFragment
+      }
+      hasSprint{
+        name
+      }
+      hasdataNodedata {
+        label,
+        description
+      }
+      comments {
+        id
+        message
+        timeStamp
+        user {
+          emailId
+        }
+      }
+    }
+  }
+}
+`
+
+const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, data: any) => {
+  // const updateRow = backlogStore(state => state.updateRow);
+  const response = await client.mutate({
+    mutation,
+    variables: {
+      "where": {
+        id
+      },
+      "update": {
+        "hasInfo": {
+          "update": {
+            "node": {
+              "status": data.status,
+              "sprint": data.sprint || null,
+              "dueDate": data.dueDate || null,
+              "assignedTo": data.assignedTo || null
+            }
+          }
+        },
+
+        "hasdataNodedata": {
+          "update": {
+            "node": {
+              "label": data.name,
+              "description": data.description
+            }
+          }
+        },
+        hasSprint: {
+          connect: [
+            {
+              where: {
+                node: {
+                  id: data.sprint||"",
+                },
+              },
+            },
+          ],
+        },
+        "comments": [
+          {
+            "create": [
+              {
+                "node": {
+                  "message": data.discussion,
+                  "user": {
+                    "connect": {
+                      "where": {
+                        "node": {
+                          "emailId": "irfan123@gmail.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+
+      }
+    }
+  })
+
+  return response;
+
+}
+
+
+
 export {
   allNodes,
   newNode,
@@ -499,4 +670,6 @@ export {
   updateLinkedBy,
   updateLinksMutation,
   updateNodeData,
+  updateTasksMutation,
+  updateTaskMethod
 };

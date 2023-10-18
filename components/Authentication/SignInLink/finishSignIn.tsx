@@ -1,5 +1,3 @@
-// irfan123@gmail.com
-// 28051997
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "next/router";
 import { auth } from '../../../auth';
@@ -66,7 +64,7 @@ const FinishSignIn: React.FC = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div className='my-4 text-center'>
       <h1>Complete Sign In</h1>
       <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <input

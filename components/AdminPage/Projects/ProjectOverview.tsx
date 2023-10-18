@@ -1,17 +1,41 @@
+import { onAuthStateChanged } from "firebase/auth";
+import MembersTable from "./MembersTable";
+import { GET_USER, getUserByEmail } from "./gqlProject";
+import { auth } from "../../../auth";
+import { useEffect } from "react";
+import projectStore from "./projectStore";
+import userStore from "../Users/userStore";
+
 interface ProjectOverviewProps {
   projectName: string;
   projectDesc: string;
   total: number;
+  details: any;
 }
 
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   projectName,
   projectDesc,
   total,
+  details,
 }) => {
+  const updateProjects = projectStore((state) => state.updateProjectData);
+  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
+  const updateUserType = userStore((state) => state.updateUserType);
+  const updateLoginUser = userStore((state) => state.updateLoginUser)
+  const verificationToken = async () => {
+    onAuthStateChanged(auth, user => {
+      if (user && user.email) {
+        getUserByEmail(user.email, GET_USER, { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject })
+      }
+    })
+  }
+  useEffect(() => {
+    verificationToken()
+  }, [])
   return (
-    <>
-      <div className="mt-8 flex items-center">
+    <div>
+      <div className="mt-8 flex items-center w-full">
         <div className="min-h-10 min-w-10 flex items-center justify-center rounded-xl bg-blue-500 p-2 text-xl font-semibold text-white">
           {getInitials(projectName)}
         </div>
@@ -28,7 +52,8 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
           {total}
         </p>
       </div>
-    </>
+      <MembersTable details={details} />
+    </div>
   );
 };
 

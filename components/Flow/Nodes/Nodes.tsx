@@ -9,6 +9,7 @@ import Tags from "./Tags";
 import Progress from "./Progress";
 import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
 import { updateLinksMutation, updateNodeData } from "./gqlNodes";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
@@ -35,17 +36,19 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   // @ts-ignore
   const description = data.description;
 
-  //console.log(shapeCSS)
 
   // const updateNodeData_Links = async () => {
+  //console.log(shapeCSS)
+// const updateNodeData_Links = async () => {
   //   if (linkNodeId === id) {
   //     return await updateNodeData(data, id, updateLinksMutation)
   //   }
   // }
+  
+  //useEffect(() => {
+  //  updateNodeData_Links()
+  //}, [updateNodeData_Links])
 
-  // useEffect(() => {
-  //   updateNodeData_Links()
-  // }, [updateNodeData_Links])
 
   const linkedTo = () => {
     const x = findFile(data.links.fileId);
@@ -87,19 +90,19 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
       updateEdges(JSON.parse(edgeData));
       updateNodes(JSON.parse(nodeData));
     }
-    updateBreadCrumbs(x, x.id, "new");
-  };
+    updateBreadCrumbs(x, x.id, 'new')
+  }
 
   return (
-    <div className="">
+    <div>
       <div
-        className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
+        className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]}  group relative`}
       >
         {Object.keys(handlePositions).map((key) => (
           <Handle
             type="source"
             key={key}
-            className="handle"
+            className="handle relative"
             position={handlePositions[key]}
             id={key}
           />
@@ -113,16 +116,21 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         ) : null}
 
         <div
-          className={`${css_props} font-sans ${shapeCSS[1]
-            } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${editing ? "cursor-default" : ""
-            }`}
+          className={`${css_props} font-sans h-auto ${
+            shapeCSS[1]
+          } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
+            editing ? "cursor-default" : ""
+          }`}
           onDoubleClick={() => {
-            setEditing(true);
-            toggleDraggable(id, false);
+            if (!(shapeCSS[1].substring(0, 4) === "bpmn")){
+              setEditing(true);
+              toggleDraggable(id, false);
+            }
           }}
         >
           <div className={shapeCSS[2]}>
             {editing ? (
+              <div className={`relative flex-row text-center h-auto ${data.links.flag && "mt-7"}`}>
               <Editing
                 isEdge={false}
                 toggleDraggable={toggleDraggable}
@@ -136,11 +144,25 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                 updateDescription={updateDescription}
                 bidirectionalArrows={false}
               />
+               {data.links.flag ? (
+              <div
+                className="flex cursor-pointer h-auto rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black h-auto "
+                onClick={linkedTo}
+              >
+                <div className="text-xs h-auto "> {data.links.label} </div>
+                <div>
+                  {" "}
+                  <BiArrowToRight className="h-4 w-4" />{" "}
+                </div>
+              </div>
             ) : (
-              <p className="py-1 text-center">{label}</p>
+              <></>
             )}
-            {/* LinkedTo */}
-            {data.links.flag ? (
+              </div>
+            ) : (
+              <div>
+              <p className="py-1 text-center text-[0.6rem]">{label}</p>
+              {data.links.flag ? (
               <div
                 className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                 onClick={linkedTo}
@@ -154,6 +176,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             ) : (
               <></>
             )}
+              </div>
+            )}
+            {/* LinkedTo */}
 
             {/* linked by node  */}
             {
@@ -187,9 +212,17 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 // ! are updated.
 
 //@ts-ignore
+function defaultNode({ data, id }) {
+  return PrototypicalNode(
+    "",
+    data,
+    id
+  );
+}
+
+//@ts-ignore
 function BrightblueNode({ data, id }) {
   return <>
-    <NodeResizer minWidth={100} minHeight={30} nodeId= {id} />
     {
       PrototypicalNode(
         "border-node-blue-100 bg-node-blue-200 text-white",
@@ -291,6 +324,7 @@ function WelcomeNode({ data, id }) {
   );
 }
 export {
+  defaultNode,
   BrightblueNode,
   blueNode,
   BrightgreenNode,

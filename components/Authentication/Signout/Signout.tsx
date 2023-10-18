@@ -3,13 +3,17 @@ import { useRouter } from "next/router";
 import { auth } from '../../../auth';
 import { getAuth, signOut } from "firebase/auth";
 
-const Signout: React.FC = () => {
+const Signout: React.FC = ({ handleFlag }: any) => {
     const router = useRouter();
 
     const handleSignOut = () => {
         signOut(auth).then(() => {
+
+
             // Sign-out successful.
-            router.push("/login")
+            router.push("/login");
+            // handleFlag();
+
         }).catch((error) => {
             // An error happened.
         });

@@ -33,7 +33,7 @@ function ExpandableChip({
   const [isCollapsed, setCollapsed] = useState(true);
   return (
     <div
-      className={`absolute overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
+      className={`absolute overflow-hidden ${!isCollapsed && "overflow-y-auto" } rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
         isCollapsed ? expTrue : expFalse
       } ${positioningCSS} dark:bg-neutral-900 `}
     >
@@ -219,7 +219,7 @@ export function Editing({
             expTrue={pEtrue}
             expFalse={sEfalse}
             positioningCSS={"left-16 -top-5"}
-            objects={Object.keys(nodeShapeMap).map((key, _) => (
+            objects={Object.keys(nodeShapeMap).slice(0,4).map((key, _) => (
               <div
                 key={key}
                 // @ts-ignore
@@ -282,7 +282,7 @@ export function Editing({
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600
-                              dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500"
+                               dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500 dark:text-white"
                           >
                             {linkNodes.nodes[key].hasdataNodedata.label}
                           </button>

@@ -21,8 +21,12 @@ import { auth } from "../../../auth";
 import {
   get_user_method,
   GET_USER,
-  GET_PROJECTS,
 } from "../Projects/gqlProject";
+import userStore from "./userStore";
+import projectStore from "../Projects/projectStore";
+import { HiArrowsUpDown } from "react-icons/hi2";
+
+//user interface type
 export interface User {
   id: string;
   name: string;
@@ -44,30 +48,57 @@ interface Project {
 }
 
 function Users() {
-  const [editedUser, setEditedUser] = useState<User | null>(null);
+  const [editedUser, setEditedUser] = useState<string | null>(null);
   const [showAddUserPopup, setShowAddUserPopup] = useState(false);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [showManageAccountPopup, setShowManageAccountPopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [projectsList, setProjectsList] = useState<Project[]>([]);
-  const [accessLevel, setAccessLevel] = useState<string>("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
 
+
+  //project store
+  const projects = projectStore((state) => state.projects);
+  const updateProject = projectStore((state) => state.updateProjectData)
+
+
+
+
+
+
+
+
+
+  //user store
+  const usersList = userStore((state) => state.usersList);
+  const updateUserList = userStore((state) => state.updateUserList);
+  const sortingOrder = userStore((state) => state.sortOrder);
+  const updateSortingOrder = userStore((state) => state.updateSortingOrder);
+  const handleSorting = userStore((state) => state.handleSorting);
+  const deleteUserById = userStore((state) => state.deleteUserById);
+  const updateUser = userStore((state) => state.updateUser);
+  const userType = userStore((state) => state.userType);
+  const updateUserType = userStore((state) => state.updateUserType);
+  const accessLevel = userStore((state) => state.accessLevel)
+  const updateAccessLevele = userStore((state) => state.updateAccessLevel);
+
+
+
+
+
+
+
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         get_user_method(user.email, GET_USER).then((res: any) => {
-          const userType = res[0].userType;
-          setAccessLevel(userType);
-          const userProjects = res[0].hasProjects.map((project: any) => ({
-            id: project.id,
-            name: project.name,
-          }));
-          setProjectsList(userProjects);
+          const { hasProjects, ...userData } = res[0]
+          const userType = userData.userType;
+          updateUserType(userType)
+          const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
+          // updateProject(userProjects,loading)
         });
       }
     });
@@ -75,6 +106,7 @@ function Users() {
   useEffect(() => {
     verfiyAuthToken();
   }, []);
+
 
   const handleMessage = (message: any) => {
     setMessage(message);
@@ -86,46 +118,41 @@ function Users() {
   };
 
   const { data, error, loading } = useQuery(ALL_USERS);
-  const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    if (data && data.users) {
-      setUsers(data.users);
-    }
-    setIsButtonDisabled(accessLevel.toLowerCase() === "user");
-    setIsNewUserDisabled(accessLevel.toLowerCase() === "super user");
-  }, [data, accessLevel]);
 
-  const handleEditClick = (user: User) => {
-    setEditedUser(user);
+
+  const handleEditClick = (userId: string) => {
+    setEditedUser(userId);
   };
 
-  const handleSortClick = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    const sortedUsers = [...users].sort((a: User, b: User) => {
-      const nameA = getNameFromEmail(a.emailId).toUpperCase();
-      const nameB = getNameFromEmail(b.emailId).toUpperCase();
-      if (nameA < nameB) return sortOrder === "asc" ? -1 : 1;
-      if (nameA > nameB) return sortOrder === "asc" ? 1 : -1;
-      return 0;
-    });
-    setUsers(sortedUsers);
-  };
+  const handleChanges_userType = (e: any) => {
+    updateAccessLevele(e.target.value)
+    // console.log(e.target.value)
+  }
+
 
   const handleSaveClick = () => {
     if (editedUser) {
-      // const updatedUsers = users.map((user) => {
-      //   if (user.id === editedUser.id) {
-      //     return { ...user, accessLevel: editedUser.accessLevel };
-      //   }
-      //   return user;
-      // });
-      handleUpdate_User(editedUser, UPDATE_USER, ALL_USERS);
-
-      //setUsers(updatedUsers);
+      handleUpdate_User(editedUser, accessLevel, UPDATE_USER, ALL_USERS);
+      updateUser(editedUser, accessLevel)
       setEditedUser(null);
     }
+
   };
+
+
+  const handleSortClick = () => {
+    //from user store
+    const newSortingValue = sortingOrder === "asc" ? "desc" : "asc"
+    updateSortingOrder(newSortingValue)
+    handleSorting()
+  };
+
+
+
+
+
+
 
   const handleAddUser = (user: User, selectedProjects: string[]) => {
     setShowAddUserPopup(false);
@@ -136,6 +163,7 @@ function Users() {
   };
 
   const handleConfirmDelete = (userId: string) => {
+    deleteUserById(userId)
     handleUser_Delete(userId, DELETE_USER, ALL_USERS);
     setConfirmDeleteId(null);
   };
@@ -143,6 +171,15 @@ function Users() {
   const handleCancelDelete = () => {
     setConfirmDeleteId(null);
   };
+
+  useEffect(() => {
+    if (data && data.users) {
+      updateUserList(data.users)
+    }
+    setIsButtonDisabled(userType.toLowerCase() === "user");
+    setIsNewUserDisabled(userType.toLowerCase() === "super user");
+    handleChanges_userType
+  }, [data]);
 
   if (loading || isLoading)
     return (
@@ -160,46 +197,80 @@ function Users() {
   };
 
   return (
-    <div className="relative overflow-x-auto" style={{ overflowX: "hidden" }}>
-      <div className="ml-6 flex items-center">
-        <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
+    <div className=" p-6">
+      {/* heading of the table */}
+      <div className="flex items-center">
+        <button className="text-md   rounded text-white bg-sky-500/75 p-2 font-semibold">
           Team Agile
         </button>
       </div>
-      <div className="ml-10 mt-4 flex items-center">
+
+      {/* <div className=" border flex items-center">
         <h2 className="inline-block text-xl font-semibold">Users</h2>
-        <p className="ml-8 inline-block">Total</p>
-        <div className="ml-2 mt-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
+        <p className="ml-8 inline-block">Total :</p>
+        <div className="">
           {data && data.users && data.users.length}
         </div>
         <button
-          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${
-            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-          }${isNewUserDisabled ? "opacity-50" : ""}`}
+          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }${isNewUserDisabled ? "opacity-50" : ""}`}
           disabled={isButtonDisabled || isNewUserDisabled}
           onClick={() => setShowAddUserPopup(true)}
         >
           <GrAdd />
           <div className="mx-2 my-1">New User</div>
         </button>
+      </div> */}
+
+      <h2 className="text-2xl font-semibold py-4">Users</h2>
+
+      {/* top bar  */}
+
+      <div className="grid grid-cols-4 bg-white gap-6 p-4 rounded shadow dark:bg-slate-600 ">
+        <div className="border rounded border-slate-400 p-1 ">
+          <input
+            className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
+            type="text"
+            id="search"
+            placeholder="Search"
+            autoComplete="off"
+          // value={searchTerm}
+          // onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className=" col-span-2  flex justify-end gap-8 items-center">
+          <span> Total : {usersList.length} </span>
+          <button onClick={handleSortClick}>shorting: <HiArrowsUpDown className={`inline ${sortingOrder === 'asc' ? '' : "rotate-180"}`} /> </button>
+          <span>
+            <label htmlFor="">Type : </label>
+            <select className="outline-none  border dark:border-none rounded dark:bg-slate-700 p-1" name="" id="">
+              <option value="user">All</option>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+              <option value="super user">Super User</option>
+            </select>
+          </span>
+        </div>
+        {/* add user button */}
+        <div className="text-end">
+          <button className={` bg-sky-500/75 p-2 hover:bg-transparent hover:text-sky-500 border border-sky-500/75 duration-300 hover:border-sky-500/75 hover:border rounded text-white ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+            }${isNewUserDisabled ? "opacity-50" : ""}`}
+            disabled={isButtonDisabled || isNewUserDisabled}
+            onClick={() => setShowAddUserPopup(true)}>Add User</button>
+        </div>
       </div>
+
+
       <div className="relative overflow-x-auto">
-        <table className="ml-10 mt-4 rounded-lg text-left text-sm">
-          <thead className="bg-gray-200 text-xs">
+        <table className="w-full my-6 text-left text-sm">
+          <thead className=" bg-slate-700 text-slate-50 text-xs">
             <tr>
               <th
                 scope="col"
                 className="ml-6 w-60 cursor-pointer px-6 py-3"
-                onClick={handleSortClick}
               >
-                <div className="flex items-center">
-                  Name
-                  {sortOrder === "asc" ? (
-                    <AiOutlineArrowUp className="ml-2 rotate-180 transform text-gray-600" />
-                  ) : (
-                    <AiOutlineArrowUp className="ml-2 text-gray-600" />
-                  )}
-                </div>
+                Name
               </th>
               <th scope="col" className="py-3 pl-60 pr-20">
                 Access Level
@@ -212,9 +283,9 @@ function Users() {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {users.map((user: User) => (
-              <tr key={user.id} className="border-b bg-white">
+          <tbody className="overflow-y-scroll">
+            {usersList.map((user: any,index) => {
+              return <tr key={user.id} className="border-b border-black dark:border-slate-200 bg-white dark:bg-slate-600">
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
@@ -225,17 +296,12 @@ function Users() {
                     </span>
                   </div>
                 </td>
-                {}
-                <td className="max-w-xs whitespace-nowrap py-4 pl-60 pr-20">
-                  {editedUser?.id === user.id ? (
+                { }
+                <td className="max-w-xs whitespace-nowrap py-4 pl-64 ">
+                  {editedUser === user.id ? (
                     <select
                       value={accessLevel}
-                      onChange={(e) =>
-                        setEditedUser({
-                          ...editedUser,
-                          accessLevel: e.target.value,
-                        })
-                      }
+                      onChange={handleChanges_userType}
                       className="rounded-md border border-gray-300 p-1"
                     >
                       <option value="User">User</option>
@@ -246,11 +312,11 @@ function Users() {
                   )}
                 </td>
                 <td className="px-16 py-4">{formatDate(user.timeStamp)}</td>
-                <td className="px-10 py-4">
+                <td className="px-4 py-4 ">
                   {confirmDeleteId === user.id ? (
                     <div className="flex items-center">
                       <button
-                        className="text-red-700"
+                        className="text-red-700 "
                         onClick={() => handleConfirmDelete(user.id)}
                         disabled={isButtonDisabled}
                       >
@@ -266,9 +332,9 @@ function Users() {
                     </div>
                   ) : (
                     <>
-                      {editedUser?.id === user.id ? (
+                      {editedUser === user.id ? (
                         <button
-                          className="rounded-md bg-red-600 px-2 py-1 font-semibold text-white"
+                          className="rounded-md bg-green-600 px-2 py-1 font-semibold text-white"
                           onClick={handleSaveClick}
                           disabled={isButtonDisabled}
                         >
@@ -276,8 +342,8 @@ function Users() {
                         </button>
                       ) : (
                         <button
-                          className="ml-2 mr-2"
-                          onClick={() => handleEditClick(user)}
+                          className="ml-2 mr-2  rounded-full p-1 hover:bg-slate-200 duration-300"
+                          onClick={() => handleEditClick(user.id)}
                           disabled={isButtonDisabled}
                         >
                           <AiFillEdit
@@ -286,7 +352,7 @@ function Users() {
                         </button>
                       )}
                       <button
-                        className="ml-2 "
+                        className="ml-2 rounded-full p-1 hover:bg-slate-200 duration-300"
                         onClick={() => handleDeleteClick(user.id)}
                         disabled={isButtonDisabled}
                       >
@@ -295,7 +361,7 @@ function Users() {
                         />
                       </button>
                       <button
-                        className="ml-2"
+                        className="ml-2 rounded-full p-1 hover:bg-slate-200 duration-300"
                         type="button"
                         onClick={() => handleManageAccountClick(user)}
                         disabled={isButtonDisabled}
@@ -308,16 +374,18 @@ function Users() {
                   )}
                 </td>
               </tr>
-            ))}
+            })}
           </tbody>
         </table>
         {message && <div className="mt-4 text-green-500">{message}</div>}
       </div>
+
       {showAddUserPopup && (
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
           //onAddUser={handleAddUser}
-          projectData={projectsList}
+          // @ts-ignore
+          projectData={projects}
           handleMessage={handleMessage}
         />
       )}
@@ -325,22 +393,24 @@ function Users() {
         <ManageAccountOverlay
           user={selectedUser}
           onClose={() => setShowManageAccountPopup(false)}
-          adminProjects={projectsList}
+          // @ts-ignore
+          adminProjects={projects}
         />
       )}
     </div>
+   
   );
 }
 
 export default Users;
 
-function getInitials(name: string) {
+export function getInitials(name: string) {
   const nameArray = getNameFromEmail(name);
   const initials = [nameArray].map((name) => name.charAt(0)).join("");
   return initials;
 }
 
-const getNameFromEmail = (email: string) => {
+export const getNameFromEmail = (email: string) => {
   let regex = /[^a-z]/gi;
   const name = email.split("@")[0].toLocaleUpperCase();
   return name.replace(regex, "");

@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'bottom': '0 1px 0px 0 rgba(0, 0, 0, 0.10)',
+      },
       colors: {
         // ? This is the custom color scheme used to style the elements of the flowchart
         "node-purple": {

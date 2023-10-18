@@ -4,17 +4,12 @@ import {
   getMainByUser,
   getTreeNodeByUser,
 } from "../../components/TreeView/gqlFiles";
-import TopBar from "../../components/AdminPage/TopBar";
-import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
+// import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import LoadingIcon from "../../components/LoadingIcon";
-import MembersTable from "../../components/AdminPage/Projects/MembersTable";
+// import MembersTable from "../../components/AdminPage/Projects/MembersTable";
 import ProjectOverview from "../../components/AdminPage/Projects/ProjectOverview";
+import fileStore from "../../components/TreeView/fileStore";
 
-interface Project {
-  name: string;
-  id: string;
-  description: string;
-}
 
 interface User {
   email: string;
@@ -29,14 +24,15 @@ function SideBar() {
   const [details, setDetails] = useState<User[]>([]);
   const router = useRouter();
   const projectId = router.query.projectId as string;
+  const setLoading = fileStore((state) => state.setLoading);
 
   async function fetchData() {
     if (projectId) {
       const initData = await getTreeNodeByUser(
         getMainByUser,
-        projectId.toString()
+        projectId.toString(),
+        setLoading
       );
-      console.log(initData);
       setTotal(initData[0].userHas.length);
       setProjectName(initData[0].name);
       setProjectDesc(initData[0].description);
@@ -50,30 +46,27 @@ function SideBar() {
     }
   }
 
+  
+
   useEffect(() => {
     fetchData();
   }, [router.query.projectId]);
 
   return (
-    <div>
-      <TopBar />
-      <div className="flex flex-row">
-        <SummarySidebar projectId={projectId} />
-        <div className="flex w-full flex-col bg-gray-50 pl-8">
-          {isLoading ? (
-            <LoadingIcon />
-          ) : (
-            <>
-              <ProjectOverview
-                projectName={projectName}
-                projectDesc={projectDesc}
-                total={total}
-              />
-              <MembersTable details={details} />
-            </>
-          )}
+    <div className="h-screen">
+      {isLoading ?
+        <div className="h-screen flex items-center justify-center">
+          <LoadingIcon />
         </div>
-      </div>
+        :
+        <ProjectOverview
+          projectName={projectName}
+          projectDesc={projectDesc}
+          total={total}
+          details={details}
+        />
+      }
+
     </div>
   );
 }
