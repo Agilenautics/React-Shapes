@@ -99,7 +99,6 @@ function Projects() {
   const verificationToken = async () => {
     onAuthStateChanged(auth, user => {
       if (user && user.email) {
-        console.log(user.uid,"userId")
         setUserEmail(user.email);
         getProjects(data)
       }

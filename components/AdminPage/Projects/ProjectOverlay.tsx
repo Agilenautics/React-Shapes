@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { ADD_PROJECT, addProject_Backend } from "./gqlProject";
+import { ADD_PROJECT, GET_USER, addProject_Backend } from "./gqlProject";
 import { Project } from "reactflow";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
@@ -39,7 +39,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     if (existanceProject) {
       setError("This Project already exists");
     } else {
-      addProject_Backend(userEmail, formData, ADD_PROJECT, addProject).then((response) => {
+      addProject_Backend(userEmail, formData, ADD_PROJECT, addProject,GET_USER).then((response) => {
         // addProject(newProject)
         notify()
         onClose();

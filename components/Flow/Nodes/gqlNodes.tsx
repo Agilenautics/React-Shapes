@@ -95,7 +95,7 @@ export const Edge_Fragment = gql`
 const allNodes = gql`
   ${Node_Fragment}
   ${Edge_Fragment}
-  query Query($where: flowchartWhere) {
+  query getAllNodes($where: flowchartWhere) {
     flowcharts(where: $where) {
       name
       nodes {
@@ -619,7 +619,7 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
             {
               where: {
                 node: {
-                  id: data.sprint||"",
+                  id: data.sprint || "",
                 },
               },
             },
@@ -647,8 +647,21 @@ const updateTaskMethod = async (id: string, mutation: DocumentNode | TypedDocume
         ]
 
       }
-    }
+    },
+    // update:(cache,data)=>{
+    //   const existanceCatch = cache.readQuery({
+    //     query:getMainByUser,
+    //   });
+    //   console.log(existanceCatch)
+
+    // }
   })
+  // const { mains } = client.readQuery({
+  //   query: getMainByUser,
+  //   variables:{
+  //     emailId:"irfan123@gmail.com"
+  //   }
+  // });
 
   return response;
 

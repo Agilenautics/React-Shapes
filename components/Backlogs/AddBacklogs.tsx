@@ -10,6 +10,7 @@ import {
 import {
   createFileInFolder,
   createFileInMain,
+  getUidQuery,
   newFileInFolder,
   newFileInMain,
   updateStoryMethod,
@@ -28,6 +29,8 @@ import {
 import sprintStore from '../Sprints/sprintStore';
 import fileStore from '../TreeView/fileStore';
 import Discussion from './Discussion';
+import userStore from '../AdminPage/Users/userStore';
+import { useQuery } from '@apollo/client';
 
 
 export default function AddBacklogs({
@@ -47,6 +50,11 @@ export default function AddBacklogs({
 
 
 
+  // const {data,error,loading} = useQuery(getUidQuery);
+  // console.log(data)
+
+
+
 
   // sprint store
   const addTaskOrEpicOrStoryToSprint = sprintStore(
@@ -60,10 +68,10 @@ export default function AddBacklogs({
 
   const projectId = router.query.projectId as string;
 
-  const handleSubmit = async (values: any) => {
+  //userstore
+  const user = userStore((state) => state.user);
 
-    console.log("SE", selectedElement);
-    
+  const handleSubmit = async (values: any) => {
 
     if (selectedElement != null) {
       if (selectedElement.type != 'file') {
@@ -157,7 +165,7 @@ export default function AddBacklogs({
           description: selectedElement ? selectedElement.description : '',
           status: selectedElement ? selectedElement.status : 'To-Do',
           assignedTo: selectedElement ? selectedElement.assignedTo : '',
-          sprint: selectedElement ? selectedElement.addToSprint :'',
+          sprint: selectedElement ? selectedElement.addToSprint : '',
           epic: selectedElement ? selectedElement.parent.id : projectId,
           story:
             selectedElement && selectedElement.type !== 'file'
@@ -165,7 +173,7 @@ export default function AddBacklogs({
               : '',
         }}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+      onSubmit={handleSubmit}
       >
         {({ values }) => (
           <Form>
@@ -208,8 +216,8 @@ export default function AddBacklogs({
                 >
                   {selectedElement == null &&
                     <option key={"To-Do"} value={"To-Do"}>
-                    To-Do
-                  </option>
+                      To-Do
+                    </option>
 
                   }
                   {selectedElement !== null && statuses.map(
@@ -363,11 +371,8 @@ export default function AddBacklogs({
                 <label htmlFor="discussion" className="block underline rounded p-1 w-fit font-semibold hover:bg-sky-100 hover:text-blue-900">
                   Discussion
                 </label>
-                {
-                  router.pathname !== "/projects/[projectId]/backlogs/add" && <Discussion comments={selectedElement.comments} />
-                }
-                <div className="p-1 my-2 flex gap-2">
-                </div>
+
+
                 <Field
                   as="textarea"
                   name="discussion"
@@ -379,6 +384,9 @@ export default function AddBacklogs({
                   component="div"
                   className="mt-1 text-red-500"
                 />
+                {
+                  router.pathname !== "/projects/[projectId]/backlogs/add" && <Discussion comments={selectedElement.comments} />
+                }
               </div>
             </div>
             <div className="flex justify-end">

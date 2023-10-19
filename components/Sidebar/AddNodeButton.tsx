@@ -68,7 +68,7 @@ function AddNodeButton() {
       if (!updateUidResponse?.errors && !updateUidResponse?.data) { return null }
       //       else{return <div>Error</div>}
       //      console.log("Update Uid Response : ", JSON.stringify({...updateUidResponse}))
-      updateUid(updateUidResponse.data.updateUids.uids)
+      // updateUid(updateUidResponse.data.updateUids.uids)
     }
     catch(err){
       console.log(err,"while creating bpmn symbole")

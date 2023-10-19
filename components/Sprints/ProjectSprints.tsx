@@ -62,15 +62,15 @@ function ProjectSprints() {
       setFilteredData(sprints[0]);
     } else {
       setFilteredData(null);
-    } 
+    }
   }, [sprints]);
 
 
   const sprintCreateMessage = () => toast.success("New Sprint Created...");
 
-  const handleBoardView = ()=>{
+  const handleBoardView = () => {
     setBoardView(!boardView)
-  }  
+  }
 
 
   const onFilter = (e: any) => {
@@ -80,7 +80,7 @@ function ProjectSprints() {
     );
     if (selectedSprint) setFilteredData(selectedSprint);
   };
-  
+
 
   if (loading) {
     return (
@@ -95,8 +95,8 @@ function ProjectSprints() {
   }
 
   return (
-    <div className="absolute ml-3 w-fit">
-      <h1 className="mb-4 rounded-lg bg-pink-300 p-2 text-2xl font-bold shadow-lg dark:bg-slate-600">
+    <div className="p-4 ">
+      <h1 className="mb-4 rounded-lg p-2 text-2xl font-bold shadow-lg bg-gray-200">
         Sprints
       </h1>
 
@@ -117,110 +117,110 @@ function ProjectSprints() {
           ))}
         </select>
         <button
-  className={`ml-5 px-4 py-2 rounded-md bg-blue-500 text-white`}
-  onClick={handleBoardView}
->
-  {boardView ? 'Table View' : 'Board View'}
-</button>
+          className={`ml-5 px-4 py-2 rounded-md bg-blue-500 text-white`}
+          onClick={handleBoardView}
+        >
+          {boardView ? 'Table View' : 'Board View'}
+        </button>
         {filteredData && (
           !boardView ?
-          <div
-            key={filteredData.id}
-            className="w-fill overflow-y mb-5 h-60 overflow-x-hidden rounded border shadow-lg"
-          >
-            <h2 className="text-xl font-semibold dark:text-white">{filteredData.name}</h2>
-            <table className="mr-4 w-[1000px] table-auto">
-              <thead>
-                <tr className="bg-gray-100 ">
-                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Type</th>
-                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Name</th>
-                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Description</th>
-                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Status</th>
-                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">User</th>
-                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Due Date</th>
-                </tr>
-              </thead>
-              <tbody className="dark:bg-slate-700 dark:text-white">
-                {filteredData.folderHas.map((item: any) => (
-                  <React.Fragment key={item.id}>
-                    <tr className="border-b ">
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {/* @ts-ignore */}
-                        {getTypeLabel(item.type).type}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.name}
-                      </td>
-                      <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.description}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.status}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.assignedTo}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {filteredData.endDate}
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                ))}
-                {filteredData.fileHas.map((item: any) => (
-                  <React.Fragment key={item.id}>
-                    <tr className="border-b">
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {/* @ts-ignore */}
-                        {getTypeLabel(item.type).type}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.name}
-                      </td>
-                      <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.description}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.status}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.assignedTo}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {filteredData.endDate}
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                ))}
-                {filteredData.flownodeHas.map((item: any) => (
-                  <React.Fragment key={item.id}>
-                    <tr className="border-b">
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {/* @ts-ignore */}
-                        {getTypeLabel(item.type).type}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.hasdataNodedata.label}
-                      </td>
-                      <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
-                        {item.hasdataNodedata.description}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.status}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {item.hasInfo.assignedTo}
-                      </td>
-                      <td className="rounded-lg border px-1 py-2 text-center">
-                        {filteredData.endDate}
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
-          </div>:
-          <div className="flex">
-            <SprintBoard data={filteredData}/>
+            <div
+              key={filteredData.id}
+              className="w-fill overflow-y mb-5 h-60 overflow-x-hidden rounded border shadow-lg"
+            >
+              <h2 className="text-xl font-semibold dark:text-white">{filteredData.name}</h2>
+              <table className="mr-4 w-[1000px] table-auto">
+                <thead>
+                  <tr className="bg-gray-100 ">
+                    <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Type</th>
+                    <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Name</th>
+                    <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Description</th>
+                    <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Status</th>
+                    <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">User</th>
+                    <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Due Date</th>
+                  </tr>
+                </thead>
+                <tbody className="dark:bg-slate-700 dark:text-white">
+                  {filteredData.folderHas.map((item: any) => (
+                    <React.Fragment key={item.id}>
+                      <tr className="border-b ">
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {/* @ts-ignore */}
+                          {getTypeLabel(item.type).type}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.name}
+                        </td>
+                        <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.description}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.status}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.assignedTo}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {filteredData.endDate}
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  ))}
+                  {filteredData.fileHas.map((item: any) => (
+                    <React.Fragment key={item.id}>
+                      <tr className="border-b">
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {/* @ts-ignore */}
+                          {getTypeLabel(item.type).type}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.name}
+                        </td>
+                        <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.description}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.status}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.assignedTo}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {filteredData.endDate}
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  ))}
+                  {filteredData.flownodeHas.map((item: any) => (
+                    <React.Fragment key={item.id}>
+                      <tr className="border-b">
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {/* @ts-ignore */}
+                          {getTypeLabel(item.type).type}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.hasdataNodedata.label}
+                        </td>
+                        <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
+                          {item.hasdataNodedata.description}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.status}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {item.hasInfo.assignedTo}
+                        </td>
+                        <td className="rounded-lg border px-1 py-2 text-center">
+                          {filteredData.endDate}
+                        </td>
+                      </tr>
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div> :
+            <div className="flex">
+              <SprintBoard data={filteredData} />
             </div>
         )}
       </div> : <div>No Sprints to show</div>}

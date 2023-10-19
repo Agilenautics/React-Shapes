@@ -73,12 +73,13 @@ const Sidebar = ({ isOpen }: SideBar) => {
   };
 
   const getuniqId = async () => {
-    const uniqId = await getUidMethode(getUidQuery)
+    const uniqId = await getUidMethode(getUidQuery);
     updateUids(uniqId.data.uids)
     if (uniqId.data.uids.length === 0) {
       await createUidMethode(createUidMutation);
     }
   }
+
 
 
 
@@ -178,7 +179,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
     const updatedFolderResponse = await createFolderInMain(newFolderInMain, projectId, newFolder);
     add_folder(updatedFolderResponse)
     handleUidUpdates()
-
   }
 
 

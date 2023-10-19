@@ -1,5 +1,6 @@
 import { DocumentNode, OperationVariables, TypedDocumentNode, gql } from "@apollo/client";
 import client from "../../../apollo-client";
+import { Project } from "./projectStore";
 
 const GET_PROJECTS = gql`
 query getProjets {
@@ -88,8 +89,8 @@ const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDo
       }
     }
   }).then((res) => {
-    updateProjects(res.data.users[0].hasProjects,res.loading);
-    updateRecycleBinProject(res.data.users[0].hasProjects,res.loading);
+    updateProjects(res.data.users[0].hasProjects, res.loading);
+    updateRecycleBinProject(res.data.users[0].hasProjects, res.loading);
     updateLoginUser(res.data.users);
     updateUserType(res.data.users[0].userType)
     admin = res
@@ -190,15 +191,16 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
     //     }
     //   });
     //   console.log("existing projects", existingProjects);
+    //   const existingUser = existingProjects.users.filter((values: any) => values.emailId === "irfan123@gmail.com");
+
 
     //   cache.writeQuery({
     //     query,
-    //     variables:{
-    //       emailId:"irfan123@gmail.com"
-
+    //     variables: {
+    //       emailId: "irfan123@gmail.com"
     //     },
     //     data: {
-    //       users: [existingProjects?.users]
+    //       users: [...existingUser, ...data.updateMains.mains]
     //     }
 
     //   })
@@ -212,9 +214,7 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
       return [query]
     },
   }).then((response) => {
-    console.log('delete response', response)
     deleteData = response.data.updateMains
-
   })
 }
 
@@ -386,54 +386,82 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
 
 const ADD_PROJECT = gql`
 ${Project_Fragment}
-mutation addProject($where: userWhere, $update: userUpdateInput) {
-  updateUsers(where: $where, update: $update) {
-    users {
-      emailId
-      id
-      userType
-     hasProjects{
-     ...ProjectFragment
-     }
+mutation createProject($input: [mainCreateInput!]!) {
+  createMains(input: $input) {
+    mains {
+      ...ProjectFragment
     }
   }
 }
 `
-const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, addProject: any) => {
-  console.log(email,"email",project,"project","addProject:",addProject)
+const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, addProject: any, query: any) => {
+  console.log(project)
   let data = []
   await client.mutate({
     mutation,
     variables: {
-      where: {
-        emailId: email
-      },
-      update: {
-        hasProjects: [
-          {
-            create: [
+      "input": [
+        {
+          "deletedAT": "",
+          "description": project.description,
+          "isOpen": true,
+          "name": project.name,
+          "recentProject": false,
+          "recycleBin": false,
+          "userHas": {
+            "connect": [
               {
-                node: {
-                  description: project.description,
-                  name: project.name,
-                  isOpen: true,
-                  recycleBin: false,
-                  recentProject: false,
-                  deletedAT: "",
-                  userName: "",
-                },
-              },
-            ],
-          },
-        ],
-      },
+                "where": {
+                  "node": {
+                    "emailId": email
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
     },
-    // refetchQueries(result) {
-    //   return [{ query }]
-    // },
+    
+
+    update: (cache, { data }) => {
+      const existingProjects = cache.readQuery({
+        query,
+        variables: {
+          emailId: email
+        }
+      });
+      console.log("existing projects", existingProjects);
+      // @ts-ignore
+      const existingUser = existingProjects.users.filter((values: any) => values.emailId === email);
+      const projects = existingUser[0].hasProjects
+      const upatedProjects = [...data.createMains.mains, ...projects]
+      const updaedUser = { ...existingUser[0], hasProjects: upatedProjects }
+
+      console.log(updaedUser)
+
+
+
+
+      cache.writeQuery({
+        query,
+        variables: {
+          emailId: email
+        },
+        data: {
+          user: [updaedUser]
+        }
+
+      })
+
+
+      //   // console.log(data)
+
+
+
+    },
   }).then((response) => {
-    console.log(response)
-    addProject(response.data.updateUsers.users[0].hasProjects[0])
+    // addProject(response.data.createMains.mains[0])
   }
   )
     .catch((error) => console.log(error))

@@ -415,7 +415,7 @@ async function createFileInMain(
                     {
                       where: {
                         node: {
-                          id: data.sprint||"",
+                          id: data.sprint || "",
                         },
                       },
                     },
@@ -517,7 +517,7 @@ async function createFileInFolder(
                     {
                       where: {
                         node: {
-                          id: data.sprint||"",
+                          id: data.sprint || "",
                         },
                       },
                     },
@@ -1026,8 +1026,8 @@ const updateStoryMethod = async (
   storyData: any
 ) => {
   // const updateRow = backlogStore((state) => state.updateRow);
-  const {name, status, description, assignedTo, dueDate, sprint, discussion } = storyData;
-  
+  const { name, status, description, assignedTo, dueDate, sprint, discussion } = storyData;
+
   const response = await client
     .mutate({
       mutation,
@@ -1052,7 +1052,7 @@ const updateStoryMethod = async (
               {
                 where: {
                   node: {
-                    id: sprint||"",
+                    id: sprint || "",
                   },
                 },
               },
@@ -1177,6 +1177,20 @@ const updateUidMethode = (id: string, mutation: DocumentNode | TypedDocumentNode
       update: {
         uid_INCREMENT: 1
       }
+    },
+    update: (cache, { data }) => {
+      const existinUid = cache.readQuery({
+        query: getUidQuery
+      });
+      // @ts-ignore
+      const updatedData = {...existinUid.uids[0],uid:data.updateUids.uids[0].uid}
+      cache.writeQuery(
+        {
+          query: getUidQuery,
+          data: { uids: [updatedData] }
+        }
+      )
+      console.log(cache,"Iam cache")
     }
   }).then((response) => {
     return response

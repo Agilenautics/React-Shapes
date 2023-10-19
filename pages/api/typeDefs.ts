@@ -22,7 +22,6 @@ const typeDefs = gql`
   type main {
     id: ID! @id
     timeStamp: DateTime! @timestamp
-    userName: String
     description: String
     name: String!
     isOpen: Boolean!
