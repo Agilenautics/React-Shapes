@@ -41,7 +41,7 @@ export default function CreateSprint({ setShowForm,sprintCreateMessage }: any) {
     >
       {({ values }) => (
         <Form>
-          <h5 className="mb-4 rounded bg-violet-300 p-2 text-xl font-bold shadow-lg">
+          <h5 className="mb-4 rounded bg-violet-300 p-2 text-xl font-bold shadow-lg  dark:bg-bgdarkcolor">
             Create New Sprint
           </h5>
           <div className="mb-4 mt-2">
@@ -67,7 +67,7 @@ export default function CreateSprint({ setShowForm,sprintCreateMessage }: any) {
               <Field
                 type="date"
                 name="startDate"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none dark:text-slate-600"
               />
               <ErrorMessage
                 name="startDate"
@@ -122,7 +122,7 @@ export default function CreateSprint({ setShowForm,sprintCreateMessage }: any) {
             </button>
             <button
               type="button"
-              className="rounded-lg bg-white px-4 py-2 text-gray-700"
+              className="rounded-lg bg-white px-4 py-2 text-gray-700 dark:bg-blue-500 dark:text-white"
               onClick={handleCancel}
             >
               Cancel

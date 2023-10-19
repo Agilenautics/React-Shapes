@@ -69,7 +69,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-[45%] rounded bg-white p-8">
+      <div className="w-[45%] rounded bg-white p-8 dark:bg-bgdarkcolor dark:text-white">
         <h2 className="mb-4 text-lg font-semibold">Add New Project</h2>
         <form onSubmit={handleFormSubmit}>
           <div className="">
@@ -82,7 +82,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full rounded-lg border px-3 py-2"
+              className="w-full rounded-lg border px-3 py-2 dark:text-bgdarkcolor"
               autoComplete="off"
               required
             />
@@ -101,13 +101,13 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               value={formData.description}
               onChange={handleInputChange}
               autoComplete="off"
-              className="w-full rounded-lg border px-3 py-2"
+              className="w-full rounded-lg border px-3 py-2 dark:text-bgdarkcolor"
             ></textarea>
           </div>
           <div className="flex justify-end">
             <button
               type="button"
-              className="mr-2 rounded-lg bg-gray-200 px-4 py-2"
+              className="mr-2 rounded-lg bg-gray-200 px-4 py-2 dark:bg-blue-500"
               onClick={onClose}
             >
               Cancel

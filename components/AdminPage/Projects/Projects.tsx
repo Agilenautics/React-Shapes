@@ -227,7 +227,7 @@ function Projects() {
     // container
     <div className="p-7">
       {/* Greeting to a user  */}
-      <div className="item-center mb-4 grid grid-cols-2 justify-center gap-6 rounded bg-white shadow-md dark:bg-slate-600">
+      <div className="item-center mb-4 grid grid-cols-2 justify-center gap-6 rounded bg-white shadow-md dark:bg-bgdarkcolor">
         <div className=" item-center flex justify-center">
           <img
             src="/assets/grretingImage.png"
@@ -263,7 +263,7 @@ function Projects() {
       {/* project heading bar (functionality) */}
       <div
         id="activities"
-        className="mb-6 grid h-fit grid-cols-4 items-center gap-6 bg-white p-4 text-center shadow dark:bg-slate-600"
+        className="mb-6 grid h-fit grid-cols-4 items-center gap-6 bg-white p-4 text-center shadow dark:bg-bgdarkcolor"
       >
         <div className="rounded border border-slate-400 p-1">
           <input
@@ -329,11 +329,11 @@ function Projects() {
           return (
             <div
               key={index}
-              className="san-sarif  relative flex flex-col justify-between rounded  bg-white  p-4 shadow-md duration-200 hover:shadow-xl dark:bg-slate-600"
+              className="san-sarif  relative flex flex-col justify-between rounded  bg-white  p-4 shadow-md duration-200 hover:shadow-xl dark:bg-bgdarkcolor"
             >
               <div>
                 <div className="flex justify-between">
-                  <h3 className="text-lg font-bold"> {name} </h3>
+                  <h3 className="text-lg font-bold "> {name} </h3>
                   <button
                     onClick={() => handleDotClick(id)}
                     className="text-xl"

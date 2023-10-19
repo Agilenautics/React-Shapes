@@ -44,6 +44,7 @@
     "memoize-one": "^6.0.0",
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
+    "moment": "^2.29.4",
     "neo4j-driver": "^4.4.6",
     "next": "^12.2.2",
     "next-plugin-graphql": "^0.0.2",

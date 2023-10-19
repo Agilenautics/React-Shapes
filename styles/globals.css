@@ -209,3 +209,9 @@ path.react-flow__edge-path {
   vertical-align: middle;
   margin-left: 4px;
 }
+.toggleStyle{
+  display: flex;
+    position: relative;
+    top: 15vh;
+    right: 6vh;
+}

@@ -132,34 +132,33 @@ function ProjectBacklogs() {
 : 
 (
     <div className="mt-3 ml-3">
-      <h1 className="mb-4 rounded-lg p-2 text-2xl font-bold shadow-lg bg-gray-200">
+      <h1 className="mb-4 rounded-lg p-2 text-2xl font-bold shadow-lg bg-gray-200 dark:bg-slate-600 dark:text-white">
         Backlogs
       </h1>
-      <div className="m-1 mr-5 rounded-lg bg-white shadow-md">
-        <div className="m-1 flex items-center justify-between bg-gray-100">
+      <div className="m-1 mr-5 rounded-lg bg-white shadow-md dark:bg-white dark:text-slate-600 ">
+        <div className="m-1 flex items-center justify-between bg-gray-100 dark:bg-white dark:text-slate-600 ">
           <input
             type="text"
             placeholder="Search by name"
-            className="m-1 rounded-lg bg-white px-4 py-2 focus:outline-none"
+            className="m-1 rounded-lg bg-white px-4 py-2 focus:outline-none dark:text-white dark:bg-slate-600 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
                 <button
-        className="inline-flex w-fit justify-center rounded-lg bg-gray-100 px-4 py-2 text-[1rem] text-gray-700 hover:bg-gray-200"
+        className="inline-flex w-fit justify-center rounded-lg bg-gray-100 px-4 py-2 text-[1rem] text-gray-700 hover:bg-gray-200 dark:bg-slate-600 dark:text-white"
         onClick={handleAddBacklogsClick}
       >
         New item +
       </button>
           
             <div className="relative inline-block text-left">
-              <div className="bg-gray-100 hover:bg-gray-200">
+              <div className="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:text-white rounded-lg">
                 <span className="shadow-sm">
                 <button
   type="button"
   onClick={() => setShowTypeDropdown((prevState) => !prevState)}
-  className="flex relative bg-gray-100 text-gray-700  hover:bg-gray-200"
->
-  <span className="block w-full pl-3 pr-10 py-2 text-left text-base">
+  className="flex relative bg-gray-100 text-gray-700  hover:bg-gray-200 dark:bg-slate-600 dark:text-white">  
+  <span className="block w-full pl-3 pr-10 py-2 text-left text-base rounded-lg">
     Select Types
   </span>
   <span className="mt-2">
@@ -171,7 +170,7 @@ function ProjectBacklogs() {
                 </span>
               </div>
               {showTypeDropdown && (
-                <div className="absolute right-0 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-gray-100 shadow-lg ring-1 ring-black ring-opacity-5 hover:bg-gray-200">
+                <div className="absolute right-0 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-gray-100 shadow-lg ring-1 ring-black ring-opacity-5 hover:bg-gray-200 dark:text-white dark:bg-slate-600">
                   <div className="py-1">
                     {types.map((type) => (
                       <label
@@ -198,7 +197,7 @@ function ProjectBacklogs() {
               )}
             </div>
             <select
-              className="rounded-lg px-4 py-2 bg-gray-100 focus:outline-none hover:bg-gray-200"
+              className="rounded-lg px-4 py-2 bg-gray-100 focus:outline-none hover:bg-gray-200 dark:text-white dark:bg-slate-600"
               value={selectedEpic}
               onChange={(e) => setSelectedEpic(e.target.value)}
             >
@@ -209,7 +208,7 @@ function ProjectBacklogs() {
               ))}
             </select>
             <select
-              className="rounded-lg px-4 py-2 bg-gray-100 focus:outline-none hover:bg-gray-200"
+              className="rounded-lg px-4 py-2 bg-gray-100 focus:outline-none hover:bg-gray-200 dark:text-white dark:bg-slate-600"
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
             >
@@ -220,7 +219,7 @@ function ProjectBacklogs() {
               ))}
             </select>
             <select
-              className="rounded-lg px-4 py-2 bg-gray-100 focus:outline-none hover:bg-gray-200"
+              className="rounded-lg px-4 py-2 bg-gray-100 focus:outline-none hover:bg-gray-200 dark:text-white dark:bg-slate-600"
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
             >
@@ -236,19 +235,21 @@ function ProjectBacklogs() {
           <table className="mr-4 w-full table-auto">
             <thead>
               <tr>
-              <th className="bg-gray-200 px-1 py-2">Id</th>
-                <th className="bg-gray-200 px-1 py-2">Type</th>
-                <th className="bg-gray-200 px-1 py-2">Name</th>
-                <th className="bg-gray-200 px-1 py-2">Description</th>
-                <th className="bg-gray-200 px-1 py-2">Epic</th>
-                <th className="bg-gray-200 px-1 py-2">Status</th>
-                <th className="bg-gray-200 px-1 py-2">Sprint</th>
-                <th className="bg-gray-200 px-1 py-2">User</th>
-              </tr>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Id</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Type</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Name</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Description</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Epic</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Status</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Sprint</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white ">Sprint</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Sprint</th>
+                  <th className="bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">User</th>
+                </tr>
             </thead>
-            <tbody>
+            <tbody className="dark:bg-indigo-100 dark:text-bgdarkcolor">
               {filteredData.map((element: any, index: any) => (
-                <tr key={index} className="py-1">
+                <tr key={index} className="py-1 ">
                   {/* @ts-ignore */}
                   <td className="px-1 py-2 text-center cursor-pointer">
                     {element.uid}
@@ -285,6 +286,12 @@ function ProjectBacklogs() {
                   </td>
                   <td className="px-1 py-2 text-center">
                     {element.assignedTo? element.assignedTo: "-"}
+                  </td>
+                  <td>
+
+                  </td>
+                  <td>
+
                   </td>
                 </tr>
               ))}

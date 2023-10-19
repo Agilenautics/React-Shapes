@@ -227,7 +227,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
 
 
-    <div className={`duration-700  sticky top-0 z-20 left-0 shadow ease-in-out text-slate-600 font-sans h-screen ${isOpen ? "w-60" : "w-0"}`}>
+    <div className={` duration-700 dark:bg-bgdarkcolor dark:text-white  top-0 z-20 left-0 shadow ease-in-out text-slate-600 font-sans h-full  ${isOpen ? "w-60" : "w-0"}`}>
       {
         isOpen && (
           <nav>
@@ -242,7 +242,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                 priority={false}
               />
             </div>
-            {/* projects  */}
+                        {/* projects  */}
             <div>
               <div
                 className="p-1 px-3 flex items-center justify-between "
@@ -260,7 +260,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                     tooltipRef.current.style.left = clientX - left + 'px'
                   }}
                   className="cursor-pointer group relative">
-                  <BsPlus className="text-[1.3rem]  bg-slate-100 duration-300 hover:scale-125 rounded" />
+                  <BsPlus className="text-[1.3rem]  bg-slate-100 duration-300 hover:scale-125 rounded dark:bg-475569 dark:text-slate-900" />
                   <span ref={tooltipRef} className="invisible z-20 group-hover:visible opacity-0 group-hover:opacity-100 transition bg-black p-1 text-white rounded absolute top-full mt-2 whitespace-nowrap text-[0.8rem]">ADD PROJECT</span>
                 </div>
                 <div onClick={() => setProjectsFlag(!projectsFlag)} className="cursor-pointer">
@@ -276,9 +276,9 @@ const Sidebar = ({ isOpen }: SideBar) => {
               >
                 {!loading && (
                   <div className="h-full overflow-auto ">
-                    <div className="bg-white sticky  p-2 top-0">
-                      <div className="flex items-center active:border-blue-500  border p-1 rounded-full justify-around ">
-                        <input type="text" name="searchProduct" placeholder="search project" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="outline-none " />
+                    <div className="#ffffff p-2 top-0">
+                      <div className="flex items-center active:border-blue-500  border p-1 rounded-full justify-around  ">
+                        <input type="text" name="searchProduct" placeholder="search project" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="outline-none dark:bg-bgdarkcolor" />
                         <AiOutlineSearch className="text-2xl " />
                       </div>
                     </div>
@@ -299,7 +299,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
               </div>
             </div>
 
-            <div className=" p-1 px-3 duration-100 hover:bg-sky-500 hover:text-white">
+            <div className=" p-1 px-3 duration-100">
               <Link href="/projects" >
                 <a className="flex items-center gap-2 w-full">
                   <AiTwotoneHome />
@@ -307,16 +307,16 @@ const Sidebar = ({ isOpen }: SideBar) => {
                 </a>
               </Link>
             </div>
-            <div className="p-1 px-3 duration-100 hover:bg-sky-500 hover:text-white">
+            <div className="p-1 px-3 duration-100">
               <Link href={`/projects/${projectId}`} >
                 <a className="flex items-center gap-2 w-full">
-                  <GrOverview className="text-slate-600" />
+                  <GrOverview className="text-slate-600  dark:bg-slate-200 "/>
                   <span>Overview</span>
                 </a>
               </Link>
             </div>
 
-            <div onClick={() => setInsightsOpen(!insightsOpen)} className="duration-100 select-none hover:bg-sky-500 hover:text-white p-1 px-3 flex items-center justify-between cursor-pointer">
+            <div onClick={() => setInsightsOpen(!insightsOpen)} className="duration-100 select-none p-1 px-3 flex items-center justify-between cursor-pointer">
               <span><CgInsights className="inline" /> Insights</span>
               <FaChevronDown className={`transition-transform ${insightsOpen ? "transform rotate-180" : ""}`} />
             </div>
@@ -328,8 +328,8 @@ const Sidebar = ({ isOpen }: SideBar) => {
               {
                 insightsOpen && (
                   <>
-                    <div className="p-1 duration-100 hover:bg-sky-500 hover:text-white ">
-                      <Link href={`/projects/${projectId}/boards`}>
+                    <div className="p-1 duration-100 ">
+                    <Link href={`/projects/${projectId}/boards`}>
                         <a
                           className="flex items-center gap-2 w-full ml-7 select-none"
                         >
@@ -338,17 +338,17 @@ const Sidebar = ({ isOpen }: SideBar) => {
                         </a>
                       </Link>
                     </div>
-                    <div className="p-1 duration-100 hover:bg-sky-500 hover:text-white">
+                    <div className="p-1 duration-100">
                       <Link href={`/projects/${projectId}/backlogs`}>
                         <a
                           className="flex items-center gap-2 w-full ml-7 select-none"
                         >
-                          <GiChecklist />
+                          <GiChecklist className="dark:text-white font-weight: 900" size={18} />
                           <span> Backlogs</span>
                         </a>
                       </Link>
                     </div>
-                    <div className=" p-1 duration-100 hover:bg-sky-500 hover:text-white">
+                    <div className=" p-1 duration-100 ">
                       <Link href={`/projects/${projectId}/sprints`}>
                         <a className="flex items-center gap-2 w-full ml-7 select-none"
                         >
@@ -357,7 +357,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                         </a>
                       </Link>
                     </div>
-                    <div className="p-1 duration-100 hover:bg-sky-500 hover:text-white">
+                    <div className="p-1 duration-100">
                       <Link href={`/projects/${projectId}/business-plan`}>
                         <a
                           className="flex items-center gap-2 w-full ml-7 select-none"
@@ -389,7 +389,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                           </div>
                           <FileTree />
                         </div>
-                      )
+                                                                  )
                     }
                   </>
                 )

@@ -34,22 +34,21 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     verificationToken()
   }, [])
   return (
-    <div>
+    <div className="pl-4">
       <div className="mt-8 flex items-center w-full">
         <div className="min-h-10 min-w-10 flex items-center justify-center rounded-xl bg-blue-500 p-2 text-xl font-semibold text-white">
           {getInitials(projectName)}
         </div>
-        <h1 className="ml-4 text-2xl font-bold">{projectName}</h1>
+        <h1 className="ml-4 text-2xl font-bold ">{projectName}</h1>
       </div>
       <div className="mt-10">
-        <h3 className="text-lg font-semibold">Description</h3>
+        <h3 className="text-lg font-semibold pl-1">Description</h3>
         <p className="mt-2">{projectDesc}</p>
       </div>
-      <h2 className="mt-10 text-lg font-semibold">Project Members</h2>
+      <h2 className="mt-10 text-lg font-semibold pl-1">Project Members</h2>
       <div className="mt-2 flex items-center">
         <h4 className="">Total</h4>
-        <p className="ml-4 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs">
-          {total}
+        <p className="ml-4 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs dark:bg-slate-500">          {total}
         </p>
       </div>
       <MembersTable details={details} />

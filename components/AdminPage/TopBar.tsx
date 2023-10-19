@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { BsFillSunFill } from "react-icons/bs";
 import { useDarkMode } from "../Sidebar/DarkModeToggleButton";
 import { FaBars } from 'react-icons/fa'
-import { HiMiniXMark } from 'react-icons/hi2'
+import { IoIosArrowDropleftCircle } from 'react-icons/io'
 import DarkModeToggleButton from "../Sidebar/DarkModeToggleButton";
 
 const auth = getAuth();
@@ -57,7 +57,7 @@ function TopBar({ toggleSideBar, flag }: Flag) {
 
 
   return (
-    <div className="sticky left-0  right-0 top-0 shadow-bottom    z-10  flex justify-between bg-white  p-2 px-6 font-sans  dark:bg-slate-600">
+      <div className=" sticky left-0  right-0 top-0 shadow-bottom    z-10  flex justify-between bg-white  p-2 px-6 font-sans  dark:bg-bgdarkcolor">
       {/* logo  */}
       <div className="flex gap-6">
         {/* <div
@@ -84,7 +84,7 @@ function TopBar({ toggleSideBar, flag }: Flag) {
 
       </div> */}
 
-        <button onClick={toggleSideBar} className=" duration-200"> {flag ? <HiMiniXMark className="text-3xl" /> : <FaBars className="text-2xl" />} </button>
+        <button onClick={toggleSideBar} className="duration-200"> {flag ? <IoIosArrowDropleftCircle className="text-2xl dark:text-blue-600 toggleStyle text-slate-600 " /> : <FaBars className="text-2xl dark:text-white text-slate-600" />} </button>
         <span className=" text-2xl font-bold text-gray-400">
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>

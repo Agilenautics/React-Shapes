@@ -13,11 +13,22 @@ import Link from 'next/link';
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const[projectId,setProjectId]=useState<string | null>(null);
     const [loginError, setLoginError] = useState({
         error: false,
         msg: ''
     })
     const router = useRouter();
+    // var projectId = router.query.projectId as string;
+    useEffect(()=>{
+        const recentPid=localStorage.getItem("recentPid")
+            setProjectId(recentPid)
+            console.log("RECENTPID IS:",recentPid)
+    },[router.query.projectId ])
+    
+
+  
+
 
     useEffect(() => {
         verfiyAuthToken()
@@ -30,7 +41,16 @@ const Login: React.FC = () => {
                 // https://firebase.google.com/docs/reference/js/auth.user
                 const uid = user.uid;
                 console.log("user", user)
-                router.push("/projects")
+                //router.push("/projects")
+                // const recentPid = localStorage.getItem('recentPid');
+                //  setprojectId(recentPid);
+                if(projectId!==null){
+                    router.push(`/projects/${projectId}`)
+                }
+                else{
+                    router.push("projects")
+                }
+                
                 // ...
             } else {
             }
@@ -61,7 +81,8 @@ const Login: React.FC = () => {
                     // Store the tokens in cookies
                     document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
                     document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
-                    router.push("/projects");
+                    //router.push("/projects");
+                    router.push(`/projects/${projectId}`)
                 });
                 // User logged in 
                 // @ts-ignore

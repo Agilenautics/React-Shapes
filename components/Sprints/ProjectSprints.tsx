@@ -96,13 +96,13 @@ function ProjectSprints() {
 
   return (
     <div className="absolute ml-3 w-fit">
-      <h1 className="mb-4 rounded-lg bg-pink-300 p-2 text-2xl font-bold shadow-lg">
+      <h1 className="mb-4 rounded-lg bg-pink-300 p-2 text-2xl font-bold shadow-lg dark:bg-slate-600">
         Sprints
       </h1>
 
       {/* Add dropdown here */}
-      {sprints.length ? <div className="mb-3">
-        <label htmlFor="sprintDropdown" className="mr-2">
+      {sprints.length ? <div className="mb-3 dark:text-black">
+        <label htmlFor="sprintDropdown" className="mr-2  dark:text-white">
           Select Sprint:
         </label>
         <select
@@ -111,7 +111,7 @@ function ProjectSprints() {
           value={filteredData ? filteredData.name : ""}
         >
           {sprints.map((sprint) => (
-            <option key={sprint.id} value={sprint.name}>
+            <option key={sprint.id} value={sprint.name} >
               {sprint.name}
             </option>
           ))}
@@ -128,22 +128,22 @@ function ProjectSprints() {
             key={filteredData.id}
             className="w-fill overflow-y mb-5 h-60 overflow-x-hidden rounded border shadow-lg"
           >
-            <h2 className="text-xl font-semibold">{filteredData.name}</h2>
+            <h2 className="text-xl font-semibold dark:text-white">{filteredData.name}</h2>
             <table className="mr-4 w-[1000px] table-auto">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border bg-gray-200 px-1 py-2">Type</th>
-                  <th className="border bg-gray-200 px-1 py-2">Name</th>
-                  <th className="border bg-gray-200 px-1 py-2">Description</th>
-                  <th className="border bg-gray-200 px-1 py-2">Status</th>
-                  <th className="border bg-gray-200 px-1 py-2">User</th>
-                  <th className="border bg-gray-200 px-1 py-2">Due Date</th>
+                <tr className="bg-gray-100 ">
+                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Type</th>
+                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Name</th>
+                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Description</th>
+                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Status</th>
+                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">User</th>
+                  <th className="border bg-gray-200 px-1 py-2 dark:bg-bgdarkcolor dark:text-white">Due Date</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="dark:bg-slate-700 dark:text-white">
                 {filteredData.folderHas.map((item: any) => (
                   <React.Fragment key={item.id}>
-                    <tr className="border-b">
+                    <tr className="border-b ">
                       <td className="rounded-lg border px-1 py-2 text-center">
                         {/* @ts-ignore */}
                         {getTypeLabel(item.type).type}
@@ -238,7 +238,7 @@ function ProjectSprints() {
       </button>
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="rounded-lg bg-white p-8 shadow-lg">
+          <div className="rounded-lg bg-white p-8 shadow-lg dark:bg-bgdarkcolor dark:text-white">
             <CreateSprint
               setShowForm={setShowForm}
               sprintCreateMessage={sprintCreateMessage}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import fileStore from "../../TreeView/fileStore";
@@ -13,6 +13,7 @@ import { auth } from "../../../auth";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 import backlogStore from "../../Backlogs/backlogStore";
+import {AiFillPlusCircle} from "react-icons/ai";
 // import backlogs from "../../../pages/projects/[projectId]/backlogs";
 
 function ProjectBoards() {
@@ -22,6 +23,9 @@ function ProjectBoards() {
   const [columns, setColumns] = useState(allStatus);
   const [showForm, setShowForm] = useState(false);
   const [newBoardName, setNewBoardName] = useState<string>('')
+  const tooltipRef = useRef<HTMLSpanElement>(null)
+  const container = useRef<HTMLDivElement>(null)
+  
 
   let backend: any = fileStore((store) => store.data);
   const { backlogs, updateBacklogsData, updateRow } = backlogStore()
@@ -131,11 +135,11 @@ function ProjectBoards() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="w-full p-4">
-        <h1 className="mb-4 rounded-lg bg-pink-300 p-2 text-2xl font-bold shadow-lg">
+        <h1 className="mb-4 rounded-lg bg-pink-300 p-2 text-2xl font-bold shadow-lg dark:bg-bgdarkcolor dark:text-white">
           Kanban Board
         </h1>
         <div className="relative inline-block text-left">
-          <div className="bg-slate-100 rounded m-2 p-2 hover:shadow-lg">
+          <div className="bg-slate-100 rounded m-2 p-2 hover:shadow-lg dark:bg-bgdarkcolor">
             <button
               className="flex"
               onClick={() => setShowTypeDropdown(!showTypeDropdown)}
@@ -176,11 +180,12 @@ function ProjectBoards() {
               )}
             </button>
             {showTypeDropdown && (
+              <div className="absolute  origin-top-right divide-y divide-gray-100 rounded-md bg-gray-100 shadow-lg ring-1 ring-black ring-opacity-5 hover:bg-gray-200 z-10 ">
               <div className="py-1">
                 {types.map((type) => (
-                  <div className="m-1 hover:bg-slate-50 rounded" key={type.value}>
+                  <div className=" hover:bg-slate-50 rounded" key={type.value}>
                     <label
-                      className="flex cursor-pointer items-center justify-between px-4 py-2"
+                      className="flex cursor-pointer items-center justify-between px-4 "
                     >
                       <span>{type.label}</span>
                       <input
@@ -197,23 +202,23 @@ function ProjectBoards() {
                     </label>
                   </div>
                 ))}
-              </div>
+              </div></div>
             )}
           </div>
         </div>
-        <div className="flex space-x-4 overflow-x-auto">
+        <div className="flex space-x-4 overflow-x-auto ">
           {columns.map((column) => (
             <div
               key={column}
-              className="relative mx-2 min-w-[250px] flex-1 rounded-lg bg-white p-4 shadow-md"
+              className="relative mx-2 min-w-[250px] flex-1 rounded-lg bg-white p-4 shadow-md dark:bg-bgdarkcolor dark:text-white"
               onDrop={(e) => handleDrop(e, column)}
               onDragOver={(e) => handleDragOver(e)}
 
             >
-              <div className="statuses-center mb-2 flex justify-between">
+              <div className="statuses-center mb-2 flex justify-between dark:bg-bgdarkcolor">
                 <h2 className="text-lg font-semibold">{column}</h2>
               </div>
-              <div className="h-80 space-y-2 overflow-y-auto overflow-x-hidden">
+              <div className="h-80 space-y-2 overflow-y-auto overflow-x-hidden dark:text-slate-600">
                 {statuses.map((task: any) =>
                   task.status === column ? (
                     <div
@@ -236,12 +241,20 @@ function ProjectBoards() {
           ))}
         </div>
       </div>
-      <button
-      data-tooltip-target="tooltip-default"
-  className="m-5 w-12 h-12 rounded-full bg-blue-700 text-white shadow-lg flex items-center justify-center"
-  onClick={() => setShowForm(!showForm)}
->
-  <svg
+      {/* <button
+         data-tooltip-target="tooltiptext"
+         data-te-toggle="tooltip"
+         data-te-placement="bottom"
+         data-te-ripple-init
+         data-te-ripple-color="light"
+         title="Add Board"
+        className="m-5 w-12 h-12 rounded-full bg-blue-700 text-white shadow-lg flex items-center justify-center"
+        onClick={() => setShowForm(!showForm)}
+      >
+   <AiFillPlusCircle size="30"/> */}
+
+
+  {/* <svg
     xmlns="http://www.w3.org/2000/svg"
     className="h-6 w-6"
     fill="none"
@@ -254,26 +267,42 @@ function ProjectBoards() {
       strokeWidth="2"
       d="M12 6v6m0 0v6m0-6h6m-6 0H6"
     />
-  </svg>
-</button>
+  </svg> */}
+
+{/* </button> */}
+{/* absolute whitespace-nowrap text-sm */}
+
+        <div
+          ref={container}
+          className="cursor-pointer group relative pl-1.5">
+          <AiFillPlusCircle onClick={() => setShowForm(!showForm)} 
+           onMouseEnter={({ clientX }) => {
+            if (!tooltipRef.current || !container.current) return;
+            const { left } = container.current.getBoundingClientRect();
+            tooltipRef.current.style.left = clientX - left + 'px'
+          }} className="text-[2.5rem] bg-white text-sky-500  duration-700 rounded-full stroke-white" />
+          <span ref={tooltipRef} className="invisible z-10 group-hover:visible opacity-0 group-hover:opacity-100 transition bg-slate-500  border-black  rounded-md p-1.5 text-white  absolute top-full mt-2 whitespace-nowrap text-[0.8rem]">ADD COLUMN</span>
+         </div>
+
+            
 
 
       {showForm && (
         <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-4 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Enter Board Name</h2>
+          <div className="bg-white p-4 rounded-lg shadow-lg dark:bg-bgdarkcolor dark:text-white">
+            <h2 className="text-xl font-semibold mb-4 ">Enter Column Name</h2>
             <input
               type="text"
-              className="border p-2 w-full rounded"
+              className="border p-2 w-full rounded dark:text-bgdarkcolor"
               value={newBoardName}
               onChange={(e) => setNewBoardName(e.target.value)}
-              placeholder="Board Name"
+              placeholder="Column Name"
             />
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
               onClick={() => addBoard(newBoardName)}
             >
-              Add Board
+              Add Column
             </button>
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 ml-2"

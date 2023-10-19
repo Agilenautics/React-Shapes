@@ -25,9 +25,9 @@ export default function MembersTable({ details }: MembersTableProps) {
     <div className="relative">
       <div className="relative mr-4 mt-8 shadow-md sm:rounded-lg">
         <table className="w-full text-left text-sm">
-          <thead className="text-md bg-gray-200">
+          <thead className="text-md bg-gray-200 dark:bg-bgdarkcolor">
             <tr>
-              <th scope="col" className="w-56 px-4 py-3 md:w-64">
+              <th scope="col" className="w-56 px-4 py-3 md:w-64 ">
                 <div className="flex cursor-pointer items-center">Name</div>
               </th>
               <th scope="col" className="hidden px-4 py-3 md:table-cell">
@@ -40,7 +40,7 @@ export default function MembersTable({ details }: MembersTableProps) {
           </thead>
           <tbody>
             {details.map((user, index) => (
-              <tr key={index} className="border-b bg-white">
+              <tr key={index} className="border-b bg-white dark:text-white dark:bg-slate-600">
                 <td className="whitespace-nowrap px-4 py-4 font-medium">
                   <div className="flex w-56 items-center">
                     <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-500 text-sm font-semibold text-white">

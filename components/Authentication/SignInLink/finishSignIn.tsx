@@ -15,6 +15,7 @@ const FinishSignIn: React.FC = () => {
     const urlParams = new URLSearchParams(queryString);
     setEmail(urlParams.get('email') || "")
   }, [])
+  
 
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {

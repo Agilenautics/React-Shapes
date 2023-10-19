@@ -25,6 +25,7 @@ import {
 import userStore from "./userStore";
 import projectStore from "../Projects/projectStore";
 import { HiArrowsUpDown } from "react-icons/hi2";
+import moment from "moment";
 
 //user interface type
 export interface User {
@@ -42,12 +43,23 @@ export interface User {
   }>;
 }
 
+export interface usersList{
+  id: string;
+  name: string;
+  accessLevel: string;
+  dateAdded: string;
+  projects: string[];
+  emailId: string;
+  userType: string;
+  timeStamp: string;
+}
 interface Project {
   id: string;
   name: string;
 }
 
 function Users() {
+  const [selectedTypeFilters, setSelectedTypeFilters] = useState<string[]>([]);
   const [editedUser, setEditedUser] = useState<string | null>(null);
   const [showAddUserPopup, setShowAddUserPopup] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -57,6 +69,9 @@ function Users() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [userData, setUserData] = useState<string[]>([]);
+  
 
 
   //project store
@@ -72,7 +87,7 @@ function Users() {
 
 
   //user store
-  const usersList = userStore((state) => state.usersList);
+  const usersList:any[]  = userStore((state) => state.usersList);
   const updateUserList = userStore((state) => state.updateUserList);
   const sortingOrder = userStore((state) => state.sortOrder);
   const updateSortingOrder = userStore((state) => state.updateSortingOrder);
@@ -83,9 +98,9 @@ function Users() {
   const updateUserType = userStore((state) => state.updateUserType);
   const accessLevel = userStore((state) => state.accessLevel)
   const updateAccessLevele = userStore((state) => state.updateAccessLevel);
+  
 
-
-
+  
 
 
 
@@ -105,8 +120,26 @@ function Users() {
   };
   useEffect(() => {
     verfiyAuthToken();
-  }, []);
+    setUserData(usersList)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usersList]);
 
+  const onhandleSearch = (e: any) => {
+    const currentData = e.target.value;
+    let filterData = structuredClone(usersList);
+    filterData = filterData.filter(val => {
+      if (/^[0-9\/]+$/.test(currentData)) {
+        return moment(val.timeStamp).isValid() && moment(val.timeStamp).format("MM/DD/YYYY").includes(currentData);
+      }
+      else {
+        return val.emailId.toLowerCase().includes(currentData.toLowerCase()) ? true : val.userType.toLowerCase().startsWith(currentData.toLowerCase()) ? true : false;
+      }
+    });
+    setUserData(filterData);
+    setSearchTerm(currentData);
+  }
+ 
+  
 
   const handleMessage = (message: any) => {
     setMessage(message);
@@ -118,7 +151,7 @@ function Users() {
   };
 
   const { data, error, loading } = useQuery(ALL_USERS);
-
+  
 
 
   const handleEditClick = (userId: string) => {
@@ -126,8 +159,13 @@ function Users() {
   };
 
   const handleChanges_userType = (e: any) => {
-    updateAccessLevele(e.target.value)
-    // console.log(e.target.value)
+     let currentDropdownData=e.target.value;
+    let filterDropData= structuredClone(usersList);
+    let filterDropdown=filterDropData.filter((val)=>{
+        return (val.userType.toLowerCase().startsWith(currentDropdownData.toLowerCase())?true: false)
+      })
+    setSelectedTypeFilters(currentDropdownData)
+    setUserData(filterDropdown)
   }
 
 
@@ -199,7 +237,7 @@ function Users() {
   return (
     <div className=" p-6">
       {/* heading of the table */}
-      <div className="flex items-center">
+      <div className="flex items-center h-full">
         <button className="text-md   rounded text-white bg-sky-500/75 p-2 font-semibold">
           Team Agile
         </button>
@@ -226,7 +264,7 @@ function Users() {
 
       {/* top bar  */}
 
-      <div className="grid grid-cols-4 bg-white gap-6 p-4 rounded shadow dark:bg-slate-600 ">
+      <div className="grid grid-cols-4 bg-white gap-6 p-4 rounded shadow dark:bg-bgdarkcolor">
         <div className="border rounded border-slate-400 p-1 ">
           <input
             className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
@@ -234,18 +272,18 @@ function Users() {
             id="search"
             placeholder="Search"
             autoComplete="off"
-          // value={searchTerm}
-          // onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
+          onChange={e => onhandleSearch(e)}
           />
         </div>
 
         <div className=" col-span-2  flex justify-end gap-8 items-center">
-          <span> Total : {usersList.length} </span>
+          <span> Total : {userData.length} </span>
           <button onClick={handleSortClick}>shorting: <HiArrowsUpDown className={`inline ${sortingOrder === 'asc' ? '' : "rotate-180"}`} /> </button>
           <span>
             <label htmlFor="">Type : </label>
-            <select className="outline-none  border dark:border-none rounded dark:bg-slate-700 p-1" name="" id="">
-              <option value="user">All</option>
+           <select className="outline-none  border dark:border-none rounded dark:bg-slate-700 p-1" defaultValue="All" name="" id=""  onChange={handleChanges_userType}  value={selectedTypeFilters}>
+              <option value="">All</option>
               <option value="user">User</option>
               <option value="admin">Admin</option>
               <option value="super user">Super User</option>
@@ -264,7 +302,7 @@ function Users() {
 
       <div className="relative overflow-x-auto">
         <table className="w-full my-6 text-left text-sm">
-          <thead className=" bg-slate-700 text-slate-50 text-xs">
+          <thead className=" bg-slate-700 text-slate-50 text-xs dark:bg-bgdarkcolor">
             <tr>
               <th
                 scope="col"
@@ -284,7 +322,7 @@ function Users() {
             </tr>
           </thead>
           <tbody className="overflow-y-scroll">
-            {usersList.map((user: any,index) => {
+            {userData.map((user: any,index) => {
               return <tr key={user.id} className="border-b border-black dark:border-slate-200 bg-white dark:bg-slate-600">
                 <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                   <div className="flex items-center">
@@ -306,7 +344,7 @@ function Users() {
                     >
                       <option value="User">User</option>
                       <option value="Super User">Super User</option>
-                    </select>
+                                         </select>
                   ) : (
                     user.userType
                   )}
@@ -411,9 +449,9 @@ export function getInitials(name: string) {
 }
 
 export const getNameFromEmail = (email: string) => {
-  let regex = /[^a-z]/gi;
+    let regex = /[^a-z]/gi;
   const name = email.split("@")[0].toLocaleUpperCase();
-  return name.replace(regex, "");
+    return name.replace(regex, "");
 };
 
 const formatDate = (date: string) => {
