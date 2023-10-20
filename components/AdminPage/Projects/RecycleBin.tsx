@@ -53,35 +53,6 @@ function Projects() {
 
   },[searchTerm])
 
-  // const handleSearch = (e: React.ReactEventHandler) => {
-  //   setSearchTerm(e.target.value)
-  // }
-
-
-  // useEffect(() => {
-  //   const filteredProjects = recycleBin.filter(
-  //     (project) =>
-  //       project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  //       project.recycleBin
-  //   );
-  //   // @ts-ignore
-  //   updateRecycleBinProject(filteredProjects)
-  // }, [searchTerm]);
-  // const filterProjects = () => {
-  //   const filteredProjects = recycleBin.filter(
-  //     (project) =>
-  //       project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-  //       project.recycleBin
-  //   );
-  //   return filteredProjects
-  // }
-
-  // useEffect(() => {
-  //   const a = filterProjects()
-  //   console.log(a)
-  //   updateRecycleBinProject(a)
-  // }, [searchTerm])
-
   useEffect(() => {
     setIsButtonDisabled(userType.toLowerCase() === "user");
     setIsNewProjectDisabled(userType.toLowerCase() === "super user");
@@ -99,21 +70,6 @@ function Projects() {
     parmenantDelete(projectId, PARMENANT_DELETE, GET_USER)
   };
 
-  // const handleConfirm = useCallback(() => {
-  //   // Delete the project if confirmed
-  //   setShowConfirmation(false);
-  //   if (projectId ) {
-  //     delete_Project(projectId, DELETE_PROJECT, GET_USER);
-  //     setProjectId(null);
-  //   }
-  // }, [projectId]);
-
-  // const handleCancel = useCallback(() => {
-  //   // Cancel the delete operation
-  //   setShowConfirmation(false);
-  //   setProjectId(null);
-  // }, []);
-
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -122,20 +78,8 @@ function Projects() {
     );
   }
 
-
-  // if (error) {
-  //   console.log(error.message);
-  // }
-
   return (
     <div className="bg grey">
-      {/* <div className="mt-4 flex justify-center">
-        {successMessage && (
-          <div className="rounded-md bg-green-200 px-4 py-2 text-green-800">
-            {successMessage}
-          </div>
-        )}
-      </div> */}
       <div className="ml-6 flex items-center">
         <button className="text-md ml-4 mt-4 h-10 rounded-lg bg-blue-200 px-5 font-semibold">
           Recycle Bin
@@ -166,22 +110,6 @@ function Projects() {
       <div className="ml-10 mt-2">
         <div className="max-w-2xl">
           <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-gray-200 focus-within:shadow-lg">
-            {/* <div className="grid h-full w-12 place-items-center text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div> */}
 
             <input
               className="peer h-full w-full bg-gray-200 p-4 text-base text-black outline-none"
@@ -224,7 +152,7 @@ function Projects() {
             {projectData.map((project: any) => (
               <tr key={project.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-4 py-4 font-medium">
-                  {/* //TODO added recycleBin */}
+
                   <label className="fontWeight-bold">{project.name}</label>
                 </td>
                 <td className="hidden px-6 py-4 md:table-cell">
@@ -256,22 +184,6 @@ function Projects() {
           </tbody>
         </table>
       </div>
-      {/* {showConfirmation && (
-        <div className="popup-container">
-          <div className="popup-window">
-            <h3>Confirm Deletion</h3>
-            <p>Are you sure you want to delete the project?</p>
-            <div>
-              <button className="popup-button" onClick={handleConfirm}>
-                Yes
-              </button>
-              <button className="popup-button" onClick={handleCancel}>
-                No
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

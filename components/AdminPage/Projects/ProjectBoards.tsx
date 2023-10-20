@@ -4,7 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import fileStore from "../../TreeView/fileStore";
 import { getTypeLabel } from "./staticData/basicFunctions";
 import { types } from "./staticData/types";
-import { allStatus } from "./staticData/processedData";
+// import { allStatus } from "./staticData/processedData";
 import { updateTaskMethod, updateTasksMutation } from "../../Flow/Nodes/gqlNodes";
 import { updateStoryMethod, updateStoryMutation } from "../../TreeView/gqlFiles";
 import { onAuthStateChanged } from "firebase/auth";
@@ -17,6 +17,8 @@ import {AiFillPlusCircle} from "react-icons/ai";
 // import backlogs from "../../../pages/projects/[projectId]/backlogs";
 
 function ProjectBoards() {
+
+  const allStatus = backlogStore(state => state.allStatus)
   const [selectedTypeFilters, setSelectedTypeFilters] = useState<string[]>([]);
   const [statuses, setStatuses] = useState([]);
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
@@ -207,7 +209,7 @@ function ProjectBoards() {
           </div>
         </div>
         <div className="flex space-x-4 overflow-x-auto ">
-          {columns.map((column) => (
+          {columns.map((column : any) => (
             <div
               key={column}
               className="relative mx-2 min-w-[250px] flex-1 rounded-lg bg-white p-4 shadow-md dark:bg-bgdarkcolor dark:text-white"
@@ -241,36 +243,6 @@ function ProjectBoards() {
           ))}
         </div>
       </div>
-      {/* <button
-         data-tooltip-target="tooltiptext"
-         data-te-toggle="tooltip"
-         data-te-placement="bottom"
-         data-te-ripple-init
-         data-te-ripple-color="light"
-         title="Add Board"
-        className="m-5 w-12 h-12 rounded-full bg-blue-700 text-white shadow-lg flex items-center justify-center"
-        onClick={() => setShowForm(!showForm)}
-      >
-   <AiFillPlusCircle size="30"/> */}
-
-
-  {/* <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-    />
-  </svg> */}
-
-{/* </button> */}
-{/* absolute whitespace-nowrap text-sm */}
 
         <div
           ref={container}
