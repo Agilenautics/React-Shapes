@@ -40,7 +40,7 @@ if (loading || selectedElement.length==0) {
 }
 
   return (
-          <div className="rounded-lg bg-white shadow-lg w-[100%] overflow-y-scroll overflow-x-hidden" >
+          <div className="rounded-lg bg-white shadow-lg w-[100%]" >
             <AddBacklogs
               types={types}
               users={users}

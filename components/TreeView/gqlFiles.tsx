@@ -1103,6 +1103,10 @@ const updateStoryMutation = gql`
         hasInfo {
           ...InfoFragment
         }
+        hasSprint {
+          id
+          name
+        }
       }
     }
   }

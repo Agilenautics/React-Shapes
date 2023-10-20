@@ -153,19 +153,19 @@ function ProjectBacklogs() {
             <div className="relative inline-block text-left">
               <div className="bg-gray-100 hover:bg-gray-200 dark:bg-slate-600 dark:text-white rounded-lg">
                 <span className="shadow-sm">
-                  <button
-                    type="button"
-                    onClick={() => setShowTypeDropdown((prevState) => !prevState)}
-                    className="flex relative bg-gray-100 text-gray-700  hover:bg-gray-200 dark:bg-slate-600 dark:text-white">
-                    <span className="block w-full pl-3 pr-10 py-2 text-left text-base rounded-lg">
-                      Select Types
-                    </span>
-                    <span className="mt-2">
-                      <RiArrowDropDownLine className="w-7 h-7" />
-                    </span>
-
-                  </button>
-
+                <button
+  type="button"
+  onClick={() => setShowTypeDropdown((prevState) => !prevState)}
+  className="flex relative bg-gray-100 text-gray-700  hover:bg-gray-200"
+>
+  <span className="block w-full pl-3 pr-10 py-2 text-left text-base">
+    Select Types
+  </span>
+  <span className="mt-2">
+  <RiArrowDropDownLine className="w-7 h-7" />
+</span>
+  
+</button>
                 </span>
               </div>
               {showTypeDropdown && (
@@ -228,74 +228,68 @@ function ProjectBacklogs() {
                 </option>
               ))}
             </select>
-
-          </div>
-            <div className="overflow-y max-h-screen overflow-x-hidden">
-              <table className="mr-4 w-full table-auto">
-                <thead>
-                  <tr>
-                    <th className="bg-gray-200 px-1 py-2">Id</th>
-                    <th className="bg-gray-200 px-1 py-2">Type</th>
-                    <th className="bg-gray-200 px-1 py-2">Name</th>
-                    <th className="bg-gray-200 px-1 py-2">Description</th>
-                    <th className="bg-gray-200 px-1 py-2">Epic</th>
-                    <th className="bg-gray-200 px-1 py-2">Status</th>
-                    <th className="bg-gray-200 px-1 py-2">Sprint</th>
-                    <th className="bg-gray-200 px-1 py-2">User</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((element: any, index: any) => (
-                    <tr key={index} className="py-1">
-                      {/* @ts-ignore */}
-                      <td className="px-1 py-2 text-center cursor-pointer">
-                        {element.uid}
-                      </td>
-                      <td
-                        className={`px-1 py-2 ${
-                          // @ts-ignore
-                          getTypeLabel(element.type).color
-                          } text-grey rounded-lg text-center`}
-                      >
-                        {/* @ts-ignore */}
-                        {getTypeLabel(element.type).type}
-                      </td>
-                      <td className="px-1 py-2 text-center cursor-pointer hover:text-blue-500 hover:underline" onClick={() => openFormWithFilledData(element)}>
-                        {element.label || element.name}
-                      </td>
-                      <td className="description-cell break-all px-1 py-2 text-center">
-                        {element.description}
-                      </td>
-                      <td className="px-1 py-2 text-center">
-                        {/* here epic */}
-                        {element.parent && (element.parent.name == "No epic" ? "-" : element.parent.name)}
-                      </td>
-                      <td
-                        className={`px-1 py-2 ${getStatusColor(
-                          // @ts-ignore
-                          element.status
-                        )} text-grey rounded-lg text-center`}
-                      >
-                        {element.status}
-                      </td>
-                      <td className="px-1 py-2 text-center">
-                        {(element.hasSprint && element.hasSprint.length) ? element.hasSprint[0].name : "-"}
-                      </td>
-                      <td className="px-1 py-2 text-center">
-                        {element.assignedTo ? element.assignedTo : "-"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          {/* <button
-        className="m-5 w-48 rounded-lg bg-blue-700 px-4 py-2 text-white shadow-lg"
-        onClick={handleAddBacklogsClick}
-      >
-        Add backlog +
-      </button> */}
+          
         </div>
+        <div className="overflow-y max-h-screen overflow-x-hidden">
+          <table className="mr-4 w-full table-auto">
+            <thead>
+              <tr>
+              <th className="bg-gray-200 px-1 py-2">Id</th>
+                <th className="bg-gray-200 px-1 py-2">Type</th>
+                <th className="bg-gray-200 px-1 py-2">Name</th>
+                <th className="bg-gray-200 px-1 py-2">Description</th>
+                <th className="bg-gray-200 px-1 py-2">Epic</th>
+                <th className="bg-gray-200 px-1 py-2">Status</th>
+                <th className="bg-gray-200 px-1 py-2">Sprint</th>
+                <th className="bg-gray-200 px-1 py-2">User</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((element: any, index: any) => (
+                <tr key={index} className="py-1">
+                  {/* @ts-ignore */}
+                  <td className="px-1 py-2 text-center cursor-pointer">
+                    {element.uid}
+                  </td>
+                  <td
+                    className={`px-1 py-2 ${
+                      // @ts-ignore
+                      getTypeLabel(element.type).color
+                      } text-grey rounded-lg text-center`}
+                  >
+                    {/* @ts-ignore */}
+                    {getTypeLabel(element.type).type}
+                  </td>
+                  <td className="px-1 py-2 text-center cursor-pointer hover:text-blue-500 hover:underline" onClick={() => openFormWithFilledData(element)}>
+                    {element.label || element.name}
+                  </td>
+                  <td className="description-cell break-all px-1 py-2 text-center">
+                    {element.description}
+                  </td>
+                  <td className="px-1 py-2 text-center">
+                    {/* here epic */}
+                    {element.parent && (element.parent.name=="No epic" ? "-": element.parent.name)}
+                  </td>
+                  <td
+                    className={`px-1 py-2 ${getStatusColor(
+                      // @ts-ignore
+                      element.status
+                    )} text-grey rounded-lg text-center`}
+                  >
+                    {element.status}
+                  </td>
+                  <td className="px-1 py-2 text-center">
+                    {(element.hasSprint && element.hasSprint.length) ? element.hasSprint[0].name : "-"}
+                  </td>
+                  <td className="px-1 py-2 text-center">
+                    {element.assignedTo? element.assignedTo: "-"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
     </div>
     );

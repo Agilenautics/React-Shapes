@@ -8,9 +8,11 @@ export const  getTypeLabel = (type: string) => {
         return { type: "Task", color: "bg-blue-200" };
       case "BrightgreenNode":
         return { type: "Sub-Task", color: "bg-green-200" };
-      case "BrightorangeNode":
-        return { type: "Issue", color: "bg-orange-200" };
       case "blueNode":
+        return { type: "Issue", color: "bg-orange-200" };
+      case "BrightorangeNode":
+        return { type: "Bug", color: "bg-red-200" };
+        case "BrightredNode":
         return { type: "Bug", color: "bg-red-200" };
       default:
         return "";

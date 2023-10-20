@@ -349,6 +349,8 @@ async function createNode(
       // data.uid = result.data.updateFiles.files[0].hasflowchart.nodes[0].uid
       data.parent = data.epic
       data.id = result.data.id
+      data.hasSprint = result.data.hasSprint
+      data.uid = result.data.uid
       addRow(data)
 
       // addRow(data)

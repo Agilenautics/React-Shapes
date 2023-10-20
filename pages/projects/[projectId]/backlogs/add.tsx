@@ -23,7 +23,7 @@ export default function Add() {
       <LoadingIcon />
     </div>
   ) : (
-    <div className="w-[100%] overflow-x-hidden overflow-y-scroll rounded-lg bg-white shadow-lg">
+    <div className="w-[100%] rounded-lg bg-white shadow-lg">
       <AddBacklogs
         types={types}
         users={users}
