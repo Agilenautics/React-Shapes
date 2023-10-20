@@ -172,35 +172,54 @@ const createSPrintBackend = (
   sprintCreateMessage: any,
   hidePopUp: any
 ) => {
-  client
-    .mutate({
-      mutation: mutation,
-      variables: {
-        input: [
-          {
-            hasProjects: {
-              connect: {
-                where: {
-                  node: {
-                    id: projectId,
+  try {
+    client
+      .mutate({
+        mutation: mutation,
+        variables: {
+          input: [
+            {
+              hasProjects: {
+                connect: {
+                  where: {
+                    node: {
+                      id: projectId,
+                    },
                   },
                 },
               },
+              name: inputVariables.name,
+              description: inputVariables.description || "",
+              startDate: inputVariables.startDate,
+              endDate: inputVariables.endDate,
             },
-            name: inputVariables.name,
-            description: inputVariables.description || "",
-            startDate: inputVariables.startDate,
-            endDate: inputVariables.endDate,
-          },
-        ],
-      },
-    })
-    .then((response: FetchResult<any>) => {
-      addSprint(response.data.createSprints.sprints[0], response.errors);
-      sprintCreateMessage();
-      hidePopUp(false);
-    })
-    .catch((error) => handleError(error));
+          ],
+        },
+        update: (cache, { data }) => {
+          const existanceSprints = cache.readQuery(
+            {
+              query: GET_SPRINTS,
+              variables: {
+                where: {
+                  hasProjects: {
+                    id: projectId,
+                  }
+                }
+              }
+            }
+          );
+          console.log(existanceSprints)
+        }
+      })
+      .then((response: FetchResult<any>) => {
+        addSprint(response.data.createSprints.sprints[0], response.errors);
+        sprintCreateMessage();
+        hidePopUp(false);
+      })
+  } catch (error) {
+    handleError(error)
+
+  }
 };
 
 const UPDATE_SPRINT_MUTATION = gql`

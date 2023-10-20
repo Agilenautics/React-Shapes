@@ -76,7 +76,7 @@ function Users() {
 
   //project store
   const projects = projectStore((state) => state.projects);
-  const updateProject = projectStore((state) => state.updateProjectData)
+  const updateProject = projectStore((state) => state.updateProjectData);
 
 
 
@@ -113,7 +113,7 @@ function Users() {
           const userType = userData.userType;
           updateUserType(userType)
           const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
-          // updateProject(userProjects,loading)
+          updateProject(userProjects,loading)
         });
       }
     });

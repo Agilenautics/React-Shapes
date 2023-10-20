@@ -332,6 +332,29 @@ async function createNode(
           },
         },
       },
+      update: (cache, { data }) => {
+        const existanceCache = cache.readQuery(
+          {
+            query: allNodes,
+            // variables: {
+            //   where: {
+            //     hasFile: {
+            //       id: data.story,
+            //     },
+            //   },
+            // }
+          }
+        );
+        const e = cache.evict({fieldName:"flowcharts"})
+       let a=  cache.read({
+          query: allNodes,
+          optimistic: false
+        });
+        console.log(a)
+       
+        
+      },
+      
     })
     .then((result) => {
       const nodes1 = JSON.stringify(
@@ -352,7 +375,6 @@ async function createNode(
       data.hasSprint = result.data.hasSprint
       data.uid = result.data.uid
       addRow(data)
-
       // addRow(data)
       return updateNode(nodes);
     })

@@ -8,10 +8,6 @@ import {
   EDIT_PROJECT,
   edit_Project,
   delete_Project,
-  update_recentProject,
-  recentProject_mutation,
-  GET_PROJECTS,
-  GET_PROJECTS_BY_ID,
 } from "./gqlProject";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
@@ -79,7 +75,7 @@ function Projects() {
         emailId: userEmail,
       },
     },
-    
+
   });
 
   const getProjects = (response: any) => {
@@ -92,8 +88,8 @@ function Projects() {
       setProjectData(response.users[0].hasProjects);
       updateRecycleBinProject(projects);
     }
-    
-    
+
+
   }
 
   const verificationToken = async () => {
@@ -146,13 +142,11 @@ function Projects() {
     setProjectName("");
   };
 
-  const handleDelete_Project = (id: string) => {
-    // Display confirmation box
-    // setShowConfirmation(true);
-    delete_Project(id, DELETE_PROJECT, GET_USER).then((response)=>{
-      setProjectTrackChanges(!projectTrackChanges);
-      deleteNotify()
-    })
+
+  const handleDelete_Project = async (id: string) => {
+    await delete_Project(id, DELETE_PROJECT, GET_USER,userEmail);
+    setProjectTrackChanges(!projectTrackChanges);
+    deleteNotify()
     // setProjectId(projectId);
   };
 
@@ -160,7 +154,7 @@ function Projects() {
     // Delete the project if confirmed
     setShowConfirmation(false);
     if (projectId) {
-      delete_Project(projectId, DELETE_PROJECT, GET_PROJECTS);
+      // delete_Project(projectId, DELETE_PROJECT, GET_USER);
       deleteProject(projectId);
       setProjectId(null);
     }
@@ -221,7 +215,7 @@ function Projects() {
 
 
   return (
-   
+
 
     // container
     <div className="p-7">

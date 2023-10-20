@@ -10,7 +10,7 @@ import { Edge_Fragment } from "../Nodes/gqlNodes";
 
 const allEdges = gql`
   ${Edge_Fragment}
-  query Query($where: flowchartWhere) {
+  query getAllEdges($where: flowchartWhere) {
     flowcharts(where: $where) {
       name
       edges {

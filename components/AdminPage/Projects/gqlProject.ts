@@ -2,19 +2,7 @@ import { DocumentNode, OperationVariables, TypedDocumentNode, gql } from "@apoll
 import client from "../../../apollo-client";
 import { Project } from "./projectStore";
 
-const GET_PROJECTS = gql`
-query getProjets {
-  projects {
-    id
-    isOpen
-    name
-    timeStamp
-    userName
-    description
-    
-  }
-}
-`
+
 
 const Project_Fragment = gql`
   fragment ProjectFragment on main {
@@ -32,32 +20,10 @@ const Project_Fragment = gql`
   }
 `;
 
-const GET_PROJECTS_BY_ID = gql`
-
-query Projects {
-  projects {
-    id
-    isOpen
-    name
-    recentProject
-    recycleBin
-    timeStamp
-    userName
-    deletedAT
-    description
-  }
-}
-`
 
 
-const UserSheme = gql`
-query GetUsers {
-  getUsers {
-    emailId
-  }
-}
 
-`
+
 
 
 
@@ -68,9 +34,9 @@ query getUser($where: userWhere) {
   users(where: $where) {
     active
     id
-    userName
     userType
     emailId
+    timeStamp
     hasProjects {
     ...ProjectFragment 
     }
@@ -118,52 +84,16 @@ const get_user_method = async (email: String, customQuery: DocumentNode | TypedD
 }
 
 const DELETE_PROJECT = gql`
+${Project_Fragment}
 mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
   updateMains(where: $where, update: $update) {
     mains {
-      id
-      timeStamp
-      description
-      name
-      recycleBin
-      deletedAT
+     ...ProjectFragment
     }
   }
 }
 `
-
-const recentProject_mutation = gql`
-${Project_Fragment}
-mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-    mains {
-    ...ProjectFragment
-    }
-  }
-}
-
-`
-
-
-const update_recentProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,) => {
-  await client.mutate({
-    mutation,
-    variables: {
-      where: {
-        id
-      },
-      update: {
-        recentProject: true,
-      }
-    },
-    // refetchQueries(result) {
-    //   return [GET_USER]
-    // },
-  })
-}
-
-
-const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>, email: string) => {
   var dateObj = new Date();
   var month = dateObj.getUTCMonth() + 1; //months from 1-12
   var day = dateObj.getUTCDate();
@@ -183,59 +113,145 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
         deletedAT: newdate
       }
     },
-    // update: (cache, { data }) => {
-    //   const existingProjects = cache.readQuery({
-    //     query,
-    //     variables: {
-    //       emailId: "irfan123@gmail.com"
-    //     }
-    //   });
-    //   console.log("existing projects", existingProjects);
-    //   const existingUser = existingProjects.users.filter((values: any) => values.emailId === "irfan123@gmail.com");
-
-
-    //   cache.writeQuery({
-    //     query,
-    //     variables: {
-    //       emailId: "irfan123@gmail.com"
-    //     },
-    //     data: {
-    //       users: [...existingUser, ...data.updateMains.mains]
-    //     }
-
-    //   })
-
-    //   // console.log(data)
-
-
-
-    // },
-    refetchQueries(result) {
-      return [query]
+    update: (cache, { data: { updateMains: { mains } } }) => {
+      const existingUser = cache.readQuery({
+        query,
+        variables: {
+          where: {
+            emailId: email
+          }
+        }
+      });
+      const { hasProjects, ...userData } = existingUser.users[0]
+      const updated_projects = hasProjects.map((project: Project) => {
+        if (project.id === id) {
+          return { ...mains[0] }
+        }
+        return project
+      });
+      const updated_user = { ...userData, hasProjects: updated_projects }
+      cache.writeQuery({
+        query,
+        variables: {
+          where: {
+            emailId: email
+          }
+        },
+        data: {
+          users: [updated_user]
+        }
+      })
     },
   }).then((response) => {
     deleteData = response.data.updateMains
   })
 }
 
-const recycleProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  await client.mutate({
-    mutation,
-    variables: {
-      where: {
-        id
+const recentProject_mutation = gql`
+${Project_Fragment}
+mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
+  updateMains(where: $where, update: $update) {
+    mains {
+    ...ProjectFragment
+    }
+  }
+}
+
+`
+
+
+const update_recentProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,) => {
+  try {
+    await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id
+        },
+        update: {
+          recentProject: true,
+        }
       },
-      update: {
-        recycleBin: false,
-        deletedAT: ""
+      update: (cache, { data }) => {
+        const existanceData = cache.readQuery(
+          {
+            query: GET_USER,
+            variables: {
+              where: {
+                emailId: "irfan123@gmail.com"
+              }
+            }
+          }
+        );
+        console.log(existanceData, "hii")
       }
-    },
-    refetchQueries: [{
-      query, variables: {
-        emailId: "irfan123@gmail.com"
+      // refetchQueries(result) {
+      //   return [GET_USER]
+      // },
+    })
+
+  } catch (error) {
+    console.log(error, "while deleting the project..")
+
+  }
+}
+
+
+
+
+const recycleProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+  try {
+    await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id
+        },
+        update: {
+          recycleBin: false,
+          deletedAT: ""
+        }
+      },
+      update: (cache, { data: { updateMains: { mains } } }) => {
+        const existanceUser = cache.readQuery(
+          {
+            query,
+            variables: {
+              where: {
+                emailId: "irfan123@gmail.com"
+              }
+            }
+          }
+        );
+        const { hasProjects, ...userData } = existanceUser.users[0];
+        const updated_projects = hasProjects.map((project: Project) => {
+          if (project.id === id) {
+            return {
+              ...mains[0]
+            }
+          }
+          return project
+        });
+        const updated_user = { ...userData, hasProjects: updated_projects }
+        cache.writeQuery(
+          {
+            query,
+            variables: {
+              where: {
+                emailId: "irfan123@gmail.com"
+              }
+            },
+            data: {
+              users: [updated_user]
+            }
+          }
+        )
       }
-    }],
-  })
+    })
+
+  } catch (error) {
+    console.log(error, "error while restoring the the project from the recyclebin")
+  }
 }
 
 //parmenant delete mutation
@@ -249,18 +265,44 @@ mutation parmenantDelete($where: mainWhere) {
 
 //parmenant delete project
 const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  await client.mutate({
-    mutation,
-    variables: {
-      where: {
-        id
+  try {
+    await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id
+        }
+      },
+      update: (cache, { data }) => {
+        const existingUser = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: "irfan123@gmail.com"
+            }
+          }
+        });
+        const { hasProjects, ...userData } = existingUser.users[0]
+        const deletedProject = hasProjects.filter((project: Project) => project.id !== id)
+        const updated_user = { ...userData, hasProjects: deletedProject }
+        cache.writeQuery(
+          {
+            query,
+            variables: {
+              where: {
+                emailId: "irfan123@gmail.com"
+              }
+            },
+            data: {
+              users: [updated_user]
+            }
+          }
+        );
       }
-    },
-    refetchQueries: (result) => {
-      return [query]
-    },
-  })
-
+    })
+  } catch (error) {
+    console.log(error, "while parmenant deleting the project")
+  }
 }
 
 //clear reCycle bin
@@ -273,109 +315,144 @@ mutation clearBin($where: mainWhere, $delete: mainDeleteInput) {
 }`
 
 const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  client.mutate({
-    mutation,
-    variables: {
-      "where": {
-        "recycleBin": true
-      },
-      "delete": {
-        "hasContainsFile": [
-          {
-            "delete": {
-              "hasflowchart": {
-                "delete": {
-                  "edges": [
-                    {
-                      "delete": {
-                        "hasedgedataEdgedata": {
-                          "delete": {}
-                        }
-                      }
-                    }
-                  ],
-                  "nodes": [
-                    {
-                      "delete": {
-                        "haspositionPosition": {
-                          "delete": {}
-                        },
-                        "hasdataNodedata": {}
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        ],
-        "hasContainsFolder": [
-          {
-            "delete": {
-              "hasFile": [
-                {
+  try {
+    client.mutate({
+      mutation,
+      variables: {
+        "where": {
+          "recycleBin": true
+        },
+        "delete": {
+          "hasContainsFile": [
+            {
+              "delete": {
+                "hasflowchart": {
                   "delete": {
-                    "hasflowchart": {
-                      "delete": {
-                        "edges": [
-                          {
-                            "delete": {
-                              "hasedgedataEdgedata": {}
-                            }
-                          }
-                        ],
-                        "nodes": [
-                          {
-                            "delete": {
-                              "haspositionPosition": {},
-                              "hasdataNodedata": {}
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              ],
-              "hasFolder": [
-                {
-                  "delete": {
-                    "hasFile": [
+                    "edges": [
                       {
                         "delete": {
-                          "hasflowchart": {
-                            "delete": {
-                              "nodes": [
-                                {
-                                  "delete": {
-                                    "hasdataNodedata": {},
-                                    "haspositionPosition": {}
-                                  }
-                                }
-                              ],
-                              "edges": [
-                                {
-                                  "delete": {
-                                    "hasedgedataEdgedata": {}
-                                  }
-                                }
-                              ]
-                            }
+                          "hasedgedataEdgedata": {
+                            "delete": {}
                           }
+                        }
+                      }
+                    ],
+                    "nodes": [
+                      {
+                        "delete": {
+                          "haspositionPosition": {
+                            "delete": {}
+                          },
+                          "hasdataNodedata": {}
                         }
                       }
                     ]
                   }
                 }
-              ]
+              }
+            }
+          ],
+          "hasContainsFolder": [
+            {
+              "delete": {
+                "hasFile": [
+                  {
+                    "delete": {
+                      "hasflowchart": {
+                        "delete": {
+                          "edges": [
+                            {
+                              "delete": {
+                                "hasedgedataEdgedata": {}
+                              }
+                            }
+                          ],
+                          "nodes": [
+                            {
+                              "delete": {
+                                "haspositionPosition": {},
+                                "hasdataNodedata": {}
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ],
+                "hasFolder": [
+                  {
+                    "delete": {
+                      "hasFile": [
+                        {
+                          "delete": {
+                            "hasflowchart": {
+                              "delete": {
+                                "nodes": [
+                                  {
+                                    "delete": {
+                                      "hasdataNodedata": {},
+                                      "haspositionPosition": {}
+                                    }
+                                  }
+                                ],
+                                "edges": [
+                                  {
+                                    "delete": {
+                                      "hasedgedataEdgedata": {}
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      update: (cache, { data }) => {
+        const existingData = cache.readQuery(
+          {
+            query,
+            variables: {
+              where: {
+                emailId: "irfan123@gmail.com"
+              }
             }
           }
-        ]
+        );
+        const { hasProjects, ...userData } = existingData.users[0]
+        const to_be_updated = hasProjects.filter((values: Project) => values.recycleBin !== true);
+        const updated_user = { ...userData, hasProjects: to_be_updated }
+        console.log(data)
+        cache.writeQuery(
+          {
+            query,
+            variables: {
+              where: {
+                emailId: "irfan123@gmail.com"
+              }
+            },
+            data: {
+              users: [updated_user]
+            }
+          }
+        )
       }
-    },
-    refetchQueries: [{ query }]
 
-  })
+
+    })
+
+  } catch (error) {
+    console.log(error, "error while clearing recycleBin projects")
+
+  }
 
 
 }
@@ -395,76 +472,67 @@ mutation createProject($input: [mainCreateInput!]!) {
 }
 `
 const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, addProject: any, query: any) => {
-  console.log(project)
   let data = []
-  await client.mutate({
-    mutation,
-    variables: {
-      "input": [
-        {
-          "deletedAT": "",
-          "description": project.description,
-          "isOpen": true,
-          "name": project.name,
-          "recentProject": false,
-          "recycleBin": false,
-          "userHas": {
-            "connect": [
-              {
-                "where": {
-                  "node": {
-                    "emailId": email
+  try {
+    await client.mutate({
+      mutation,
+      variables: {
+        "input": [
+          {
+            "deletedAT": "",
+            "description": project.description,
+            "isOpen": true,
+            "name": project.name,
+            "recentProject": false,
+            "recycleBin": false,
+            "userHas": {
+              "connect": [
+                {
+                  "where": {
+                    "node": {
+                      "emailId": email
+                    }
                   }
                 }
-              }
-            ]
+              ]
+            }
           }
-        }
-      ]
-    },
-    
+        ]
+      },
+      update: (cache, { data: { createMains: { mains } } }) => {
+        // @ts-ignore
+        const { users } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email
+            }
+          }
+        });
+        const { hasProjects, ...user } = users[0];
+        const updated_projects = [...mains, ...hasProjects];
+        const updated_user = { ...user, hasProjects: updated_projects };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email
+            }
+          },
+          data: {
+            users: [updated_user]
+          }
+        })
+      },
+    }).then((response) => {
+      addProject(response.data.createMains.mains[0])
+    }
+    )
 
-    update: (cache, { data }) => {
-      const existingProjects = cache.readQuery({
-        query,
-        variables: {
-          emailId: email
-        }
-      });
-      console.log("existing projects", existingProjects);
-      // @ts-ignore
-      const existingUser = existingProjects.users.filter((values: any) => values.emailId === email);
-      const projects = existingUser[0].hasProjects
-      const upatedProjects = [...data.createMains.mains, ...projects]
-      const updaedUser = { ...existingUser[0], hasProjects: upatedProjects }
-
-      console.log(updaedUser)
-
-
-
-
-      cache.writeQuery({
-        query,
-        variables: {
-          emailId: email
-        },
-        data: {
-          user: [updaedUser]
-        }
-
-      })
-
-
-      //   // console.log(data)
-
-
-
-    },
-  }).then((response) => {
-    // addProject(response.data.createMains.mains[0])
+  } catch (error) {
+    console.log(error, "While adding the project")
   }
-  )
-    .catch((error) => console.log(error))
+
 }
 const EDIT_PROJECT = gql`
 mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
@@ -493,4 +561,4 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
 }
 
 
-export { GET_PROJECTS, DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail, UserSheme, GET_PROJECTS_BY_ID }
+export { DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail }

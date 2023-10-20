@@ -28,6 +28,17 @@ function Projects() {
   const [searchTerm, setSearchTerm] = useState("");
 
 
+  const { data, error, loading: userLoading } = useQuery(GET_USER, {
+    variables: {
+      where: {
+        emailId: "irfan123@gmail.com"
+      }
+    }
+  });
+
+
+
+
 
   const recycleBin = projectStore((state) => state.recycleBin);
   const [projectData, setProjectData] = useState(recycleBin)
@@ -43,7 +54,7 @@ function Projects() {
 
 
 
-  useEffect(()=>{
+  useEffect(() => {
     const filteredData = recycleBin.filter(
       (element: any) =>
         (element.name && element.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -51,7 +62,7 @@ function Projects() {
 
     setProjectData(filteredData)
 
-  },[searchTerm])
+  }, [searchTerm])
 
   useEffect(() => {
     setIsButtonDisabled(userType.toLowerCase() === "user");
@@ -65,10 +76,13 @@ function Projects() {
   };
 
 
-  const handleDelete_Project = (projectId: string) => {
+
+  const handleDelete_Project = async (projectId: string) => {
+    await parmenantDelete(projectId, PARMENANT_DELETE, GET_USER);
     removeFromRecycleBin(projectId)
-    parmenantDelete(projectId, PARMENANT_DELETE, GET_USER)
   };
+
+  console.log(data,"hello")
 
   if (loading) {
     return (
@@ -77,6 +91,8 @@ function Projects() {
       </div>
     );
   }
+
+  
 
   return (
     <div className="bg grey">
