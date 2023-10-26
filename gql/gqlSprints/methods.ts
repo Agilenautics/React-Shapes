@@ -102,30 +102,47 @@ const createSPrintBackend = (
             },
           ],
         },
-        update: (cache, { data }) => {
-          const existanceSprints = cache.readQuery({
-            query: GET_SPRINTS,
-            variables: {
-              where: {
-                hasProjects: {
-                  id: projectId,
-                },
+        update: (cache, { data: { createSprints: { sprints } } }) => {
+          const existanceSprints = cache.readQuery(
+            {
+              query: GET_SPRINTS,
+              variables: {
+                where: {
+                  hasProjects: {
+                    id: projectId,
+                  }
+                }
+              }
+            }
+          );
+          cache.writeQuery(
+            {
+              query: GET_SPRINTS,
+              variables: {
+                where: {
+                  hasProjects: {
+                    id: projectId,
+                  }
+                }
               },
-            },
-          });
-          console.log(existanceSprints);
-        },
+              data: {
+                // @ts-ignore
+                sprints: [...existanceSprints.sprints, ...sprints]
+              }
+            }
+          )
+        }
       })
       .then((response: FetchResult<any>) => {
         addSprint(response.data.createSprints.sprints[0], response.errors);
         sprintCreateMessage();
         hidePopUp(false);
-      });
+      })
   } catch (error) {
-    handleError(error);
+    handleError(error)
+
   }
 };
-
 const updateSprintBackend = async (
   sprintId: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,

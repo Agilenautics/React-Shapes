@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useRouter } from "next/router";
 import "reactflow/dist/style.css";
 import ReactFlow, {
   addEdge,
@@ -19,18 +20,24 @@ import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
 import {
+  allNodes,
+  delNodeMutation,
   deleteNodeBackend,
+  findNode,
+  getNode,
   updateNodeBackend,
   updatePosition,
-  getNode,
-  findNode,
+  updatePositionMutation,
+} from "../../gql";
+import {
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
+  getMainByUser
 } from "../../gql";
-
 import fileStore from "../TreeView/fileStore";
+
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -50,6 +57,8 @@ const defaultShowConfirmation = {
 
 function Flow() {
   const snapGrid: [number, number] = [10, 10];
+  const router = useRouter();
+  const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
   const defaultNodes = nodeStore((state) => state.nodes);
   const defaultEdges = edgeStore((state) => state.edges);
@@ -195,11 +204,15 @@ function Flow() {
       document.removeEventListener("keydown", handleBackspace);
     };
   }, [getNodes, getEdges]);
-  function onNodesDelete(nodes: Array<Node>) {
+  async function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
-      deleteNodeBackend(element.id);
-      deleteNode(element);
+      try {
+        await deleteNodeBackend(element.id, delNodeMutation, allNodes, fileId, projectId, getMainByUser);
+        deleteNode(element);
+      } catch (error) {
+        console.log(error, "deleting the node")
+      }
     }
   }
 
@@ -207,11 +220,19 @@ function Flow() {
     dragged.current = true;
   }, []);
 
-  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
-    if (dragged.current) {
-      updatePosition(node);
+  console.log(fileId)
+
+  const onNodeDragStop = useCallback(async (event: React.MouseEvent, node: Node) => {
+    try {
+      if (dragged.current) {
+        console.log(fileId)
+        await updatePosition(node, updatePositionMutation, allNodes,fileId);
+      }
+      dragged.current = false;
+
+    } catch (error) {
+      console.log(error, "while dragging the node");
     }
-    dragged.current = false;
   }, []);
 
   // const onSelectionChange = useCallback(() => {
@@ -227,13 +248,16 @@ function Flow() {
   };
   const proOptions = { hideAttribution: true };
 
+
+
+
   //TODO here iam calling deleteEdge methode inside onDeleteEdge
 
   // const onDeleteEdge = (edge: Array<Edge>) => {
   //   edge.map((CurEle: any) => {
   //     deleteEdge(CurEle.id, CurEle.data.label)
   //   })
-  // }
+  // } 
 
   return (
     <>
@@ -261,9 +285,9 @@ function Flow() {
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
             updateNodes(getNodes());
-            onNodeDragStop(event, node);
+            onNodeDragStop(event, node)
           }}
-          onNodeDrag={onNodeDrag} //this event we dont want
+          onNodeDrag={onNodeDrag} //this event we dont want 
           // onNodeDragStop={}
           // onSelectionChange={onSelectionChange}
           // onNodeMouseMove={(event, node) => onDrag(event, node)}
@@ -291,8 +315,8 @@ function Flow() {
                   ? "node"
                   : // @ts-ignore
                   showConfirmation.type === "links"
-                  ? "node with attached links"
-                  : "edge"}
+                    ? "node with attached links"
+                    : "edge"}
                 ?
               </p>
               <div>

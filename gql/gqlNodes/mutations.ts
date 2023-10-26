@@ -48,7 +48,7 @@ export const newNode = gql`
     }
   }
 `;
-export const delNode = gql`
+export const delNodeMutation = gql`
   mutation deleteNode($where: flowNodeWhere, $delete: flowNodeDeleteInput) {
     deleteFlowNodes(where: $where, delete: $delete) {
       nodesDeleted
