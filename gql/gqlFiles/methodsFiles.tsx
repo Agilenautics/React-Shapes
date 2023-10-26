@@ -72,10 +72,10 @@ const createFile = async (
     })
     .then((result) => {
       node = result.data.createFolders.files[0];
-      // console.log(result.data.createFolders);
+      
     })
     .catch((error) => {
-      console.log("Error in creating folder", error);
+      console.log("Error in creating file", error);
     });
   return node;
 };

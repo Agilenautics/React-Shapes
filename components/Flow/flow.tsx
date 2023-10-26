@@ -20,7 +20,6 @@ import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
 import {
   deleteNodeBackend,
-<<<<<<< HEAD
   updateNodeBackend,
   updatePosition,
   getNode,
@@ -31,23 +30,6 @@ import {
   updateEdgeMutation,
 } from "../../gql";
 
-=======
-  
-  updateNodeBackend,
-  updatePosition,
-} from "../../gql/gqlNodes/methods";
-import {
-  getNode} from "../../gql/gqlNodes/queries";
-  import { findNode } from "../../gql/gqlNodes/methods";
-import {
-  
-  createFlowEdge,
-  deleteEdgeBackend,
-  updateEdgeBackend,
-} from "../../gql/gqlEdges/methods";
-
-  import { updateEdgeMutation } from "../../gql";
->>>>>>> 83c5ff5c99759d330ed0a1c3b221af536db6ae19
 import fileStore from "../TreeView/fileStore";
 
 const defaultEdgeOptions = {

@@ -26,7 +26,7 @@ import {
   getTreeNodeByUser,
   getUidMethode,
   getUidQuery,
-    newFolderInMain,
+  newFolderInMain,
   updateUidMethode,
   updateUidMutation,
 } from "../../gql";
@@ -178,11 +178,13 @@ const Sidebar = ({ isOpen }: SideBar) => {
           uid,
         };
         const fileInFolderResponse = await createFile(
-          "",selectedFolderId,createFileMutation,
-             data
+          "",
+          selectedFolderId,
+          createFileMutation,
+          data
         );
         console.log(fileInFolderResponse);
-        add_file(fileInFolderResponse);
+       // add_file(fileInFolderResponse);
         handleUidUpdates();
       } else {
         const newFile = {
@@ -192,10 +194,12 @@ const Sidebar = ({ isOpen }: SideBar) => {
           uid,
         };
         const fileInMainResponse = await createFile(
-          projectId,"",createFileMutation,
+          projectId,
+          "",
+          createFileMutation,
           newFile
         );
-        add_file(fileInMainResponse);
+        //add_file(fileInMainResponse);
         handleUidUpdates();
       }
     } catch (error) {
