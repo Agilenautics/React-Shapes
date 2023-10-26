@@ -4,13 +4,12 @@ import { signInWithEmailAndPassword, signInWithPopup, GithubAuthProvider, Google
 import { useRouter } from "next/router";
 import styles from './Login.module.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {  get_user_method } from '../../../gql/gqlProjects/methods';
+import { GET_USER, get_user_method } from '../../../gql';
 import { AiOutlineUser } from 'react-icons/ai'
 import { BiSolidLockAlt, BiLogoFacebook, BiLogoGoogle } from 'react-icons/bi'
 import { TbBrandGithubFilled } from 'react-icons/tb'
 
 import Link from 'next/link';
-import { GET_USER } from '../../../gql';
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');

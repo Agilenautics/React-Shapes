@@ -1,6 +1,10 @@
 import { onAuthStateChanged } from "firebase/auth";
 import MembersTable from "./MembersTable";
+<<<<<<< HEAD
 import { getUserByEmail } from "../../../gql";
+=======
+import { GET_USER, getUserByEmail } from "../../../gql/gqlProjects/methods";
+>>>>>>> 83c5ff5c99759d330ed0a1c3b221af536db6ae19
 import { auth } from "../../../auth";
 import { useEffect } from "react";
 import projectStore from "./projectStore";

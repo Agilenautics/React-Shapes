@@ -6,9 +6,9 @@ import projectStore from "../../../components/AdminPage/Projects/projectStore";
 import userStore from "../../../components/AdminPage/Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { getUserByEmail } from "../../../gql/gqlProjects/methods";
+import { GET_USER, getUserByEmail } from "../../../gql";
 import { useEffect } from "react";
-import { GET_USER } from "../../../gql";
+
 
 
 const BusinessPlan = () => {

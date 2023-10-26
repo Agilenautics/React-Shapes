@@ -164,8 +164,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
       projectId,
       newFolder
     );
-    
-    console.log(updatedFolderResponse)
     add_folder(updatedFolderResponse);
     handleUidUpdates();
   };
@@ -184,7 +182,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
              data
         );
         console.log(fileInFolderResponse);
-        //add_file(fileInFolderResponse);
+        add_file(fileInFolderResponse);
         handleUidUpdates();
       } else {
         const newFile = {
@@ -197,7 +195,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
           projectId,"",createFileMutation,
           newFile
         );
-        //add_file(fileInMainResponse);
+        add_file(fileInMainResponse);
         handleUidUpdates();
       }
     } catch (error) {

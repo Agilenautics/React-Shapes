@@ -6,18 +6,16 @@ import {
   createNode,
   updateTaskMethod,
   newNode,
+  
   updateTasksMutation,
-  createFileInFolder,
-  createFileInMain,
-  getUidQuery,
-  newFileInFolder,
-  newFileInMain,
+  createFile,
   updateStoryMethod,
   updateStoryMutation,
   updateUidMethode,
   updateUidMutation,
   getSprintByProjectId,
   GET_SPRINTS,
+  createFileMutation,
 } from "../../gql";
 import { useRouter } from "next/router";
 import validationSchema from "../AdminPage/Projects/staticData/validationSchema";
@@ -91,15 +89,14 @@ export default function AddBacklogs({
       if (values.type == "file") {
         if (values.epic == projectId)
           try {
-            const createFileResponse = await createFileInMain(
-              newFileInMain,
-              values.epic,
+            const createFileResponse = await createFile(
+                            values.epic,"",createFileMutation,
               values
             );
             values.parent = values.epic;
-            values.id = createFileResponse.id;
-            values.uid = createFileResponse.uid;
-            values.sprint = createFileResponse.hasSprint;
+            //values.id = createFileResponse.id;
+            //values.uid = createFileResponse.uid;
+            //values.sprint = createFileResponse.hasSprint;
             addRow(values);
             const updatedUidResponse = await updateUidMethode(
               idofUid,
@@ -114,12 +111,12 @@ export default function AddBacklogs({
             );
           }
         else
-          createFileInFolder(newFileInFolder, values.epic, values).then(
+          createFile("", values.epic,createFileMutation,values).then(
             async (res) => {
               values.parent = values.epic;
-              values.id = res.id;
-              values.uid = res.uid;
-              values.sprint = res.hasSprint;
+              //values.id = res.id;
+              //values.uid = res.uid;
+              //values.sprint = res.hasSprint;
               addRow(values);
               const updateUidRespon = (await updateUidMethode(
                 idofUid,

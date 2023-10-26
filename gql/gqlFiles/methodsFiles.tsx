@@ -20,7 +20,7 @@ const createFile = async (
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileData: any
 ) => {
-  let data;
+  let node;
   await client
     .mutate({
       mutation,
@@ -70,11 +70,14 @@ const createFile = async (
         },
       },
     })
-    .then((response) => {
-      data = response.data.createFiles;
-      return response.data.createFiles;
+    .then((result) => {
+      node = result.data.createFolders.files[0];
+      // console.log(result.data.createFolders);
+    })
+    .catch((error) => {
+      console.log("Error in creating folder", error);
     });
-  return data;
+  return node;
 };
 
 async function getTreeNodeByUser(
