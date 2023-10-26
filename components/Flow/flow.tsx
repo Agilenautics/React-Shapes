@@ -21,17 +21,21 @@ import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
 import {
   deleteNodeBackend,
-  findNode,
-  getNode,
+  
   updateNodeBackend,
   updatePosition,
-} from "./Nodes/gqlNodes";
+} from "../../gql/gqlNodes/methods";
 import {
+  getNode} from "../../gql/gqlNodes/queries";
+  import { findNode } from "../../gql/gqlNodes/methods";
+import {
+  
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
-  updateEdgeMutation,
-} from "./Edges/gqlEdges";
+} from "../../gql/gqlEdges/methods";
+
+  import { updateEdgeMutation } from "../../gql";
 import fileStore from "../TreeView/fileStore";
 
 const defaultEdgeOptions = {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
-import { newNode, createNode } from "../Flow/Nodes/gqlNodes";
+import {  createNode } from "../../gql/gqlNodes/methods";
+import { newNode } from "../../gql/gqlNodes/queries";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import fileStore from "../TreeView/fileStore";
 

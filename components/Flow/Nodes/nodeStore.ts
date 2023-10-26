@@ -2,13 +2,14 @@ import { create } from "zustand";
 import { Node } from "reactflow";
 import {
   findNode,
-  getNode,
+  
   updateLinkedByMethod,
-  updateLinkedBy,
+
   updateNodeData,
-  updateLinksMutation,
+  
   updateNodeBackend,
-} from "./gqlNodes";
+} from "../../../gql/gqlNodes/methods";
+import {getNode,updateLinkedBy,updateLinksMutation} from "../../../gql/gqlNodes/queries";
 import { getFileByNode } from "../../TreeView/gqlFiles";
 
 /* This is the store for managing the state of the nodes in the present flowchart. */

@@ -6,7 +6,7 @@ import projectStore from "../../../components/AdminPage/Projects/projectStore";
 import userStore from "../../../components/AdminPage/Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { GET_USER, getUserByEmail } from "../../../components/AdminPage/Projects/gqlProject";
+import { GET_USER, getUserByEmail } from "../../../gql/gqlProjects/methods";
 import { useEffect } from "react";
 
 const BusinessPlan = () => {

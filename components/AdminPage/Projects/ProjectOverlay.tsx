@@ -1,9 +1,11 @@
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { ADD_PROJECT, GET_USER, addProject_Backend } from "./gqlProject";
+import {  GET_USER, addProject_Backend } from "../../../gql/gqlProjects/methods";
+
 import { Project } from "reactflow";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
+import { ADD_PROJECT } from "../../../gql";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;

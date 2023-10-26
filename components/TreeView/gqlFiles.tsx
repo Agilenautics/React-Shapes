@@ -5,7 +5,8 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import client from "../../apollo-client";
-import { Node_Fragment, Edge_Fragment } from "../Flow/Nodes/gqlNodes";
+import { Node_Fragment } from "../../gql/gqlNodes/fragments";
+import { Edge_Fragment } from "../../gql/gqlEdges/fragments";
 import { NextApiResponse } from "next";
 
 

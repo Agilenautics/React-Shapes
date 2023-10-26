@@ -4,11 +4,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import fileStore from "../../TreeView/fileStore";
 import { getTypeLabel } from "./staticData/basicFunctions";
 import { types } from "./staticData/types";
-// import { allStatus } from "./staticData/processedData";
-import { updateTaskMethod, updateTasksMutation } from "../../Flow/Nodes/gqlNodes";
+
+import {  updateTasksMutation } from "../../../gql/gqlNodes/queries";
+import { updateTaskMethod } from "../../../gql/gqlNodes/methods";
 import { updateStoryMethod, updateStoryMutation } from "../../TreeView/gqlFiles";
 import { onAuthStateChanged } from "firebase/auth";
-import { GET_USER, getUserByEmail } from "./gqlProject";
+import { GET_USER, getUserByEmail } from "../../../gql/gqlProjects/methods";
 import { auth } from "../../../auth";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";

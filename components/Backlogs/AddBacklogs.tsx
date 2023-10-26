@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Types } from "../AdminPage/Projects/staticData/types";
-import {
-  createNode,
-  newNode,
-  updateTaskMethod,
-  updateTasksMutation,
-} from "../Flow/Nodes/gqlNodes";
+import { newNode, updateTasksMutation } from "../../gql/gqlNodes/queries";
+import { createNode, updateTaskMethod } from "../../gql/gqlNodes/methods";
+
 import {
   createFileInFolder,
   createFileInMain,
@@ -43,6 +40,9 @@ export default function AddBacklogs({
   const idofUid = fileStore((state) => state.idofUid);
   const uid = fileStore((state) => state.uid);
   const updateUid = fileStore((state) => state.updateUid);
+
+  // const {data,error,loading} = useQuery(getUidQuery);
+  // console.log(data)
 
   // sprint store
   const addTaskOrEpicOrStoryToSprint = sprintStore(
@@ -174,7 +174,7 @@ export default function AddBacklogs({
               : "",
         }}
         validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         {({ values }) => (
           <Form>

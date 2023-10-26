@@ -2,13 +2,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
 import { auth } from '../../../auth'
-import {
-  DELETE_PROJECT,
-  GET_USER,
-  EDIT_PROJECT,
-  edit_Project,
-  delete_Project,
-} from "./gqlProject";
+
+ 
+import {GET_USER,GET_PROJECTS,EDIT_PROJECT,DELETE_PROJECT,
+  recentProject_mutation} from "../../../gql/gqlProjects/queries";
+import{  update_recentProject,
+edit_Project, delete_Project,
+  
+  GET_PROJECTS_BY_ID} from "../../../gql/gqlProjects/methods";
+
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { User, getInitials } from "../Users/Users";
@@ -24,6 +26,7 @@ import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
+//import { GET_USER, edit_Project } from "../../../gql";
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation

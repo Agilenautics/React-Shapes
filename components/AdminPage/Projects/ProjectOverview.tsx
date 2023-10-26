@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "firebase/auth";
 import MembersTable from "./MembersTable";
-import { GET_USER, getUserByEmail } from "./gqlProject";
+import { GET_USER, getUserByEmail } from "../../../gql/gqlProjects/methods";
 import { auth } from "../../../auth";
 import { useEffect } from "react";
 import projectStore from "./projectStore";

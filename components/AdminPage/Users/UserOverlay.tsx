@@ -4,6 +4,7 @@ import makeAnimated from "react-select/animated";
 import { usersList } from "./UsersList";
 import { useMutation } from "@apollo/client";
 import { ADD_USER, ALL_USERS } from "./gqlUsers";
+import { GET_PROJECTS } from "../../../gql/gqlProjects/methods";
 import { sendLink } from "../../Authentication/SignInLink/sendLink";
 
 interface Project {

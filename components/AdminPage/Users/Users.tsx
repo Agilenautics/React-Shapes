@@ -21,7 +21,7 @@ import { auth } from "../../../auth";
 import {
   get_user_method,
   GET_USER,
-} from "../Projects/gqlProject";
+} from "../../../gql/gqlProjects/methods";
 import userStore from "./userStore";
 import projectStore from "../Projects/projectStore";
 import { HiArrowsUpDown } from "react-icons/hi2";

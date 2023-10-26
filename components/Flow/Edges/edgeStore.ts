@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Edge } from "reactflow";
-import edges from "./flowchart1";
+//import edges from "./flowchart1";
 
 /* This is the store for managing the state of the edges in the present flowchart. */
 export interface EdgeState {
@@ -13,7 +13,7 @@ export interface EdgeState {
 }
 
 const edgeStore = create<EdgeState>((set) => ({
-  edges: edges,
+  edges: [],
   updateEdges: (edges) =>
     set((state): any => {
       return { edges: edges };

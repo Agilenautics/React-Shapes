@@ -6,7 +6,8 @@ import edgeStore from "./Edges/edgeStore";
 import { LinkTree } from "../TreeView/fileRenderer";
 import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
-import { findNode, getNode } from "./Nodes/gqlNodes";
+import {  getNode } from "../../gql/gqlNodes/queries";
+import { findNode } from "../../gql/gqlNodes/methods";
 import { getFile, getFileByNode } from "../TreeView/gqlFiles";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter

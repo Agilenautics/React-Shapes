@@ -12,7 +12,7 @@ import AddBacklogs from "./AddBacklogs";
 // import nodeStore from "../../Flow/Nodes/nodeStore";
 import { auth } from "../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { GET_USER, getUserByEmail } from "../AdminPage/Projects/gqlProject";
+import { GET_USER, getUserByEmail } from "../../gql/gqlProjects/methods";
 import projectStore from "../AdminPage/Projects/projectStore";
 import userStore from "../AdminPage/Users/userStore";
 import backlogStore from "./backlogStore";
