@@ -7,19 +7,19 @@ import { AiOutlineFile, AiFillFolder, AiFillFolderOpen } from "react-icons/ai";
 import fileStore from "./fileStore";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import edgeStore from "../Flow/Edges/edgeStore";
-import { allNodes, getNodes } from "../Flow/Nodes/gqlNodes";
-import { allEdges, getEdges } from "../Flow/Edges/gqlEdges";
-import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
-import { getFileByNode } from "./gqlFiles";
+import {
+  allNodes,
+  getNodes,
+  allEdges,
+  getEdges,
+  getFileByNode,
+  } from "../../gql";
 import { gql } from "graphql-tag";
-import styles from "../Flow/Nodes/styles.module.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
-import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
+import { get_user_method, GET_USER } from "../../gql";
 import LoadingIcon from "../LoadingIcon";
-import { ApolloQueryResult } from "@apollo/client";
-import TreeModel from "tree-model-improved";
-import useBackend from './backend'
+import useBackend from "./backend";
 
 // LoadingIcon component
 import classNames from "classnames";
@@ -35,7 +35,7 @@ function ExpandableChip({ onRename, onDelete }: any) {
     <div className="expandable-chip">
       <button
         onClick={() => setExpanded(!expanded)}
-        className={`expand-button ${expanded ? 'expanded' : ''}`}
+        className={`expand-button ${expanded ? "expanded" : ""}`}
       >
         {expanded ? <span>X</span> : <span>...</span>}
       </button>
@@ -52,7 +52,6 @@ function ExpandableChip({ onRename, onDelete }: any) {
     </div>
   );
 }
-
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -237,16 +236,12 @@ export const TreeNode = ({
           isSelected={state.isSelected}
         />
         <i>
-          <Icon
-            isFolder={folder}
-            isSelected={state.isSelected}
-            isOpen={open}
-          />
+          <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
         {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
         ) : (
-          <span className="flex flex-row text-sm group font-sans dark:text-white">
+          <span className="group flex flex-row font-sans text-sm dark:text-white">
             {name}{" "}
             {state.isSelected &&
               !state.isEditing &&
@@ -257,7 +252,9 @@ export const TreeNode = ({
                   </button>
                   <button
                     onClick={() => {
-                      const confirmation = window.confirm('Are you sure you want to delete?');
+                      const confirmation = window.confirm(
+                        "Are you sure you want to delete?"
+                      );
                       // console.log(confirmation)
 
                       if (confirmation) {
@@ -276,10 +273,6 @@ export const TreeNode = ({
     </div>
   );
 };
-
-
-
-
 
 export const TreeNode2 = ({
   innerRef,
@@ -345,7 +338,11 @@ export const TreeNode2 = ({
     <div
       ref={innerRef}
       style={{ ...styles.row, ...nodeStyles }}
-      className={`${classNames("row", state, disabledCursorClass)} dark:text-white`}
+      className={`${classNames(
+        "row",
+        state,
+        disabledCursorClass
+      )} dark:text-white`}
       onClick={loadFlowNodes(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -373,6 +370,3 @@ export const TreeNode2 = ({
     </div>
   );
 };
-
-
-

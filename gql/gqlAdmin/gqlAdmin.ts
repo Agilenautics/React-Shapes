@@ -1,5 +1,5 @@
 import { DocumentNode, OperationVariables, TypedDocumentNode, gql } from "@apollo/client";
-import client from "../../../apollo-client";
+import client from "../../apollo-client";
 
 
 const CREATE_ADMIN = gql`

@@ -2,10 +2,6 @@ import { gql } from "@apollo/client";
 
 const typeDefs = gql`
 
-  type Query {
-    projects: [main!]! 
-    getUsers(emailId:String!): [user]
-  }
   # ! Interfaces only work on relationships!
   type user {
     id: ID! @id
@@ -217,43 +213,6 @@ const typeDefs = gql`
   }
 
 
-
-  type Mutation {
-    createProject(newProject: projectInput!): main
-    updateProject(projectData: projectInput!): updateData
-    addUser(newUser: userInput!): user
-    deleteNode(nodeId:nodeId):Boolean
-  }
-
-  input nodeId{
-  id:String!
-  }
-
-  input userEmail {
-    email: String!
-  }
-
-  input projectInput {
-    name: String!
-    description: String
-    userName: String!
-    isOpen: Boolean!
-  }
-
-  input userInput {
-    userName: String!
-    emailId: String!
-    userType: String
-    active: Boolean!
-  }
-
-  type updateData {
-    id: ID!
-    name: String!
-    description: String!
-    userName: String!
-    isOpen: Boolean!
-  }
 
   
 `;

@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { sprintValidationSchema } from './staticData/validationSchema';
 import { useRouter } from 'next/router';
 import sprintStore from '../../Sprints/sprintStore';
-import { CREATE_SPRINT_MUTATION, createSPrintBackend } from '../../Sprints/gqlSprints';
+import { CREATE_SPRINT_MUTATION, createSPrintBackend } from '../../../gql';
 import sprints from '../../../pages/projects/[projectId]/sprints';
 
 

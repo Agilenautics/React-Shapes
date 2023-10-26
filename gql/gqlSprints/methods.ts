@@ -1,14 +1,13 @@
 import client from "../../apollo-client";
 import {
-  gql,
   DocumentNode,
   TypedDocumentNode,
   OperationVariables,
   FetchResult,
 } from "@apollo/client";
 
-import { Info_Fragment } from "../TreeView/gqlFiles";
 import { FetchError } from "node-fetch";
+import { GET_SPRINTS } from "./mutations";
 export interface Sprint {
   id: string;
   name?: string | null;
@@ -17,80 +16,7 @@ export interface Sprint {
   startDate: string;
   endDate: string;
 }
-//  Epic fragment for Sprints
-export const EpicSprint_Fragment = gql`
-  ${Info_Fragment}
-  fragment EpicSprintFragment on folder {
-    id
-    name
-    type
-    hasInfo {
-      ...InfoFragment
-    }
-  }
-`;
-//  Story fragment for Sprints
-export const StorySprint_Fragment = gql`
-  ${Info_Fragment}
-  fragment StorySprintFragment on file {
-    id
-    name
-    type
-    hasInfo {
-      ...InfoFragment
-    }
-  }
-`;
-//  Task/Issue/subtask/Bug fragment for Sprints
-export const TaskSprint_Fragment = gql`
-  ${Info_Fragment}
-  fragment TaskSprintFragment on flowNode {
-    id
-    type
-    hasInfo {
-      ...InfoFragment
-    }
-    hasdataNodedata {
-      label
-      description
-    }
-  }
-`;
-export const Sprint_Fragment = gql`
-  ${StorySprint_Fragment}
-  ${EpicSprint_Fragment}
-  ${TaskSprint_Fragment}
-  fragment SprintFragment on sprint {
-    id
-    name
-    description
-    timeStamp
-    startDate
-    endDate
-    folderHas {
-      ...EpicSprintFragment
-    }
-    fileHas {
-      ...StorySprintFragment
-    }
-    flownodeHas {
-      ...TaskSprintFragment
-    }
-    hasProjects {
-      name
-    }
-  }
-`;
 
-//get sprint by the project id
-const GET_SPRINTS = gql`
-  ${Sprint_Fragment}
-  query Sprints($where: sprintWhere) {
-    sprints(where: $where) {
-      ...SprintFragment
-    }
-  }
-`;
 const getSprintByProjectId = async (
   projectId: string,
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -118,14 +44,6 @@ const getSprintByProjectId = async (
     });
 };
 
-const SPRINTS_FOR_BACKLOGS = gql`
-  query Sprints($where: sprintWhere) {
-    sprints(where: $where) {
-      id
-      name
-    }
-  }
-`;
 const getSprintToBacklogs = async (
   projectId: string,
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -151,17 +69,6 @@ const getSprintToBacklogs = async (
     return error;
   }
 };
-
-const CREATE_SPRINT_MUTATION = gql`
-  ${Sprint_Fragment}
-  mutation CreateSprints($input: [sprintCreateInput!]!) {
-    createSprints(input: $input) {
-      sprints {
-        ...SprintFragment
-      }
-    }
-  }
-`;
 
 const createSPrintBackend = (
   projectId: string,
@@ -196,41 +103,28 @@ const createSPrintBackend = (
           ],
         },
         update: (cache, { data }) => {
-          const existanceSprints = cache.readQuery(
-            {
-              query: GET_SPRINTS,
-              variables: {
-                where: {
-                  hasProjects: {
-                    id: projectId,
-                  }
-                }
-              }
-            }
-          );
-          console.log(existanceSprints)
-        }
+          const existanceSprints = cache.readQuery({
+            query: GET_SPRINTS,
+            variables: {
+              where: {
+                hasProjects: {
+                  id: projectId,
+                },
+              },
+            },
+          });
+          console.log(existanceSprints);
+        },
       })
       .then((response: FetchResult<any>) => {
         addSprint(response.data.createSprints.sprints[0], response.errors);
         sprintCreateMessage();
         hidePopUp(false);
-      })
+      });
   } catch (error) {
-    handleError(error)
-
+    handleError(error);
   }
 };
-
-const UPDATE_SPRINT_MUTATION = gql`
-  mutation updateSprint($where: sprintWhere, $update: sprintUpdateInput) {
-    updateSprints(where: $where, update: $update) {
-      sprints {
-        ...SprintFragment
-      }
-    }
-  }
-`;
 
 const updateSprintBackend = async (
   sprintId: string,
@@ -260,15 +154,6 @@ const updateSprintBackend = async (
     });
 };
 
-const DELETE_SPRINT = gql`
-  mutation DeleteSprints($where: sprintWhere) {
-    deleteSprints(where: $where) {
-      nodesDeleted
-      relationshipsDeleted
-    }
-  }
-`;
-
 const deleteSprintBackend = async (
   sprintId: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -291,17 +176,6 @@ const deleteSprintBackend = async (
       console.log(error.message, "delete sprint");
     });
 };
-
-const CONNECT_TO_STORY = gql`
-  ${Sprint_Fragment}
-  mutation connectToStory($where: sprintWhere, $connect: sprintConnectInput) {
-    updateSprints(where: $where, connect: $connect) {
-      sprints {
-        ...SprintFragment
-      }
-    }
-  }
-`;
 
 const connectToStory = (
   sprintId: string,
@@ -340,17 +214,6 @@ const connectToStory = (
 
 // connect to epic
 
-const CONNECT_TO_EPIC = gql`
-  ${Sprint_Fragment}
-  mutation connectToEpic($where: sprintWhere, $connect: sprintConnectInput) {
-    updateSprints(where: $where, connect: $connect) {
-      sprints {
-        ...SprintFragment
-      }
-    }
-  }
-`;
-
 const connectToEpic = (
   sprintId: string,
   epicId: string,
@@ -386,17 +249,6 @@ const connectToEpic = (
 
 //sprint to task
 
-const CONNECT_TO_TASK = gql`
-  ${Sprint_Fragment}
-  mutation connectToTask($where: sprintWhere, $connect: sprintConnectInput) {
-    updateSprints(where: $where, connect: $connect) {
-      sprints {
-        ...SprintFragment
-      }
-    }
-  }
-`;
-
 const connectToTask = (
   sprintId: string,
   taskId: string,
@@ -431,20 +283,12 @@ const connectToTask = (
 };
 
 export {
-  GET_SPRINTS,
   getSprintByProjectId,
-  SPRINTS_FOR_BACKLOGS,
   getSprintToBacklogs,
   createSPrintBackend,
-  CREATE_SPRINT_MUTATION,
-  CONNECT_TO_EPIC,
-  CONNECT_TO_STORY,
-  CONNECT_TO_TASK,
   connectToEpic,
   connectToTask,
   connectToStory,
   deleteSprintBackend,
   updateSprintBackend,
-  DELETE_SPRINT,
-  UPDATE_SPRINT_MUTATION,
 };

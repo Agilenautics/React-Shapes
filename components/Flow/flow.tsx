@@ -15,23 +15,21 @@ import ReactFlow, {
 } from "reactflow";
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
-import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
 import {
   deleteNodeBackend,
-  findNode,
-  getNode,
   updateNodeBackend,
   updatePosition,
-} from "./Nodes/gqlNodes";
-import {
+  getNode,
+  findNode,
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
-} from "./Edges/gqlEdges";
+} from "../../gql";
+
 import fileStore from "../TreeView/fileStore";
 
 const defaultEdgeOptions = {
@@ -116,7 +114,7 @@ function Flow() {
 
   const [edgeId, setEdgeId] = useState([]);
 
-  const onEdgeClick = (event:React.MouseEvent, edge: any) => {
+  const onEdgeClick = (event: React.MouseEvent, edge: any) => {
     setEdgeId(edge.id);
   };
 
@@ -224,13 +222,10 @@ function Flow() {
   //   updatePosition(node);
   //   console.log(node);
   // };
-  const onNodeClick = (e:React.MouseEvent, nodeData: any) => {
+  const onNodeClick = (e: React.MouseEvent, nodeData: any) => {
     updateLinkNodeId(nodeData.id);
   };
   const proOptions = { hideAttribution: true };
-
-
-
 
   //TODO here iam calling deleteEdge methode inside onDeleteEdge
 
@@ -238,7 +233,7 @@ function Flow() {
   //   edge.map((CurEle: any) => {
   //     deleteEdge(CurEle.id, CurEle.data.label)
   //   })
-  // } 
+  // }
 
   return (
     <>
@@ -266,9 +261,9 @@ function Flow() {
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
             updateNodes(getNodes());
-            onNodeDragStop(event, node)
+            onNodeDragStop(event, node);
           }}
-          onNodeDrag={onNodeDrag} //this event we dont want 
+          onNodeDrag={onNodeDrag} //this event we dont want
           // onNodeDragStop={}
           // onSelectionChange={onSelectionChange}
           // onNodeMouseMove={(event, node) => onDrag(event, node)}
@@ -296,8 +291,8 @@ function Flow() {
                   ? "node"
                   : // @ts-ignore
                   showConfirmation.type === "links"
-                    ? "node with attached links"
-                    : "edge"}
+                  ? "node with attached links"
+                  : "edge"}
                 ?
               </p>
               <div>

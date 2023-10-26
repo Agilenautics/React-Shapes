@@ -1,10 +1,13 @@
 import { onAuthStateChanged } from "firebase/auth";
 import MembersTable from "./MembersTable";
-import { GET_USER, getUserByEmail } from "./gqlProject";
+import { getUserByEmail } from "../../../gql";
 import { auth } from "../../../auth";
 import { useEffect } from "react";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
+import { GET_USER } from "../../../gql";
+
+
 
 interface ProjectOverviewProps {
   projectName: string;

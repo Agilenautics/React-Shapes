@@ -1,43 +1,17 @@
 import {
-  gql,
+  
   DocumentNode,
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import client from "../../../apollo-client";
+import client from "../../apollo-client";
 import { Edge } from "reactflow";
-import { Edge_Fragment } from "../Nodes/gqlNodes";
-
-const allEdges = gql`
-  ${Edge_Fragment}
-  query getAllEdges($where: flowchartWhere) {
-    flowcharts(where: $where) {
-      name
-      edges {
-        ...EdgeFragment
-      }
-    }
-  }
-`;
-
-// create Edge mutation
-
-const createEdgeMutation = gql`
-  ${Edge_Fragment}
-  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
-    updateFiles(where: $where, update: $update) {
-      files {
-        name
-        hasflowchart {
-          name
-          edges {
-            ...EdgeFragment
-          }
-        }
-      }
-    }
-  }
-`;
+import {
+  allEdges,
+  createEdgeMutation,
+  deleteEdgeMutation,
+  updateEdgeMutation,
+} from "./mutations";
 
 async function getEdges(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -148,20 +122,6 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
 
 //update Edge mutation
 
-const updateEdgeMutation = gql`
-  mutation updateEdge($where: flowEdgeWhere, $update: flowEdgeUpdateInput) {
-    updateFlowEdges(where: $where, update: $update) {
-      flowEdges {
-        hasedgedataEdgedata {
-          label
-          bidirectional
-          boxCSS
-        }
-      }
-    }
-  }
-`;
-
 // update edge method
 const updateEdgeBackend = async (
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -190,18 +150,6 @@ const updateEdgeBackend = async (
 };
 
 // delete Edge
-
-const deleteEdgeMutation = gql`
-  mutation deleteFlowEdges(
-    $where: flowEdgeWhere
-    $delete: flowEdgeDeleteInput
-  ) {
-    deleteFlowEdges(where: $where, delete: $delete) {
-      nodesDeleted
-      relationshipsDeleted
-    }
-  }
-`;
 
 // delete edge method
 const deleteEdgeBackend = async (edgeId: string, label: string) => {
@@ -232,5 +180,4 @@ export {
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
-  updateEdgeMutation,
 };

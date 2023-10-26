@@ -6,8 +6,7 @@ import edgeStore from "./Edges/edgeStore";
 import { LinkTree } from "../TreeView/fileRenderer";
 import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
-import { findNode, getNode } from "./Nodes/gqlNodes";
-import { getFile, getFileByNode } from "../TreeView/gqlFiles";
+import { getNode, findNode, getFile, getFileByNode } from "../../gql";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter
 /**
@@ -33,7 +32,9 @@ function ExpandableChip({
   const [isCollapsed, setCollapsed] = useState(true);
   return (
     <div
-      className={`absolute overflow-hidden ${!isCollapsed && "overflow-y-auto" } rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
+      className={`absolute overflow-hidden ${
+        !isCollapsed && "overflow-y-auto"
+      } rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
         isCollapsed ? expTrue : expFalse
       } ${positioningCSS} dark:bg-neutral-900 `}
     >
@@ -219,18 +220,20 @@ export function Editing({
             expTrue={pEtrue}
             expFalse={sEfalse}
             positioningCSS={"left-16 -top-5"}
-            objects={Object.keys(nodeShapeMap).slice(0,4).map((key, _) => (
-              <div
-                key={key}
-                // @ts-ignore
-                className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${nodeShapeMap[key][1]}`}
-                id={key}
-                onClick={() => {
-                  toggleDraggable(id, true);
-                  updateShape(id, key);
-                }}
-              ></div>
-            ))}
+            objects={Object.keys(nodeShapeMap)
+              .slice(0, 4)
+              .map((key, _) => (
+                <div
+                  key={key}
+                  // @ts-ignore
+                  className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${nodeShapeMap[key][1]}`}
+                  id={key}
+                  onClick={() => {
+                    toggleDraggable(id, true);
+                    updateShape(id, key);
+                  }}
+                ></div>
+              ))}
           />
           <ExpandableChip
             title="Description"
@@ -282,7 +285,7 @@ export function Editing({
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600
-                               dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500 dark:text-white"
+                               dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500"
                           >
                             {linkNodes.nodes[key].hasdataNodedata.label}
                           </button>

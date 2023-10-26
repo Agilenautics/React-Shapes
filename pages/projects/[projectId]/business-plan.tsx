@@ -6,8 +6,10 @@ import projectStore from "../../../components/AdminPage/Projects/projectStore";
 import userStore from "../../../components/AdminPage/Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { GET_USER, getUserByEmail } from "../../../components/AdminPage/Projects/gqlProject";
+import { getUserByEmail } from "../../../gql/gqlProjects/methods";
 import { useEffect } from "react";
+import { GET_USER } from "../../../gql";
+
 
 const BusinessPlan = () => {
   const updateProjects = projectStore((state) => state.updateProjectData);

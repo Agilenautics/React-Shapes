@@ -2,14 +2,14 @@ import { create } from "zustand";
 import { Node } from "reactflow";
 import {
   findNode,
-  getNode,
   updateLinkedByMethod,
-  updateLinkedBy,
   updateNodeData,
-  updateLinksMutation,
   updateNodeBackend,
-} from "./gqlNodes";
-import { getFileByNode } from "../../TreeView/gqlFiles";
+  getNode,
+  updateLinkedBy,
+  updateLinksMutation,
+  getFileByNode,
+} from "../../../gql";
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
 
@@ -180,7 +180,6 @@ const nodeStore = create<NodeState>((set) => ({
   },
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {
-
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       //@ts-ignore

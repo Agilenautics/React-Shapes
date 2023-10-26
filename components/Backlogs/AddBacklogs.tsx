@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Types } from "../AdminPage/Projects/staticData/types";
+
 import {
   createNode,
-  newNode,
   updateTaskMethod,
+  newNode,
   updateTasksMutation,
-} from "../Flow/Nodes/gqlNodes";
-import {
   createFileInFolder,
   createFileInMain,
   getUidQuery,
@@ -17,12 +16,13 @@ import {
   updateStoryMutation,
   updateUidMethode,
   updateUidMutation,
-} from "../TreeView/gqlFiles";
+  getSprintByProjectId,
+  GET_SPRINTS,
+} from "../../gql";
 import { useRouter } from "next/router";
 import validationSchema from "../AdminPage/Projects/staticData/validationSchema";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import backlogStore from "./backlogStore";
-import { getSprintByProjectId, GET_SPRINTS } from "../Sprints/gqlSprints";
 import sprintStore from "../Sprints/sprintStore";
 import fileStore from "../TreeView/fileStore";
 import Discussion from "./Discussion";
@@ -43,6 +43,9 @@ export default function AddBacklogs({
   const idofUid = fileStore((state) => state.idofUid);
   const uid = fileStore((state) => state.uid);
   const updateUid = fileStore((state) => state.updateUid);
+
+  // const {data,error,loading} = useQuery(getUidQuery);
+  // console.log(data)
 
   // sprint store
   const addTaskOrEpicOrStoryToSprint = sprintStore(
@@ -174,7 +177,7 @@ export default function AddBacklogs({
               : "",
         }}
         validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         {({ values }) => (
           <Form>

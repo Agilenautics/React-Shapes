@@ -6,7 +6,7 @@ import {
   allocateProjectToUserMutation,
   deAllocateProjectToUserMethod,
   deAllocateProjectToUserMutation,
-} from "./gqlUsers";
+} from "../../../gql";
 
 interface ManageAccountOverlayProps {
   user: {

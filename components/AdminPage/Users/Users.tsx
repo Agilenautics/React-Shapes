@@ -13,15 +13,13 @@ import {
   UPDATE_USER,
   handleUpdate_User,
   handleUser_Delete,
-} from "./gqlUsers";
+} from "../../../gql";
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
-import {
-  get_user_method,
-  GET_USER,
-} from "../Projects/gqlProject";
+import { get_user_method, GET_USER } from "../../../gql";
+
 import userStore from "./userStore";
 import projectStore from "../Projects/projectStore";
 import { HiArrowsUpDown } from "react-icons/hi2";
@@ -43,7 +41,7 @@ export interface User {
   }>;
 }
 
-export interface usersList{
+export interface usersList {
   id: string;
   name: string;
   accessLevel: string;
@@ -71,23 +69,13 @@ function Users() {
   const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [userData, setUserData] = useState<string[]>([]);
-  
-
 
   //project store
   const projects = projectStore((state) => state.projects);
   const updateProject = projectStore((state) => state.updateProjectData);
 
-
-
-
-
-
-
-
-
   //user store
-  const usersList:any[]  = userStore((state) => state.usersList);
+  const usersList: any[] = userStore((state) => state.usersList);
   const updateUserList = userStore((state) => state.updateUserList);
   const sortingOrder = userStore((state) => state.sortOrder);
   const updateSortingOrder = userStore((state) => state.updateSortingOrder);
@@ -96,50 +84,50 @@ function Users() {
   const updateUser = userStore((state) => state.updateUser);
   const userType = userStore((state) => state.userType);
   const updateUserType = userStore((state) => state.updateUserType);
-  const accessLevel = userStore((state) => state.accessLevel)
+  const accessLevel = userStore((state) => state.accessLevel);
   const updateAccessLevele = userStore((state) => state.updateAccessLevel);
-  
-
-  
-
-
-
 
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         get_user_method(user.email, GET_USER).then((res: any) => {
-          const { hasProjects, ...userData } = res[0]
+          const { hasProjects, ...userData } = res[0];
           const userType = userData.userType;
-          updateUserType(userType)
-          const userProjects = res[0].hasProjects.filter((project: any) => project.recycleBin === false);
-          updateProject(userProjects,loading)
+          updateUserType(userType);
+          const userProjects = res[0].hasProjects.filter(
+            (project: any) => project.recycleBin === false
+          );
+          updateProject(userProjects, loading);
         });
       }
     });
   };
   useEffect(() => {
     verfiyAuthToken();
-    setUserData(usersList)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    setUserData(usersList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usersList]);
 
   const onhandleSearch = (e: any) => {
     const currentData = e.target.value;
     let filterData = structuredClone(usersList);
-    filterData = filterData.filter(val => {
+    filterData = filterData.filter((val) => {
       if (/^[0-9\/]+$/.test(currentData)) {
-        return moment(val.timeStamp).isValid() && moment(val.timeStamp).format("MM/DD/YYYY").includes(currentData);
-      }
-      else {
-        return val.emailId.toLowerCase().includes(currentData.toLowerCase()) ? true : val.userType.toLowerCase().startsWith(currentData.toLowerCase()) ? true : false;
+        return (
+          moment(val.timeStamp).isValid() &&
+          moment(val.timeStamp).format("MM/DD/YYYY").includes(currentData)
+        );
+      } else {
+        return val.emailId.toLowerCase().includes(currentData.toLowerCase())
+          ? true
+          : val.userType.toLowerCase().startsWith(currentData.toLowerCase())
+          ? true
+          : false;
       }
     });
     setUserData(filterData);
     setSearchTerm(currentData);
-  }
- 
-  
+  };
 
   const handleMessage = (message: any) => {
     setMessage(message);
@@ -151,46 +139,39 @@ function Users() {
   };
 
   const { data, error, loading } = useQuery(ALL_USERS);
-  
-
 
   const handleEditClick = (userId: string) => {
     setEditedUser(userId);
   };
 
   const handleChanges_userType = (e: any) => {
-     let currentDropdownData=e.target.value;
-    let filterDropData= structuredClone(usersList);
-    let filterDropdown=filterDropData.filter((val)=>{
-        return (val.userType.toLowerCase().startsWith(currentDropdownData.toLowerCase())?true: false)
-      })
-    setSelectedTypeFilters(currentDropdownData)
-    setUserData(filterDropdown)
-  }
-
+    let currentDropdownData = e.target.value;
+    let filterDropData = structuredClone(usersList);
+    let filterDropdown = filterDropData.filter((val) => {
+      return val.userType
+        .toLowerCase()
+        .startsWith(currentDropdownData.toLowerCase())
+        ? true
+        : false;
+    });
+    setSelectedTypeFilters(currentDropdownData);
+    setUserData(filterDropdown);
+  };
 
   const handleSaveClick = () => {
     if (editedUser) {
       handleUpdate_User(editedUser, accessLevel, UPDATE_USER, ALL_USERS);
-      updateUser(editedUser, accessLevel)
+      updateUser(editedUser, accessLevel);
       setEditedUser(null);
     }
-
   };
-
 
   const handleSortClick = () => {
     //from user store
-    const newSortingValue = sortingOrder === "asc" ? "desc" : "asc"
-    updateSortingOrder(newSortingValue)
-    handleSorting()
+    const newSortingValue = sortingOrder === "asc" ? "desc" : "asc";
+    updateSortingOrder(newSortingValue);
+    handleSorting();
   };
-
-
-
-
-
-
 
   const handleAddUser = (user: User, selectedProjects: string[]) => {
     setShowAddUserPopup(false);
@@ -201,7 +182,7 @@ function Users() {
   };
 
   const handleConfirmDelete = (userId: string) => {
-    deleteUserById(userId)
+    deleteUserById(userId);
     handleUser_Delete(userId, DELETE_USER, ALL_USERS);
     setConfirmDeleteId(null);
   };
@@ -212,11 +193,11 @@ function Users() {
 
   useEffect(() => {
     if (data && data.users) {
-      updateUserList(data.users)
+      updateUserList(data.users);
     }
     setIsButtonDisabled(userType.toLowerCase() === "user");
     setIsNewUserDisabled(userType.toLowerCase() === "super user");
-    handleChanges_userType
+    handleChanges_userType;
   }, [data]);
 
   if (loading || isLoading)
@@ -237,8 +218,8 @@ function Users() {
   return (
     <div className=" p-6">
       {/* heading of the table */}
-      <div className="flex items-center h-full">
-        <button className="text-md   rounded text-white bg-sky-500/75 p-2 font-semibold">
+      <div className="flex h-full items-center">
+        <button className="text-md   rounded bg-sky-500/75 p-2 font-semibold text-white">
           Team Agile
         </button>
       </div>
@@ -260,29 +241,41 @@ function Users() {
         </button>
       </div> */}
 
-      <h2 className="text-2xl font-semibold py-4">Users</h2>
+      <h2 className="py-4 text-2xl font-semibold">Users</h2>
 
       {/* top bar  */}
 
-      <div className="grid grid-cols-4 bg-white gap-6 p-4 rounded shadow dark:bg-bgdarkcolor">
-        <div className="border rounded border-slate-400 p-1 ">
+      <div className="grid grid-cols-4 gap-6 rounded bg-white p-4 shadow dark:bg-bgdarkcolor">
+        <div className="rounded border border-slate-400 p-1 ">
           <input
-            className=" h-full w-full bg-white-200 dark:bg-transparent bg:text-slate-100 outline-none"
+            className=" bg-white-200 bg:text-slate-100 h-full w-full outline-none dark:bg-transparent"
             type="text"
             id="search"
             placeholder="Search"
             autoComplete="off"
-          value={searchTerm}
-          onChange={e => onhandleSearch(e)}
+            value={searchTerm}
+            onChange={(e) => onhandleSearch(e)}
           />
         </div>
 
-        <div className=" col-span-2  flex justify-end gap-8 items-center">
+        <div className=" col-span-2  flex items-center justify-end gap-8">
           <span> Total : {userData.length} </span>
-          <button onClick={handleSortClick}>shorting: <HiArrowsUpDown className={`inline ${sortingOrder === 'asc' ? '' : "rotate-180"}`} /> </button>
+          <button onClick={handleSortClick}>
+            shorting:{" "}
+            <HiArrowsUpDown
+              className={`inline ${sortingOrder === "asc" ? "" : "rotate-180"}`}
+            />{" "}
+          </button>
           <span>
             <label htmlFor="">Type : </label>
-           <select className="outline-none  border dark:border-none rounded dark:bg-slate-700 p-1" defaultValue="All" name="" id=""  onChange={handleChanges_userType}  value={selectedTypeFilters}>
+            <select
+              className="rounded  border p-1 outline-none dark:border-none dark:bg-slate-700"
+              defaultValue="All"
+              name=""
+              id=""
+              onChange={handleChanges_userType}
+              value={selectedTypeFilters}
+            >
               <option value="">All</option>
               <option value="user">User</option>
               <option value="admin">Admin</option>
@@ -292,22 +285,23 @@ function Users() {
         </div>
         {/* add user button */}
         <div className="text-end">
-          <button className={` bg-sky-500/75 p-2 hover:bg-transparent hover:text-sky-500 border border-sky-500/75 duration-300 hover:border-sky-500/75 hover:border rounded text-white ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          <button
+            className={` rounded border border-sky-500/75 bg-sky-500/75 p-2 text-white duration-300 hover:border hover:border-sky-500/75 hover:bg-transparent hover:text-sky-500 ${
+              isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
             }${isNewUserDisabled ? "opacity-50" : ""}`}
             disabled={isButtonDisabled || isNewUserDisabled}
-            onClick={() => setShowAddUserPopup(true)}>Add User</button>
+            onClick={() => setShowAddUserPopup(true)}
+          >
+            Add User
+          </button>
         </div>
       </div>
 
-
       <div className="relative overflow-x-auto">
-        <table className="w-full my-6 text-left text-sm">
-          <thead className=" bg-slate-700 text-slate-50 text-xs dark:bg-bgdarkcolor">
+        <table className="my-6 w-full text-left text-sm">
+          <thead className=" bg-slate-700 text-xs text-slate-50 dark:bg-bgdarkcolor">
             <tr>
-              <th
-                scope="col"
-                className="ml-6 w-60 cursor-pointer px-6 py-3"
-              >
+              <th scope="col" className="ml-6 w-60 cursor-pointer px-6 py-3">
                 Name
               </th>
               <th scope="col" className="py-3 pl-60 pr-20">
@@ -322,96 +316,101 @@ function Users() {
             </tr>
           </thead>
           <tbody className="overflow-y-scroll">
-            {userData.map((user: any,index) => {
-              return <tr key={user.id} className="border-b border-black dark:border-slate-200 bg-white dark:bg-slate-600">
-                <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
-                  <div className="flex items-center">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
-                      {getInitials(user.emailId)}
-                    </div>
-                    <span className="ml-2">
-                      {getNameFromEmail(user.emailId)}
-                    </span>
-                  </div>
-                </td>
-                { }
-                <td className="max-w-xs whitespace-nowrap py-4 pl-64 ">
-                  {editedUser === user.id ? (
-                    <select
-                      value={accessLevel}
-                      onChange={handleChanges_userType}
-                      className="rounded-md border border-gray-300 p-1"
-                    >
-                      <option value="User">User</option>
-                      <option value="Super User">Super User</option>
-                                         </select>
-                  ) : (
-                    user.userType
-                  )}
-                </td>
-                <td className="px-16 py-4">{formatDate(user.timeStamp)}</td>
-                <td className="px-4 py-4 ">
-                  {confirmDeleteId === user.id ? (
+            {userData.map((user: any, index) => {
+              return (
+                <tr
+                  key={user.id}
+                  className="border-b border-black bg-white dark:border-slate-200 dark:bg-slate-600"
+                >
+                  <td className="whitespace-nowrap px-6 py-4 text-right font-medium">
                     <div className="flex items-center">
-                      <button
-                        className="text-red-700 "
-                        onClick={() => handleConfirmDelete(user.id)}
-                        disabled={isButtonDisabled}
-                      >
-                        <MdDelete />
-                      </button>
-                      <button
-                        className="px-3 text-gray-500"
-                        onClick={handleCancelDelete}
-                        disabled={isButtonDisabled}
-                      >
-                        {/* <RxCross2 /> */}x
-                      </button>
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white">
+                        {getInitials(user.emailId)}
+                      </div>
+                      <span className="ml-2">
+                        {getNameFromEmail(user.emailId)}
+                      </span>
                     </div>
-                  ) : (
-                    <>
-                      {editedUser === user.id ? (
+                  </td>
+                  {}
+                  <td className="max-w-xs whitespace-nowrap py-4 pl-64 ">
+                    {editedUser === user.id ? (
+                      <select
+                        value={accessLevel}
+                        onChange={handleChanges_userType}
+                        className="rounded-md border border-gray-300 p-1"
+                      >
+                        <option value="User">User</option>
+                        <option value="Super User">Super User</option>
+                      </select>
+                    ) : (
+                      user.userType
+                    )}
+                  </td>
+                  <td className="px-16 py-4">{formatDate(user.timeStamp)}</td>
+                  <td className="px-4 py-4 ">
+                    {confirmDeleteId === user.id ? (
+                      <div className="flex items-center">
                         <button
-                          className="rounded-md bg-green-600 px-2 py-1 font-semibold text-white"
-                          onClick={handleSaveClick}
+                          className="text-red-700 "
+                          onClick={() => handleConfirmDelete(user.id)}
                           disabled={isButtonDisabled}
                         >
-                          Save
+                          <MdDelete />
                         </button>
-                      ) : (
                         <button
-                          className="ml-2 mr-2  rounded-full p-1 hover:bg-slate-200 duration-300"
-                          onClick={() => handleEditClick(user.id)}
+                          className="px-3 text-gray-500"
+                          onClick={handleCancelDelete}
                           disabled={isButtonDisabled}
                         >
-                          <AiFillEdit
+                          {/* <RxCross2 /> */}x
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        {editedUser === user.id ? (
+                          <button
+                            className="rounded-md bg-green-600 px-2 py-1 font-semibold text-white"
+                            onClick={handleSaveClick}
+                            disabled={isButtonDisabled}
+                          >
+                            Save
+                          </button>
+                        ) : (
+                          <button
+                            className="ml-2 mr-2  rounded-full p-1 duration-300 hover:bg-slate-200"
+                            onClick={() => handleEditClick(user.id)}
+                            disabled={isButtonDisabled}
+                          >
+                            <AiFillEdit
+                              className={isButtonDisabled ? "opacity-50" : ""}
+                            />
+                          </button>
+                        )}
+                        <button
+                          className="ml-2 rounded-full p-1 duration-300 hover:bg-slate-200"
+                          onClick={() => handleDeleteClick(user.id)}
+                          disabled={isButtonDisabled}
+                        >
+                          <MdDeleteOutline
                             className={isButtonDisabled ? "opacity-50" : ""}
                           />
                         </button>
-                      )}
-                      <button
-                        className="ml-2 rounded-full p-1 hover:bg-slate-200 duration-300"
-                        onClick={() => handleDeleteClick(user.id)}
-                        disabled={isButtonDisabled}
-                      >
-                        <MdDeleteOutline
-                          className={isButtonDisabled ? "opacity-50" : ""}
-                        />
-                      </button>
-                      <button
-                        className="ml-2 rounded-full p-1 hover:bg-slate-200 duration-300"
-                        type="button"
-                        onClick={() => handleManageAccountClick(user)}
-                        disabled={isButtonDisabled}
-                      >
-                        <MdManageAccounts
-                          className={isButtonDisabled ? "opacity-50" : ""}
-                        />
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
+                        <button
+                          className="ml-2 rounded-full p-1 duration-300 hover:bg-slate-200"
+                          type="button"
+                          onClick={() => handleManageAccountClick(user)}
+                          disabled={isButtonDisabled}
+                        >
+                          <MdManageAccounts
+                            className={isButtonDisabled ? "opacity-50" : ""}
+                          />
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              );
             })}
           </tbody>
         </table>
@@ -436,7 +435,6 @@ function Users() {
         />
       )}
     </div>
-   
   );
 }
 
@@ -449,9 +447,9 @@ export function getInitials(name: string) {
 }
 
 export const getNameFromEmail = (email: string) => {
-    let regex = /[^a-z]/gi;
+  let regex = /[^a-z]/gi;
   const name = email.split("@")[0].toLocaleUpperCase();
-    return name.replace(regex, "");
+  return name.replace(regex, "");
 };
 
 const formatDate = (date: string) => {

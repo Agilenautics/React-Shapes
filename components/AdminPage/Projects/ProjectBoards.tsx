@@ -4,16 +4,20 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import fileStore from "../../TreeView/fileStore";
 import { getTypeLabel } from "./staticData/basicFunctions";
 import { types } from "./staticData/types";
-// import { allStatus } from "./staticData/processedData";
-import { updateTaskMethod, updateTasksMutation } from "../../Flow/Nodes/gqlNodes";
-import { updateStoryMethod, updateStoryMutation } from "../../TreeView/gqlFiles";
+
+import {  updateTasksMutation } from "../../../gql";
+import { updateTaskMethod } from "../../../gql";
+import { updateStoryMethod, updateStoryMutation } from "../../../gql";
 import { onAuthStateChanged } from "firebase/auth";
-import { GET_USER, getUserByEmail } from "./gqlProject";
+import {  getUserByEmail } from "../../../gql";
+
+
 import { auth } from "../../../auth";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 import backlogStore from "../../Backlogs/backlogStore";
 import {AiFillPlusCircle} from "react-icons/ai";
+import { GET_USER } from "../../../gql";
 // import backlogs from "../../../pages/projects/[projectId]/backlogs";
 
 function ProjectBoards() {

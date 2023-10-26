@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import {
   getMainByUser,
   getTreeNodeByUser,
-} from "../../components/TreeView/gqlFiles";
+} from "../../gql";
 // import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import LoadingIcon from "../../components/LoadingIcon";
 // import MembersTable from "../../components/AdminPage/Projects/MembersTable";

@@ -4,7 +4,7 @@ import { auth } from '../../../auth';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import './SignUp.module.css';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { CREATE_ADMIN, handle_add_admin } from './gqlAdmin';
+import { CREATE_ADMIN, handle_add_admin } from '../../../gql/gqlAdmin/gqlAdmin';
 
 const Signup: React.FC = () => {
     const [email, setEmail] = useState('');

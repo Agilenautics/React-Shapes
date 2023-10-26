@@ -8,7 +8,7 @@ import edgeStore from "../Edges/edgeStore";
 import Tags from "./Tags";
 import Progress from "./Progress";
 import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
-import { updateLinksMutation, updateNodeData } from "./gqlNodes";
+import { updateLinksMutation, updateNodeData } from "../../../gql";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 
 /* This is the custom node component that is used */

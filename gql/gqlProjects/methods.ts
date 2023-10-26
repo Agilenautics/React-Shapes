@@ -1,48 +1,11 @@
-import { DocumentNode, OperationVariables, TypedDocumentNode, gql } from "@apollo/client";
-import client from "../../../apollo-client";
-import { Project } from "./projectStore";
-
-
-
-const Project_Fragment = gql`
-  fragment ProjectFragment on main {
-      id
-      timeStamp
-      description
-      name
-      recycleBin
-      recentProject
-      deletedAT
-      userHas {
-        emailId
-        userType
-      }
-  }
-`;
-
-
-
-
-
-
-
-
-
-const GET_USER = gql`
-${Project_Fragment}
-query getUser($where: userWhere) {
-  users(where: $where) {
-    active
-    id
-    userType
-    emailId
-    timeStamp
-    hasProjects {
-    ...ProjectFragment 
-    }
-  }
-}
-`
+import {
+  DocumentNode,
+  OperationVariables,
+  TypedDocumentNode,
+} from "@apollo/client";
+import client from "../../apollo-client";
+import { Project } from "../../components/AdminPage/Projects/projectStore";
+import { GET_PROJECTS, GET_USER, GET_PROJECTS_BY_ID } from "./mutations";
 
 const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>, methods: any) => {
   const { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject } = methods
@@ -83,16 +46,8 @@ const get_user_method = async (email: String, customQuery: DocumentNode | TypedD
   return admin
 }
 
-const DELETE_PROJECT = gql`
-${Project_Fragment}
-mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-    mains {
-     ...ProjectFragment
-    }
-  }
-}
-`
+
+
 const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>, email: string) => {
   var dateObj = new Date();
   var month = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -147,18 +102,6 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
   })
 }
 
-const recentProject_mutation = gql`
-${Project_Fragment}
-mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-    mains {
-    ...ProjectFragment
-    }
-  }
-}
-
-`
-
 
 const update_recentProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,) => {
   try {
@@ -195,10 +138,6 @@ const update_recentProject = async (id: string, mutation: DocumentNode | TypedDo
 
   }
 }
-
-
-
-
 const recycleProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   try {
     await client.mutate({
@@ -254,15 +193,6 @@ const recycleProject = async (id: string, mutation: DocumentNode | TypedDocument
   }
 }
 
-//parmenant delete mutation
-const PARMENANT_DELETE = gql`
-mutation parmenantDelete($where: mainWhere) {
-  deleteMains(where: $where) {
-    nodesDeleted
-  }
-}
-`
-
 //parmenant delete project
 const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   try {
@@ -305,14 +235,6 @@ const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumen
   }
 }
 
-//clear reCycle bin
-
-const CLEAR_RECYCLE_BIN = gql`
-mutation clearBin($where: mainWhere, $delete: mainDeleteInput) {
-  deleteMains(where: $where, delete: $delete) {
-    relationshipsDeleted
-  }
-}`
 
 const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   try {
@@ -457,20 +379,6 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
 
 }
 
-
-
-
-
-const ADD_PROJECT = gql`
-${Project_Fragment}
-mutation createProject($input: [mainCreateInput!]!) {
-  createMains(input: $input) {
-    mains {
-      ...ProjectFragment
-    }
-  }
-}
-`
 const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, addProject: any, query: any) => {
   let data = []
   try {
@@ -534,16 +442,7 @@ const addProject_Backend = async (email: String, project: any, mutation: Documen
   }
 
 }
-const EDIT_PROJECT = gql`
-mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-    mains {
-      name
-      description
-    }
-  }
-}
-`
+
 const edit_Project = async (id: string, projectName: string, projectDesc: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
   await client.mutate({
     mutation,
@@ -560,5 +459,16 @@ const edit_Project = async (id: string, projectName: string, projectDesc: string
   })
 }
 
-
-export { DELETE_PROJECT, delete_Project, ADD_PROJECT, GET_USER, get_user_method, edit_Project, EDIT_PROJECT, parmenantDelete, PARMENANT_DELETE, recycleProject, CLEAR_RECYCLE_BIN, clearRecycleBin, addProject_Backend, update_recentProject, recentProject_mutation, getUserByEmail }
+export {
+  GET_PROJECTS,
+  delete_Project,
+    get_user_method,
+  edit_Project,
+  parmenantDelete,
+  recycleProject,
+    clearRecycleBin,
+  addProject_Backend,
+  update_recentProject,
+  getUserByEmail,
+  GET_PROJECTS_BY_ID,
+};

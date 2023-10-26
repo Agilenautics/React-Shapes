@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
-import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, getMainByUser, getTreeNodeByUser, deleteFileBackend, deleteFolderBackend, Folder } from "./gqlFiles";
+import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, deleteFileBackend, deleteFolderBackend, Folder } from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
 
 /**
