@@ -71,8 +71,7 @@ function Users() {
   const [userData, setUserData] = useState<string[]>([]);
 
   //project store
-  const projects = projectStore((state) => state.projects);
-  const updateProject = projectStore((state) => state.updateProjectData);
+  const { projects, updateProjectData: updateProject } = projectStore();
 
   //user store
   const usersList: any[] = userStore((state) => state.usersList);
@@ -223,23 +222,6 @@ function Users() {
           Team Agile
         </button>
       </div>
-
-      {/* <div className=" border flex items-center">
-        <h2 className="inline-block text-xl font-semibold">Users</h2>
-        <p className="ml-8 inline-block">Total :</p>
-        <div className="">
-          {data && data.users && data.users.length}
-        </div>
-        <button
-          className={`text-md ml-auto mr-10 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-            }${isNewUserDisabled ? "opacity-50" : ""}`}
-          disabled={isButtonDisabled || isNewUserDisabled}
-          onClick={() => setShowAddUserPopup(true)}
-        >
-          <GrAdd />
-          <div className="mx-2 my-1">New User</div>
-        </button>
-      </div> */}
 
       <h2 className="py-4 text-2xl font-semibold">Users</h2>
 

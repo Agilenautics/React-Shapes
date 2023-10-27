@@ -1,7 +1,5 @@
 import driver from "../dbConnection";
-import { loadFile } from "graphql-import-files";
 import { OGM } from '@neo4j/graphql-ogm'
-import { gql } from "@apollo/client";
 import typeDefs from "../typeDefs";
 
 

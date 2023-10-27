@@ -17,7 +17,6 @@ import userStore from "../Users/userStore";
 import backlogStore from "../../Backlogs/backlogStore";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { GET_USER } from "../../../gql";
-// import backlogs from "../../../pages/projects/[projectId]/backlogs";
 
 function ProjectBoards() {
   const allStatus = backlogStore((state) => state.allStatus);
@@ -96,8 +95,7 @@ function ProjectBoards() {
   const handleDrop = (e: any, columnId: string) => {
     e.preventDefault();
 
-    //@ts-ignore
-    const task = JSON.parse(localStorage.getItem("task"));
+    const task = JSON.parse(localStorage.getItem("task") as string);
     task.status = columnId;
 
     // console.log(statuses);
@@ -232,7 +230,6 @@ function ProjectBoards() {
                       // onDragEnd={(e) => handleDrop(e, column.id)}
                     >
                       <div className="font-bold">{task.name || task.label}</div>
-                      {/* @ts-ignore */}
                       <div>{getTypeLabel(task.type).type}</div>
                     </div>
                   ) : null

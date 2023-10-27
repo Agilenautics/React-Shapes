@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CreateSprint from "../AdminPage/Projects/CreateSprint";
+import CreateSprint from "./CreateSprint";
 import { getTypeLabel } from "../AdminPage/Projects/staticData/basicFunctions";
 // import fileStore from "../../TreeView/fileStore";
 import projectStore from "../AdminPage/Projects/projectStore";

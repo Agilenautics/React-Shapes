@@ -1,24 +1,27 @@
-import React from 'react';
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { sprintValidationSchema } from './staticData/validationSchema';
-import { useRouter } from 'next/router';
-import sprintStore from '../../Sprints/sprintStore';
-import { CREATE_SPRINT_MUTATION, createSPrintBackend } from '../../../gql';
-import sprints from '../../../pages/projects/[projectId]/sprints';
+import { sprintValidationSchema } from "../AdminPage/Projects/staticData/validationSchema";
+import { useRouter } from "next/router";
+import sprintStore from "./sprintStore";
+import { CREATE_SPRINT_MUTATION, createSPrintBackend } from "../../gql";
 
-
-export default function CreateSprint({ setShowForm,sprintCreateMessage }: any) {
+export default function CreateSprint({
+  setShowForm,
+  sprintCreateMessage,
+}: any) {
   const router = useRouter();
-  const  addSprint = sprintStore(state => state.addSprint);
-  const updateError = sprintStore(state => state.updateError);
-  const projectId = router.query.projectId as string | ""
-  const handleSubmit = (values: any) => {
-   const spr: any = createSPrintBackend(projectId, CREATE_SPRINT_MUTATION, values, addSprint,updateError,sprintCreateMessage,setShowForm)
-  //  console.log(spr);
-  //  if(spr){
-  //   addSprint(values)
-  //  }
-   
+  const { addSprint, updateError } = sprintStore();
+  const projectId = router.query.projectId as string | "";
+  const handleSubmit = async (values: any) => {
+    await createSPrintBackend(
+      projectId,
+      CREATE_SPRINT_MUTATION,
+      values,
+      addSprint,
+      updateError,
+      sprintCreateMessage,
+      setShowForm
+    );
   };
 
   const handleCancel = () => {

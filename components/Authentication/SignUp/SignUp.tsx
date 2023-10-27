@@ -51,7 +51,6 @@ const Signup: React.FC = () => {
 
                     });
                     // Add user to Database
-                    // @ts-ignore
                     // handle_add_admin(user.email,CREATE_ADMIN)
                 })
                 .catch((error) => {

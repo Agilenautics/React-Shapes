@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import projectStore from "./AdminPage/Projects/projectStore";
-import Link from "next/link";
 
 const RoutingBreadCrumbs = ({ loading }: any) => {
   const [breadCrumbs, setBreadCrumbs] = useState<string[]>([]);
   const projects = projectStore((state) => state.projects);
 
   const router = useRouter();
+  const projectId = router.query.projectId as string;
 
   const getBreadCrumbs = (data: string, projectId: string) => {
     let pathArray = data.split("/").filter((path) => path !== "");
@@ -19,8 +19,7 @@ const RoutingBreadCrumbs = ({ loading }: any) => {
   };
 
   useEffect(() => {
-    // @ts-ignore
-    getBreadCrumbs(router.asPath, router.query.projectId);
+    getBreadCrumbs(router.asPath, projectId);
   }, [router.asPath, projects]);
 
   if (loading) {

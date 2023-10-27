@@ -12,7 +12,6 @@ import { getUserByEmail, GET_USER } from "../../gql";
 import projectStore from "../AdminPage/Projects/projectStore";
 import userStore from "../AdminPage/Users/userStore";
 import backlogStore from "./backlogStore";
-import generateUid from "../getUid";
 import LoadingIcon from "../LoadingIcon";
 import { RiArrowDropDownLine } from "react-icons/ri";
 
@@ -24,31 +23,27 @@ function ProjectBacklogs() {
   const [selectedEpic, setSelectedEpic] = useState("");
   const [selectedSprint, setSelectedSprint] = useState("");
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
-  // const [showForm, setShowForm] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
-  const allStatus = backlogStore((state) => state.allStatus);
+  // from backlog store iam taking allStatus and parents
+  const { allStatus, parents, backlogs, updateBacklogsData } = backlogStore();
+  // from fileStore iam taking loading and main data
+  const { loading, data: backend } = fileStore();
+  //using project store to updated project and recycleBin projects
+  const { updateProjectData: updateProjects, updateRecycleBinProject } =
+    projectStore();
+
+  // from user store to updating userType and loging user
+  const { updateUserType, updateLoginUser } = userStore();
+
   const [statuses, setStatuses] = useState(["Select Status", ...allStatus]);
-  const parents = backlogStore((state) => state.parents);
 
-  const uid = generateUid([1, 9]);
-
-  const router = useRouter();
-
-  const projectId = router.query.projectId as string;
-  const loading = fileStore((state) => state.loading);
-  const backend = fileStore((state) => state.data);
-  const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore(
-    (state) => state.updateRecycleBinProject
-  );
-  const updateUserType = userStore((state) => state.updateUserType);
-  const updateLoginUser = userStore((state) => state.updateLoginUser);
   const [users, setUsers] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
-  // const [typeDropdown, setTypeDropdown] = useState(false)
 
-  // backlogs store
-  const { backlogs, updateBacklogsData } = backlogStore();
+  //taking router object from the useRouter hook from next
+  const router = useRouter();
+  // getting project id from the router path
+  const projectId = router.query.projectId as string;
 
   const verificationToken = async () => {
     onAuthStateChanged(auth, (user) => {
@@ -68,7 +63,6 @@ function ProjectBacklogs() {
 
   useEffect(() => {
     verificationToken();
-    //  callBack()
   }, []);
 
   useEffect(() => {
@@ -76,10 +70,8 @@ function ProjectBacklogs() {
       setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas]);
     }
     if (backlogs.length == 0) {
-      // @ts-ignore
-      updateBacklogsData(backend.children);
+      updateBacklogsData(backend.children as any);
     }
-    // @ts-ignore
   }, [backend.userHas]);
 
   useEffect(() => {

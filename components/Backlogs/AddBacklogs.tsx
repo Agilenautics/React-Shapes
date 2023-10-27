@@ -6,7 +6,6 @@ import {
   createNode,
   updateTaskMethod,
   newNode,
-  
   updateTasksMutation,
   createFile,
   updateStoryMethod,
@@ -269,7 +268,6 @@ export default function AddBacklogs({
                       </>
                     ) : (
                       <option value={selectedElement.type}>
-                        {/* @ts-ignore */}
                         {getTypeLabel(selectedElement.type).type}
                       </option>
                     )}

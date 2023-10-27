@@ -1,16 +1,7 @@
 import { create } from "zustand";
-import { Project } from "../Projects/projectStore";
+import { User } from "../../../lib/appInterfaces";
 
-interface User {
-    id: string;
-    name: string;
-    emailId: string;
-    userType: string;
-    active: Boolean;
-    userName: string;
-    timeStamp: string
-    hasProject: Project
-}
+
 
 export interface userState {
     usersList: Array<User>;
@@ -34,6 +25,7 @@ const userStore = create<userState>((set) => ({
     userType: '',
     updateLoginUser: (loginUser: any) =>
         set((state) => {
+            console.log(loginUser)
             const { hasProjects, ...userData } = loginUser[0]
             return { user: [userData] }
         })

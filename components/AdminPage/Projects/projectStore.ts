@@ -1,25 +1,6 @@
 import { create } from "zustand";
+import { Project } from "../../../lib/appInterfaces";
 
-interface User {
-    id: string;
-    name: string;
-    emailId: string;
-    userType: string;
-    active: Boolean;
-    userName: string;
-
-}
-
-export interface Project {
-    id?: string;
-    name: string;
-    recycleBin: Boolean;
-    createdAt: Date | null;
-    timeStamp: string;
-    description: string;
-    userHas: User[];
-    recentProject: Boolean;
-}
 
 export interface ProjectState {
     projects: Array<Project>;

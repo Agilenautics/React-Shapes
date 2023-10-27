@@ -86,7 +86,6 @@ const Login: React.FC = () => {
                     router.push(`/projects/${projectId}`)
                 });
                 // User logged in 
-                // @ts-ignore
                 // get_user_method(user.email, GET_USER)
             })
             .catch((error) => {

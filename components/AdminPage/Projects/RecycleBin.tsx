@@ -3,7 +3,16 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FaTrashRestoreAlt } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineArrowDown } from "react-icons/ai";
-import { CLEAR_RECYCLE_BIN, DELETE_PROJECT, GET_USER, PARMENANT_DELETE, clearRecycleBin, delete_Project, parmenantDelete, recycleProject } from "../../../gql";
+import {
+  CLEAR_RECYCLE_BIN,
+  DELETE_PROJECT,
+  GET_USER,
+  PARMENANT_DELETE,
+  clearRecycleBin,
+  delete_Project,
+  parmenantDelete,
+  recycleProject,
+} from "../../../gql";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
@@ -27,42 +36,35 @@ function Projects() {
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const {
+    removeFromRecycleBin,
+    clearRecyleBin: clearRecycle_Bin,
+    updateSortOrder,
+    sortOrder,
+    handleSorting,
+    recycleBin,
+  } = projectStore();
+  const [projectData, setProjectData] = useState(recycleBin);
 
-  const { data, error, loading: userLoading } = useQuery(GET_USER, {
+  const { data, error, loading } = useQuery(GET_USER, {
     variables: {
       where: {
-        emailId: "irfan123@gmail.com"
-      }
-    }
+        emailId: "irfan123@gmail.com",
+      },
+    },
   });
 
-
-
-
-
-  const recycleBin = projectStore((state) => state.recycleBin);
-  const [projectData, setProjectData] = useState(recycleBin)
-  const loading = projectStore((state) => state.loading)
-  const handleSorting = projectStore((state) => state.handleSorting);
-  const sortOrder = projectStore((state) => state.sortOrder);
-  const updateSorOrder = projectStore((state) => state.updateSortOrder);
-  const clearRecycle_Bin = projectStore((state) => state.clearRecyleBin);
-  const removeFromRecycleBin = projectStore((state) => state.removeFromRecycleBin);
-  const { updateSearchItem, search, updateRecycleBinProject } = projectStore()
-
   const userType = userStore((state) => state.userType);
-
-
 
   useEffect(() => {
     const filteredData = recycleBin.filter(
       (element: any) =>
-        (element.name && element.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        element.name &&
+        element.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    setProjectData(filteredData)
-
-  }, [searchTerm])
+    setProjectData(filteredData);
+  }, [searchTerm]);
 
   useEffect(() => {
     setIsButtonDisabled(userType.toLowerCase() === "user");
@@ -71,18 +73,14 @@ function Projects() {
 
   const handleSortClick = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    updateSorOrder(newSortOrder);
-    handleSorting()
+    updateSortOrder(newSortOrder);
+    handleSorting();
   };
-
-
 
   const handleDelete_Project = async (projectId: string) => {
     await parmenantDelete(projectId, PARMENANT_DELETE, GET_USER);
-    removeFromRecycleBin(projectId)
+    removeFromRecycleBin(projectId);
   };
-
-  console.log(data,"hello")
 
   if (loading) {
     return (
@@ -91,8 +89,6 @@ function Projects() {
       </div>
     );
   }
-
-  
 
   return (
     <div className="bg grey">
@@ -109,15 +105,14 @@ function Projects() {
         </div>
         <button
           onClick={() => {
-            clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER)
-            clearRecycle_Bin()
-
+            clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER);
+            clearRecycle_Bin();
           }}
-
-          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
-            }${isNewProjectDisabled ? "opacity-50" : ""}`}
+          className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
+            isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
+          }${isNewProjectDisabled ? "opacity-50" : ""}`}
           disabled={isButtonDisabled || isNewProjectDisabled}
-        // TODO onClick logic for empty bin
+          // TODO onClick logic for empty bin
         >
           <AiOutlineDelete />
           <div className="mx-1 my-1">Empty Recycle Bin</div>
@@ -126,7 +121,6 @@ function Projects() {
       <div className="ml-10 mt-2">
         <div className="max-w-2xl">
           <div className="relative flex h-12 w-full items-center overflow-hidden rounded-lg bg-gray-200 focus-within:shadow-lg">
-
             <input
               className="peer h-full w-full bg-gray-200 p-4 text-base text-black outline-none"
               type="text"
@@ -151,8 +145,9 @@ function Projects() {
                 <div className="flex cursor-pointer items-center">
                   Project name
                   <AiOutlineArrowDown
-                    className={`ml-1 text-sm ${sortOrder === "asc" ? "rotate-180 transform" : ""
-                      }`}
+                    className={`ml-1 text-sm ${
+                      sortOrder === "asc" ? "rotate-180 transform" : ""
+                    }`}
                   />
                 </div>
               </th>
@@ -168,7 +163,6 @@ function Projects() {
             {projectData.map((project: any) => (
               <tr key={project.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-4 py-4 font-medium">
-
                   <label className="fontWeight-bold">{project.name}</label>
                 </td>
                 <td className="hidden px-6 py-4 md:table-cell">
@@ -181,8 +175,9 @@ function Projects() {
                       removeFromRecycleBin(project.id);
                     }}
                     //  TODO onClick restore logic here
-                    className={`mr-2 w-3 ${isButtonDisabled ? "opacity-50" : ""
-                      }`}
+                    className={`mr-2 w-3 ${
+                      isButtonDisabled ? "opacity-50" : ""
+                    }`}
                     disabled={isButtonDisabled}
                   >
                     <FaTrashRestoreAlt />
