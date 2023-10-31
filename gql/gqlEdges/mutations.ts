@@ -4,10 +4,10 @@ import { Edge_Fragment } from "./fragments";
 
 export const allEdges = gql`
   ${Edge_Fragment}
-  query Query($where: flowchartWhere) {
+  query Query($where: FlowchartWhere) {
     flowcharts(where: $where) {
       name
-      edges {
+      hasEdges {
         ...EdgeFragment
       }
     }
@@ -18,13 +18,13 @@ export const allEdges = gql`
 
 export const createEdgeMutation = gql`
   ${Edge_Fragment}
-  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
+  mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
         name
         hasflowchart {
           name
-          edges {
+          hasEdges {
             ...EdgeFragment
           }
         }
@@ -35,8 +35,8 @@ export const createEdgeMutation = gql`
 
 export const deleteEdgeMutation = gql`
   mutation deleteFlowEdges(
-    $where: flowEdgeWhere
-    $delete: flowEdgeDeleteInput
+    $where: FlowEdgeWhere
+    $delete: FlowEdgeDeleteInput
   ) {
     deleteFlowEdges(where: $where, delete: $delete) {
       nodesDeleted
@@ -45,7 +45,7 @@ export const deleteEdgeMutation = gql`
   }
 `;
 export const updateEdgeMutation = gql`
-  mutation updateEdge($where: flowEdgeWhere, $update: flowEdgeUpdateInput) {
+  mutation updateEdge($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
     updateFlowEdges(where: $where, update: $update) {
       flowEdges {
         hasedgedataEdgedata {

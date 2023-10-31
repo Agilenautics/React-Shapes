@@ -98,7 +98,7 @@ export function Editing({
   const updateArrows = edgeStore((state) => state.updateArrows);
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
-  const updateLinks = nodeStore((state) => state.updateLinks);
+  const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
   const linkNodeId = fileStore((state) => state.linkNodeId);
   const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
 
@@ -113,7 +113,7 @@ export function Editing({
     const { data } = await getFileByNode(linkNodeId, getFile);
     console.log(data);
 
-    updateLinks(linkNodeId, {
+    updateLinkedTo(linkNodeId, {
       label: linkNodes.nodes[key].hasdataNodedata.label,
       flag: true,
       id,

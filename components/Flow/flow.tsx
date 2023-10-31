@@ -32,7 +32,7 @@ import {
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
-  getMainByUser,
+  getProjectByUser
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
 
@@ -155,8 +155,9 @@ function Flow() {
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
           const node = await findNode(getNode, selectedNodes[0].id);
-          const linkA = node[0].data.linkedBy.flag;
-          const linkB = node[0].data.links.flag;
+          const linkA = node[0].data.hasLinkedBy.flag;
+          const linkB = node[0].data.hasLinkedTo.flag;
+          //.flowNode.nodeData.linked
           if (linkA || linkB) {
             setShowConfirmation({
               type: "links",
@@ -191,14 +192,7 @@ function Flow() {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
       try {
-        await deleteNodeBackend(
-          element.id,
-          delNodeMutation,
-          allNodes,
-          fileId,
-          projectId,
-          getMainByUser
-        );
+        await deleteNodeBackend(element.id, delNodeMutation, allNodes, fileId, projectId,getProjectByUser);
         deleteNode(element);
       } catch (error) {
         console.log(error, "deleting the node");

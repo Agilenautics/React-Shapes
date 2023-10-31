@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const Info_Fragment = gql`
-  fragment InfoFragment on info {
+  fragment InfoFragment on Info {
     description
     assignedTo
     status
@@ -12,16 +12,16 @@ export const Info_Fragment = gql`
 
 export const Node_Fragment = gql`
   ${Info_Fragment}
-  fragment NodeFragment on flowNode {
+  fragment NodeFragment on FlowNode {
     id
     draggable
     flowchart
     type
     timeStamp
     uid
-    comments {
+    hasComments {
       message
-      user {
+      userHas {
         emailId
       }
     }
@@ -36,13 +36,13 @@ export const Node_Fragment = gql`
       label
       shape
       description
-      links {
+      hasLinkedTo {
         label
         id
         flag
         fileId
       }
-      linkedBy {
+      hasLinkedBy {
         label
         id
         fileId

@@ -6,7 +6,7 @@ import {
 
  export  const createFileMutation = gql`
 ${File_Fragment}
-  mutation CreateFiles($input: [fileCreateInput!]!) {
+  mutation CreateFiles($input: [FileCreateInput!]!) {
   createFiles(input: $input) {
     files{
       ...FileFragment
@@ -15,11 +15,11 @@ ${File_Fragment}
 }
 `
 //Get root using unique userName(UID)
-export const getMainByUser = gql`
+export const getProjectByUser = gql`
   ${File_Fragment}
   ${Info_Fragment}
-  query getMainByUser($where: mainWhere) {
-    mains(where: $where) {
+  query getprojectByUser($where: ProjectWhere) {
+    projects(where: $where) {
       name
       description
       isOpen
@@ -72,7 +72,7 @@ export const getMainByUser = gql`
 
 
 export const newFolderInFolder = gql`
-  mutation Mutation($where: folderWhere, $create: folderRelationInput) {
+  mutation Mutation($where: FolderWhere, $create: FolderRelationInput) {
     updateFolders(where: $where, create: $create) {
       folders {
         name
@@ -89,7 +89,7 @@ export const newFolderInFolder = gql`
 
 export const newFolderInMain = gql`
   ${Info_Fragment}
-  mutation createEpic($input: [folderCreateInput!]!) {
+  mutation createEpic($input: [FolderCreateInput!]!) {
     createFolders(input: $input) {
       folders {
         id
@@ -100,7 +100,7 @@ export const newFolderInMain = gql`
         hasInfo {
           ...InfoFragment
         }
-        mainHas {
+        projectHas {
           name
           id
         }
@@ -113,21 +113,21 @@ export const newFolderInMain = gql`
   }
 `;
 export const deleteFiles = gql`
-  mutation DeleteFiles($where: fileWhere, $delete: fileDeleteInput) {
+  mutation DeleteFiles($where: FileWhere, $delete: FileDeleteInput) {
     deleteFiles(where: $where, delete: $delete) {
       nodesDeleted
     }
   }
 `;
 export const deleteFolders = gql`
-  mutation DeleteFolders($where: folderWhere, $delete: folderDeleteInput) {
+  mutation DeleteFolders($where: FolderWhere, $delete: FolderDeleteInput) {
     deleteFolders(where: $where, delete: $delete) {
       nodesDeleted
     }
   }
 `;
 export const updateFolders = gql`
-  mutation UpdateFolders($where: folderWhere, $update: folderUpdateInput) {
+  mutation UpdateFolders($where: FolderWhere, $update: FolderUpdateInput) {
     updateFolders(where: $where, update: $update) {
       folders {
         id
@@ -137,7 +137,7 @@ export const updateFolders = gql`
   }
 `;
 export const connectToFolderOnMove = gql`
-  mutation Mutation($where: folderWhere, $connect: folderConnectInput) {
+  mutation Mutation($where: FolderWhere, $connect: FolderConnectInput) {
     updateFolders(where: $where, connect: $connect) {
       folders {
         name
@@ -149,7 +149,7 @@ export const connectToFolderOnMove = gql`
   }
 `;
 export const disconnectFromFolderOnMove = gql`
-  mutation Mutation($where: folderWhere, $disconnect: folderDisconnectInput) {
+  mutation Mutation($where: FolderWhere, $disconnect: FolderDisconnectInput) {
     updateFolders(where: $where, disconnect: $disconnect) {
       folders {
         name
@@ -161,7 +161,7 @@ export const disconnectFromFolderOnMove = gql`
   }
 `;
 export const updateFiles = gql`
-  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
+  mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
         id
@@ -172,14 +172,14 @@ export const updateFiles = gql`
 `;
 export const getFile = gql`
   ${Node_Fragment}
-  query Query($where: fileWhere) {
+  query Query($where: FileWhere) {
     files(where: $where) {
       name
       id
       type
       hasflowchart {
         name
-        nodes {
+        hasNodes {
           ...NodeFragment
         }
       }
@@ -190,7 +190,7 @@ export const getFile = gql`
 
 export const updateEpicMutation = gql`
   ${Info_Fragment}
-  mutation updateEpic($where: folderWhere, $update: folderUpdateInput) {
+  mutation updateEpic($where: FolderWhere, $update: FolderUpdateInput) {
     updateFolders(where: $where, update: $update) {
       folders {
         name
@@ -208,15 +208,15 @@ export const updateEpicMutation = gql`
 //update story  hasInfo data only
 export const updateStoryMutation = gql`
   ${Info_Fragment}
-  mutation UpdateStory($where: fileWhere, $update: fileUpdateInput) {
+  mutation UpdateStory($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
         name
-        comments {
+        hasComments {
           id
           message
           timeStamp
-          user {
+          userHas {
            emailId
           }
         }
@@ -242,7 +242,7 @@ export const getUidQuery = gql`
 }
 `
 export const createUidMutation = gql`
-mutation CreateUids($input: [uidCreateInput!]!) {
+mutation CreateUids($input: [UidCreateInput!]!) {
   createUids(input: $input) {
     uids {
       uid
@@ -252,7 +252,7 @@ mutation CreateUids($input: [uidCreateInput!]!) {
 }
 `
 export const updateUidMutation = gql`
-mutation UpdateUids($where: uidWhere, $update: uidUpdateInput) {
+mutation UpdateUids($where: UidWhere, $update: UidUpdateInput) {
   updateUids(where: $where, update: $update) {
     uids {
       id

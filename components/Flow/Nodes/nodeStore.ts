@@ -7,7 +7,7 @@ import {
   updateNodeBackend,
   getNode,
   updateLinkedBy,
-  updateLinksMutation,
+  updateLinkedToMutation,
   getFileByNode,
 } from "../../../gql";
 
@@ -21,7 +21,7 @@ export interface NodeState {
   updateLabel: (id: string, newLabel: string) => void;
   updateShape: (id: string, newShape: string) => void;
   updateNodeType: (id: string, newType: string) => void;
-  updateLinks: (id: string, newLink: Object) => void;
+  updateLinkedTo: (id: string, newLink: Object) => void;
   toggleDraggable: (id: string, draggable: boolean) => void;
   updateLinkedBy: (id: string, LinkedBy: Object, getNodeQuery: any) => void;
   breadCrumbs: Array<Node>;
@@ -39,7 +39,7 @@ const nodeStore = create<NodeState>((set) => ({
           "Welcome!\nTo get started, use the sidebar button on the top left.",
         shape: "rectangle",
         description: "",
-        links: {},
+        hasLinkedTo: {},
       },
       position: { x: 0, y: 0 },
       type: "WelcomeNode",
@@ -92,7 +92,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-      updateNodeData(updated_node, updateLinksMutation);
+      updateNodeData(updated_node, updateLinkedToMutation);
       return { nodes: [...to_be_updated, updated_node] };
     });
   },
@@ -105,7 +105,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, label: newLabel },
       };
-      updateNodeData(updated_node, updateLinksMutation);
+      updateNodeData(updated_node, updateLinkedToMutation);
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateShape: (id: string, newShape: string) =>
@@ -117,7 +117,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, shape: newShape },
       };
-      updateNodeData(updated_node, updateLinksMutation);
+      updateNodeData(updated_node, updateLinkedToMutation);
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateNodeType: (id: string, newType: string) =>
@@ -129,7 +129,7 @@ const nodeStore = create<NodeState>((set) => ({
       updateNodeBackend(updated_node);
       return { nodes: [...to_be_updated, updated_node] };
     }),
-  updateLinks: async (
+  updateLinkedTo: async (
     id,
     newLink // add flowchart variable
   ) => {
@@ -144,7 +144,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...new_node,
         data: { ...new_node.data, links: newLink, id },
       };
-      updateNodeData(updated_node, updateLinksMutation);
+      updateNodeData(updated_node, updateLinkedToMutation);
       return { nodes: [...to_be_updated, updated_node] };
     });
   },
@@ -153,7 +153,7 @@ const nodeStore = create<NodeState>((set) => ({
     //save data of new node
 
     const { data } = await getFileByNode(id, getNodeQuery);
-    const nodes = JSON.stringify(data.files[0].hasflowchart.nodes)
+    const nodes = JSON.stringify(data.files[0].hasflowchart.hasNodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
     const nodesData = JSON.parse(nodes);

@@ -295,7 +295,7 @@ export const TreeNode2 = ({
   }
   const customQuery = gql`
     query FindFileById($nodeId: String!) {
-      files(where: { hasflowchart: { nodes: { id: { equals: $nodeId } } } }) {
+      files(where: { hasflowchart: { hasNodes: { id: { equals: $nodeId } } } }) {
         id
       }
     }
@@ -323,7 +323,7 @@ export const TreeNode2 = ({
       }
       handlers.select(e);
       if (data.children == null) {
-        return updateLinkNodes(data.hasflowchart.nodes, data.id);
+        return updateLinkNodes(data.hasflowchart.hasNodes, data.id);
       }
     };
   }

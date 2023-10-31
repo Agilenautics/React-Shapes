@@ -9,7 +9,7 @@ import {
   disconnectFromFolderOnMove,
   updateFiles,
 } from "./mutations";
-import { Main, transformObject } from "./interfaces";
+import { Project, transformObject } from "./interfaces";
 import client from "../../apollo-client";
 
 // create File (story)
@@ -51,7 +51,7 @@ const createFile = async (
               },
             },
           },
-          mainHas: {
+          projectHas: {
             connect: {
               where: {
                 node: {
@@ -85,7 +85,7 @@ async function getTreeNodeByUser(
   id: string,
   setLoading: any
 ) {
-  var nodes: Array<Main> = [];
+  var nodes: Array<Project> = [];
 
   await client
     .query({
@@ -97,13 +97,13 @@ async function getTreeNodeByUser(
       },
     })
     .then((result) => {
-      const mainData = result.data.mains;
+      const mainData = result.data.projects;
       const data = mainData.map((value: any) => {
         const { hasContainsFile, hasContainsFolder, ...rest } = value;
         return { ...rest, children: hasContainsFolder };
       });
       const res_updated = transformObject(result);
-      nodes = res_updated.data.mains;
+      nodes = res_updated.data.projects;
       setLoading(result.loading);
     });
   return nodes;
@@ -119,20 +119,20 @@ async function deleteFileBackend(fileID: string, deleteItem: any) {
         delete: {
           hasflowchart: {
             delete: {
-              nodes: [
+              hasNodes: [
                 {
                   delete: {
                     hasdataNodedata: {
                       delete: {
-                        links: {},
-                        linkedBy: {},
+                        hasLinkedTo: {},
+                       hasLinkedBy: {},
                       },
                     },
                     haspositionPosition: {},
                   },
                 },
               ],
-              edges: [
+              hasEdges: [
                 {
                   delete: {
                     hasedgedataEdgedata: {},
@@ -228,7 +228,7 @@ const getFileByNode = async (
       variables: {
         where: {
           hasflowchart: {
-            nodes_SINGLE: {
+            hasNodes_SINGLE: {
               id: nodeId,
             },
           },
@@ -279,13 +279,13 @@ const updateStoryMethod = async (
             },
           ],
         },
-        comments: [
+        hasComments: [
           {
             create: [
               {
                 node: {
                   message: discussion,
-                  user: {
+                  userHas: {
                     connect: {
                       where: {
                         node: {

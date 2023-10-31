@@ -32,7 +32,7 @@ async function getEdges(
       },
     })
     .then((result) => {
-      const edges1 = JSON.stringify(result.data.flowcharts[0].edges);
+      const edges1 = JSON.stringify(result.data.flowcharts[0].hasEdges);
       // @ts-ignore
       edges = JSON.parse(
         edges1.replaceAll('"hasedgedataEdgedata":', '"data":')
@@ -55,7 +55,7 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
           hasflowchart: {
             update: {
               node: {
-                edges: [
+                hasEdges: [
                   {
                     create: [
                       {
@@ -107,7 +107,7 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
     })
     .then((result) => {
       const edges1 = JSON.stringify(
-        result.data.updateFiles.files[0].hasflowchart.edges
+        result.data.updateFiles.files[0].hasflowchart.hasEdges
       );
       //@ts-ignore
       edges = JSON.parse(

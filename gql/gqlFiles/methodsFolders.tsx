@@ -3,7 +3,7 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import { getMainByUser, deleteFolders, updateFolders } from "./mutations";
+import { getProjectByUser, deleteFolders, updateFolders } from "./mutations";
 import { Folder} from "./interfaces";
 import client from "../../apollo-client";
 async function createFolderInFolder(
@@ -69,7 +69,7 @@ async function createFolderInMain(
                 },
               },
             },
-            mainHas: {
+            projectHas: {
               connect: {
                 where: {
                   node: {
@@ -101,7 +101,7 @@ async function createFolderInMain(
         console.log(cache);
         try {
           const existingData = cache.readQuery({
-            query: getMainByUser,
+            query: getProjectByUser,
             variables: {
               emailId: "irfan123@gmail.com",
             },
@@ -135,20 +135,20 @@ async function deleteFolderBackend(folderID: string, deleteItem: any) {
               delete: {
                 hasflowchart: {
                   delete: {
-                    nodes: [
+                    hasNodes: [
                       {
                         delete: {
                           hasdataNodedata: {
                             delete: {
-                              links: {},
-                              linkedBy: {},
+                              hasLinkedTo: {},
+                              hasLinkedBy: {},
                             },
                           },
                           haspositionPosition: {},
                         },
                       },
                     ],
-                    edges: [
+                    hasEdges: [
                       {
                         delete: {
                           hasedgedataEdgedata: {},

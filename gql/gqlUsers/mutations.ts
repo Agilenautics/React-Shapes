@@ -16,20 +16,20 @@ query getUsers {
 }
 `
 export const GET_USERS_ByProject = gql`
-query Query($where: userWhere) {
+query Query($where: UserWhere) {
   users(where: $where) {
    emailId 
    userType
   }
 }`
 export const DELETE_USER = gql`
-mutation deleteUser($where: userWhere, $delete: userDeleteInput) {
+mutation deleteUser($where: UserWhere, $delete: UserDeleteInput) {
   deleteUsers(where: $where, delete: $delete) {
     nodesDeleted
   }
 }`
 export const ADD_USER = gql`
-mutation CreateUsers($input: [userCreateInput!]!) {
+mutation CreateUsers($input: [UserCreateInput!]!) {
   createUsers(input: $input) {
     users {
       userType
@@ -44,9 +44,9 @@ mutation CreateUsers($input: [userCreateInput!]!) {
 }
 `
 export const UPDATE_USER = gql`
-mutation UpdateUsers($where: userWhere, $update: userUpdateInput) {
+mutation UpdateUsers($where: UserWhere, $update: UserUpdateInput) {
   updateUsers(where: $where, update: $update) {
-    info {
+    Info {
       bookmark
     }
   }
@@ -54,7 +54,7 @@ mutation UpdateUsers($where: userWhere, $update: userUpdateInput) {
 `
 //assign  project to users mutation
 export const allocateProjectToUserMutation = gql`
-mutation assignProjectToUser($connect: userConnectInput, $where: userWhere) {
+mutation assignProjectToUser($connect: UserConnectInput, $where: UserWhere) {
   updateUsers(connect: $connect, where: $where) {
     users {
       id
@@ -66,7 +66,7 @@ mutation assignProjectToUser($connect: userConnectInput, $where: userWhere) {
 }
 `
 export const deAllocateProjectToUserMutation = gql`
-  mutation UpdateUsers($disconnect: userDisconnectInput, $where: userWhere) {
+  mutation UpdateUsers($disconnect: UserDisconnectInput, $where: UserWhere) {
     updateUsers(disconnect: $disconnect, where: $where) {
       info {
         relationshipsDeleted

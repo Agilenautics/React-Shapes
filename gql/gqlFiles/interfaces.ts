@@ -19,20 +19,20 @@ export interface Folder {
   __typename: "folder";
 }
 
-export interface Main {
+export interface Project {
   name: string;
   isOpen: boolean;
   id: string;
   hasContainsFile: File[];
   hasContainsFolder: Folder[];
   children: (Folder | File)[];
-  __typename: "main";
+  __typename: "project";
   userHas: File[];
   description: string;
 }
 
 interface Data {
-  mains: Main[];
+  projects: Project[];
 }
 
 interface RootObject {
@@ -40,20 +40,20 @@ interface RootObject {
 }
 
 export function transformObject(root: RootObject): RootObject {
-  const transformMain = (main: Main): Main => ({
-    ...main,
+  const transformMain = (project: Project): Project => ({
+    ...project,
     children: [
-      ...(Array.isArray(main.hasContainsFolder)
-        ? main.hasContainsFolder.map(transformFolder)
+      ...(Array.isArray(project.hasContainsFolder)
+        ? project.hasContainsFolder.map(transformFolder)
         : []),
-      ...(main.hasContainsFile || []),
+      ...(project.hasContainsFile || []),
     ].map((item) => {
       if (item.type === "file") {
         return item;
       }
       return transformFolder(item);
     }),
-    hasContainsFolder: main.hasContainsFolder.map((folder) =>
+    hasContainsFolder: project.hasContainsFolder.map((folder) =>
       transformFolder(folder)
     ),
   });
@@ -79,7 +79,7 @@ export function transformObject(root: RootObject): RootObject {
 
   const transformData = (data: Data): Data => ({
     ...data,
-    mains: data.mains.map((main) => transformMain(main)),
+    projects: data.projects.map((project) => transformMain(project)),
   });
 
   return {

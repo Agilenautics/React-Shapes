@@ -9,7 +9,7 @@
     ${Node_Fragment}
     ${Edge_Fragment}
     ${Info_Fragment}
-    fragment FileFragment on file {
+    fragment FileFragment on File {
       type
       id
       name
@@ -18,15 +18,15 @@
         id
         name
       }
-      mainHas {
+      projectHas {
         id
         name
       }
-      comments {
+      hasComments {
         id
         message
         timeStamp
-        user {
+        userHas {
           emailId
         }
       }
@@ -39,10 +39,10 @@
       }
       hasflowchart {
         name
-        nodes {
+        hasNodes {
           ...NodeFragment
         }
-        edges {
+        hasEdges {
           ...EdgeFragment
         }
       }

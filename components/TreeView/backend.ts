@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
-import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, deleteFileBackend, deleteFolderBackend, Folder } from "../../gql";
+import {
+  connectToFolderBackendOnMove,
+  disconnectFromFolderBackendOnMove,
+  updateFileBackend,
+  updateFolderBackend,
+  deleteFileBackend,
+  deleteFolderBackend,
+  Folder,
+} from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
 
 /**
@@ -55,7 +63,6 @@ export function useBackend() {
 
   // console.log(initData);
 
-
   useEffect(() => {
     setData(initData);
     update;
@@ -100,7 +107,7 @@ export function useBackend() {
               "Welcome!\nTo get started, use the sidebar button on the top left.",
             shape: "rectangle",
             description: "",
-            links: {},
+            hasLinkedTo: {},
           },
           position: { x: 0, y: 0 },
           type: "WelcomeNode",
@@ -132,7 +139,6 @@ export function useBackend() {
         await updateFileBackend(id, name);
         // updateNodes(nodeData);
       }
-
     },
 
     onDelete: async (id: string) => {
@@ -151,7 +157,6 @@ export function useBackend() {
       }
     },
   };
-
 }
 
 export default useBackend;

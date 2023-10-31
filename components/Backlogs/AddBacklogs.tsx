@@ -87,6 +87,9 @@ export default function AddBacklogs({
               values
             );
             values.parent = values.epic;
+            // values.id = createFileResponse.id;
+            // values.uid = createFileResponse.uid;
+            // values.sprint = createFileResponse.hasSprint;
             addRow(values);
             const updatedUidResponse = (await updateUidMethode(
               idofUid,
@@ -422,7 +425,7 @@ export default function AddBacklogs({
                   />
                 </div>
                 {router.pathname !== "/projects/[projectId]/backlogs/add" && (
-                  <Discussion comments={selectedElement.comments} />
+                  <Discussion comments={selectedElement.comment} />
                 )}
               </div>
 

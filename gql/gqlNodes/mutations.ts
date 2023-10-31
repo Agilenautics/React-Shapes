@@ -5,13 +5,13 @@ import { Edge_Fragment } from "../gqlEdges/fragments";
 export const allNodes = gql`
   ${Node_Fragment}
   ${Edge_Fragment}
-  query getAllNodes($where: flowchartWhere) {
+  query getAllNodes($where: FlowchartWhere) {
     flowcharts(where: $where) {
       name
-      nodes {
+      hasNodes {
         ...NodeFragment
       }
-      edges {
+      hasEdges {
         ...EdgeFragment
       }
     }
@@ -20,7 +20,7 @@ export const allNodes = gql`
 
 export const getNode = gql`
   ${Node_Fragment}
-  query FlowNodes($where: flowNodeWhere) {
+  query FlowNodes($where: FlowNodeWhere) {
     flowNodes(where: $where) {
       ...NodeFragment
     }
@@ -31,7 +31,7 @@ export const getNode = gql`
 
 export const newNode = gql`
   ${Node_Fragment}
-  mutation UpdateFiles($where: fileWhere, $update: fileUpdateInput) {
+  mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
         name
@@ -40,7 +40,7 @@ export const newNode = gql`
         }
         hasflowchart {
           name
-          nodes {
+          hasNodes {
             ...NodeFragment
           }
         }
@@ -49,7 +49,7 @@ export const newNode = gql`
   }
 `;
 export const delNodeMutation = gql`
-  mutation deleteNode($where: flowNodeWhere, $delete: flowNodeDeleteInput) {
+  mutation deleteNode($where: FlowNodeWhere, $delete: FlowNodeDeleteInput) {
     deleteFlowNodes(where: $where, delete: $delete) {
       nodesDeleted
       relationshipsDeleted
@@ -57,9 +57,9 @@ export const delNodeMutation = gql`
   }
 `;
 export const updateLinkedBy = gql`
-  mutation UpdateLinkedBy($where: linkedWhere, $update: linkedUpdateInput) {
-    updateLinkeds(where: $where, update: $update) {
-      linkeds {
+  mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
+    updateLinkedBy(where: $where, update: $update) {
+      linkedBy {
         fileId
         flag
         id
@@ -68,14 +68,14 @@ export const updateLinkedBy = gql`
     }
   }
 `;
-export const updateLinksMutation = gql`
-  mutation updateLinks($where: nodeDataWhere, $update: nodeDataUpdateInput) {
+export const updateLinkedToMutation = gql`
+  mutation updateLinkedTo($where: NodeDataWhere, $update: NodeDataUpdateInput) {
     updateNodeData(where: $where, update: $update) {
       nodeData {
         label
         description
         shape
-        links {
+        hasLinkedTo {
           label
           id
           fileId
@@ -87,7 +87,7 @@ export const updateLinksMutation = gql`
 `;
 export const updateNodesMutation = gql`
   ${Node_Fragment}
-  mutation updateFlowNode($where: flowNodeWhere, $update: flowNodeUpdateInput) {
+  mutation updateFlowNode($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {
       flowNodes {
         ...NodeFragment
@@ -99,7 +99,7 @@ export const updateNodesMutation = gql`
 //updete position mutation
 
 export const updatePositionMutation = gql`
-  mutation updatePosition($update: positionUpdateInput, $where: positionWhere) {
+  mutation updatePosition($update: PositionUpdateInput, $where: PositionWhere) {
     updatePositions(update: $update, where: $where) {
       positions {
         name
@@ -114,7 +114,7 @@ export const updatePositionMutation = gql`
 `;
 export const updateTasksMutation = gql`
   ${Info_Fragment}
-  mutation updateTasks($where: flowNodeWhere, $update: flowNodeUpdateInput) {
+  mutation updateTasks($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {
       flowNodes {
         id
@@ -129,11 +129,11 @@ export const updateTasksMutation = gql`
           label
           description
         }
-        comments {
+        hasComments {
           id
           message
           timeStamp
-          user {
+          userHas {
             emailId
           }
         }

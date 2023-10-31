@@ -22,7 +22,7 @@ import {
   createFolderInMain,
   createUidMethode,
   createUidMutation,
-  getMainByUser,
+  getProjectByUser,
   getTreeNodeByUser,
   getUidMethode,
   getUidQuery,
@@ -31,11 +31,12 @@ import {
   updateUidMutation,
 } from "../../gql";
 import Link from "next/link";
-import projectStore, { Project } from "../AdminPage/Projects/projectStore";
+import projectStore from "../AdminPage/Projects/projectStore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import AddProjectPopup from "../AdminPage/Projects/ProjectOverlay";
 import { ToastContainer, toast } from "react-toastify";
+import { Project } from "../../lib/appInterfaces";
 
 interface SideBar {
   isOpen: Boolean;
@@ -72,7 +73,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
   const projectId = (router.query.projectId as string) || "";
 
   const getProjectId = async (id: string) => {
-    const initData = await getTreeNodeByUser(getMainByUser, id, setLoading);
+    const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
     const data = initData[0];
     //@ts-ignore
     updateInitData(data);

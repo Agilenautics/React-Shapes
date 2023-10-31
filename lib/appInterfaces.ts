@@ -81,7 +81,7 @@ interface File {
   uid: number;
   timeStamp: string;
   hasInfo: Info;
-  mainHas: Project;
+  projectHas: Project;
   comments: Array<Comment>;
   hasflowchart: Flowchart;
   folderHas: Folder;
@@ -127,7 +127,7 @@ interface Backlog {
   folderHas: Array<Folder>;
   hasFile: Array<File>;
   parent: Parent;
-  mainHas: Project;
+  projectHas: Project;
 }
 
 interface Main {

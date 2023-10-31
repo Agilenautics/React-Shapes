@@ -1,12 +1,12 @@
+// have to check with irfan line no:8 & 10
 import {
   DocumentNode,
   OperationVariables,
   TypedDocumentNode,
 } from "@apollo/client";
 import client from "../../apollo-client";
-import { Project } from "../../components/AdminPage/Projects/projectStore";
 import { GET_PROJECTS, GET_USER, GET_PROJECTS_BY_ID } from "./mutations";
-
+import { Project } from "../..//lib/appInterfaces";
 const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>, methods: any) => {
   const { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject } = methods
   let admin = {}
@@ -16,8 +16,9 @@ const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDo
       where: {
         emailId: email
       }
-    }
+    } 
   }).then((res) => {
+    console.log(res)
     updateProjects(res.data.users[0].hasProjects, res.loading);
     updateRecycleBinProject(res.data.users[0].hasProjects, res.loading);
     updateLoginUser(res.data.users);
@@ -68,7 +69,7 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
         deletedAT: newdate
       }
     },
-    update: (cache, { data: { updateMains: { mains } } }) => {
+    update: (cache, { data: { updateProjects: { projects } } }) => {
       const existingUser = cache.readQuery({
         query,
         variables: {
@@ -80,7 +81,7 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
       const { hasProjects, ...userData } = existingUser.users[0]
       const updated_projects = hasProjects.map((project: Project) => {
         if (project.id === id) {
-          return { ...mains[0] }
+          return { ...projects[0] }
         }
         return project
       });
@@ -98,7 +99,7 @@ const delete_Project = async (id: string, mutation: DocumentNode | TypedDocument
       })
     },
   }).then((response) => {
-    deleteData = response.data.updateMains
+    deleteData = response.data.updateProjects
   })
 }
 
@@ -151,7 +152,7 @@ const recycleProject = async (id: string, mutation: DocumentNode | TypedDocument
           deletedAT: ""
         }
       },
-      update: (cache, { data: { updateMains: { mains } } }) => {
+      update: (cache, { data: { updateProjects: {projects } } }) => {
         const existanceUser = cache.readQuery(
           {
             query,
@@ -166,7 +167,7 @@ const recycleProject = async (id: string, mutation: DocumentNode | TypedDocument
         const updated_projects = hasProjects.map((project: Project) => {
           if (project.id === id) {
             return {
-              ...mains[0]
+              ...projects[0]
             }
           }
           return project
@@ -250,7 +251,7 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
               "delete": {
                 "hasflowchart": {
                   "delete": {
-                    "edges": [
+                    "hasEdges": [
                       {
                         "delete": {
                           "hasedgedataEdgedata": {
@@ -259,7 +260,7 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
                         }
                       }
                     ],
-                    "nodes": [
+                    "hasNodes": [
                       {
                         "delete": {
                           "haspositionPosition": {
@@ -282,14 +283,14 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
                     "delete": {
                       "hasflowchart": {
                         "delete": {
-                          "edges": [
+                          "hasEdges": [
                             {
                               "delete": {
                                 "hasedgedataEdgedata": {}
                               }
                             }
                           ],
-                          "nodes": [
+                          "hasNodes": [
                             {
                               "delete": {
                                 "haspositionPosition": {},
@@ -310,7 +311,7 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
                           "delete": {
                             "hasflowchart": {
                               "delete": {
-                                "nodes": [
+                                "hasNodes": [
                                   {
                                     "delete": {
                                       "hasdataNodedata": {},
@@ -318,7 +319,7 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
                                     }
                                   }
                                 ],
-                                "edges": [
+                                "hasEdges": [
                                   {
                                     "delete": {
                                       "hasedgedataEdgedata": {}
@@ -407,7 +408,7 @@ const addProject_Backend = async (email: String, project: any, mutation: Documen
           }
         ]
       },
-      update: (cache, { data: { createMains: { mains } } }) => {
+      update: (cache, { data: { createProjects: { projects } } }) => {
         // @ts-ignore
         const { users } = cache.readQuery({
           query,
@@ -418,7 +419,7 @@ const addProject_Backend = async (email: String, project: any, mutation: Documen
           }
         });
         const { hasProjects, ...user } = users[0];
-        const updated_projects = [...mains, ...hasProjects];
+        const updated_projects = [...projects, ...hasProjects];
         const updated_user = { ...user, hasProjects: updated_projects };
         cache.writeQuery({
           query,
@@ -433,7 +434,7 @@ const addProject_Backend = async (email: String, project: any, mutation: Documen
         })
       },
     }).then((response) => {
-      addProject(response.data.createMains.mains[0])
+      addProject(response.data.createProjects.projects[0])
     }
     )
 

@@ -3,9 +3,9 @@ import {
 } from "@apollo/client";
 
 export const UPDATE_COMMENTS = gql`
-mutation UpdateComments($where: commentsWhere, $update: commentsUpdateInput) {
-  updateComments(where: $where, update: $update) {
-    comments {
+mutation UpdateComment($where: CommentWhere, $update: CommentUpdateInput) {
+  updateComment(where: $where, update: $update) {
+    comment {
       id
       message
       timeStamp
@@ -14,8 +14,8 @@ mutation UpdateComments($where: commentsWhere, $update: commentsUpdateInput) {
 }
 `
 export const DELETE_COMMENT = gql`
-mutation DeleteComments($where: commentsWhere) {
-  deleteComments(where: $where) {
+mutation DeleteComment($where: CommentWhere) {
+  deleteComment(where: $where) {
     relationshipsDeleted
     nodesDeleted
   }

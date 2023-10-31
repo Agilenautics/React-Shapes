@@ -58,8 +58,8 @@ async function getNodes(
       },
     })
     .then((result) => {
-      const nodes1 = JSON.stringify(result.data.flowcharts[0].nodes);
-      const edge1 = JSON.stringify(result.data.flowcharts[0].edges);
+      const nodes1 = JSON.stringify(result.data.flowcharts[0].hasNodes);
+      const edge1 = JSON.stringify(result.data.flowcharts[0].hasEdges);
       const edge2 = edge1.replaceAll('"hasedgedataEdgedata":', '"data":');
       edges = JSON.parse(edge2);
       const nodes2 = nodes1
@@ -92,7 +92,7 @@ async function createNode(
             hasflowchart: {
               update: {
                 node: {
-                  nodes: [
+                  hasNodes: [
                     {
                       create: [
                         {
@@ -101,12 +101,12 @@ async function createNode(
                             draggable: true,
                             type: data.type,
                             uid: data.uid,
-                            comments: {
+                            hasComments: {
                               create: [
                                 {
                                   node: {
                                     message: data.discussion,
-                                    user: {
+                                    userHas: {
                                       connect: {
                                         where: {
                                           node: {
@@ -136,7 +136,7 @@ async function createNode(
                                   label: data.name || data.label,
                                   shape: data.symbol || "rectangle",
                                   description: data.description,
-                                  links: {
+                                  hasLinkedTo: {
                                     create: {
                                       node: {
                                         label: "",
@@ -146,7 +146,7 @@ async function createNode(
                                       },
                                     },
                                   },
-                                  linkedBy: {
+                                  hasLinkedBy: {
                                     create: {
                                       node: {
                                         label: "",
@@ -208,10 +208,9 @@ async function createNode(
               },
             },
           });
-          
-          
+
           console.log(existanceCache, "data");
-          const nodes = existanceCache.flowcharts[0].nodes;
+          const nodes = existanceCache.flowcharts[0].hasNodes;
           console.log(files);
 
           // const updated_nodes =
@@ -219,7 +218,7 @@ async function createNode(
       })
       .then((result) => {
         const nodes1 = JSON.stringify(
-          result.data.updateFiles.files[0].hasflowchart.nodes
+          result.data.updateFiles.files[0].hasflowchart.hasNodes
         )
           .replaceAll('"hasdataNodedata":', '"data":')
           .replaceAll('"haspositionPosition":', '"position":');
@@ -257,8 +256,8 @@ async function deleteNodeBackend(
         delete: {
           hasdataNodedata: {
             delete: {
-              links: {},
-              linkedBy: {},
+              hasLinkedTo: {},
+              hasLinkedBy: {},
             },
           },
           haspositionPosition: {},
@@ -285,7 +284,7 @@ async function deleteNodeBackend(
             },
           },
         });
-        const nodes = existanceData.flowcharts[0].nodes;
+        const nodes = existanceData.flowcharts[0].hasNodes;
         let deleted_node = nodes.filter((values: Node) => values.id !== nodeID);
         const updaedFlowNodes = {
           ...existanceData.flowcharts[0],
@@ -387,7 +386,7 @@ const updateLinkedByMethod = async (
     mutation: mutations,
     variables: {
       where: {
-        hasLinked: {
+        hasLinkedBy: {
           flownodeHasdata: {
             id: nodeData.id,
           },
@@ -421,13 +420,13 @@ const updateNodeData = async (
         description: nodeData.data.description,
         shape: nodeData.data.shape,
         label: nodeData.data.label,
-        links: {
+        hasLinkedTo: {
           update: {
             node: {
-              fileId: nodeData.data.links.fileId,
-              flag: nodeData.data.links.flag,
-              id: nodeData.data.links.id,
-              label: nodeData.data.links.label,
+              fileId: nodeData.data.hasLinkedTo.fileId,
+              flag: nodeData.data.hasLinkedTo.flag,
+              id: nodeData.data.hasLinkedTo.id,
+              label: nodeData.data.hasLinkedTo.label,
             },
           },
         },
@@ -479,13 +478,13 @@ const updateTaskMethod = async (
             },
           ],
         },
-        comments: [
+        hasComments: [
           {
             create: [
               {
                 node: {
                   message: data.discussion,
-                  user: {
+                  userHas: {
                     connect: {
                       where: {
                         node: {

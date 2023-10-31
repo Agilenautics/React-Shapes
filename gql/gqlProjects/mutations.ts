@@ -3,9 +3,9 @@ import { Project_Fragment } from "./fragments";
 
 export const DELETE_PROJECT = gql`
 ${Project_Fragment}
-mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-    mains {
+mutation deleteProject($where: ProjectWhere, $update: ProjectUpdateInput) {
+  updateProjects(where: $where, update: $update) {
+    projects {
      ...ProjectFragment
     }
   }
@@ -14,9 +14,9 @@ mutation deleteProject($where: mainWhere, $update: mainUpdateInput) {
 
 export const ADD_PROJECT = gql`
 ${Project_Fragment}
-mutation createProject($input: [mainCreateInput!]!) {
-  createMains(input: $input) {
-    mains {
+mutation createProject($input: [ProjectCreateInput!]!) {
+  createProjects(input: $input) {
+    projects {
       ...ProjectFragment
     }
   }
@@ -63,7 +63,7 @@ export const UserSheme = gql`
 
 export const GET_USER = gql`
   ${Project_Fragment}
-  query getUser($where: userWhere) {
+  query getUser($where: UserWhere) {
     users(where: $where) {
       active
       id
@@ -77,9 +77,9 @@ export const GET_USER = gql`
   }
 `;
 export const EDIT_PROJECT = gql`
-mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-    mains {
+mutation Mutation($where: ProjectWhere, $update: ProjectUpdateInput) {
+  updateProjects(where: $where, update: $update) {
+    projects {
       name
       description
     }
@@ -91,9 +91,9 @@ mutation Mutation($where: mainWhere, $update: mainUpdateInput) {
 
 export const recentProject_mutation = gql`
 ${Project_Fragment}
-mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
-  updateMains(where: $where, update: $update) {
-    mains {
+mutation updateRecentProject($where: ProjectWhere, $update: ProjectUpdateInput) {
+  updateProjects(where: $where, update: $update) {
+    projects {
     ...ProjectFragment
     }
   }
@@ -103,8 +103,8 @@ mutation updateRecentProject($where: mainWhere, $update: mainUpdateInput) {
 
 //parmenant delete mutation
 export const PARMENANT_DELETE = gql`
-mutation parmenantDelete($where: mainWhere) {
-  deleteMains(where: $where) {
+mutation parmenantDelete($where: ProjectsWhere) {
+  deleteProjects(where: $where) {
     nodesDeleted
   }
 }
@@ -112,8 +112,8 @@ mutation parmenantDelete($where: mainWhere) {
 //clear reCycle bin
 
 export const CLEAR_RECYCLE_BIN = gql`
-mutation clearBin($where: mainWhere, $delete: mainDeleteInput) {
-  deleteMains(where: $where, delete: $delete) {
+mutation clearBin($where: ProjectWhere, $delete: projectDeleteInput) {
+  deleteProjects(where: $where, delete: $delete) {
     relationshipsDeleted
   }
 }`

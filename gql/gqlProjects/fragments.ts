@@ -1,7 +1,7 @@
 
 import {gql} from "@apollo/client"
 export const Project_Fragment = gql`
-  fragment ProjectFragment on main {
+  fragment ProjectFragment on Project {
       id
       timeStamp
       description
