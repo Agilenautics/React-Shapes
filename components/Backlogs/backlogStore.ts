@@ -17,8 +17,7 @@ const backlogStore = create<BacklogState>((set) => ({
   parents: [],
   allStatus: [],
   updateBacklogsData: (backlogs: Array<Backlog>) =>
-    // @ts-ignore
-    set((state) => {
+    set((state): any => {
       const parents: any[] = [{ name: "Select Epic", id: "" }];
       const allStories: any[] = [];
       const allStatus: any[] = ["To-Do", "In-Progress", "Completed"];
@@ -40,7 +39,6 @@ const backlogStore = create<BacklogState>((set) => ({
         if (i.type == "folder") {
           parents.push({ name: i.name, id: i.id });
 
-          //@ts-ignore
           for (let j of i.hasFile) {
             allStories.push({ ...j, parent: { name: i.name, id: i.id } });
             if (!allStatus.includes(j.hasInfo.status)) {

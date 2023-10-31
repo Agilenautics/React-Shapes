@@ -1,11 +1,9 @@
-import { useMutation } from "@apollo/client";
-import React, { useEffect, useState } from "react";
-import {  GET_USER, addProject_Backend } from "../../../gql";
+import React, { useState } from "react";
+import { GET_USER, addProject_Backend, ADD_PROJECT } from "../../../gql";
 
-import { Project } from "reactflow";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
-import { ADD_PROJECT } from "../../../gql";
+import { Project } from "../../../lib/appInterfaces";
 
 interface AddProjectPopupProps {
   onAddProject: (name: string, desc: string) => void;
@@ -13,7 +11,6 @@ interface AddProjectPopupProps {
   notify: () => void;
   projectData: Array<Project>;
   userEmail: String;
-  handleMessage: (message: string) => void;
 }
 
 const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
@@ -23,12 +20,8 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   projectData,
 }) => {
   const [formData, setFormData] = useState({ name: "", description: "" });
-
-  const [createProject, { data, error, loading }] = useMutation(ADD_PROJECT);
   const [errors, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const addProject = projectStore((state) => state.addProject);
+  const { addProject, loading } = projectStore();
 
   // successfull message
 
@@ -41,21 +34,22 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     if (existanceProject) {
       setError("This Project already exists");
     } else {
-      addProject_Backend(userEmail, formData, ADD_PROJECT, addProject,GET_USER).then((response) => {
-        // addProject(newProject)
-        notify()
-        onClose();
-        setError(null);
-      }).catch((err) => console.log(err))
-        // .finally((result) => {
-        //   // window.location.reload();
-        // })
+      addProject_Backend(userEmail, formData, ADD_PROJECT, addProject, GET_USER)
+        .then((response) => {
+          // addProject(newProject)
+          notify();
+          onClose();
+          setError(null);
+        })
+        .catch((err) => console.log(err));
+      // .finally((result) => {
+      //   // window.location.reload();
+      // })
       setFormData({ name: "", description: "" });
     }
   };
 
-  
-  if (loading || isLoading)
+  if (loading)
     return (
       <div className="flex h-screen items-center justify-center">
         <LoadingIcon />

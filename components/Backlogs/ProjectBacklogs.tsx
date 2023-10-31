@@ -24,6 +24,8 @@ function ProjectBacklogs() {
   const [selectedSprint, setSelectedSprint] = useState("");
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [selectedElement, setSelectedElement] = useState(null);
+  const [users, setUsers] = useState<any[]>([]);
+  const [items, setItems] = useState<any[]>([]);
   // from backlog store iam taking allStatus and parents
   const { allStatus, parents, backlogs, updateBacklogsData } = backlogStore();
   // from fileStore iam taking loading and main data
@@ -37,8 +39,6 @@ function ProjectBacklogs() {
 
   const [statuses, setStatuses] = useState(["Select Status", ...allStatus]);
 
-  const [users, setUsers] = useState<any[]>([]);
-  const [items, setItems] = useState<any[]>([]);
 
   //taking router object from the useRouter hook from next
   const router = useRouter();
@@ -105,9 +105,9 @@ function ProjectBacklogs() {
     });
   };
 
-  const getSprintName: any = (id: string) => {
-    if (id == "" || id == null) return "-";
-  };
+  // const getSprintName: any = (id: string) => {
+  //   if (id == "" || id == null) return "-";
+  // };
 
   return loading ? (
     <div className="flex h-screen items-center justify-center">
@@ -238,17 +238,14 @@ function ProjectBacklogs() {
             <tbody>
               {filteredData.map((element: any, index: any) => (
                 <tr key={index} className="py-1">
-                  {/* @ts-ignore */}
                   <td className="cursor-pointer px-1 py-2 text-center">
                     {element.uid}
                   </td>
                   <td
                     className={`px-1 py-2 ${
-                      // @ts-ignore
                       getTypeLabel(element.type).color
                     } text-grey rounded-lg text-center`}
                   >
-                    {/* @ts-ignore */}
                     {getTypeLabel(element.type).type}
                   </td>
                   <td
@@ -269,7 +266,6 @@ function ProjectBacklogs() {
                   </td>
                   <td
                     className={`px-1 py-2 ${getStatusColor(
-                      // @ts-ignore
                       element.status
                     )} text-grey rounded-lg text-center`}
                   >

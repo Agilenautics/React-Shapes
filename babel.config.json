@@ -1,5 +1,4 @@
 {
-    "plugins": [
-        "@babel/plugin-syntax-flow"
-    ]
+  "plugins": ["@babel/plugin-syntax-flow"],
+  "presets": ["next/babel", "@babel/preset-typescript"]
 }

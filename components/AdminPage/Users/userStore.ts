@@ -25,7 +25,6 @@ const userStore = create<userState>((set) => ({
     userType: '',
     updateLoginUser: (loginUser: any) =>
         set((state) => {
-            console.log(loginUser)
             const { hasProjects, ...userData } = loginUser[0]
             return { user: [userData] }
         })

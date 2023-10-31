@@ -17,18 +17,10 @@ import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
 import LoadingIcon from "../../LoadingIcon";
-import { User } from "../Users/Users";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 
-interface Project {
-  id: string;
-  name: string;
-  desc: string;
-  deletedAt: string; //TODO removed descirption and added timestamps
-  users: User[];
-  recycleBin: boolean;
-}
+
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation

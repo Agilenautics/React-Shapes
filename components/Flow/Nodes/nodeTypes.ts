@@ -53,7 +53,7 @@ const nodeCSSMap = Object.fromEntries(
   nodeStrings.map((_, i) => [nodeStrings[i], nodeCSS[i]])
 );
 
-const nodeShapeMap = {
+const nodeShapeMap:any = {
   rectangle: ["w-36 h-10", "h-7 rounded-md", ""],
   diamond: [
     "!h-24 w-24",

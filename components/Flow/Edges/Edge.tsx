@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import { Editing } from "../Editing";
-import {
-  getSmoothStepPath,
-  getBezierPath,
-  Position,
-} from "reactflow";
+import { getSmoothStepPath, getBezierPath, Position } from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
 const fOHeight = fO;
 const fOWidth = fO + 100;
-import 'reactflow/dist/style.css';
+import "reactflow/dist/style.css";
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
 import { lineColors } from "../constants";
@@ -33,7 +29,7 @@ export default function CustomEdge({
   sourcePosition: Position;
   targetPosition: Position;
   data: {
-    id:string;
+    id: string;
     label: string;
     pathCSS: string;
     boxCSS: string;
@@ -52,9 +48,8 @@ export default function CustomEdge({
 
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState(false);
-  const updateLabel = edgeStore((state) => state.updateLabel);
-  const updateEdgeType = edgeStore((state) => state.updateEdgeCSS);
-  const updateDescription = nodeStore((state) => state.updateDescription);
+  const { updateLabel, updateEdgeCSS: updateEdgeType } = edgeStore();
+  const { updateDescription } = nodeStore();
   const [lineColor, setLineColor] = useState("green");
   const markerStartCheck = data.bidirectional
     ? `url(#marker-end-${id})`
@@ -63,7 +58,6 @@ export default function CustomEdge({
     const lineColorPath = data.pathCSS.split(" ").slice(-1)[0];
     const fillPath = lineColorPath.split("-").slice(0, 3).join("-");
     const strokeWidth = lineColorPath.split("-").slice(-1)[0];
-    // @ts-ignore
     setLineColor(lineColors[fillPath][strokeWidth]);
   }, [data.pathCSS]);
 
@@ -95,7 +89,7 @@ export default function CustomEdge({
           markerHeight="5"
           orient="auto-start-reverse"
         >
-          <path d="M0,-5L10,0L0,5" fill={lineColor} ></path>
+          <path d="M0,-5L10,0L0,5" fill={lineColor}></path>
         </marker>
       </defs>
 
@@ -109,7 +103,11 @@ export default function CustomEdge({
         orient="auto-start-reverse"
         fill={lineColor} // Set the same color for the marker
       >
-        <path d={`M0,0 L0,${markerSize} L${markerSize},${markerSize / 2} z`} className="edge-marker" /> {/* Smaller arrow */}
+        <path
+          d={`M0,0 L0,${markerSize} L${markerSize},${markerSize / 2} z`}
+          className="edge-marker"
+        />{" "}
+        {/* Smaller arrow */}
       </marker>
       {/* Edge marker at the start */}
       <marker
@@ -120,7 +118,8 @@ export default function CustomEdge({
         refY={markerSize / 2} // Orient the marker at the start of the edge
         fill={lineColor} // Set the same color for the marker
       >
-        <circle cx={markerSize / 2} cy={markerSize / 2} r={markerSize / 3} /> {/* Smaller circle */}
+        <circle cx={markerSize / 2} cy={markerSize / 2} r={markerSize / 3} />{" "}
+        {/* Smaller circle */}
       </marker>
 
       {/* Edge path */}
@@ -178,9 +177,7 @@ export default function CustomEdge({
                 <p>{data.label}</p>
               )}
             </div>
-          ) : (
-            <div></div>
-          )}
+          ) : null}
         </div>
       </foreignObject>
     </>

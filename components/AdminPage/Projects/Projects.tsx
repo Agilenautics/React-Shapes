@@ -2,11 +2,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
 import { auth } from "../../../auth";
-import { GET_USER, DELETE_PROJECT } from "../../../gql";
-import { delete_Project } from "../../../gql";
+import { GET_USER, DELETE_PROJECT,delete_Project } from "../../../gql";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
-import { User, getInitials } from "../Users/Users";
+import { getInitials } from "../Users/Users";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,18 +18,15 @@ import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
-import { Project } from "../../../lib/appInterfaces";
+import { Project, User } from "../../../lib/appInterfaces";
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [projectData, setProjectData] = useState<Project[]>([]);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
   const [projectTrackChanges, setProjectTrackChanges] = useState(false);
 
   // project store
@@ -98,8 +94,8 @@ function Projects() {
   }, [searchTerm]);
 
   useEffect(() => {
-    setIsButtonDisabled(userType.toLowerCase() === "user");
-    setIsNewProjectDisabled(userType.toLowerCase() === "super user");
+    // setIsButtonDisabled(userType.toLowerCase() === "user");
+    // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
     verificationToken();
     if (loginUser && loginUser.length) {
       setUserEmail(loginUser[0].emailId);
@@ -267,7 +263,6 @@ function Projects() {
           notify={notify}
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
-          // @ts-ignore
           projectData={allProjects}
           userEmail={userEmail}
         />

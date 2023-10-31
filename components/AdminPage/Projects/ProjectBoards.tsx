@@ -4,19 +4,20 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import fileStore from "../../TreeView/fileStore";
 import { getTypeLabel } from "./staticData/basicFunctions";
 import { types } from "./staticData/types";
-
-import { updateTasksMutation } from "../../../gql";
-import { updateTaskMethod } from "../../../gql";
-import { updateStoryMethod, updateStoryMutation } from "../../../gql";
 import { onAuthStateChanged } from "firebase/auth";
-import { getUserByEmail } from "../../../gql";
-
 import { auth } from "../../../auth";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 import backlogStore from "../../Backlogs/backlogStore";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { GET_USER } from "../../../gql";
+import {
+  GET_USER,
+  updateStoryMethod,
+  updateStoryMutation,
+  updateTaskMethod,
+  getUserByEmail,
+  updateTasksMutation
+} from "../../../gql";
 
 function ProjectBoards() {
   const allStatus = backlogStore((state) => state.allStatus);
@@ -29,20 +30,12 @@ function ProjectBoards() {
   const tooltipRef = useRef<HTMLSpanElement>(null);
   const container = useRef<HTMLDivElement>(null);
 
-  let backend: any = fileStore((store) => store.data);
+  const { loading, data: backend } = fileStore();
   const { backlogs, updateBacklogsData, updateRow } = backlogStore();
-  const loading = fileStore((state) => state.loading);
+  const { updateProjectData: updateProjects, updateRecycleBinProject } =
+    projectStore();
+  const { updateUserType, updateLoginUser } = userStore();
 
-  // let backend = useBackend();
-
-  const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore(
-    (state) => state.updateRecycleBinProject
-  );
-  const updateUserType = userStore((state) => state.updateUserType);
-  const updateLoginUser = userStore((state) => state.updateLoginUser);
-
-  const loadingFromFileStore = fileStore((state) => state.loading);
   const verificationToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
@@ -58,7 +51,7 @@ function ProjectBoards() {
 
   useEffect(() => {
     if (backlogs.length == 0) {
-      updateBacklogsData(backend.children);
+      updateBacklogsData(backend.children as any);
     }
     let filteredStatuses: any;
     filteredStatuses = backlogs.filter(
@@ -98,7 +91,6 @@ function ProjectBoards() {
     const task = JSON.parse(localStorage.getItem("task") as string);
     task.status = columnId;
 
-    // console.log(statuses);
     updateStatus({ id: task.id, newStatus: columnId });
 
     if (task.type == "file") {
@@ -114,9 +106,7 @@ function ProjectBoards() {
     localStorage.clear();
   };
 
-  // console.log(statuses);
-
-  if (loadingFromFileStore) {
+  if (loading) {
     return <div>...loading</div>;
   }
 

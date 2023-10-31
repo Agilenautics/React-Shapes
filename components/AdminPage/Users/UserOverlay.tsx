@@ -4,7 +4,6 @@ import makeAnimated from "react-select/animated";
 import { usersList } from "./UsersList";
 import { useMutation } from "@apollo/client";
 import { ADD_USER, ALL_USERS } from "../../../gql";
-import { GET_PROJECTS } from "../../../gql";
 import { sendLink } from "../../Authentication/SignInLink/sendLink";
 
 interface Project {
@@ -24,7 +23,6 @@ interface User {
 
 interface UserOverlayProps {
   onClose: () => void;
-  //onAddUser: (user: User, selectedProjects: string[]) => void;
   projectData: Array<Project>;
   handleMessage: (message: string) => void; // Add the prop for handleMessage function
 }
@@ -71,7 +69,6 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
   };
 
   // Mutation of add new user
-
   const [createNewUser, { data, error, loading }] = useMutation(ADD_USER);
 
   const handleProjectSelect = (selectedOptions: any) => {

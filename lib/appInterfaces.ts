@@ -2,6 +2,7 @@ import { Edge, Node } from "reactflow";
 //user type Interface
 interface User {
   id: string;
+  // name:string
   userId: string;
   userName: string;
   userType: string;
@@ -42,6 +43,7 @@ interface Info {
 interface Comment {
   id: string;
   message: string;
+  user: User;
   timeStamp: string;
   __typename: string;
 }
@@ -57,6 +59,7 @@ interface Folder {
   hasInfo: Info;
   hasFile: Array<File>;
   hasSprint: Array<Sprints>;
+  children: (Folder | File)[];
 }
 
 // flowchart interface
@@ -122,12 +125,29 @@ interface Backlog {
   hasSprint: Array<Sprints>;
   comments: Array<Comment>;
   folderHas: Array<Folder>;
+  hasFile: Array<File>;
   parent: Parent;
   mainHas: Project;
 }
 
+interface Main {
+  __typename: string;
+  id: string;
+  name: string;
+  description: string;
+  timeStamp: string;
+  recycleBin: boolean;
+  recentProject: string;
+  deletedAT: string;
+  isOpen: boolean;
+  hasContainsFile: File[];
+  hasContainsFolder: Folder[];
+  children: (Folder | File)[];
+  userHas: Array<User>;
+}
+
 interface Data {
-  mains: Project[];
+  mains: Main[];
 }
 
 interface RootObject {
@@ -147,4 +167,5 @@ export type {
   User,
   Data,
   RootObject,
+  Main
 };

@@ -28,16 +28,13 @@ import {
   updateNodeBackend,
   updatePosition,
   updatePositionMutation,
-} from "../../gql";
-import {
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
-  getMainByUser
+  getMainByUser,
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
-
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -60,22 +57,16 @@ function Flow() {
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
-  const defaultNodes = nodeStore((state) => state.nodes);
-  const defaultEdges = edgeStore((state) => state.edges);
-  const updateEdges = edgeStore((state) => state.updateEdges);
-  const updateNodes = nodeStore((state) => state.updateNodes);
-  const deleteNode = nodeStore((state) => state.deleteNode);
+  const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
+  const { edges: defaultEdges, updateEdges, deleteEdge } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
-  const currentFlowchart = fileStore((state) => state.currentFlowchart);
-  const fileId = fileStore((state) => state.Id);
-  const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
-  const deleteEdge = edgeStore((state) => state.deleteEdge);
+  const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
   const [nodeId, setNodeId] = useState([]);
 
   const dragged = useRef(false);
 
-  const [showConfirmation, setShowConfirmation] = useState(
+  const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
@@ -86,18 +77,14 @@ function Flow() {
   };
   const handleConfirm = useCallback(() => {
     if (showConfirmation) {
-      //@ts-ignore
       const selectedItems = showConfirmation.selectedItems;
       if (showConfirmation.type === "node") {
-        //console.log(findNode(selectedItems));
         onNodesDelete(selectedItems);
       } else if (showConfirmation.type === "links") {
-        //console.log(findNode(selectedItems));
         onNodesDelete(selectedItems);
       } else if (showConfirmation.type === "edge") {
         onDeleteEdge(selectedItems);
       }
-      //@ts-ignore
       setShowConfirmation(null);
     }
     setShowConfirmation(defaultShowConfirmation);
@@ -170,19 +157,16 @@ function Flow() {
           const node = await findNode(getNode, selectedNodes[0].id);
           const linkA = node[0].data.linkedBy.flag;
           const linkB = node[0].data.links.flag;
-          //.flowNode.nodeData.linked
           if (linkA || linkB) {
             setShowConfirmation({
               type: "links",
               show: true,
-              // @ts-ignore
               selectedItems: selectedNodes,
             });
           } else {
             setShowConfirmation({
               type: "node",
               show: true,
-              // @ts-ignore
               selectedItems: selectedNodes,
             });
           }
@@ -190,7 +174,6 @@ function Flow() {
           setShowConfirmation({
             type: "edge",
             show: true,
-            // @ts-ignore
             selectedItems: selectedEdges,
           });
         } else {
@@ -208,10 +191,17 @@ function Flow() {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
       try {
-        await deleteNodeBackend(element.id, delNodeMutation, allNodes, fileId, projectId, getMainByUser);
+        await deleteNodeBackend(
+          element.id,
+          delNodeMutation,
+          allNodes,
+          fileId,
+          projectId,
+          getMainByUser
+        );
         deleteNode(element);
       } catch (error) {
-        console.log(error, "deleting the node")
+        console.log(error, "deleting the node");
       }
     }
   }
@@ -220,20 +210,22 @@ function Flow() {
     dragged.current = true;
   }, []);
 
-  console.log(fileId)
+  console.log(fileId);
 
-  const onNodeDragStop = useCallback(async (event: React.MouseEvent, node: Node) => {
-    try {
-      if (dragged.current) {
-        console.log(fileId)
-        await updatePosition(node, updatePositionMutation, allNodes,fileId);
+  const onNodeDragStop = useCallback(
+    async (event: React.MouseEvent, node: Node) => {
+      try {
+        if (dragged.current) {
+          console.log(fileId);
+          await updatePosition(node, updatePositionMutation, allNodes, fileId);
+        }
+        dragged.current = false;
+      } catch (error) {
+        console.log(error, "while dragging the node");
       }
-      dragged.current = false;
-
-    } catch (error) {
-      console.log(error, "while dragging the node");
-    }
-  }, []);
+    },
+    []
+  );
 
   // const onSelectionChange = useCallback(() => {
   //   console.count("onSelectionChange");
@@ -248,16 +240,13 @@ function Flow() {
   };
   const proOptions = { hideAttribution: true };
 
-
-
-
   //TODO here iam calling deleteEdge methode inside onDeleteEdge
 
   // const onDeleteEdge = (edge: Array<Edge>) => {
   //   edge.map((CurEle: any) => {
   //     deleteEdge(CurEle.id, CurEle.data.label)
   //   })
-  // } 
+  // }
 
   return (
     <>
@@ -279,15 +268,14 @@ function Flow() {
           connectionLineComponent={ConnectionLine}
           snapGrid={snapGrid}
           zoomOnDoubleClick={false}
-          //@ts-ignore
           edgeTypes={edgeTypeMap}
           nodeTypes={nodeTypeMap}
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
             updateNodes(getNodes());
-            onNodeDragStop(event, node)
+            onNodeDragStop(event, node);
           }}
-          onNodeDrag={onNodeDrag} //this event we dont want 
+          onNodeDrag={onNodeDrag} //this event we dont want
           // onNodeDragStop={}
           // onSelectionChange={onSelectionChange}
           // onNodeMouseMove={(event, node) => onDrag(event, node)}
@@ -313,10 +301,9 @@ function Flow() {
                 Are you sure you want to delete the selected
                 {showConfirmation.type === "node"
                   ? "node"
-                  : // @ts-ignore
-                  showConfirmation.type === "links"
-                    ? "node with attached links"
-                    : "edge"}
+                  : showConfirmation.type === "links"
+                  ? "node with attached links"
+                  : "edge"}
                 ?
               </p>
               <div>

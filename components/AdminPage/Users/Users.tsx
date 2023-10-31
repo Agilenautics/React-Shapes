@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { GrAdd } from "react-icons/gr";
 import { MdDeleteOutline, MdDelete, MdManageAccounts } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
-import { AiOutlineArrowUp } from "react-icons/ai";
 import UserOverlay from "./UserOverlay";
-import { usersList } from "./UsersList";
 import LoadingIcon from "../../LoadingIcon";
 
 import {
@@ -13,48 +10,18 @@ import {
   UPDATE_USER,
   handleUpdate_User,
   handleUser_Delete,
+  GET_USER,
+  get_user_method,
 } from "../../../gql";
 import { useQuery } from "@apollo/client";
 import ManageAccountOverlay from "./ManageAccountOverlay";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../auth";
-import { get_user_method, GET_USER } from "../../../gql";
-
 import userStore from "./userStore";
 import projectStore from "../Projects/projectStore";
 import { HiArrowsUpDown } from "react-icons/hi2";
 import moment from "moment";
-
-//user interface type
-export interface User {
-  id: string;
-  name: string;
-  accessLevel: string;
-  dateAdded: string;
-  projects: string[];
-  emailId: string;
-  userType: string;
-  timeStamp: string;
-  hasProjects: Array<{
-    id: string;
-    name: string;
-  }>;
-}
-
-export interface usersList {
-  id: string;
-  name: string;
-  accessLevel: string;
-  dateAdded: string;
-  projects: string[];
-  emailId: string;
-  userType: string;
-  timeStamp: string;
-}
-interface Project {
-  id: string;
-  name: string;
-}
+import { User } from "../../../lib/appInterfaces";
 
 function Users() {
   const [selectedTypeFilters, setSelectedTypeFilters] = useState<string[]>([]);
@@ -68,23 +35,27 @@ function Users() {
   const [isLoading, setIsLoading] = useState(false);
   const [isNewUserDisabled, setIsNewUserDisabled] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [userData, setUserData] = useState<string[]>([]);
+  const [userData, setUserData] = useState<User[]>([]);
 
   //project store
   const { projects, updateProjectData: updateProject } = projectStore();
 
   //user store
-  const usersList: any[] = userStore((state) => state.usersList);
-  const updateUserList = userStore((state) => state.updateUserList);
-  const sortingOrder = userStore((state) => state.sortOrder);
-  const updateSortingOrder = userStore((state) => state.updateSortingOrder);
-  const handleSorting = userStore((state) => state.handleSorting);
-  const deleteUserById = userStore((state) => state.deleteUserById);
-  const updateUser = userStore((state) => state.updateUser);
-  const userType = userStore((state) => state.userType);
-  const updateUserType = userStore((state) => state.updateUserType);
-  const accessLevel = userStore((state) => state.accessLevel);
-  const updateAccessLevele = userStore((state) => state.updateAccessLevel);
+  const {
+    usersList,
+    updateUserList,
+    sortOrder: sortingOrder,
+    updateSortingOrder,
+    handleSorting,
+    deleteUserById,
+    updateUser,
+    userType,
+    updateUserType,
+    accessLevel,
+    updateAccessLevel,
+  } = userStore();
+  // const usersList: any[] = userStore((state) => state.usersList);
+  // const updateAccessLevele = userStore((state) => state.updateAccessLevel);
 
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
@@ -403,7 +374,6 @@ function Users() {
         <UserOverlay
           onClose={() => setShowAddUserPopup(false)}
           //onAddUser={handleAddUser}
-          // @ts-ignore
           projectData={projects}
           handleMessage={handleMessage}
         />
@@ -412,7 +382,6 @@ function Users() {
         <ManageAccountOverlay
           user={selectedUser}
           onClose={() => setShowManageAccountPopup(false)}
-          // @ts-ignore
           adminProjects={projects}
         />
       )}

@@ -33,16 +33,10 @@ export default function AddBacklogs({
   selectedElement,
   typeDropdown,
 }: any) {
-  const addRow = backlogStore((state) => state.addRow);
-  const updateRow = backlogStore((state) => state.updateRow);
-  const allStories = backlogStore((state) => state.allStories);
-  const parents = backlogStore((state) => state.parents);
-  const idofUid = fileStore((state) => state.idofUid);
-  const uid = fileStore((state) => state.uid);
-  const updateUid = fileStore((state) => state.updateUid);
+  const { addRow, updateRow, allStories, parents } = backlogStore();
+  const { uid, idofUid, updateUid } = fileStore();
 
   // const {data,error,loading} = useQuery(getUidQuery);
-  // console.log(data)
 
   // sprint store
   const addTaskOrEpicOrStoryToSprint = sprintStore(
@@ -57,8 +51,6 @@ export default function AddBacklogs({
   const projectId = router.query.projectId as string;
 
   const handleSubmit = async (values: any) => {
-    console.log("SE", selectedElement);
-
     if (selectedElement != null) {
       values.uid = selectedElement.uid;
       values.id = selectedElement.id;
@@ -89,19 +81,17 @@ export default function AddBacklogs({
         if (values.epic == projectId)
           try {
             const createFileResponse = await createFile(
-                            values.epic,"",createFileMutation,
+              values.epic,
+              "",
+              createFileMutation,
               values
             );
             values.parent = values.epic;
-            //values.id = createFileResponse.id;
-            //values.uid = createFileResponse.uid;
-            //values.sprint = createFileResponse.hasSprint;
             addRow(values);
-            const updatedUidResponse = await updateUidMethode(
+            const updatedUidResponse = (await updateUidMethode(
               idofUid,
               updateUidMutation
-            );
-            // @ts-ignore
+            )) as any;
             updateUid(updatedUidResponse.data.updateUids.uids);
           } catch (error) {
             console.log(
@@ -110,12 +100,9 @@ export default function AddBacklogs({
             );
           }
         else
-          createFile("", values.epic,createFileMutation,values).then(
+          createFile("", values.epic, createFileMutation, values).then(
             async (res) => {
               values.parent = values.epic;
-              //values.id = res.id;
-              //values.uid = res.uid;
-              //values.sprint = res.hasSprint;
               addRow(values);
               const updateUidRespon = (await updateUidMethode(
                 idofUid,
@@ -147,8 +134,6 @@ export default function AddBacklogs({
       pathname: `/projects/${projectId}/backlogs/`,
     });
   };
-
-  console.log(selectedElement);
 
   useEffect(() => {
     getSprintByProjectId(projectId, GET_SPRINTS, updateSprints);
