@@ -8,6 +8,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { GraphQLError } from "graphql";
 import errorHandling from "./errorHandling";
 import logger from "./logger";
+import authMiddleware from "../../authMiddleware";
+import { verify } from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth";
+
+import { Neo4jGraphQLAuthJWKSPlugin } from "@neo4j/graphql-plugin-auth";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
@@ -18,7 +24,24 @@ EventEmitter.defaultMaxListeners = 15;
 // ? Here we provide authentication details for the Neo4j server
 // * This server is currently for development only, we will need to change
 // * to another server before production
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
+function getTokenFromHeader(header: string | undefined): string | null {
+  if (header && header.startsWith('Bearer ')) {
+    return header.split(' ')[1]; // Return the token part
+  }
+  return null;
+}
+
+
+const neoSchema = new Neo4jGraphQL({ typeDefs, driver,
+  plugins: {
+    auth: new Neo4jGraphQLAuthJWTPlugin({
+        secret: "super-secret",
+        // jwksEndpoint: "https://www.googleapis.com/identitytoolkit/v3/relyingparty/publicKeys",
+        globalAuthentication: true,
+    })
+}
+});
+
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
   formatError: (error) => {
@@ -26,7 +49,17 @@ const apolloServer = new ApolloServer({
   },
   introspection: true,
   persistedQueries: false,
-  plugins: [ApolloServerPluginLandingPageLocalDefault()],
+  context: ({ req }) => {
+    const token = getTokenFromHeader(req.headers.authorization);
+    if (!token) throw new Error("No token provided");
+    return { token };
+},
+  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed : true })],
+
+  // formatError: (err) => {
+  //   console.error(err.message);
+  //   return err;
+ // },
 });
 
 // neoSchema.
@@ -43,7 +76,7 @@ export default async function handler(
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
 
   if (req.method === "OPTIONS") {
@@ -51,10 +84,10 @@ export default async function handler(
     return false;
   }
 
-  await apolloServer.createHandler({
-    // ? This is path on which the Apollo server is located
-    path: "/api/graphql",
-  })(req, res);
+    if (res.writableEnded) return;  
+    await apolloServer.createHandler({
+      path: '/api/graphql',
+    })(req, res);
 }
 
 export const config = {
