@@ -1,9 +1,10 @@
 import { gql } from "@apollo/client";
 
 const typeDefs = gql`
+  # directive @auth(operations: [String!]!) on OBJECT | FIELD_DEFINITION
 
   # ! Interfaces only work on relationships!
-  type user {
+  type user @auth(rules: [{ isAuthenticated: true }]){
     id: ID! @id
     timeStamp: DateTime! @timestamp
     userName: String
@@ -218,3 +219,4 @@ const typeDefs = gql`
 `;
 
 export default typeDefs;
+
