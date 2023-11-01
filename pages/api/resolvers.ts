@@ -1,7 +1,6 @@
 import Project from "./modules/projectModel"
 import User from "./modules/usersModel"
 import driver from "./dbConnection"
-
 const resolvers = {
     Query: {
        
@@ -16,9 +15,11 @@ const resolvers = {
         //     }
         // },
         // @ts-ignore
-        getUsers: async (_: any, { emailId }: any) => {
+        getUsers: async (_: any, { emailId }: any, context: any) => {
             const session = driver.session()
+            console.log(context)
             try {
+
                 const result = await session.run('MATCH(u:user {emailId:$emailId}) -->(hasMain)   RETURN u as user,  hasMain as project', { emailId });
                 const users = result.records.map((record) => record.get('user').properties);
                 // const projects = result.records.map((record)=>record.get('project').properties);
