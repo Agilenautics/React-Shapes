@@ -36,12 +36,12 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     const x = findFile(data.hasLinkedTo.fileId);
     //console.log('x: ', x);
     // @ts-ignore
-    const nodes = x.hasflowchart.hasNodes;
+    const nodes = x.hasFlowchart.hasNodes;
     const nodeData = JSON.stringify(nodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
     // @ts-ignore
-    const edges = x.hasflowchart.hasEdges;
+    const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(
       '"hasedgedataEdgedata":',
       '"data":'
@@ -58,12 +58,12 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     const x = findFile(data.hasLinkedBy.fileId);
     console.log("x: ", x);
     // @ts-ignore
-    const nodes = x.hasflowchart.hasNodes;
+    const nodes = x.hasFlowchart.hasNodes;
     const nodeData = JSON.stringify(nodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
     // @ts-ignore
-    const edges = x.hasflowchart.hasEdges;
+    const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(
       '"hasedgedataEdgedata":',
       '"data":'

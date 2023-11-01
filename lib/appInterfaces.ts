@@ -83,7 +83,7 @@ interface File {
   hasInfo: Info;
   projectHas: Project;
   comments: Array<Comment>;
-  hasflowchart: Flowchart;
+  hasFlowchart: Flowchart;
   folderHas: Folder;
   hasSprint: Array<Sprints>;
 }
@@ -121,7 +121,7 @@ interface Backlog {
   status: string;
   dueDate: string;
   hasInfo: Info;
-  hasflowchart: Flowchart;
+  hasFlowchart: Flowchart;
   hasSprint: Array<Sprints>;
   comments: Array<Comment>;
   folderHas: Array<Folder>;

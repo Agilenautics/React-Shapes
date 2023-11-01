@@ -133,7 +133,7 @@ async function deleteFolderBackend(folderID: string, deleteItem: any) {
           hasFile: [
             {
               delete: {
-                hasflowchart: {
+                hasFlowchart: {
                   delete: {
                     hasNodes: [
                       {

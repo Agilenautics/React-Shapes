@@ -38,7 +38,7 @@ export const newNode = gql`
         folderHas {
           name
         }
-        hasflowchart {
+        hasFlowchart {
           name
           hasNodes {
             ...NodeFragment

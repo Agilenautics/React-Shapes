@@ -249,7 +249,7 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
           "hasContainsFile": [
             {
               "delete": {
-                "hasflowchart": {
+                "hasFlowchart": {
                   "delete": {
                     "hasEdges": [
                       {
@@ -281,7 +281,7 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
                 "hasFile": [
                   {
                     "delete": {
-                      "hasflowchart": {
+                      "hasFlowchart": {
                         "delete": {
                           "hasEdges": [
                             {
@@ -309,7 +309,7 @@ const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, O
                       "hasFile": [
                         {
                           "delete": {
-                            "hasflowchart": {
+                            "hasFlowchart": {
                               "delete": {
                                 "hasNodes": [
                                   {

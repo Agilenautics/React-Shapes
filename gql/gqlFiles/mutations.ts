@@ -177,7 +177,7 @@ export const getFile = gql`
       name
       id
       type
-      hasflowchart {
+      hasFlowchart {
         name
         hasNodes {
           ...NodeFragment

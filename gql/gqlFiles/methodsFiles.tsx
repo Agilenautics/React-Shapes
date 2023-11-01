@@ -60,7 +60,7 @@ const createFile = async (
               },
             },
           },
-          hasflowchart: {
+          hasFlowchart: {
             create: {
               node: {
                 name: "flowchart",
@@ -117,7 +117,7 @@ async function deleteFileBackend(fileID: string, deleteItem: any) {
           id: fileID,
         },
         delete: {
-          hasflowchart: {
+          hasFlowchart: {
             delete: {
               hasNodes: [
                 {
@@ -227,7 +227,7 @@ const getFileByNode = async (
       query: customQuery,
       variables: {
         where: {
-          hasflowchart: {
+          hasFlowchart: {
             hasNodes_SINGLE: {
               id: nodeId,
             },

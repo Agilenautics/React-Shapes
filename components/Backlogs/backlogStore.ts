@@ -73,8 +73,8 @@ const backlogStore = create<BacklogState>((set) => ({
       }
 
       for (let i of allStories) {
-        if (i.hasflowchart.hasNodes) {
-          for (let j of i.hasflowchart.hasNodes) {
+        if (i.hasFlowchart.hasNodes) {
+          for (let j of i.hasFlowchart.hasNodes) {
             if (!allStatus.includes(j.hasInfo.status)) {
               allStatus.push(j.hasInfo.status);
             }

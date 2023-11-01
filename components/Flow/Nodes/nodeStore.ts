@@ -153,7 +153,7 @@ const nodeStore = create<NodeState>((set) => ({
     //save data of new node
 
     const { data } = await getFileByNode(id, getNodeQuery);
-    const nodes = JSON.stringify(data.files[0].hasflowchart.hasNodes)
+    const nodes = JSON.stringify(data.files[0].hasFlowchart.hasNodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
     const nodesData = JSON.parse(nodes);

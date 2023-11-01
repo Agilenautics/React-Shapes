@@ -89,7 +89,7 @@ async function createNode(
             id: data.story,
           },
           update: {
-            hasflowchart: {
+            hasFlowchart: {
               update: {
                 node: {
                   hasNodes: [
@@ -218,14 +218,14 @@ async function createNode(
       })
       .then((result) => {
         const nodes1 = JSON.stringify(
-          result.data.updateFiles.files[0].hasflowchart.hasNodes
+          result.data.updateFiles.files[0].hasFlowchart.hasNodes
         )
           .replaceAll('"hasdataNodedata":', '"data":')
           .replaceAll('"haspositionPosition":', '"position":');
         //@ts-ignore
         nodes = JSON.parse(nodes1);
         data.status = data.status || "To-Do";
-        // data.uid = result.data.updateFiles.files[0].hasflowchart.nodes[0].uid
+        // data.uid = result.data.updateFiles.files[0].hasFlowchart.nodes[0].uid
         data.parent = data.epic;
         data.id = result.data.id;
         data.hasSprint = result.data.hasSprint;

@@ -37,7 +37,7 @@
       hasInfo{
       ...InfoFragment
       }
-      hasflowchart {
+      hasFlowchart {
         name
         hasNodes {
           ...NodeFragment

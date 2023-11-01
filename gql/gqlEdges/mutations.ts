@@ -22,7 +22,7 @@ export const createEdgeMutation = gql`
     updateFiles(where: $where, update: $update) {
       files {
         name
-        hasflowchart {
+        hasFlowchart {
           name
           hasEdges {
             ...EdgeFragment
