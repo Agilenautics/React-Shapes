@@ -37,6 +37,7 @@ import { auth } from "../../auth";
 import AddProjectPopup from "../AdminPage/Projects/ProjectOverlay";
 import { ToastContainer, toast } from "react-toastify";
 import { Project } from "../../lib/appInterfaces";
+import { FetchResult } from "@apollo/client";
 
 interface SideBar {
   isOpen: Boolean;
@@ -44,30 +45,30 @@ interface SideBar {
 
 const Sidebar = ({ isOpen }: SideBar) => {
   // const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
-  const updateInitData = fileStore((state) => state.updateInitData);
   const [insightsOpen, setInsightsOpen] = useState(false);
   const [projectsFlag, setProjectsFlag] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const tooltipRef = useRef<HTMLSpanElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const [addProjectPopUp, setAddProjectPopUp] = useState<Boolean | null>(false);
-
   // search project
   const [searchQuery, setSearchQuery] = useState("");
   //projects stores
-  const allProjects = projectStore((state) => state.projects);
-  const loading = projectStore((state) => state.loading);
+  const { projects: allProjects, loading } = projectStore();
   const [projectData, setProjectData] = useState<Project[]>([]);
 
   const notify = () => toast.success("Project Created...");
 
-  const add_file = fileStore((state) => state.add_file);
-  const add_folder = fileStore((state) => state.add_folder);
-  const setLoading = fileStore((state) => state.setLoading);
-  const updateUids = fileStore((state) => state.updateUid);
-  const uid = fileStore((state) => state.uid);
-  const idOfUid = fileStore((state) => state.idofUid);
-  const selectedFolderId = fileStore((state) => state.Id);
+  const {
+    updateInitData,
+    add_file,
+    add_folder,
+    setLoading,
+    updateUid,
+    uid,
+    idofUid,
+    Id: selectedFolderId,
+  } = fileStore();
 
   const router = useRouter();
   const projectId = (router.query.projectId as string) || "";
@@ -82,7 +83,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   const getuniqId = async () => {
     const uniqId = await getUidMethode(getUidQuery);
-    updateUids(uniqId.data.uids);
+    updateUid(uniqId.data.uids);
     if (uniqId.data.uids.length === 0) {
       await createUidMethode(createUidMutation);
     }
@@ -108,7 +109,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
   }, [searchQuery]);
 
   // fetch recent project
-
   const fetchRecentProject = (project: any) => {
     if (typeof window !== "undefined") {
       // Perform localStorage action
@@ -148,10 +148,10 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   const handleUidUpdates = async () => {
     const uidResponse = (await updateUidMethode(
-      idOfUid,
+      idofUid,
       updateUidMutation
     )) as any;
-    updateUids(uidResponse.data.updateUids.uids);
+    updateUid(uidResponse.data.updateUids.uids);
   };
 
   const handleAddFolder = async () => {
@@ -159,48 +159,53 @@ const Sidebar = ({ isOpen }: SideBar) => {
       name: "New Folder",
       uid,
       isOpen: false,
+      sprintId: "",
     };
-    const updatedFolderResponse = await createFolderInMain(
-      newFolderInMain,
-      projectId,
-      newFolder
-    );
-    add_folder(updatedFolderResponse);
+    const addFolderResponse: FetchResult<any> | undefined =
+      await createFolderInMain(
+        newFolderInMain,
+        projectId,
+        newFolder,
+        getProjectByUser
+      );
+    add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
   };
 
   const handleAddFile = async () => {
+    let data = {
+      name: "New File",
+      description: "Custome description",
+      status: "To-Do",
+      uid,
+      projectId,
+    };
     try {
       if (selectedFolderId) {
-        const data = {
-          name: "New File",
-          description: "Custome description",
-          status: "To-Do",
-          uid,
-        };
-        const fileInFolderResponse = await createFile(
-          "",
-          selectedFolderId,
-          createFileMutation,
-          data
-        );
-        console.log(fileInFolderResponse);
-       // add_file(fileInFolderResponse);
+        //adding file or story inside folder or epic
+        const fileInFolderResponse: FetchResult<any> | undefined =
+          await createFile(
+            "",
+            selectedFolderId,
+            createFileMutation,
+            data,
+            getProjectByUser
+          );
+        add_file(fileInFolderResponse?.data.createFiles.files[0]);
         handleUidUpdates();
       } else {
-        const newFile = {
-          name: "FileInMain",
-          status: "To-Do",
-          description: "Custome description",
-          uid,
-        };
-        const fileInMainResponse = await createFile(
-          projectId,
-          "",
-          createFileMutation,
-          newFile
-        );
-        //add_file(fileInMainResponse);
+        // adding file or story inside project
+        data.name = "FileInMain";
+        const fileInMainResponse: FetchResult<any> | undefined =
+          await createFile(
+            projectId,
+            "",
+            createFileMutation,
+            data,
+            getProjectByUser
+          );
+        //adding file or epic inside store after getting response from the network
+        add_file(fileInMainResponse?.data.createFiles.files[0]);
         handleUidUpdates();
       }
     } catch (error) {
@@ -420,19 +425,14 @@ const Sidebar = ({ isOpen }: SideBar) => {
           </div>
         </nav>
       )}
-      {
-        // @ts-ignore
-        addProjectPopUp && (
-          <AddProjectPopup
-            onClose={onCloseAddProjectPopUp}
-            notify={notify}
-            userEmail={userEmail}
-            //@ts-ignore
-            projectData={projectData}
-          />
-        )
-      }
-      {/* <AddProjectPopup /> */}
+      {addProjectPopUp && (
+        <AddProjectPopup
+          onClose={onCloseAddProjectPopUp}
+          notify={notify}
+          userEmail={userEmail}
+          projectData={projectData}
+        />
+      )}
       <ToastContainer autoClose={2500} />
     </div>
   );

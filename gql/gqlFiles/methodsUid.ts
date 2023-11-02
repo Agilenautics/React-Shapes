@@ -67,7 +67,6 @@ const updateUidMethode = (
           query: getUidQuery,
           data: { uids: [updatedData] },
         });
-        console.log(cache, "Iam cache");
       },
     })
     .then((response) => {

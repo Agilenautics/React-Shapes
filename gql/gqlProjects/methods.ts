@@ -7,467 +7,502 @@ import {
 import client from "../../apollo-client";
 import { GET_PROJECTS, GET_USER, GET_PROJECTS_BY_ID } from "./mutations";
 import { Project } from "../..//lib/appInterfaces";
-const getUserByEmail = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>, methods: any) => {
-  const { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject } = methods
-  let admin = {}
-  await client.query({
-    query: customQuery,
-    variables: {
-      where: {
-        emailId: email
-      }
-    } 
-  }).then((res) => {
-    console.log(res)
-    updateProjects(res.data.users[0].hasProjects, res.loading);
-    updateRecycleBinProject(res.data.users[0].hasProjects, res.loading);
-    updateLoginUser(res.data.users);
-    updateUserType(res.data.users[0].userType)
-    admin = res
-  })
+const getUserByEmail = async (
+  email: String,
+  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
+  try {
+    return await client.query({
+      query: customQuery,
+      variables: {
+        where: {
+          emailId: email,
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error, "while getUser by email");
+  }
+};
 
-  return admin
+const get_user_method = async (
+  email: String,
+  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
+  let admin = {};
 
-}
+  await client
+    .query({
+      query: customQuery,
+      variables: {
+        where: {
+          emailId: email,
+        },
+      },
+    })
+    .then((res) => {
+      admin = res.data.users;
+    });
+  return admin;
+};
 
-const get_user_method = async (email: String, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-
-  let admin = {}
-
-  await client.query({
-    query: customQuery,
-    variables: {
-      where: {
-        emailId: email
-      }
-    }
-  }).then((res) => {
-    admin = res.data.users
-  })
-  return admin
-}
-
-
-
-const delete_Project = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>, email: string) => {
+const delete_Project = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  email: string
+) => {
   var dateObj = new Date();
   var month = dateObj.getUTCMonth() + 1; //months from 1-12
   var day = dateObj.getUTCDate();
   var year = dateObj.getUTCFullYear();
 
-  let deleteData = {}
+  let deleteData = {};
 
   const newdate = year + "/" + month + "/" + day;
-  await client.mutate({
-    mutation,
-    variables: {
-      where: {
-        id
-      },
-      update: {
-        recycleBin: true,
-        deletedAT: newdate
-      }
-    },
-    update: (cache, { data: { updateProjects: { projects } } }) => {
-      const existingUser = cache.readQuery({
-        query,
-        variables: {
-          where: {
-            emailId: email
-          }
-        }
-      });
-      const { hasProjects, ...userData } = existingUser.users[0]
-      const updated_projects = hasProjects.map((project: Project) => {
-        if (project.id === id) {
-          return { ...projects[0] }
-        }
-        return project
-      });
-      const updated_user = { ...userData, hasProjects: updated_projects }
-      cache.writeQuery({
-        query,
-        variables: {
-          where: {
-            emailId: email
-          }
+  await client
+    .mutate({
+      mutation,
+      variables: {
+        where: {
+          id,
         },
-        data: {
-          users: [updated_user]
+        update: {
+          recycleBin: true,
+          deletedAT: newdate,
+        },
+      },
+      update: (
+        cache,
+        {
+          data: {
+            updateProjects: { projects },
+          },
         }
-      })
-    },
-  }).then((response) => {
-    deleteData = response.data.updateProjects
-  })
-}
+      ) => {
+        const existingUser = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
+            },
+          },
+        });
+        const { hasProjects, ...userData } = existingUser.users[0];
+        const updated_projects = hasProjects.map((project: Project) => {
+          if (project.id === id) {
+            return { ...projects[0] };
+          }
+          return project;
+        });
+        const updated_user = { ...userData, hasProjects: updated_projects };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
+            },
+          },
+          data: {
+            users: [updated_user],
+          },
+        });
+      },
+    })
+    .then((response) => {
+      deleteData = response.data.updateProjects;
+    });
+};
 
-
-const update_recentProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,) => {
+const update_recentProject = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   try {
     await client.mutate({
       mutation,
       variables: {
         where: {
-          id
+          id,
         },
         update: {
           recentProject: true,
-        }
+        },
       },
       update: (cache, { data }) => {
-        const existanceData = cache.readQuery(
-          {
-            query: GET_USER,
-            variables: {
-              where: {
-                emailId: "irfan123@gmail.com"
-              }
-            }
-          }
-        );
-        console.log(existanceData, "hii")
-      }
+        const existanceData = cache.readQuery({
+          query: GET_USER,
+          variables: {
+            where: {
+              emailId: "irfan123@gmail.com",
+            },
+          },
+        });
+        console.log(existanceData, "hii");
+      },
       // refetchQueries(result) {
       //   return [GET_USER]
       // },
-    })
-
+    });
   } catch (error) {
-    console.log(error, "while deleting the project..")
-
+    console.log(error, "while deleting the project..");
   }
-}
-const recycleProject = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+};
+const restoreFromRecycleBin = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  email: string
+) => {
   try {
     await client.mutate({
       mutation,
       variables: {
         where: {
-          id
+          id,
         },
         update: {
           recycleBin: false,
-          deletedAT: ""
-        }
+          deletedAT: "",
+        },
       },
-      update: (cache, { data: { updateProjects: {projects } } }) => {
-        const existanceUser = cache.readQuery(
-          {
-            query,
-            variables: {
-              where: {
-                emailId: "irfan123@gmail.com"
-              }
-            }
-          }
-        );
+      update: (
+        cache,
+        {
+          data: {
+            updateProjects: { projects },
+          },
+        }
+      ) => {
+        const existanceUser = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
+            },
+          },
+        });
         const { hasProjects, ...userData } = existanceUser.users[0];
         const updated_projects = hasProjects.map((project: Project) => {
           if (project.id === id) {
             return {
-              ...projects[0]
-            }
+              ...projects[0],
+            };
           }
-          return project
+          return project;
         });
-        const updated_user = { ...userData, hasProjects: updated_projects }
-        cache.writeQuery(
-          {
-            query,
-            variables: {
-              where: {
-                emailId: "irfan123@gmail.com"
-              }
+        const updated_user = { ...userData, hasProjects: updated_projects };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              emailId: "irfan123@gmail.com",
             },
-            data: {
-              users: [updated_user]
-            }
-          }
-        )
-      }
-    })
-
+          },
+          data: {
+            users: [updated_user],
+          },
+        });
+      },
+    });
   } catch (error) {
-    console.log(error, "error while restoring the the project from the recyclebin")
+    console.log(
+      error,
+      "error while restoring the the project from the recyclebin"
+    );
   }
-}
+};
 
 //parmenant delete project
-const parmenantDelete = async (id: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const parmenantDelete = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   try {
     await client.mutate({
       mutation,
       variables: {
         where: {
-          id
-        }
+          id,
+        },
       },
       update: (cache, { data }) => {
         const existingUser = cache.readQuery({
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com"
-            }
-          }
-        });
-        const { hasProjects, ...userData } = existingUser.users[0]
-        const deletedProject = hasProjects.filter((project: Project) => project.id !== id)
-        const updated_user = { ...userData, hasProjects: deletedProject }
-        cache.writeQuery(
-          {
-            query,
-            variables: {
-              where: {
-                emailId: "irfan123@gmail.com"
-              }
+              emailId: "irfan123@gmail.com",
             },
-            data: {
-              users: [updated_user]
-            }
-          }
-        );
-      }
-    })
-  } catch (error) {
-    console.log(error, "while parmenant deleting the project")
-  }
-}
-
-
-const clearRecycleBin = async (mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, query: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
-  try {
-    client.mutate({
-      mutation,
-      variables: {
-        "where": {
-          "recycleBin": true
-        },
-        "delete": {
-          "hasContainsFile": [
-            {
-              "delete": {
-                "hasFlowchart": {
-                  "delete": {
-                    "hasEdges": [
-                      {
-                        "delete": {
-                          "hasedgedataEdgedata": {
-                            "delete": {}
-                          }
-                        }
-                      }
-                    ],
-                    "hasNodes": [
-                      {
-                        "delete": {
-                          "haspositionPosition": {
-                            "delete": {}
-                          },
-                          "hasdataNodedata": {}
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          ],
-          "hasContainsFolder": [
-            {
-              "delete": {
-                "hasFile": [
-                  {
-                    "delete": {
-                      "hasFlowchart": {
-                        "delete": {
-                          "hasEdges": [
-                            {
-                              "delete": {
-                                "hasedgedataEdgedata": {}
-                              }
-                            }
-                          ],
-                          "hasNodes": [
-                            {
-                              "delete": {
-                                "haspositionPosition": {},
-                                "hasdataNodedata": {}
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  }
-                ],
-                "hasFolder": [
-                  {
-                    "delete": {
-                      "hasFile": [
-                        {
-                          "delete": {
-                            "hasFlowchart": {
-                              "delete": {
-                                "hasNodes": [
-                                  {
-                                    "delete": {
-                                      "hasdataNodedata": {},
-                                      "haspositionPosition": {}
-                                    }
-                                  }
-                                ],
-                                "hasEdges": [
-                                  {
-                                    "delete": {
-                                      "hasedgedataEdgedata": {}
-                                    }
-                                  }
-                                ]
-                              }
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      update: (cache, { data }) => {
-        const existingData = cache.readQuery(
-          {
-            query,
-            variables: {
-              where: {
-                emailId: "irfan123@gmail.com"
-              }
-            }
-          }
-        );
-        const { hasProjects, ...userData } = existingData.users[0]
-        const to_be_updated = hasProjects.filter((values: Project) => values.recycleBin !== true);
-        const updated_user = { ...userData, hasProjects: to_be_updated }
-        console.log(data)
-        cache.writeQuery(
-          {
-            query,
-            variables: {
-              where: {
-                emailId: "irfan123@gmail.com"
-              }
-            },
-            data: {
-              users: [updated_user]
-            }
-          }
-        )
-      }
-
-
-    })
-
-  } catch (error) {
-    console.log(error, "error while clearing recycleBin projects")
-
-  }
-
-
-}
-
-const addProject_Backend = async (email: String, project: any, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, addProject: any, query: any) => {
-  let data = []
-  try {
-    await client.mutate({
-      mutation,
-      variables: {
-        "input": [
-          {
-            "deletedAT": "",
-            "description": project.description,
-            "isOpen": true,
-            "name": project.name,
-            "recentProject": false,
-            "recycleBin": false,
-            "userHas": {
-              "connect": [
-                {
-                  "where": {
-                    "node": {
-                      "emailId": email
-                    }
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      },
-      update: (cache, { data: { createProjects: { projects } } }) => {
-        // @ts-ignore
-        const { users } = cache.readQuery({
-          query,
-          variables: {
-            where: {
-              emailId: email
-            }
-          }
+          },
         });
-        const { hasProjects, ...user } = users[0];
-        const updated_projects = [...projects, ...hasProjects];
-        const updated_user = { ...user, hasProjects: updated_projects };
+        const { hasProjects, ...userData } = existingUser.users[0];
+        const deletedProject = hasProjects.filter(
+          (project: Project) => project.id !== id
+        );
+        const updated_user = { ...userData, hasProjects: deletedProject };
         cache.writeQuery({
           query,
           variables: {
             where: {
-              emailId: email
-            }
+              emailId: "irfan123@gmail.com",
+            },
           },
           data: {
-            users: [updated_user]
-          }
-        })
+            users: [updated_user],
+          },
+        });
       },
-    }).then((response) => {
-      addProject(response.data.createProjects.projects[0])
-    }
-    )
-
+    });
   } catch (error) {
-    console.log(error, "While adding the project")
+    console.log(error, "while parmenant deleting the project");
   }
+};
 
-}
+const clearRecycleBin = async (
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  email: string
+) => {
+  try {
+    return await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          recycleBin: true,
+        },
+        delete: {
+          hasContainsFile: [
+            {
+              delete: {
+                hasFlowchart: {
+                  delete: {
+                    hasEdges: [
+                      {
+                        delete: {
+                          hasedgedataEdgedata: {
+                            delete: {},
+                          },
+                        },
+                      },
+                    ],
+                    hasNodes: [
+                      {
+                        delete: {
+                          haspositionPosition: {
+                            delete: {},
+                          },
+                          hasdataNodedata: {},
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+          hasContainsFolder: [
+            {
+              delete: {
+                hasFile: [
+                  {
+                    delete: {
+                      hasFlowchart: {
+                        delete: {
+                          hasEdges: [
+                            {
+                              delete: {
+                                hasedgedataEdgedata: {},
+                              },
+                            },
+                          ],
+                          hasNodes: [
+                            {
+                              delete: {
+                                haspositionPosition: {},
+                                hasdataNodedata: {},
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                ],
+                hasFolder: [
+                  {
+                    delete: {
+                      hasFile: [
+                        {
+                          delete: {
+                            hasFlowchart: {
+                              delete: {
+                                hasNodes: [
+                                  {
+                                    delete: {
+                                      hasdataNodedata: {},
+                                      haspositionPosition: {},
+                                    },
+                                  },
+                                ],
+                                hasEdges: [
+                                  {
+                                    delete: {
+                                      hasedgedataEdgedata: {},
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+      update: (cache, { data }) => {
+        const existingData = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
+            },
+          },
+        });
+        const { hasProjects, ...userData } = existingData.users[0];
+        const to_be_updated = hasProjects.filter(
+          (values: Project) => values.recycleBin !== true
+        );
+        const updated_user = { ...userData, hasProjects: to_be_updated };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              emailId: "irfan123@gmail.com",
+            },
+          },
+          data: {
+            users: [updated_user],
+          },
+        });
+      },
+    });
+  } catch (error) {
+    console.log(error, "error while clearing recycleBin projects");
+  }
+};
 
-const edit_Project = async (id: string, projectName: string, projectDesc: string, mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>, customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>) => {
+const addProject_Backend = async (
+  email: String,
+  project: any,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  addProject: any,
+  query: any
+) => {
+  let data = [];
+  try {
+    await client
+      .mutate({
+        mutation,
+        variables: {
+          input: [
+            {
+              deletedAT: "",
+              description: project.description,
+              isOpen: true,
+              name: project.name,
+              recentProject: false,
+              recycleBin: false,
+              userHas: {
+                connect: [
+                  {
+                    where: {
+                      node: {
+                        emailId: email,
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        update: (
+          cache,
+          {
+            data: {
+              createProjects: { projects },
+            },
+          }
+        ) => {
+          // @ts-ignore
+          const { users } = cache.readQuery({
+            query,
+            variables: {
+              where: {
+                emailId: email,
+              },
+            },
+          });
+          const { hasProjects, ...user } = users[0];
+          const updated_projects = [...projects, ...hasProjects];
+          const updated_user = { ...user, hasProjects: updated_projects };
+          cache.writeQuery({
+            query,
+            variables: {
+              where: {
+                emailId: email,
+              },
+            },
+            data: {
+              users: [updated_user],
+            },
+          });
+        },
+      })
+      .then((response) => {
+        addProject(response.data.createProjects.projects[0]);
+      });
+  } catch (error) {
+    console.log(error, "While adding the project");
+  }
+};
+
+const edit_Project = async (
+  id: string,
+  projectName: string,
+  projectDesc: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   await client.mutate({
     mutation,
     variables: {
       where: {
-        id
+        id,
       },
-      "update": {
-        "name": projectName,
-        "description": projectDesc,
-      }
+      update: {
+        name: projectName,
+        description: projectDesc,
+      },
     },
-    refetchQueries: [{ query: customQuery }]
-  })
-}
+    refetchQueries: [{ query: customQuery }],
+  });
+};
 
 export {
   GET_PROJECTS,
   delete_Project,
-    get_user_method,
+  get_user_method,
   edit_Project,
   parmenantDelete,
-  recycleProject,
-    clearRecycleBin,
+  restoreFromRecycleBin,
+  clearRecycleBin,
   addProject_Backend,
   update_recentProject,
   getUserByEmail,

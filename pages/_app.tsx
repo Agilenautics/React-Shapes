@@ -8,8 +8,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";
 import { auth } from "../auth";
 import Layout from "../components/AdminPage/Layout";
+import userStore from "../components/AdminPage/Users/userStore";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { updateUserEmail } = userStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -17,9 +19,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     verfiyAuthToken();
   }, []);
 
+
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user && user.email) {
+        updateUserEmail(user.email);
         if (window.location.pathname == "/") router.push("/projects");
       } else {
         const queryString = window.location.search;
@@ -58,4 +62,3 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
-

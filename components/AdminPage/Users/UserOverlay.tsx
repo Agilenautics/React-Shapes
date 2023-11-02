@@ -79,7 +79,6 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     }));
   };
 
-  console.log(projectData);
 
   const handleAddUser = () => {
     const newUser = {

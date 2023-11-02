@@ -6,7 +6,6 @@ import projectStore from "./projectStore";
 import { Project } from "../../../lib/appInterfaces";
 
 interface AddProjectPopupProps {
-  onAddProject: (name: string, desc: string) => void;
   onClose: () => void;
   notify: () => void;
   projectData: Array<Project>;

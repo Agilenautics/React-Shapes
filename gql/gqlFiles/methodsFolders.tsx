@@ -3,8 +3,8 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import { getProjectByUser, deleteFolders, updateFolders } from "./mutations";
-import { Folder} from "./interfaces";
+import { deleteFolders } from "./mutations";
+import { Folder } from "./interfaces";
 import client from "../../apollo-client";
 async function createFolderInFolder(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -45,11 +45,11 @@ async function createFolderInFolder(
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string,
-  newFolderData: Folder | any
+  newFolderData: Folder | any,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) {
-  var node: any;
-  await client
-    .mutate({
+  try {
+    return await client.mutate({
       mutation: mutation,
       variables: {
         input: [
@@ -82,7 +82,7 @@ async function createFolderInMain(
               connect: {
                 where: {
                   node: {
-                    id: "", // here you want to add sprint id take as a param
+                    id: newFolderData.sprintId, // here you want to add sprint id take as a param
                   },
                 },
               },
@@ -98,32 +98,44 @@ async function createFolderInMain(
           },
         }
       ) => {
-        console.log(cache);
-        try {
-          const existingData = cache.readQuery({
-            query: getProjectByUser,
-            variables: {
-              emailId: "irfan123@gmail.com",
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: parentId,
             },
-          });
-          console.log(existingData);
-        } catch (error) {
-          console.log(error, "while creating folder");
-        }
+          },
+        });
+        const { hasContainsFolder, ...projectData } = projects[0];
+        const updatedProjects = [...hasContainsFolder, ...folders];
+        const updatedProject = {
+          ...projectData,
+          hasContainsFolder: updatedProjects,
+        };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              id: parentId,
+            },
+          },
+          data: {
+            projects: [updatedProject],
+          },
+        });
       },
-    })
-    .then((result) => {
-      node = result.data.createFolders.folders[0];
-      // console.log(result.data.createFolders);
-    })
-    .catch((error) => {
-      console.log("Error in creating folder", error);
     });
-  return node;
+  } catch (error) {
+    console.log(error, "error while creating folder");
+  }
 }
-async function deleteFolderBackend(folderID: string, deleteItem: any) {
-  return client
-    .mutate({
+async function deleteFolderBackend(
+  folderID: string,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  projectId: string
+) {
+  try {
+    return await client.mutate({
       mutation: deleteFolders,
       variables: {
         where: {
@@ -162,40 +174,96 @@ async function deleteFolderBackend(folderID: string, deleteItem: any) {
           ],
         },
       },
-    })
-    .then((res) => {
-      if (res.data) {
-        deleteItem(folderID);
-      }
-      if (res.errors) {
-        return (
-          res.errors && <div>{res.errors.map((values) => values.message)}</div>
+      update: (cache, { data }) => {
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: projectId,
+            },
+          },
+        });
+        const { hasContainsFolder, ...projectData } = projects[0];
+        const to_be_updated = hasContainsFolder.filter(
+          (folder: Folder) => folder.id !== folderID
         );
-      }
-    })
-    .catch((error) => {
-      console.log("error while deleting folder", error);
+        const updatedProject = {
+          ...projectData,
+          hasContainsFolder: to_be_updated,
+        };
+        cache.writeQuery({
+          query,
+          variables: { where: { id: projectId } },
+          data: { projects: [{ ...updatedProject }] },
+        });
+      },
     });
+  } catch (error) {
+    console.log("error while deleting folder", error);
+  }
 }
-const updateFolderBackend = async (folderId: string, name: string) => {
-  await client.mutate({
-    mutation: updateFolders,
-    variables: {
-      where: {
-        id: folderId,
+const updateFolderBackend = async (
+  folderData: any,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
+  try {
+    return await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id: folderData.folderId,
+        },
+        update: {
+          name: folderData.name,
+        },
       },
-      update: {
-        name: name,
+      update: (cache, { data }) => {
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: folderData.projectId,
+            },
+          },
+        });
+        const { hasContainsFolder, ...projectData } = projects[0];
+        const updatedFolder = hasContainsFolder.map((folder: Folder) => {
+          if (folder.id === folderData.folderId) {
+            return {
+              ...folder,
+              name: folderData.name,
+            };
+          }
+          return folder;
+        });
+        const updatedProject = {
+          ...projectData,
+          hasContainsFolder: updatedFolder,
+        };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              id: folderData.projectId,
+            },
+          },
+          data: {
+            projects: [updatedProject],
+          },
+        });
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log(error, "while updating the folder");
+  }
 };
 const updateEpic = async (
   id: string,
   epictData: any,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) => {
-  const { status, description, assignedTo, dueDate} = epictData;
+  const { status, description, assignedTo, dueDate } = epictData;
   await client.mutate({
     mutation,
     variables: {

@@ -67,7 +67,7 @@ function Users() {
           const userProjects = res[0].hasProjects.filter(
             (project: any) => project.recycleBin === false
           );
-          updateProject(userProjects, loading);
+          updateProject(userProjects, loading,null);
         });
       }
     });

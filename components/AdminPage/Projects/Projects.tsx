@@ -2,7 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
 import { auth } from "../../../auth";
-import { GET_USER, DELETE_PROJECT,delete_Project } from "../../../gql";
+import {
+  GET_USER,
+  DELETE_PROJECT,
+  delete_Project,
+  getUserByEmail,
+} from "../../../gql";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
 import { getInitials } from "../Users/Users";
@@ -16,7 +21,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { Project, User } from "../../../lib/appInterfaces";
 
@@ -25,19 +30,22 @@ function Projects() {
   const [projectId, setProjectId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [projectData, setProjectData] = useState<Project[]>([]);
-  const [userEmail, setUserEmail] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [projectTrackChanges, setProjectTrackChanges] = useState(false);
 
   // project store
   const {
     projects: allProjects,
-    deleteProject,
+    MovetoRecycleBin,
+    error,
     updateProject,
     recycleBin: recycleBinProject,
     handleSorting,
     sortOrder: sortValue,
     updateSortOrder,
+    updateProjectData: updateProjects,
+    loading,
+    updateRecycleBinProject,
   } = projectStore();
 
   // user store
@@ -45,62 +53,47 @@ function Projects() {
     userType,
     user: loginUser,
     updateUserType,
+    userEmail,
     updateLoginUser,
   } = userStore();
-  const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore(
-    (state) => state.updateRecycleBinProject
-  );
-
   const router = useRouter();
   // from the toestify library
   const notify = () => toast.success("Project Created...");
   const deleteNotify = () => toast.error("Project Got Deleted...");
 
-  const { data, error, loading } = useQuery(GET_USER, {
-    variables: {
-      where: {
-        emailId: userEmail,
-      },
-    },
-  });
-
-  const getProjects = (response: any) => {
-    if (!loading && response && response.users.length) {
-      const projects = response.users[0].hasProjects;
-      const userType = data.users[0].userType;
-      updateProjects(projects, loading);
-      updateLoginUser(data.users);
-      updateUserType(userType);
-      setProjectData(response.users[0].hasProjects);
-      updateRecycleBinProject(projects);
+  const getProjects = async (email: string) => {
+    try {
+      const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
+        email,
+        GET_USER
+      );
+      const { hasProjects, ...userData } = response?.data.users[0];
+      updateProjects(hasProjects, response?.loading, response?.error);
+      setProjectData(hasProjects);
+      updateRecycleBinProject(hasProjects);
+      updateLoginUser(userData);
+      updateUserType(userData.userType);
+    } catch (error) {
+      console.log(error);
     }
   };
-
-  const verificationToken = async () => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        setUserEmail(user.email);
-        getProjects(data);
-      }
-    });
-  };
-
   useEffect(() => {
-    const filteredProjects = projectData.filter((project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    updateProjects(filteredProjects, false);
-  }, [searchTerm]);
-
-  useEffect(() => {
+    if (userEmail) {
+      getProjects(userEmail);
+    }
     // setIsButtonDisabled(userType.toLowerCase() === "user");
     // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
-    verificationToken();
-    if (loginUser && loginUser.length) {
-      setUserEmail(loginUser[0].emailId);
+  }, [userEmail]);
+  
+
+  useEffect(() => {
+    if (projectData && projectData.length) {
+      const filteredProjects = projectData.filter((project) =>
+        project.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      updateProjects(filteredProjects, false, null);
     }
-  }, [data]);
+  }, [searchTerm]);
 
   const handleSortClick = () => {
     const newSortOrder = sortValue === "asc" ? "desc" : "asc";
@@ -110,6 +103,8 @@ function Projects() {
 
   const handleDelete_Project = async (id: string) => {
     await delete_Project(id, DELETE_PROJECT, GET_USER, userEmail);
+    // adding a project to recycle bin
+    MovetoRecycleBin(id);
     setProjectTrackChanges(!projectTrackChanges);
     deleteNotify();
     // setProjectId(projectId);
@@ -171,6 +166,7 @@ function Projects() {
       </div>
     );
   }
+
 
   return (
     // container

@@ -24,6 +24,7 @@ const apolloServer = new ApolloServer({
   plugins: [ApolloServerPluginLandingPageLocalDefault()],
 });
 
+// neoSchema.
 const startServer = apolloServer.start();
 
 export default async function handler(

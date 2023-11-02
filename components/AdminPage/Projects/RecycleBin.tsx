@@ -10,52 +10,65 @@ import {
   PARMENANT_DELETE,
   clearRecycleBin,
   delete_Project,
+  getUserByEmail,
   parmenantDelete,
-  recycleProject,
+  restoreFromRecycleBin,
 } from "../../../gql";
-import { useQuery } from "@apollo/client";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../auth";
+import { ApolloQueryResult } from "@apollo/client";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
-
-
+import { Project } from "../../../lib/appInterfaces";
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [projectData, setProjectData] = useState<Project[]>([]);
 
   const {
+    error,
     removeFromRecycleBin,
     clearRecyleBin: clearRecycle_Bin,
     updateSortOrder,
     sortOrder,
     handleSorting,
     recycleBin,
+    loading,
+    updateRecycleBinProject,
+    updateProjectData: updateProjects,
   } = projectStore();
-  const [projectData, setProjectData] = useState(recycleBin);
-
-  const { data, error, loading } = useQuery(GET_USER, {
-    variables: {
-      where: {
-        emailId: "irfan123@gmail.com",
-      },
-    },
-  });
-
-  const userType = userStore((state) => state.userType);
+  const { userType, userEmail, updateLoginUser, updateUserType } = userStore();
+  const getProjects = async (email: string) => {
+    try {
+      const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
+        email,
+        GET_USER
+      );
+      const { hasProjects, ...userData } = response?.data.users[0];
+      updateProjects(hasProjects, response?.loading, response?.error);
+      updateRecycleBinProject(hasProjects);
+      setProjectData(hasProjects);
+      updateLoginUser(userData);
+      updateUserType(userData.userType);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const filteredData = recycleBin.filter(
+    if (userEmail) {
+      getProjects(userEmail);
+    }
+  }, [userEmail]);
+  useEffect(() => {
+    const filteredData = projectData.filter(
       (element: any) =>
         element.name &&
         element.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    setProjectData(filteredData);
+    updateRecycleBinProject(filteredData);
   }, [searchTerm]);
 
   useEffect(() => {
@@ -69,9 +82,28 @@ function Projects() {
     handleSorting();
   };
 
-  const handleDelete_Project = async (projectId: string) => {
+  const handleParmenantDelete = async (projectId: string) => {
     await parmenantDelete(projectId, PARMENANT_DELETE, GET_USER);
     removeFromRecycleBin(projectId);
+  };
+
+  const handleRestoreFromRecycleBin = async (id: string) => {
+    try {
+      await restoreFromRecycleBin(id, DELETE_PROJECT, GET_USER, userEmail);
+      removeFromRecycleBin(id);
+    } catch (error) {
+      console.log("Error in restoring from recycle bin", error);
+    }
+  };
+
+  const handleClearRecycleBin = async () => {
+    try {
+      await clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER, userEmail);
+      console.log("jii")
+      clearRecycle_Bin();
+    } catch (error) {
+      console.log("Error in clearing the recycle bin", error);
+    }
   };
 
   if (loading) {
@@ -79,6 +111,12 @@ function Projects() {
       <div className="flex h-screen items-center justify-center">
         <LoadingIcon />
       </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-danger text-center">{error && error.message}</div>
     );
   }
 
@@ -96,10 +134,7 @@ function Projects() {
           {recycleBin && recycleBin.length}
         </div>
         <button
-          onClick={() => {
-            clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER);
-            clearRecycle_Bin();
-          }}
+          onClick={handleClearRecycleBin}
           className={`text-md ml-auto mr-12 flex items-center rounded-md bg-blue-200 p-2 ${
             isButtonDisabled ? "cursor-not-allowed opacity-50" : ""
           }${isNewProjectDisabled ? "opacity-50" : ""}`}
@@ -152,7 +187,7 @@ function Projects() {
             </tr>
           </thead>
           <tbody>
-            {projectData.map((project: any) => (
+            {recycleBin.map((project: Project) => (
               <tr key={project.id} className="border-b bg-white">
                 <td className="whitespace-nowrap px-4 py-4 font-medium">
                   <label className="fontWeight-bold">{project.name}</label>
@@ -163,8 +198,7 @@ function Projects() {
                 <td className="px-6 py-4">
                   <button
                     onClick={() => {
-                      recycleProject(project.id, DELETE_PROJECT, GET_USER);
-                      removeFromRecycleBin(project.id);
+                      handleRestoreFromRecycleBin(project.id);
                     }}
                     //  TODO onClick restore logic here
                     className={`mr-2 w-3 ${
@@ -175,7 +209,7 @@ function Projects() {
                     <FaTrashRestoreAlt />
                   </button>
                   <button
-                    onClick={() => handleDelete_Project(project.id)}
+                    onClick={() => handleParmenantDelete(project.id)}
                     className={`ml-2 ${isButtonDisabled ? "opacity-50" : ""}`}
                     disabled={isButtonDisabled}
                   >

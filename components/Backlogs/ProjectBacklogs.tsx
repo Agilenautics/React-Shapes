@@ -14,6 +14,7 @@ import userStore from "../AdminPage/Users/userStore";
 import backlogStore from "./backlogStore";
 import LoadingIcon from "../LoadingIcon";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import { ApolloQueryResult } from "@apollo/client";
 
 function ProjectBacklogs() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,35 +36,38 @@ function ProjectBacklogs() {
     projectStore();
 
   // from user store to updating userType and loging user
-  const { updateUserType, updateLoginUser } = userStore();
+  const { updateUserType, updateLoginUser, userEmail } = userStore();
 
   const [statuses, setStatuses] = useState(["Select Status", ...allStatus]);
-
 
   //taking router object from the useRouter hook from next
   const router = useRouter();
   // getting project id from the router path
   const projectId = router.query.projectId as string;
 
-  const verificationToken = async () => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        getUserByEmail(user.email, GET_USER, {
-          updateLoginUser,
-          updateProjects,
-          updateUserType,
-          updateRecycleBinProject,
-        });
-      }
-    });
+  const getProjects = async (email: string) => {
+    try {
+      const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
+        email,
+        GET_USER
+      );
+      const { hasProjects, ...userData } = response?.data.users[0];
+      updateProjects(hasProjects, response?.loading, response?.error);
+      updateRecycleBinProject(hasProjects);
+      updateLoginUser(userData);
+      updateUserType(userData.userType);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  useEffect(() => {
+    if (userEmail) {
+      getProjects(userEmail);
+    }
+  }, [userEmail]);
   useEffect(() => {
     setItems(backlogs);
   }, [backlogs]);
-
-  useEffect(() => {
-    verificationToken();
-  }, []);
 
   useEffect(() => {
     if (backend.userHas && backend.userHas.length) {

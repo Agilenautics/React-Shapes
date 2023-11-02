@@ -110,9 +110,8 @@ mutation parmenantDelete($where: ProjectsWhere) {
 }
 `
 //clear reCycle bin
-
 export const CLEAR_RECYCLE_BIN = gql`
-mutation clearBin($where: ProjectWhere, $delete: projectDeleteInput) {
+mutation clearBin($where: ProjectWhere, $delete: ProjectDeleteInput) {
   deleteProjects(where: $where, delete: $delete) {
     relationshipsDeleted
   }

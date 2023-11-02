@@ -204,7 +204,6 @@ function Flow() {
     dragged.current = true;
   }, []);
 
-  console.log(fileId);
 
   const onNodeDragStop = useCallback(
     async (event: React.MouseEvent, node: Node) => {

@@ -5,6 +5,7 @@ import { MyData, findById } from "./backend";
 import {
   Folder
 } from "../../gql";
+import { File } from "../../lib/appInterfaces";
 
 function searchTree(element: any, matchingTitle: any): any {
   if (element.id == matchingTitle) {
@@ -75,7 +76,7 @@ const fileStore = create<files>((set) => ({
       return { linkNodeId: nodeId };
     });
   },
-  add_file: (newFile: any) => {
+  add_file: (newFile:File) => {
     set((state) => {
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);

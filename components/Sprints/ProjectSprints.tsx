@@ -6,50 +6,57 @@ import projectStore from "../AdminPage/Projects/projectStore";
 import userStore from "../AdminPage/Users/userStore";
 import { auth } from "../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import {getUserByEmail,GET_USER, GET_SPRINTS, getSprintByProjectId } from "../../gql";
+import {
+  getUserByEmail,
+  GET_USER,
+  GET_SPRINTS,
+  getSprintByProjectId,
+} from "../../gql";
 import sprintStore from "./sprintStore";
 import { useRouter } from "next/router";
 import LoadingIcon from "../LoadingIcon";
 import { ToastContainer, toast } from "react-toastify";
 import SprintBoard from "./SprintBoard";
-
+import { ApolloQueryResult } from "@apollo/client";
 
 function ProjectSprints() {
-  const { sprints, updateSprints, loading, error } = sprintStore();
+  const [showForm, setShowForm] = useState(false);
   const [filteredData, setFilteredData] = useState<any>();
   const [boardView, setBoardView] = useState(false);
 
+  const { sprints, updateSprints, loading, error } = sprintStore();
+  const { userEmail, updateUserType, updateLoginUser } = userStore();
+  const { updateRecycleBinProject, updateProjectData: updateProjects } =
+    projectStore();
+  
   const router = useRouter();
-
   const projectId = router.query.projectId as string;
-
   const getSprint = async (id: string) => {
     await getSprintByProjectId(id, GET_SPRINTS, updateSprints);
   };
 
-  const [showForm, setShowForm] = useState(false);
-  const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore(
-    (state) => state.updateRecycleBinProject
-  );
-  const updateUserType = userStore((state) => state.updateUserType);
-  const updateLoginUser = userStore((state) => state.updateLoginUser);
+  
 
-  const verificationToken = async () => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        getUserByEmail(user.email, GET_USER, {
-          updateLoginUser,
-          updateProjects,
-          updateUserType,
-          updateRecycleBinProject,
-        });
-      }
-    });
+  const getProjects = async (email: string) => {
+    try {
+      const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
+        email,
+        GET_USER
+      );
+      const { hasProjects, ...userData } = response?.data.users[0];
+      updateProjects(hasProjects, response?.loading, response?.error);
+      updateRecycleBinProject(hasProjects);
+      updateLoginUser(userData);
+      updateUserType(userData.userType);
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
-    verificationToken();
-  }, []);
+    if (userEmail) {
+      getProjects(userEmail);
+    }
+  }, [userEmail]);
 
   useEffect(() => {
     if (projectId) {

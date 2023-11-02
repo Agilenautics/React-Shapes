@@ -7,6 +7,7 @@ import { FaBars } from "react-icons/fa";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import DarkModeToggleButton from "../Sidebar/DarkModeToggleButton";
 import { getInitials } from "./Users/Users";
+import userStore from "./Users/userStore";
 
 const auth = getAuth();
 
@@ -22,16 +23,9 @@ function TopBar({ toggleSideBar, flag }: Flag) {
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+  const {userEmail} = userStore()
 
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        setEmail(user.email);
-      }
-    });
-  }, [auth]);
+  
 
   return (
     <div className=" sticky left-0  right-0 top-0 z-10    flex  justify-between bg-white p-2  px-6 font-sans shadow-bottom  dark:bg-bgdarkcolor">
@@ -68,12 +62,12 @@ function TopBar({ toggleSideBar, flag }: Flag) {
             className="mr-12 flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white"
             onClick={toggleDropdown}
           >
-            {getInitials(email)}
+            {getInitials(userEmail)}
           </button>
           {dropdownOpen && (
             <div className="absolute right-0 top-12 z-40 mr-4 w-48 rounded border border-gray-300 bg-white shadow">
               <div className="p-4">
-                <p className="mb-2 text-sm text-gray-600">{email}</p>
+                <p className="mb-2 text-sm text-gray-600">{userEmail}</p>
                 <Signout />
               </div>
             </div>

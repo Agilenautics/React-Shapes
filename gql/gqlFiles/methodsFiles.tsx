@@ -11,6 +11,7 @@ import {
 } from "./mutations";
 import { Project, transformObject } from "./interfaces";
 import client from "../../apollo-client";
+import { File, Folder } from "../../lib/appInterfaces";
 
 // create File (story)
 
@@ -18,17 +19,16 @@ const createFile = async (
   mainId: string,
   folderId: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  fileData: any
+  fileData: any,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) => {
-  let node;
-  await client
-    .mutate({
+  try {
+    return await client.mutate({
       mutation,
       variables: {
         input: {
           name: fileData.name,
           uid: fileData.uid,
-
           type: fileData.type || "file",
           hasInfo: {
             create: {
@@ -36,7 +36,6 @@ const createFile = async (
                 status: "To-Do",
                 assignedTo: "",
                 dueDate: "",
-                // @ts-ignore
                 description: fileData.discription || "",
                 sprint: "",
               },
@@ -46,7 +45,7 @@ const createFile = async (
             connect: {
               where: {
                 node: {
-                  id: folderId || "",
+                  id: folderId,
                 },
               },
             },
@@ -55,7 +54,7 @@ const createFile = async (
             connect: {
               where: {
                 node: {
-                  id: mainId || "",
+                  id: mainId,
                 },
               },
             },
@@ -69,15 +68,73 @@ const createFile = async (
           },
         },
       },
-    })
-    .then((result) => {
-      node = result.data.createFolders.files[0];
-      
-    })
-    .catch((error) => {
-      console.log("Error in creating file", error);
+      update: (
+        cache,
+        {
+          data: {
+            createFiles: { files },
+          },
+        }
+      ) => {
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: fileData.projectId,
+            },
+          },
+        });
+        const { hasContainsFile, hasContainsFolder, ...projectData } =
+          projects[0];
+        if (folderId) {
+          const updateFileInFolder = hasContainsFolder.map((folder: Folder) => {
+            if (folder.id === folderId) {
+              return {
+                ...folder,
+                hasFile: [...folder.hasFile, ...files],
+              };
+            }
+            return folder;
+          });
+          const updatedProject = {
+            ...projectData,
+            hasContainsFile,
+            hasContainsFolder: updateFileInFolder,
+          };
+          cache.writeQuery({
+            query,
+            variables: {
+              where: {
+                id: fileData.projectId,
+              },
+            },
+            data: {
+              projects: [updatedProject],
+            },
+          });
+        } else {
+          const updatedFiles = [...hasContainsFile, ...files];
+          const updatedProject = {
+            ...projects[0],
+            hasContainsFile: updatedFiles,
+          };
+          cache.writeQuery({
+            query,
+            variables: {
+              where: {
+                id: fileData.projectId,
+              },
+            },
+            data: {
+              projects: [updatedProject],
+            },
+          });
+        }
+      },
     });
-  return node;
+  } catch (error) {
+    console.log("Error in creating new file", error);
+  }
 };
 
 async function getTreeNodeByUser(
@@ -108,9 +165,13 @@ async function getTreeNodeByUser(
     });
   return nodes;
 }
-async function deleteFileBackend(fileID: string, deleteItem: any) {
-  client
-    .mutate({
+async function deleteFileBackend(
+  fileID: string,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  readAndWriteQueryId: string
+) {
+  try {
+    return await client.mutate({
       mutation: deleteFiles,
       variables: {
         where: {
@@ -125,7 +186,7 @@ async function deleteFileBackend(fileID: string, deleteItem: any) {
                     hasdataNodedata: {
                       delete: {
                         hasLinkedTo: {},
-                       hasLinkedBy: {},
+                        hasLinkedBy: {},
                       },
                     },
                     haspositionPosition: {},
@@ -143,22 +204,33 @@ async function deleteFileBackend(fileID: string, deleteItem: any) {
           },
         },
       },
-    })
-    .then((res) => {
-      if (res.data) {
-        deleteItem(fileID);
-      }
-      if (res.errors) {
-        return (
-          res.errors && (
-            <div> {res.errors.map((values) => values.message)} </div>
-          )
+      update: (cache, { data }) => {
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: readAndWriteQueryId,
+            },
+          },
+        });
+        const { hasContainsFile, ...projectData } = projects[0];
+        const to_be_update = hasContainsFile.filter(
+          (file: File) => file.id !== fileID
         );
-      }
-    })
-    .catch((error) => {
-      console.error("Error deleting the file", error);
+        const updatedProject = {
+          ...projectData,
+          hasContainsFile: to_be_update,
+        };
+        cache.writeQuery({
+          query,
+          variables: { where: { id: readAndWriteQueryId } },
+          data: { projects: [updatedProject] },
+        });
+      },
     });
+  } catch (error) {
+    console.error("Error deleting the file", error);
+  }
 }
 const connectToFolderBackendOnMove = async (folderId: any, fileId: string) => {
   await client.mutate({
@@ -314,5 +386,5 @@ export {
   getFileByNode,
   getTreeNodeByUser,
   updateStoryMethod,
-  createFile
+  createFile,
 };

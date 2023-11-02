@@ -23,9 +23,9 @@ interface Project {
   recentProject: string;
   deletedAT: string;
   isOpen: boolean;
-  hasContainsFile: File[];
+  hasContainsFile: File[] | any;
   hasContainsFolder: Folder[];
-  children: (Folder | File)[];
+  children?: (Folder | File)[] | any;
   userHas: Array<User>;
 }
 
@@ -48,35 +48,12 @@ interface Comment {
   __typename: string;
 }
 
-// folder or epic interface
-interface Folder {
-  __typename: string;
-  id: string;
-  name: string;
-  type: string;
-  timeStamp: string;
-  uid: number;
-  hasInfo: Info;
-  hasFile: Array<File>;
-  hasSprint: Array<Sprints>;
-  children: (Folder | File)[];
-}
-
-// flowchart interface
-interface Flowchart {
-  __typename: string;
-  id: string;
-  name: string;
-  nodes: Array<Node>;
-  edges: Array<Edge>;
-}
-
 //File interface or story interface type
 interface File {
   __typename: string;
   id: string;
   name: string;
-  type: string;
+  type: "file";
   isOpen: string;
   uid: number;
   timeStamp: string;
@@ -88,9 +65,33 @@ interface File {
   hasSprint: Array<Sprints>;
 }
 
+// folder or epic interface
+interface Folder {
+  __typename: string;
+  id: string;
+  name: string;
+  type: "folder";
+  timeStamp: string;
+  uid: number;
+  hasInfo: Info;
+  hasFile: Array<File>;
+  hasFolder: Array<Folder>;
+  hasSprint: Array<Sprints>;
+  children: Array<Folder | File>;
+}
+
+// flowchart interface
+interface Flowchart {
+  __typename: string;
+  id: string;
+  name: string;
+  nodes: Array<Node>;
+  edges: Array<Edge>;
+}
+
 // sprints interface
 interface Sprints {
-  __typename: "sprint";
+  __typename: string;
   id: string;
   name: string;
   startDate: string;
@@ -130,24 +131,8 @@ interface Backlog {
   projectHas: Project;
 }
 
-interface Main {
-  __typename: string;
-  id: string;
-  name: string;
-  description: string;
-  timeStamp: string;
-  recycleBin: boolean;
-  recentProject: string;
-  deletedAT: string;
-  isOpen: boolean;
-  hasContainsFile: File[];
-  hasContainsFolder: Folder[];
-  children: (Folder | File)[];
-  userHas: Array<User>;
-}
-
 interface Data {
-  mains: Main[];
+  projects: Array<Project>;
 }
 
 interface RootObject {
@@ -167,5 +152,4 @@ export type {
   User,
   Data,
   RootObject,
-  Main
 };

@@ -16,8 +16,9 @@ import {
   updateStoryMutation,
   updateTaskMethod,
   getUserByEmail,
-  updateTasksMutation
+  updateTasksMutation,
 } from "../../../gql";
+import { ApolloQueryResult } from "@apollo/client";
 
 function ProjectBoards() {
   const allStatus = backlogStore((state) => state.allStatus);
@@ -34,20 +35,30 @@ function ProjectBoards() {
   const { backlogs, updateBacklogsData, updateRow } = backlogStore();
   const { updateProjectData: updateProjects, updateRecycleBinProject } =
     projectStore();
-  const { updateUserType, updateLoginUser } = userStore();
+  const { updateUserType, updateLoginUser, userEmail } = userStore();
 
-  const verificationToken = async () => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        getUserByEmail(user.email, GET_USER, {
-          updateLoginUser,
-          updateProjects,
-          updateUserType,
-          updateRecycleBinProject,
-        });
-      }
-    });
+  const getProjects = async (email: string) => {
+    try {
+      const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
+        email,
+        GET_USER
+      );
+      const { hasProjects, ...userData } = response?.data.users[0];
+      updateProjects(hasProjects, response?.loading, response?.error);
+      updateRecycleBinProject(hasProjects);
+      updateLoginUser(userData);
+      updateUserType(userData.userType);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  useEffect(() => {
+    if (userEmail) {
+      getProjects(userEmail);
+    }
+    // setIsButtonDisabled(userType.toLowerCase() === "user");
+    // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
+  }, [userEmail]);
 
   useEffect(() => {
     if (backlogs.length == 0) {
@@ -61,10 +72,6 @@ function ProjectBoards() {
     );
     setStatuses(filteredStatuses);
   }, [backlogs, selectedTypeFilters]);
-
-  useEffect(() => {
-    verificationToken();
-  }, []);
 
   const handleDragStart = (e: any, task: any) => {
     localStorage.setItem("task", JSON.stringify(task));
