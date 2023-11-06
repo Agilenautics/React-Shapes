@@ -1,20 +1,17 @@
-import {
-    gql
-  } from "@apollo/client";
-  import { File_Fragment } from "./fragments";
-  import { Node_Fragment,Info_Fragment } from "../gqlNodes";
+import { gql } from "@apollo/client";
+import { File_Fragment } from "./fragments";
+import { Node_Fragment, Info_Fragment } from "../gqlNodes";
 
- export  const createFileMutation = gql`
-${File_Fragment}
+export const createFileMutation = gql`
+  ${File_Fragment}
   mutation CreateFiles($input: [FileCreateInput!]!) {
-  createFiles(input: $input) {
-    files{
-      ...FileFragment
+    createFiles(input: $input) {
+      files {
+        ...FileFragment
+      }
     }
   }
-}
-`
-
+`;
 
 export const newFolderInFolder = gql`
   mutation Mutation($where: FolderWhere, $create: FolderRelationInput) {
@@ -34,6 +31,7 @@ export const newFolderInFolder = gql`
 
 export const newFolderInMain = gql`
   ${Info_Fragment}
+  ${File_Fragment}
   mutation createEpic($input: [FolderCreateInput!]!) {
     createFolders(input: $input) {
       folders {
@@ -45,11 +43,14 @@ export const newFolderInMain = gql`
         hasInfo {
           ...InfoFragment
         }
+        hasFile {
+          ...FileFragment
+        }
         projectHas {
           name
           id
         }
-        hasSprint{
+        hasSprint {
           id
           name
         }
@@ -57,14 +58,14 @@ export const newFolderInMain = gql`
     }
   }
 `;
-export const deleteFiles = gql`
+export const deleteFilesMutation = gql`
   mutation DeleteFiles($where: FileWhere, $delete: FileDeleteInput) {
     deleteFiles(where: $where, delete: $delete) {
       nodesDeleted
     }
   }
 `;
-export const deleteFolders = gql`
+export const deleteFoldersMutation = gql`
   mutation DeleteFolders($where: FolderWhere, $delete: FolderDeleteInput) {
     deleteFolders(where: $where, delete: $delete) {
       nodesDeleted
@@ -105,7 +106,7 @@ export const disconnectFromFolderOnMove = gql`
     }
   }
 `;
-export const updateFiles = gql`
+export const updateFilesMutation = gql`
   mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
@@ -146,7 +147,7 @@ export const updateStoryMutation = gql`
           message
           timeStamp
           userHas {
-           emailId
+            emailId
           }
         }
         hasInfo {
@@ -162,23 +163,22 @@ export const updateStoryMutation = gql`
 `;
 
 export const createUidMutation = gql`
-mutation CreateUids($input: [UidCreateInput!]!) {
-  createUids(input: $input) {
-    uids {
-      uid
-      id
+  mutation CreateUids($input: [UidCreateInput!]!) {
+    createUids(input: $input) {
+      uids {
+        uid
+        id
+      }
     }
   }
-}
-`
+`;
 export const updateUidMutation = gql`
-mutation UpdateUids($where: UidWhere, $update: UidUpdateInput) {
-  updateUids(where: $where, update: $update) {
-    uids {
-      id
-      uid
+  mutation UpdateUids($where: UidWhere, $update: UidUpdateInput) {
+    updateUids(where: $where, update: $update) {
+      uids {
+        id
+        uid
+      }
     }
   }
-}
-`
-
+`;

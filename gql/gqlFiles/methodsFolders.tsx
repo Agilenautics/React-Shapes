@@ -3,7 +3,6 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import { deleteFolders } from "./mutations";
 import { Folder } from "./interfaces";
 import client from "../../apollo-client";
 async function createFolderInFolder(
@@ -130,16 +129,16 @@ async function createFolderInMain(
   }
 }
 async function deleteFolderBackend(
-  folderID: string,
-  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  projectId: string
+  deleteIds: any,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) {
   try {
     return await client.mutate({
-      mutation: deleteFolders,
+      mutation,
       variables: {
         where: {
-          id: folderID,
+          id: deleteIds.id,
         },
         delete: {
           hasFile: [
@@ -179,13 +178,13 @@ async function deleteFolderBackend(
           query,
           variables: {
             where: {
-              id: projectId,
+              id: deleteIds.projectId,
             },
           },
         });
         const { hasContainsFolder, ...projectData } = projects[0];
         const to_be_updated = hasContainsFolder.filter(
-          (folder: Folder) => folder.id !== folderID
+          (folder: Folder) => folder.id !== deleteIds.id
         );
         const updatedProject = {
           ...projectData,
@@ -193,7 +192,7 @@ async function deleteFolderBackend(
         };
         cache.writeQuery({
           query,
-          variables: { where: { id: projectId } },
+          variables: { where: { id: deleteIds.projectId } },
           data: { projects: [{ ...updatedProject }] },
         });
       },
@@ -212,7 +211,7 @@ const updateFolderBackend = async (
       mutation,
       variables: {
         where: {
-          id: folderData.folderId,
+          id: folderData.id,
         },
         update: {
           name: folderData.name,
@@ -229,7 +228,7 @@ const updateFolderBackend = async (
         });
         const { hasContainsFolder, ...projectData } = projects[0];
         const updatedFolder = hasContainsFolder.map((folder: Folder) => {
-          if (folder.id === folderData.folderId) {
+          if (folder.id === folderData.id) {
             return {
               ...folder,
               name: folderData.name,

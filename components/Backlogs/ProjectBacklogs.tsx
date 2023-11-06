@@ -73,9 +73,9 @@ function ProjectBacklogs() {
     if (backend.userHas && backend.userHas.length) {
       setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas]);
     }
-    if (backlogs.length == 0) {
+    // if (backlogs.length == 0) {
       updateBacklogsData(backend.children as any);
-    }
+    // }
   }, [backend.userHas]);
 
   useEffect(() => {

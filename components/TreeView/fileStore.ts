@@ -56,8 +56,8 @@ const fileStore = create<files>((set) => ({
   currentFlowchart: "",
   updateCurrentFlowchart: (currentFlowchart, Id) =>
     set((state) => {
-      let root = new TreeModel().parse(state.data);
-      let node = findById(root, Id);
+      // let root = new TreeModel().parse(state.data);
+      // let node = findById(root, Id);
       // if (node?.model.type === "folder") {
       //   return { currentFlowchart, Id }
       // } else {

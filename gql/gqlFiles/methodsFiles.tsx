@@ -3,12 +3,7 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import {
-  deleteFiles,
-  connectToFolderOnMove,
-  disconnectFromFolderOnMove,
-  updateFiles,
-} from "./mutations";
+import { connectToFolderOnMove, disconnectFromFolderOnMove } from "./mutations";
 import { Project, transformObject } from "./interfaces";
 import client from "../../apollo-client";
 import { File, Folder } from "../../lib/appInterfaces";
@@ -86,7 +81,8 @@ const createFile = async (
         });
         const { hasContainsFile, hasContainsFolder, ...projectData } =
           projects[0];
-        if (folderId) {
+          const findParent = hasContainsFolder.find((folder:Folder)=>folder.id===folderId) as Folder;
+        if (findParent?.type==='folder') {
           const updateFileInFolder = hasContainsFolder.map((folder: Folder) => {
             if (folder.id === folderId) {
               return {
@@ -166,16 +162,16 @@ async function getTreeNodeByUser(
   return nodes;
 }
 async function deleteFileBackend(
-  fileID: string,
-  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  readAndWriteQueryId: string
+  deleteIds: any,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) {
   try {
     return await client.mutate({
-      mutation: deleteFiles,
+      mutation,
       variables: {
         where: {
-          id: fileID,
+          id: deleteIds.id,
         },
         delete: {
           hasFlowchart: {
@@ -209,23 +205,68 @@ async function deleteFileBackend(
           query,
           variables: {
             where: {
-              id: readAndWriteQueryId,
+              id: deleteIds.projectId,
             },
           },
         });
-        const { hasContainsFile, ...projectData } = projects[0];
-        const to_be_update = hasContainsFile.filter(
-          (file: File) => file.id !== fileID
-        );
-        const updatedProject = {
-          ...projectData,
-          hasContainsFile: to_be_update,
-        };
-        cache.writeQuery({
-          query,
-          variables: { where: { id: readAndWriteQueryId } },
-          data: { projects: [updatedProject] },
-        });
+        //getting folders or epics and file or story from the readQuery projects
+        const { hasContainsFile, hasContainsFolder, ...projectData } =
+          projects[0];
+        // finding the parent of the file or story
+        const findParent = hasContainsFolder.find(
+          (folder: Folder) => folder.id === deleteIds.parentId
+        ) as Folder;
+        //checking if its folder then iam removing file inside the folder
+        if (findParent?.type === "folder") {
+          const { hasFile } = findParent;
+          const newHasFile = hasFile.filter(
+            (file: File) => file.id !== deleteIds.id
+          );
+          // updating removed data to the folder
+          const updatedFolder = hasContainsFolder.map((folder: Folder) => {
+            if (folder.id === deleteIds.parentId) {
+              return {
+                ...folder,
+                hasFile: newHasFile,
+              };
+            }
+            return {
+              folder,
+            };
+          });
+          // and finally updating the project
+          const updatedProject = {
+            ...projectData,
+            hasContainsFile,
+            hasContainsFolder: updatedFolder,
+          };
+          cache.writeQuery({
+            query,
+            variables: {
+              where: {
+                id: deleteIds.projectId,
+              },
+            },
+            data: {
+              projects: [updatedProject],
+            },
+          });
+        } else {
+          const to_be_update = hasContainsFile.filter(
+            (file: File) => file.id !== deleteIds.id
+          );
+
+          const updatedProject = {
+            ...projectData,
+            hasContainsFile: to_be_update,
+            hasContainsFolder
+          };
+          cache.writeQuery({
+            query,
+            variables: { where: { id: deleteIds.projectId } },
+            data: { projects: [updatedProject] },
+          });
+        }
       },
     });
   } catch (error) {
@@ -276,16 +317,64 @@ const disconnectFromFolderBackendOnMove = async (fileId: string) => {
     },
   });
 };
-const updateFileBackend = async (fileId: string, flowchart: string) => {
+const updateFileBackend = async (
+  fileData: any,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
+) => {
   await client.mutate({
-    mutation: updateFiles,
+    mutation,
     variables: {
       where: {
-        id: fileId,
+        id: fileData.id,
       },
       update: {
-        name: flowchart,
+        name: fileData.name,
       },
+    },
+    update: (
+      cache,
+      {
+        data: {
+          updateFiles: { files },
+        },
+      }
+    ) => {
+      const { projects } = cache.readQuery({
+        query,
+        variables: {
+          where: {
+            id: fileData.projectId,
+          },
+        },
+      });
+      const { hasContainsFile, hasContainsFolder, ...projectsData } =
+        projects[0];
+      const updatedFile = hasContainsFile.map((file: File) => {
+        if (file.id === fileData.id) {
+          return {
+            ...file,
+            name: files[0].name,
+          };
+        }
+        return file;
+      });
+      const updatedProject = {
+        ...projectsData,
+        hasContainsFile: updatedFile,
+        hasContainsFolder,
+      };
+      cache.writeQuery({
+        query,
+        variables: {
+          where: {
+            id: fileData.projectId,
+          },
+        },
+        data: {
+          projects: [updatedProject],
+        },
+      });
     },
   });
 };

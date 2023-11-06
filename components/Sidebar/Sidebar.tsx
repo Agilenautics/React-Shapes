@@ -168,6 +168,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
         newFolder,
         getProjectByUser
       );
+    console.log(addFolderResponse?.data.createFolders.folders[0]);
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
   };

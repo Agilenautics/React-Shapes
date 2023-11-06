@@ -31,23 +31,6 @@ export const getProjectByUser = gql`
         hasInfo{
          ...InfoFragment
         }
-        hasFolder {
-          name
-          id
-          type
-          isOpen
-          uid
-          hasSprint {
-            id
-            name
-          }
-          hasInfo{
-          ...InfoFragment
-          }
-          hasFile {
-            ...FileFragment
-          }
-        }
         hasFile {
           ...FileFragment
         }

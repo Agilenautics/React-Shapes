@@ -11,6 +11,9 @@ import {
   Folder,
   getProjectByUser,
   updateFoldersMutation,
+  updateFilesMutation,
+  deleteFoldersMutation,
+  deleteFilesMutation,
 } from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
 
@@ -95,8 +98,8 @@ export function useBackend() {
 
     onEdit: async (id: string, name: string) => {
       const node = find(id);
-      let folderData = {
-        folderId: id,
+      let editedData = {
+        id,
         name,
         projectId: initData.id,
       };
@@ -133,22 +136,32 @@ export function useBackend() {
       const { type } = node?.model;
       if (type === "folder") {
         await updateFolderBackend(
-          folderData,
+          editedData,
           updateFoldersMutation,
           getProjectByUser
         );
         // updateNodes(nodeData);
       }
       if (type === "file") {
-        await updateFileBackend(id, name);
+        await updateFileBackend(
+          editedData,
+          updateFilesMutation,
+          getProjectByUser
+        );
         // updateNodes(nodeData);
       }
     },
 
     onDelete: async (id: string) => {
       const node = find(id);
-      const { type } = node?.model;
       const projectId = initData.id;
+      const deleteIds = {
+         id,
+        projectId,
+        parentId: node?.parent.model.id,
+      };
+      const { type } = node?.model;
+
       const readableData = { ...initData };
       const updatedChild = readableData.children?.filter(
         (element) => element.id !== id
@@ -157,11 +170,14 @@ export function useBackend() {
       setData(initData);
       update();
       if (type === "folder") {
-        await deleteFolderBackend(id, getProjectByUser, projectId);
+        await deleteFolderBackend(
+          deleteIds,
+          deleteFoldersMutation,
+          getProjectByUser,
+        );
         delete_item(id);
-      }
-      if (type === "file") {
-        await deleteFileBackend(id, getProjectByUser, projectId);
+      } else {
+        await deleteFileBackend(deleteIds,deleteFilesMutation, getProjectByUser);
         delete_item(id);
       }
     },
