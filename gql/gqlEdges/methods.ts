@@ -1,17 +1,12 @@
 import {
-  
   DocumentNode,
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { Edge } from "reactflow";
-import {
-  allEdges,
-  createEdgeMutation,
-  deleteEdgeMutation,
-  updateEdgeMutation,
-} from "./mutations";
+import { createEdgeMutation, deleteEdgeMutation } from "./mutations";
+import { allEdges } from "./queries";
 
 async function getEdges(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,

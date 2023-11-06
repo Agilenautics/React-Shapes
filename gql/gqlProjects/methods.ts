@@ -5,7 +5,7 @@ import {
   TypedDocumentNode,
 } from "@apollo/client";
 import client from "../../apollo-client";
-import { GET_PROJECTS, GET_USER, GET_PROJECTS_BY_ID } from "./mutations";
+import { GET_PROJECTS, GET_USER, GET_PROJECTS_BY_ID } from "./queries";
 import { Project } from "../..//lib/appInterfaces";
 const getUserByEmail = async (
   email: String,

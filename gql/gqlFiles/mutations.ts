@@ -14,61 +14,6 @@ ${File_Fragment}
   }
 }
 `
-//Get root using unique userName(UID)
-export const getProjectByUser = gql`
-  ${File_Fragment}
-  ${Info_Fragment}
-  query getprojectByUser($where: ProjectWhere) {
-    projects(where: $where) {
-      name
-      description
-      isOpen
-      id
-      
-      hasContainsFile {
-        ...FileFragment
-      }
-      hasContainsFolder {
-        id
-        type
-        isOpen
-        name
-        uid
-        hasSprint {
-         id
-         name
-        }   
-        hasInfo{
-         ...InfoFragment
-        }
-        hasFolder {
-          name
-          id
-          type
-          isOpen
-          uid
-          hasSprint {
-            id
-            name
-          }
-          hasInfo{
-          ...InfoFragment
-          }
-          hasFile {
-            ...FileFragment
-          }
-        }
-        hasFile {
-          ...FileFragment
-        }
-      }
-      userHas {
-        emailId
-        userType
-      }
-    }
-  }
-`;
 
 
 export const newFolderInFolder = gql`
@@ -170,22 +115,6 @@ export const updateFiles = gql`
     }
   }
 `;
-export const getFile = gql`
-  ${Node_Fragment}
-  query Query($where: FileWhere) {
-    files(where: $where) {
-      name
-      id
-      type
-      hasFlowchart {
-        name
-        hasNodes {
-          ...NodeFragment
-        }
-      }
-    }
-  }
-`;
 // updating epic hasInfo data only
 
 export const updateEpicMutation = gql`
@@ -232,15 +161,6 @@ export const updateStoryMutation = gql`
   }
 `;
 
-//getting uid 
-export const getUidQuery = gql`
-  query Uids {
-  uids {
-    id
-    uid
-  }
-}
-`
 export const createUidMutation = gql`
 mutation CreateUids($input: [UidCreateInput!]!) {
   createUids(input: $input) {

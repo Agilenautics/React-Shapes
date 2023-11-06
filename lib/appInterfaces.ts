@@ -23,8 +23,8 @@ interface Project {
   recentProject: string;
   deletedAT: string;
   isOpen: boolean;
+ hasContainsFolder: Folder[]|any;
   hasContainsFile: File[] | any;
-  hasContainsFolder: Folder[];
   children?: (Folder | File)[] | any;
   userHas: Array<User>;
 }
@@ -77,6 +77,7 @@ interface Folder {
   hasFile: Array<File>;
   hasFolder: Array<Folder>;
   hasSprint: Array<Sprints>;
+  projectHas: Project;
   children: Array<Folder | File>;
 }
 

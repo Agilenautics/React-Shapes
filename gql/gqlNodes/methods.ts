@@ -9,11 +9,9 @@ import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import {
-  allNodes,
-  updatePositionMutation,
-  delNodeMutation,
   updateNodesMutation,
 } from "./mutations";
+import { allNodes } from "./queries";
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,

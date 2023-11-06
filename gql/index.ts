@@ -5,3 +5,4 @@ export * from "./gqlUsers";
 export * from "./gqlBacklogs";
 export * from "./gqlSprints";
 export * from "./gqlFiles";
+export * from "./gqlAdmin";

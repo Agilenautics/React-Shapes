@@ -41,7 +41,7 @@ const typeDefs = gql`
     hasComments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: IN)
     hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
     hasInfo: Info @relationship(type: "HAS_INFO", direction: IN)
-    projectHas: Project @relationship(type: "HAS_fOLDER", direction: IN)
+    projectHas: Project @relationship(type: "HAS_FOLDER", direction: IN)
     hasFolder: [Folder!]! @relationship(type: "HAS_FOLDER", direction: OUT)
     hasFile: [File!]! @relationship(type: "HAS_FILE", direction: OUT)
   }

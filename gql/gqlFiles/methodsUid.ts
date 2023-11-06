@@ -3,7 +3,7 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import { getUidQuery } from "./mutations";
+import { getUidQuery } from "./queries";
 import client from "../../apollo-client";
 import { NextApiResponse } from "next";
 
