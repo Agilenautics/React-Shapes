@@ -361,6 +361,41 @@ const Sidebar = ({ isOpen }: SideBar) => {
           >
             {insightsOpen && (
               <>
+                <div className="p-1 duration-100">
+                  <Link href={`/projects/${projectId}/business-plan`}>
+                    <a className="ml-7 flex w-full select-none items-center gap-2">
+                      <RiFlowChart />
+                      <span> Business Plan</span>
+                    </a>
+                  </Link>
+                </div>
+
+                {router.asPath ==
+                  "/projects/" + projectId + "/business-plan" && (
+                  <div>
+                    <div className=" sticky top-0 grid grid-cols-2 gap-2 bg-white  p-1  text-white  ">
+                      <button
+                        type="button"
+                        className=" flex items-center justify-center gap-1 rounded bg-sky-500 p-1 duration-300 hover:bg-sky-600"
+                        onClick={handleAddFolder}
+                      >
+                        <AiFillFolderAdd className="text-xl" />
+                        <span>Add Folder</span>
+                      </button>
+                      <button
+                        type="button"
+                        className=" flex items-center justify-center gap-1 rounded bg-sky-500 p-1 duration-300 hover:bg-sky-600"
+                        onClick={handleAddFile}
+                      >
+                        <AiFillFileAdd className="text-xl" />
+                        <span>Add File</span>
+                      </button>
+                    </div>
+                    <div className="h-24 min-h-0 hover:min-h-full overflow-auto overflow-x-hidden">
+                      <FileTree />
+                    </div>
+                  </div>
+                )}
                 <div className="p-1 duration-100 ">
                   <Link href={`/projects/${projectId}/boards`}>
                     <a className="ml-7 flex w-full select-none items-center gap-2">
@@ -388,39 +423,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
                     </a>
                   </Link>
                 </div>
-                <div className="p-1 duration-100">
-                  <Link href={`/projects/${projectId}/business-plan`}>
-                    <a className="ml-7 flex w-full select-none items-center gap-2">
-                      <RiFlowChart />
-                      <span> Business Plan</span>
-                    </a>
-                  </Link>
-                </div>
-
-                {router.asPath ==
-                  "/projects/" + projectId + "/business-plan" && (
-                  <div className="h-[23vh] overflow-auto overflow-x-hidden ">
-                    <div className=" sticky top-0 grid grid-cols-2 gap-2 bg-white  p-1  text-white  ">
-                      <button
-                        type="button"
-                        className=" flex items-center justify-center gap-1 rounded bg-sky-500 p-1 duration-300 hover:bg-sky-600"
-                        onClick={handleAddFolder}
-                      >
-                        <AiFillFolderAdd className="text-xl" />{" "}
-                        <span>Add Folder</span>
-                      </button>
-                      <button
-                        type="button"
-                        className=" flex items-center justify-center gap-1 rounded bg-sky-500 p-1 duration-300 hover:bg-sky-600"
-                        onClick={handleAddFile}
-                      >
-                        <AiFillFileAdd className="text-xl" />{" "}
-                        <span>Add File</span>
-                      </button>
-                    </div>
-                    <FileTree />
-                  </div>
-                )}
               </>
             )}
           </div>
