@@ -187,32 +187,32 @@ async function createNode(
             },
           },
         },
-        update: (
-          cache: ApolloCache<any> | any,
-          {
-            data: {
-              updateFiles: { files },
-            },
-          }
-        ) => {
-          console.log(data.story);
-          const existanceCache = cache.readQuery({
-            query: allNodes,
-            variables: {
-              where: {
-                hasFile: {
-                  id: data.story,
-                },
-              },
-            },
-          });
+        // update: (
+        //   cache: ApolloCache<any> | any,
+        //   {
+        //     data: {
+        //       updateFiles: { files },
+        //     },
+        //   }
+        // ) => {
+        //   console.log(data.story);
+        //   const existanceCache = cache.readQuery({
+        //     query: allNodes,
+        //     variables: {
+        //       where: {
+        //         hasFile: {
+        //           id: data.story,
+        //         },
+        //       },
+        //     },
+        //   });
 
-          console.log(existanceCache, "data");
-          const nodes = existanceCache.flowcharts[0].hasNodes;
-          console.log(files);
+        //   console.log(existanceCache, "data");
+        //   const nodes = existanceCache.flowcharts[0].hasNodes;
+        //   console.log(files);
 
-          // const updated_nodes =
-        },
+        //   // const updated_nodes =
+        // },
       })
       .then((result) => {
         const nodes1 = JSON.stringify(
@@ -271,48 +271,48 @@ async function deleteNodeBackend(
           },
         },
       },
-      update: (cache, { data }) => {
-        const existanceData = cache.readQuery({
-          query,
-          variables: {
-            where: {
-              hasFile: {
-                id: fileId,
-              },
-            },
-          },
-        });
-        const nodes = existanceData.flowcharts[0].hasNodes;
-        let deleted_node = nodes.filter((values: Node) => values.id !== nodeID);
-        const updaedFlowNodes = {
-          ...existanceData.flowcharts[0],
-          nodes: deleted_node,
-        };
-        cache.writeQuery({
-          query,
-          variables: {
-            where: {
-              hasFile: {
-                id: fileId,
-              },
-            },
-          },
-          data: {
-            flowcharts: [updaedFlowNodes],
-          },
-        });
-        const existanceMain = cache.readQuery({
-          query: mainQuery,
-          variables: {
-            where: {
-              id: projectId,
-            },
-          },
-        });
-        console.log(existanceMain);
-        // const root = new TreeModel().parse(existanceMain.mains)
-        // console.log(root)
-      },
+      // update: (cache, { data }) => {
+      //   const existanceData = cache.readQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         hasFile: {
+      //           id: fileId,
+      //         },
+      //       },
+      //     },
+      //   });
+      //   const nodes = existanceData.flowcharts[0].hasNodes;
+      //   let deleted_node = nodes.filter((values: Node) => values.id !== nodeID);
+      //   const updaedFlowNodes = {
+      //     ...existanceData.flowcharts[0],
+      //     nodes: deleted_node,
+      //   };
+      //   cache.writeQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         hasFile: {
+      //           id: fileId,
+      //         },
+      //       },
+      //     },
+      //     data: {
+      //       flowcharts: [updaedFlowNodes],
+      //     },
+      //   });
+      //   const existanceMain = cache.readQuery({
+      //     query: mainQuery,
+      //     variables: {
+      //       where: {
+      //         id: projectId,
+      //       },
+      //     },
+      //   });
+      //   console.log(existanceMain);
+      //   // const root = new TreeModel().parse(existanceMain.mains)
+      //   // console.log(root)
+      // },
     });
   } catch (error) {
     console.log(error, "while deleting the node..");
