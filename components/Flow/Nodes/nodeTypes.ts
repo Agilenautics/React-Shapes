@@ -61,7 +61,7 @@ const nodeShapeMap:any = {
     "-rotate-45",
   ],
   circle: ["h-30 w-30", "!h-20 w-20 rounded-full", "rotate-0"],
-  parallelogram: ["h-30 w-30", styles.parallelogram, "rotate-0"],
+  parallelogram: ["h-30 w-30", "h-30 w-30", "rotate-0 h-14 w-20 flex items-center justify-center"],
   screw: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-screw-wrench", "rotate-0"],
   trash: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-trash", "rotate-0"],
   gatewayParallel: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-gateway-parallel", "rotate-0"],
