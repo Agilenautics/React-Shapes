@@ -1,4 +1,4 @@
-import React, { HTMLInputTypeAttribute, useState } from "react";
+import React, { HTMLInputTypeAttribute, memo, useState } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { nodeShapeMap } from "./Nodes/nodeTypes";
 import nodeStore from "./Nodes/nodeStore";
@@ -58,7 +58,7 @@ interface CSSMapType {
   [key: string]: string | [string, string];
 }
 /* A React component that is used to edit the properties of a node or edge.*/
-export function Editing({
+function Editing({
   isEdge = false,
   toggleDraggable,
   id,
@@ -220,17 +220,19 @@ export function Editing({
             positioningCSS={"left-16 -top-5"}
             objects={Object.keys(nodeShapeMap)
               .slice(0, 4)
-              .map((key, _) => (
-                <div
-                  key={key}
-                  className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${nodeShapeMap[key][1]}`}
-                  id={key}
-                  onClick={() => {
-                    toggleDraggable(id, true);
-                    updateShape(id, key);
-                  }}
-                ></div>
-              ))}
+              .map((key, _) => {
+                return (
+                  <div
+                    key={key}
+                    className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${key==="diamond"?"rotate-45 translate-x-[10px] translate-y-[9px] rounded-md -rotate-45":nodeShapeMap[key][1]}`}
+                    id={key}
+                    onClick={() => {
+                      toggleDraggable(id, true);
+                      updateShape(id, key);
+                    }}
+                  ></div>
+                );
+              })}
           />
           <ExpandableChip
             title="Description"
@@ -321,3 +323,8 @@ export function Editing({
     </div>
   );
 }
+
+export default memo(Editing);
+
+// hasLinkedTo.flag
+// hasLinkedBy

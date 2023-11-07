@@ -1,4 +1,4 @@
-import { Editing } from "../Editing";
+import  Editing  from "../Editing";
 import { useState } from "react";
 import { Handle, Position } from "reactflow";
 import nodeStore from "./nodeStore";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Editing } from "../Editing";
+import  Editing  from "../Editing";
 import { getSmoothStepPath, getBezierPath, Position } from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
