@@ -217,7 +217,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
   return (
     <div
       className={` left-0 top-0 z-20  h-full font-sans text-slate-600 shadow duration-700 ease-in-out dark:bg-bgdarkcolor dark:text-white  ${
-        isOpen ? "w-60" : "w-0"
+        isOpen ? "w-64" : "w-0"
       }`}
     >
       {isOpen && (
