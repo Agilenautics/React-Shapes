@@ -257,6 +257,7 @@ function Projects() {
       {showForm && (
         <ProjectOverlay
           notify={notify}
+          //@ts-ignore
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
           projectData={allProjects}

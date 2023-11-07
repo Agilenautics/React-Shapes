@@ -121,6 +121,7 @@ function AddNodeButton() {
                   .map(([symbol, styles], index) => (
                     <div key={index} className="text-center">
                       <span
+                      //@ts-ignore
                         className={`cursor-pointer ${styles[1]}`}
                         onClick={() => handleBPMNClick(symbol)}
                       />

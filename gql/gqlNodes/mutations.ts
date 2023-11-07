@@ -35,16 +35,18 @@ export const delNodeMutation = gql`
   }
 `;
 export const updateLinkedBy = gql`
-  mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
-    updateLinkedBy(where: $where, update: $update) {
-      linkedBy {
-        fileId
-        flag
-        id
-        label
-      }
+mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
+  updateLinkedBies 
+    
+  (where: $where, update: $update) {
+    linkedBies {
+      fileId
+      flag
+      id
+      label
     }
   }
+}
 `;
 export const updateLinkedToMutation = gql`
   mutation updateLinkedTo($where: NodeDataWhere, $update: NodeDataUpdateInput) {
