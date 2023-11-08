@@ -16,6 +16,7 @@ import LoadingIcon from "../LoadingIcon";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { ApolloQueryResult } from "@apollo/client";
 
+import $ from "jquery";
 function ProjectBacklogs() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
@@ -109,9 +110,11 @@ function ProjectBacklogs() {
     });
   };
 
-  // const getSprintName: any = (id: string) => {
-  //   if (id == "" || id == null) return "-";
-  // };
+  const getSprintName: any = (id: string) => {
+    if (id == "" || id == null) return "-";
+  };
+  
+  
 
   return loading ? (
     <div className="flex h-screen items-center justify-center">
@@ -122,8 +125,8 @@ function ProjectBacklogs() {
       <h1 className="mb-4 rounded-lg bg-gray-200 p-2 text-2xl font-bold shadow-lg dark:bg-slate-600 dark:text-white">
         Backlogs
       </h1>
-      <div className="m-1 mr-5 rounded-lg bg-white shadow-md dark:bg-white dark:text-slate-600 ">
-        <div className="m-1 flex items-center justify-between bg-gray-100 dark:bg-white dark:text-slate-600 ">
+      <div className=" mr-5 rounded-lg bg-white shadow-md dark:bg-white dark:text-slate-600 ">
+        <div className=" flex items-center justify-between bg-gray-100 dark:bg-white dark:text-slate-600 ">
           <input
             type="text"
             placeholder="Search by name"
@@ -144,7 +147,7 @@ function ProjectBacklogs() {
                 <button
                   type="button"
                   onClick={() => setShowTypeDropdown((prevState) => !prevState)}
-                  className="relative flex bg-gray-100 text-gray-700  hover:bg-gray-200"
+                  className="relative flex bg-gray-100 text-gray-700  hover:bg-gray-200 dark:bg-slate-600  dark:text-white"
                 >
                   <span className="block w-full py-2 pl-3 pr-10 text-left text-base">
                     Select Types
@@ -225,43 +228,60 @@ function ProjectBacklogs() {
             ))}
           </select>
         </div>
-        <div className="overflow-y max-h-screen overflow-x-hidden">
-          <table className="mr-4 w-full table-auto">
-            <thead>
+        <div className="overflow-y  max-h-screen overflow-x-hidden ">
+          <table className="mr-4 w-full table-auto ">
+            <thead className=" sticky top-0 z-10">
               <tr>
-                <th className="bg-gray-200 px-1 py-2">Id</th>
-                <th className="bg-gray-200 px-1 py-2">Type</th>
-                <th className="bg-gray-200 px-1 py-2">Name</th>
-                <th className="bg-gray-200 px-1 py-2">Description</th>
-                <th className="bg-gray-200 px-1 py-2">Epic</th>
-                <th className="bg-gray-200 px-1 py-2">Status</th>
-                <th className="bg-gray-200 px-1 py-2">Sprint</th>
-                <th className="bg-gray-200 px-1 py-2">User</th>
+                <th className="bg-gray-200 px-1 py-2">
+                  Id
+                </th>
+                <th className=" bg-gray-200 px-1 py-2">
+                  Type
+                </th>
+                <th className=" bg-gray-200 px-1 py-2">
+                  Name
+                </th>
+                <th className=" bg-gray-200 px-1 py-2">
+                  Description
+                </th>
+                <th className="bg-gray-200 px-1 py-2">
+                  Epic
+                </th>
+                <th className=" bg-gray-200 px-1 py-2">
+                  Status
+                </th>
+                <th className=" bg-gray-200 px-1 py-2">
+                  Sprint
+                </th>
+                <th className="bg-gray-200 px-1 py-2">
+                  User
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((element: any, index: any) => (
                 <tr key={index} className="py-1">
-                  <td className="cursor-pointer px-1 py-2 text-center">
+                  {/* @ts-ignore */}
+                  <td className="cursor-pointer border-b  border-slate-400 px-1 py-2 text-center ">
                     {element.uid}
                   </td>
                   <td
-                    className={`px-1 py-2 ${
+                    className={`border-b  border-slate-400 px-1 py-2  ${
                       getTypeLabel(element.type).color
                     } text-grey rounded-lg text-center`}
                   >
                     {getTypeLabel(element.type).type}
                   </td>
                   <td
-                    className="cursor-pointer px-1 py-2 text-center hover:text-blue-500 hover:underline"
+                    className="cursor-pointer border-b  border-slate-400 px-1 py-2 text-center  hover:text-blue-500 hover:underline "
                     onClick={() => openFormWithFilledData(element)}
                   >
                     {element.label || element.name}
                   </td>
-                  <td className="description-cell break-all px-1 py-2 text-center">
+                  <td className="description-cell break-all border-b border-slate-400 px-1 py-2 text-center ">
                     {element.description}
                   </td>
-                  <td className="px-1 py-2 text-center">
+                  <td className="border-b  border-slate-400  px-1 py-2 text-center ">
                     {/* here epic */}
                     {element.parent &&
                       (element.parent.name == "No epic"
@@ -269,18 +289,18 @@ function ProjectBacklogs() {
                         : element.parent.name)}
                   </td>
                   <td
-                    className={`px-1 py-2 ${getStatusColor(
+                    className={`border-b   border-slate-400 px-1 py-2  ${getStatusColor(
                       element.status
                     )} text-grey rounded-lg text-center`}
                   >
                     {element.status}
                   </td>
-                  <td className="px-1 py-2 text-center">
+                  <td className="border-b  border-slate-400 px-1 py-2  text-center">
                     {element.hasSprint && element.hasSprint.length
                       ? element.hasSprint[0].name
                       : "-"}
                   </td>
-                  <td className="px-1 py-2 text-center">
+                  <td className="border-b  border-slate-400 px-1 py-2 text-center">
                     {element.assignedTo ? element.assignedTo : "-"}
                   </td>
                 </tr>

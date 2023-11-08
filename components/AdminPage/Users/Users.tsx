@@ -172,12 +172,12 @@ function Users() {
 
   if (loading || isLoading)
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex h-screen items-center justify-center" data-testId="Icontest1">
         <LoadingIcon />
       </div>
     );
   if (error) {
-    return error && <div> {error.message} </div>;
+    return error && <div>{error.message}</div>;//{error.message}
   }
 
   const handleManageAccountClick = (user: User) => {
@@ -186,10 +186,10 @@ function Users() {
   };
 
   return (
-    <div className=" p-6">
+    <div className=" p-6" data-testid="testUser">
       {/* heading of the table */}
       <div className="flex h-full items-center">
-        <button className="text-md   rounded bg-sky-500/75 p-2 font-semibold text-white">
+        <button className="text-md   rounded bg-sky-500/75 p-2 font-semibold text-white" >
           Team Agile
         </button>
       </div>
@@ -244,6 +244,7 @@ function Users() {
             }${isNewUserDisabled ? "opacity-50" : ""}`}
             disabled={isButtonDisabled || isNewUserDisabled}
             onClick={() => setShowAddUserPopup(true)}
+            data-testId="addtestuser"
           >
             Add User
           </button>
@@ -308,7 +309,8 @@ function Users() {
                           className="text-red-700 "
                           onClick={() => handleConfirmDelete(user.id)}
                           disabled={isButtonDisabled}
-                        >
+                          data-testId="delTestIcon"
+                                                >
                           <MdDelete />
                         </button>
                         <button
@@ -344,6 +346,7 @@ function Users() {
                           className="ml-2 rounded-full p-1 duration-300 hover:bg-slate-200"
                           onClick={() => handleDeleteClick(user.id)}
                           disabled={isButtonDisabled}
+                          data-testId="testDelIcon"
                         >
                           <MdDeleteOutline
                             className={isButtonDisabled ? "opacity-50" : ""}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Login from "../components/Authentication/Login/Login";
 import Signup from "../components/Authentication/SignUp/SignUp";

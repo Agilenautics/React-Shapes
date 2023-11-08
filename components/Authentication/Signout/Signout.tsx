@@ -28,6 +28,7 @@ const Signout: React.FC = ({ handleFlag }: any) => {
         border: "none",
         fontSize: "1rem",
       }}
+      role="button"
       onClick={handleSignOut}
     >
       Sign Out

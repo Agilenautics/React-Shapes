@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React,{ useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
 import {
   createNode,
@@ -125,7 +125,9 @@ function AddNodeButton() {
                         className={`cursor-pointer ${styles[1]}`}
                         onClick={() => handleBPMNClick(symbol)}
                       />
+          
                     </div>
+                  
                   ))}
             </div>
           </div>
@@ -151,5 +153,4 @@ function AddNodeButton() {
     </div>
   );
 }
-
 export default AddNodeButton;

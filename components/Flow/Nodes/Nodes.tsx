@@ -1,5 +1,5 @@
 import  Editing  from "../Editing";
-import { useState } from "react";
+import React,{ useState } from "react";
 import { Handle, Position } from "reactflow";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";

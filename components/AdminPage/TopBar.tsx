@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import Signout from "../Authentication/Signout/Signout";
 //import { auth } from "../../auth";
 import Link from "next/link";
@@ -31,15 +31,8 @@ function TopBar({ toggleSideBar, flag }: Flag) {
     <div className=" sticky left-0  right-0 top-0 z-10    flex  justify-between bg-white p-2  px-6 font-sans shadow-bottom  dark:bg-bgdarkcolor">
       {/* logo  */}
       <div className="flex gap-6">
-        <button onClick={toggleSideBar} className="duration-200">
-          {" "}
-          {flag ? (
-            <IoIosArrowDropleftCircle className="toggleStyle text-2xl text-slate-600 dark:text-blue-600 " />
-          ) : (
-            <FaBars className="text-2xl text-slate-600 dark:text-white" />
-          )}{" "}
-        </button>
-        <span className=" text-2xl font-bold text-gray-400">
+      <button onClick={toggleSideBar} className="duration-200"> {!flag && <FaBars className="text-2xl dark:text-white text-slate-600" />} </button>
+        <span className=" text-2xl font-bold text-gray-400" data-testId="test-TextElement">
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>
       </div>

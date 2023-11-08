@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsSun, BsMoonStars } from 'react-icons/bs'
 
 /**
@@ -58,7 +58,7 @@ function DarkModeToggleButton() {
 
     <div onClick={(e) => toggleDarkModeButton(!isDark)} className="border border-orange-600 flex items-center p-[3px] dark:bg-slate-700 dark:border-none dark:p-1 rounded-full">
       <button className="duration-300 ease-in">
-        {isDark ? <BsMoonStars className="text-lg " /> : <BsSun className="text-lg  text-orange-600 " />}
+        {isDark ? <BsMoonStars className="text-lg "  data-testId="DarkIcon"/> : <BsSun className="text-lg  text-orange-600 " data-testId="LightIcon" />}
       </button>
     </div>
   );

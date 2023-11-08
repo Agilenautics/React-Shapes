@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import Sidebar from "../Sidebar/Sidebar";
 import TopBar from "./TopBar";
@@ -37,7 +37,7 @@ function Layout({ children }: any) {
 
   return (
     <div className="flex">
-      <div>{email && path && <Sidebar isOpen={isSideBarOpen} />}</div>
+      <div>{email && path && <Sidebar isOpen={isSideBarOpen} toggleSideBar={toggleSideBar} />}</div>
       <div className="w-full">
         {email && path && (
           <>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import FinishSignIn from "../components/Authentication/SignInLink/finishSignIn";
 

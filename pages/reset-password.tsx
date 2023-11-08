@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ResetPassword from "../components/Authentication/Login/ResetPassword";
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React,{ useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FileTree } from "../TreeView/fileRenderer";
 import {
@@ -16,6 +16,8 @@ import { BsPlus } from "react-icons/bs";
 import { RiFlowChart } from "react-icons/ri";
 import fileStore from "../TreeView/fileStore";
 import { useRouter } from "next/router";
+import { IoIosArrowDropleftCircle } from 'react-icons/io';
+ import 'react-tooltip/dist/react-tooltip.css'
 import {
   createFile,
   createFileMutation,
@@ -38,12 +40,14 @@ import AddProjectPopup from "../AdminPage/Projects/ProjectOverlay";
 import { ToastContainer, toast } from "react-toastify";
 import { Project } from "../../lib/appInterfaces";
 import { FetchResult } from "@apollo/client";
+import { Tooltip } from 'react-tooltip'
 
 interface SideBar {
   isOpen: Boolean;
+  toggleSideBar: any
 }
 
-const Sidebar = ({ isOpen }: SideBar) => {
+const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
   // const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
   const [insightsOpen, setInsightsOpen] = useState(false);
   const [projectsFlag, setProjectsFlag] = useState(false);
@@ -56,7 +60,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
   //projects stores
   const { projects: allProjects, loading } = projectStore();
   const [projectData, setProjectData] = useState<Project[]>([]);
-
+  
   const notify = () => toast.success("Project Created...");
 
   const {
@@ -72,6 +76,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   const router = useRouter();
   const projectId = (router.query.projectId as string) || "";
+ 
 
   const getProjectId = async (id: string) => {
     const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
@@ -96,7 +101,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
       }
     });
   };
-
   useEffect(() => {
     getuniqId();
   }, []);
@@ -133,6 +137,15 @@ const Sidebar = ({ isOpen }: SideBar) => {
     localStorage.setItem("recentPid", id);
     // update_recentProject(id,recentProject_mutation);
   };
+  const handleInsights = () => {
+    if(projectId){
+      setInsightsOpen(!insightsOpen)
+    }
+    else{
+      setInsightsOpen(false)
+    }
+      
+    }
 
   useEffect(() => {
     if (
@@ -205,7 +218,6 @@ const Sidebar = ({ isOpen }: SideBar) => {
             data,
             getProjectByUser
           );
-        //adding file or epic inside store after getting response from the network
         add_file(fileInMainResponse?.data.createFiles.files[0]);
         handleUidUpdates();
       }
@@ -215,13 +227,10 @@ const Sidebar = ({ isOpen }: SideBar) => {
   };
 
 
-  const handleInsights = ()=>{
-    if(projectId){
-      setInsightsOpen(!insightsOpen)
-    }else{
-     window.alert("Please select a project")
-    }
-  }
+  // const handleInsights = ()=>{
+  //   if(projectId){
+  //   }
+  // }
 
   
 
@@ -234,7 +243,8 @@ const Sidebar = ({ isOpen }: SideBar) => {
       {isOpen && (
         <nav>
           {/* top bar image section */}
-          <div className="flex justify-center p-4">
+          <div className="flex py-4">
+            <div className=" w-[90%] flex justify-center">
             <Image
               className="mx-auto"
               src="/assets/flow-chart.png"
@@ -243,6 +253,8 @@ const Sidebar = ({ isOpen }: SideBar) => {
               alt="Company Logo"
               priority={false}
             />
+            </div>
+              <button onClick={toggleSideBar} className="duration-200">  <IoIosArrowDropleftCircle className="text-2xl dark:text-blue-600 relative -right-3 top-6 text-slate-600 " /> </button>
           </div>
           {/* projects  */}
           <div>
@@ -280,9 +292,10 @@ const Sidebar = ({ isOpen }: SideBar) => {
                   className={`inline transition-transform ${
                     projectsFlag ? "rotate-180 transform" : ""
                   }`}
-                />
+                 />
+             
               </div>
-            </div>
+              </div>
             <div
               className={`max-h-0  overflow-hidden transition-all duration-300 ${
                 projectsFlag ? "max-h-screen" : ""
@@ -360,7 +373,12 @@ const Sidebar = ({ isOpen }: SideBar) => {
               className={`transition-transform ${
                 insightsOpen ? "rotate-180 transform" : ""
               }`}
+              id="clickable"
             />
+           {!insightsOpen && <Tooltip anchorSelect="#clickable">
+                <button>Please Select Project</button>
+              </Tooltip>}
+              
           </div>
 
           {/* insights */}

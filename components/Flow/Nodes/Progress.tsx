@@ -1,3 +1,4 @@
+import React from 'react'
 import { MdDoneAll } from "react-icons/md";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 function Progress({ progress }: { progress: number }) {
