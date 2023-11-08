@@ -2621,10 +2621,14 @@
     tslib "^2.4.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@graphql-tools/merge@^8.3.3", "@graphql-tools/merge@^8.4.1":
 =======
 "@graphql-tools/merge@^8.3.14", "@graphql-tools/merge@^8.4.1":
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+"@graphql-tools/merge@^8.3.14", "@graphql-tools/merge@^8.4.1":
+>>>>>>> 9a75d88 (authenticated new project)
   version "8.4.2"
   resolved "https://registry.npmjs.org/@graphql-tools/merge/-/merge-8.4.2.tgz"
   integrity sha512-XbrHAaj8yDuINph+sAfuq3QCZ/tKblrTLOpirK0+CAgNlZUCHs0Fa+xtMUURgwCVThLle1AF7svJCxFizygLsw==
@@ -2667,6 +2671,7 @@
     tslib "^2.4.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@graphql-tools/resolvers-composition@^6.5.3":
   version "6.5.18"
 <<<<<<< HEAD
@@ -2683,6 +2688,8 @@
 
 =======
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 "@graphql-tools/resolvers-composition@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@graphql-tools/resolvers-composition/-/resolvers-composition-7.0.0.tgz#a8a3cd3de691a748c6b935e6046cc5824ec56be5"
@@ -2703,6 +2710,7 @@
     tslib "^2.4.0"
     value-or-promise "^1.0.12"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 "@graphql-tools/schema@9.0.19", "@graphql-tools/schema@^9.0.0", "@graphql-tools/schema@^9.0.18":
   version "9.0.19"
@@ -2726,7 +2734,15 @@
   resolved "https://registry.npmjs.org/@graphql-tools/schema/-/schema-8.5.1.tgz"
 =======
   resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-8.5.1.tgz#c2f2ff1448380919a330312399c9471db2580b58"
+<<<<<<< HEAD
 >>>>>>> 4117e6b (Authentication using firebase and directives)
+=======
+=======
+"@graphql-tools/schema@^8.0.0":
+  version "8.5.1"
+  resolved "https://registry.npmjs.org/@graphql-tools/schema/-/schema-8.5.1.tgz"
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
   integrity sha512-0Esilsh0P/qYcB5DKQpiKeQs/jevzIadNTaT0jeWklPMwNbT7yMX4EqZany7mbeRRlSRwMzNzL5olyFdffHBZg==
   dependencies:
     "@graphql-tools/merge" "8.3.1"
@@ -3143,6 +3159,7 @@
   integrity sha512-EN0xm/Ic05WWC7063wdtnqSfn5cRGyT8jqbMPnPy+Pw6708TA89xmamotrfhaZKE7KpPJHXQ42OT1tRi9NFAxQ==
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 
+<<<<<<< HEAD
 "@neo4j/cypher-builder@^1.7.1":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@neo4j/cypher-builder/-/cypher-builder-1.9.0.tgz#0bd41150d240912dfaaee409afce08525c3ba531"
@@ -3164,21 +3181,30 @@
   resolved "https://registry.yarnpkg.com/@neo4j/graphql-ogm/-/graphql-ogm-4.4.4.tgz#27a4277b85ee6170679c0c127ec2dd1424be95fa"
   integrity sha512-2gO24eY1xKJMl/NhA3AwgbVl+xYiGEcReLqmjlRaTSESBKtpESV+rSFd55MBxlu/v14jZxy4wkAF0ynAMB2FQQ==
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 "@neo4j/graphql-ogm@^4.4.1":
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/@neo4j/graphql-ogm/-/graphql-ogm-4.4.1.tgz#51931c1047457be157a5456d8b9f7d27d489258d"
   integrity sha512-yLsL+Y+b6X36UnIgTHeDYpUDiQ4XVoR9CwEU7AXvuYmglEuF679VNkenphtPj1BzCLqft7yn6E3N7SlU58rGzQ==
+<<<<<<< HEAD
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
   dependencies:
     "@graphql-codegen/core" "^4.0.0"
     "@graphql-codegen/plugin-helpers" "^5.0.0"
     "@graphql-codegen/typescript" "^4.0.0"
     "@graphql-tools/merge" "^9.0.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@neo4j/graphql" "^4.4.4"
 =======
     "@neo4j/graphql" "^4.4.1"
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+    "@neo4j/graphql" "^4.4.1"
+>>>>>>> 9a75d88 (authenticated new project)
     prettier "^2.7.1"
 
 <<<<<<< HEAD
@@ -3197,6 +3223,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 "@neo4j/graphql@^3.5.1":
@@ -3212,6 +3239,8 @@
     "@graphql-tools/utils" "^9.0.0"
     "@neo4j/cypher-builder" "~0.6.0"
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 "@neo4j/graphql@^4.4.1":
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/@neo4j/graphql/-/graphql-4.4.1.tgz#60c23070b07715dc8b28bb21b865f23232b883d7"
@@ -3232,6 +3261,7 @@
     graphql-parse-resolve-info "^4.12.3"
     graphql-relay "^0.10.0"
     jose "^5.0.0"
+<<<<<<< HEAD
     pluralize "^8.0.0"
     semver "^7.5.4"
     uuid "^9.0.0"
@@ -3255,6 +3285,8 @@
     graphql-parse-resolve-info "^4.12.3"
     graphql-relay "^0.10.0"
     jose "^5.0.0"
+=======
+>>>>>>> 9a75d88 (authenticated new project)
     pluralize "^8.0.0"
     semver "^7.5.4"
     typescript-memoize "^1.1.1"
@@ -4510,7 +4542,10 @@ acorn-walk@^8.0.2:
   integrity sha512-TgUZgYvqZprrl7YldZNoa9OciCAyZR+Ejm9eXzKCmjsF5IKp/wgQ7Z/ZpjpGTIUPwrHQIcYeI8qDh4PsEwxMbw==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 acorn@^3.1.0:
   version "3.3.0"
@@ -4520,6 +4555,8 @@ acorn@^3.1.0:
 >>>>>>> 190d740 (authenticated new project)
 acorn@^8.1.0, acorn@^8.8.1, acorn@^8.9.0:
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 acorn@^8.1.0, acorn@^8.8.1:
   version "8.10.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.10.0.tgz#8be5b3907a67221a81ab23c7889c4c5526b62ec5"
@@ -4547,8 +4584,11 @@ agent-base@6:
     debug "4"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ajv@^6.12.4:
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 ajv@^4.9.1:
   version "4.11.8"
@@ -4563,6 +4603,8 @@ ajv@^6.12.3, ajv@^6.12.4:
 =======
 ajv@^6.10.0, ajv@^6.12.3, ajv@^6.12.4:
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 ajv@^6.10.0, ajv@^6.12.4:
 >>>>>>> 9a75d88 (authenticated new project)
 >>>>>>> 69fbf29 (authenticated new project)
@@ -4865,7 +4907,10 @@ asap@~2.0.3:
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 asn1@~0.2.3:
   version "0.2.6"
@@ -4890,6 +4935,8 @@ ast-types-flow@^0.0.8:
   resolved "https://registry.yarnpkg.com/ast-types-flow/-/ast-types-flow-0.0.8.tgz#0a85e1c92695769ac13a428bb653e7538bea27d6"
   integrity sha512-OH/2E5Fg20h2aPrbe+QL8JZQFko0YZaF+j4mnQ7BGhfavO7OpSLa8a0y9sBwomHdSbkhTS8TQNayBfnW5DwbvQ==
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 ast-types-flow@^0.0.7:
   version "0.0.7"
   resolved "https://registry.npmjs.org/ast-types-flow/-/ast-types-flow-0.0.7.tgz"
@@ -4943,7 +4990,10 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 aws-sign2@~0.6.0:
   version "0.6.0"
@@ -4967,6 +5017,8 @@ axe-core@=4.7.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
   integrity sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> 9a75d88 (authenticated new project)
 axe-core@^4.6.2:
@@ -5186,9 +5238,12 @@ binary-extensions@^2.0.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
+=======
+>>>>>>> c7642a4 (authenticated new project)
 bindings@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.2.1.tgz#14ad6113812d2d37d72e67b4cacb4bb726505f11"
@@ -5198,6 +5253,8 @@ bindings@~1.2.1:
 =======
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> 9a75d88 (authenticated new project)
 bl@^4.0.3:
@@ -5220,6 +5277,7 @@ bluebird@^3.7.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
@@ -5236,7 +5294,12 @@ bluebird@~2.9.2:
 =======
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 body-parser@1.20.1:
   version "1.20.1"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.20.1.tgz#b1812a8912c195cd371a3ee5e66faa2338a5c668"
@@ -5430,6 +5493,7 @@ case-anything@^2.1.13:
   integrity sha512-zlOQ80VrQ2Ue+ymH5OuM/DlDq64mEm+B9UTdHULv5osUMD6HalNTblf2b1u/m6QecjsnOkBpqVZ+XPwIVsy7Ng==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
@@ -5446,6 +5510,8 @@ chalk@^2.0.0, chalk@^2.4.2:
 >>>>>>> 69fbf29 (authenticated new project)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 catharsis@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/catharsis/-/catharsis-0.9.0.tgz#40382a168be0e6da308c277d3a2b3eb40c7d2121"
@@ -5588,7 +5654,10 @@ cliui@^8.0.1:
     wrap-ansi "^7.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 clone@~0.2.0:
   version "0.2.0"
@@ -5598,6 +5667,8 @@ clone@~0.2.0:
 >>>>>>> 190d740 (authenticated new project)
 clsx@^1.1.1:
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 clsx@^1.1.1, clsx@^1.2.1:
 >>>>>>> 69fbf29 (authenticated new project)
   version "1.2.1"
@@ -5693,6 +5764,9 @@ color@^4.2.3:
     color-string "^1.9.0"
 
 combined-stream@^1.0.8:
+<<<<<<< HEAD
+>>>>>>> 9a75d88 (authenticated new project)
+=======
 >>>>>>> 9a75d88 (authenticated new project)
 >>>>>>> 190d740 (authenticated new project)
   version "1.0.8"
@@ -5780,6 +5854,7 @@ cookie@0.5.0:
   integrity sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 core-js-compat@^3.31.0, core-js-compat@^3.33.1:
   version "3.34.0"
   resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.34.0.tgz#61a4931a13c52f8f08d924522bba65f8c94a5f17"
@@ -5792,6 +5867,8 @@ core-js@^3:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.34.0.tgz#5705e6ad5982678612e96987d05b27c6c7c274a5"
   integrity sha512-aDdvlDder8QmY91H88GzNi9EtQi2TjvQhpCX6B1v/dAZHU1AuLgHvRh54RiOerpEhEW46Tkf+vgAViB/CWC0ag==
 
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> 9a75d88 (authenticated new project)
 cors@^2.8.5:
@@ -6303,6 +6380,7 @@ duplexify@^4.0.0:
     readable-stream "^3.1.1"
     stream-shift "^1.0.0"
 
+<<<<<<< HEAD
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"
@@ -6314,6 +6392,8 @@ ecc-jsbn@~0.1.1:
     readable-stream "^3.1.1"
     stream-shift "^1.0.0"
 
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 ecdsa-sig-formatter@1.0.11, ecdsa-sig-formatter@^1.0.11:
 >>>>>>> 4117e6b (Authentication using firebase and directives)
   version "1.0.11"
@@ -6887,11 +6967,14 @@ express@^4.17.1, express@^4.18.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
 =======
 >>>>>>> 3023401 (Authentication using firebase and directives)
+=======
+>>>>>>> c7642a4 (authenticated new project)
 extend@^3.0.2, extend@~3.0.0, extend@~3.0.2:
 =======
 <<<<<<< HEAD
@@ -6907,6 +6990,9 @@ extend@^3.0.2:
 =======
 extend@^3.0.2, extend@~3.0.0:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+extend@^3.0.2:
+>>>>>>> 9a75d88 (authenticated new project)
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
@@ -6967,12 +7053,14 @@ fast-xml-parser@^4.2.2:
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 fast.js@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/fast.js/-/fast.js-0.1.1.tgz#7c024d55ae144882fbcee44b79005fe2dcabd9fe"
   integrity sha512-DIVG0bJTAgVg6iUiAvmVBzE+8ZAPZ3cmuzTjkC9PxLM2/6TqUtfgr+1P3bCHUdlDAstZYLqOQTLKU4+srK6Y0w==
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 fast.js@^0.1.1:
   version "0.1.1"
@@ -6982,6 +7070,10 @@ fast.js@^0.1.1:
 >>>>>>> 4117e6b (Authentication using firebase and directives)
 =======
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 fastq@^1.6.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/fastq/-/fastq-1.15.0.tgz#d04d07c6a2a68fe4599fea8d2e103a937fae6b3a"
@@ -7201,13 +7293,18 @@ for-each@^0.3.3:
     is-callable "^1.1.3"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha512-j0KLYPhm6zeac4lz3oJ3o65qvgQCcPubiyotZrXqEaG4hNagNYO8qdlUrX5vwqv9ohqeT/Z3j6+yW067yWWdUw==
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 form-data@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-3.0.1.tgz#ebd53791b78356a99af9a300d4282c4d5eb9755f"
@@ -7229,7 +7326,10 @@ form-data@^4.0.0:
     mime-types "^2.1.12"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 form-data@~2.1.1:
   version "2.1.4"
@@ -7249,6 +7349,8 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> 9a75d88 (authenticated new project)
 format@^0.2.0:
@@ -7389,7 +7491,10 @@ get-symbol-description@^1.0.0:
     get-intrinsic "^1.1.1"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 getpass@^0.1.1:
   version "0.1.7"
@@ -7398,6 +7503,8 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 github-from-package@0.0.0:
   version "0.0.0"
   resolved "https://registry.npmjs.org/github-from-package/-/github-from-package-0.0.0.tgz"
@@ -7637,7 +7744,10 @@ hammerjs@^2.0.1:
   integrity sha512-tSQXBXS/MWQOn/RKckawJ61vvsDpCom87JgxiYdGwHdOa0ht0vzUWDlfioofFCRU0L+6NGDt6XzbgoJvZkMeRQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 har-schema@^1.0.5:
   version "1.0.5"
@@ -7667,7 +7777,12 @@ har-validator@~5.1.3:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/has-bigints/-/has-bigints-1.0.2.tgz#0871bd3e3d51626f6ca0966668ba35d5602d6eaa"
@@ -7717,6 +7832,7 @@ has@^1.0.3:
     function-bind "^1.1.1"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 69fbf29 (authenticated new project)
 hasown@^2.0.0:
   version "2.0.0"
@@ -7739,7 +7855,12 @@ hawk@~3.1.3:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 header-case@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/header-case/-/header-case-2.0.4.tgz#5a42e63b55177349cf405beb8d775acabb92c063"
@@ -7825,10 +7946,13 @@ http-proxy-agent@^5.0.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 https-proxy-agent@^5.0.1:
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
+=======
+>>>>>>> c7642a4 (authenticated new project)
 http-signature@~1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/http-signature/-/http-signature-1.1.1.tgz#df72e267066cd0ac67fb76adf8e134a8fbcf91bf"
@@ -7857,6 +7981,8 @@ https-proxy-agent@^5.0.1:
 >>>>>>> 69fbf29 (authenticated new project)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 https-proxy-agent@^5.0.0, https-proxy-agent@^5.0.1:
 >>>>>>> 4117e6b (Authentication using firebase and directives)
   version "5.0.1"
@@ -8013,7 +8139,10 @@ is-absolute@^1.0.0:
     is-windows "^1.0.1"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 is-accessor-descriptor@^1.0.1:
   version "1.0.1"
@@ -8024,7 +8153,12 @@ is-accessor-descriptor@^1.0.1:
 
 =======
 >>>>>>> 69fbf29 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 is-arguments@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/is-arguments/-/is-arguments-1.1.1.tgz#15b3f88fda01f2a97fec84ca761a560f123efa9b"
@@ -8097,6 +8231,7 @@ is-core-module@^2.11.0, is-core-module@^2.9.0:
     has "^1.0.3"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 is-core-module@^2.13.0:
 >>>>>>> 69fbf29 (authenticated new project)
   version "2.13.1"
@@ -8116,7 +8251,12 @@ is-data-descriptor@^1.0.1:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 is-date-object@^1.0.1, is-date-object@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/is-date-object/-/is-date-object-1.0.5.tgz#0841d5536e724c25597bf6ea62e1bd38298df31f"
@@ -8125,7 +8265,10 @@ is-date-object@^1.0.1, is-date-object@^1.0.5:
     has-tostringtag "^1.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 is-descriptor@^0.1.0:
   version "0.1.7"
@@ -8137,6 +8280,8 @@ is-descriptor@^0.1.0:
 
 =======
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 is-extendable@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-extendable/-/is-extendable-1.0.1.tgz#a7470f9e426733d81bd81e1155264e3a3507cab4"
@@ -8295,7 +8440,15 @@ is-typed-array@^1.1.10, is-typed-array@^1.1.12, is-typed-array@^1.1.9:
   resolved "https://registry.yarnpkg.com/is-typed-array/-/is-typed-array-1.1.12.tgz#d0bab5686ef4a76f7a73097b95470ab199c57d4a"
   integrity sha512-Z14TF2JNG8Lss5/HMqt0//T9JeHXttXy5pH/DBU4vi98ozO2btxzq9MwYDZYnKwU8nRsz/+GVFVRDq3DkVuSPg==
   dependencies:
+<<<<<<< HEAD
     which-typed-array "^1.1.11"
+=======
+    available-typed-arrays "^1.0.5"
+    call-bind "^1.0.2"
+    for-each "^0.3.3"
+    gopd "^1.0.1"
+    has-tostringtag "^1.0.0"
+>>>>>>> 9a75d88 (authenticated new project)
 
 is-unc-path@^1.0.0:
   version "1.0.0"
@@ -8354,6 +8507,7 @@ isobject@^3.0.1:
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 isomorphic-fetch@2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
@@ -8369,7 +8523,12 @@ isstream@~0.1.2:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.2.tgz#2d166c4b0644d43a39f04bf6c2edd1e585f31756"
@@ -8813,10 +8972,13 @@ jiti@^1.19.1:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 jose@^4.13.1:
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
+=======
+>>>>>>> c7642a4 (authenticated new project)
 jose@^4.13.1, jose@^4.14.6:
 >>>>>>> 4117e6b (Authentication using firebase and directives)
   version "4.15.4"
@@ -8856,10 +9018,17 @@ jose@^5.0.0:
   resolved "https://registry.yarnpkg.com/jose/-/jose-5.1.0.tgz#b4dcfa037b3b30ad9d64949b51bc6f173cbd61cf"
   integrity sha512-H+RVqxA6apaJ0rcQYupKYhos7uosAiF42gUcWZiwhICWMphDULFj/CRr1R0tV/JCv9DEeJaSyYYpc9luHHNT4g==
 
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 jose@^4.14.6:
   version "4.15.4"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.4.tgz#02a9a763803e3872cf55f29ecef0dfdcc218cc03"
   integrity sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==
+
+jose@^5.0.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.1.0.tgz#b4dcfa037b3b30ad9d64949b51bc6f173cbd61cf"
+  integrity sha512-H+RVqxA6apaJ0rcQYupKYhos7uosAiF42gUcWZiwhICWMphDULFj/CRr1R0tV/JCv9DEeJaSyYYpc9luHHNT4g==
 
 js-levenshtein@^1.1.6:
   version "1.1.6"
@@ -8896,6 +9065,7 @@ js2xmlparser@^4.0.2:
     xmlcreate "^2.0.4"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 jsdoc@^4.0.0:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/jsdoc/-/jsdoc-4.0.2.tgz#a1273beba964cf433ddf7a70c23fd02c3c60296e"
@@ -8923,6 +9093,8 @@ jsbn@~0.1.0:
   integrity sha512-UVU9dibq2JcFWxQPA6KCqj5O42VOmAY3zQUfEKxU0KpTGXwNoCjkX1e13eHNvw/xPynt6pU0rZ1htjWTNTSXsg==
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 jsdoc@^4.0.0:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/jsdoc/-/jsdoc-4.0.2.tgz#a1273beba964cf433ddf7a70c23fd02c3c60296e"
@@ -9021,7 +9193,10 @@ json-stable-stringify-without-jsonify@^1.0.1:
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 json-stable-stringify@^1.0.1:
   version "1.1.0"
@@ -9040,7 +9215,12 @@ json-stringify-safe@~5.0.1:
 
 =======
 >>>>>>> 69fbf29 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 json5@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json5/-/json5-1.0.2.tgz#63d98d60f21b313b77c4d6da18bfa69d80e1d593"
@@ -9092,6 +9272,7 @@ jsonwebtoken@^9.0.2:
     ms "^2.1.1"
     semver "^7.5.4"
 
+<<<<<<< HEAD
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 >>>>>>> 3023401 (Authentication using firebase and directives)
 jsprim@^1.2.2:
@@ -9110,6 +9291,8 @@ jsprim@^1.2.2:
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-3.3.5.tgz#4766bd05a8e2a11af222becd19e15575e52a853a"
   integrity sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 "jsx-ast-utils@^2.4.1 || ^3.0.0", jsx-ast-utils@^3.3.3:
   version "3.3.4"
   resolved "https://registry.npmjs.org/jsx-ast-utils/-/jsx-ast-utils-3.3.4.tgz"
@@ -9169,6 +9352,7 @@ jws@^4.0.0:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
+<<<<<<< HEAD
 kind-of@^3.0.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
@@ -9195,6 +9379,8 @@ klaw@^3.0.0:
   dependencies:
     graceful-fs "^4.1.9"
 
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 klaw@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/klaw/-/klaw-3.0.0.tgz#b11bec9cf2492f06756d6e809ab73a2910259146"
@@ -9397,7 +9583,10 @@ lodash@4.17.21, lodash@^4.17.15, lodash@^4.17.21, lodash@~4.17.0, lodash@~4.17.1
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 lodash@^3.10.0:
   version "3.10.1"
@@ -9419,6 +9608,8 @@ logform@^2.3.2, logform@^2.4.0:
 
 =======
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 loglevel@^1.6.8:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.8.1.tgz#5c621f83d5b48c54ae93b6156353f555963377b4"
@@ -9662,6 +9853,7 @@ mime-db@1.52.0, "mime-db@>= 1.43.0 < 2":
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34:
 =======
 mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.19, mime-types@~2.1.24, mime-types@~2.1.34, mime-types@~2.1.7:
@@ -9669,6 +9861,8 @@ mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.19, mime-types@~2.1.24, m
 =======
 =======
 >>>>>>> 3023401 (Authentication using firebase and directives)
+=======
+>>>>>>> c7642a4 (authenticated new project)
 mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.19, mime-types@~2.1.24, mime-types@~2.1.34, mime-types@~2.1.7:
 =======
 <<<<<<< HEAD
@@ -9687,7 +9881,13 @@ mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34:
 =======
 mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34, mime-types@~2.1.7:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+<<<<<<< HEAD
 >>>>>>> 3023401 (Authentication using firebase and directives)
+=======
+=======
+mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34:
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
   version "2.1.35"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
@@ -9746,6 +9946,7 @@ minimatch@^5.0.1:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 minimist@^0.1.0:
@@ -9756,6 +9957,8 @@ minimist@^0.1.0:
 >>>>>>> 4117e6b (Authentication using firebase and directives)
 minimist@^1.2.0, minimist@^1.2.6:
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.6:
 >>>>>>> 9a75d88 (authenticated new project)
   version "1.2.8"
@@ -9818,7 +10021,10 @@ mz@^2.7.0:
     thenify-all "^1.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 nan@^2.13.2:
   version "2.18.0"
@@ -9831,6 +10037,8 @@ nanoid@^3.3.4, nanoid@^3.3.7:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 nanoid@^3.3.4, nanoid@^3.3.6:
   version "3.3.6"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.6.tgz"
@@ -9847,6 +10055,7 @@ negotiator@0.6.3, negotiator@^0.6.3:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz#58e323a72fedc0d6f9cd4d31fe49f51479590ccd"
   integrity sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 neo4j-driver-bolt-connection@5.15.0:
   version "5.15.0"
@@ -9892,6 +10101,29 @@ neo4j-driver@^5.14.0:
     neo4j-driver-bolt-connection "5.14.0"
     neo4j-driver-core "5.14.0"
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+neo4j-driver-bolt-connection@5.14.0:
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-bolt-connection/-/neo4j-driver-bolt-connection-5.14.0.tgz#7e8714268aabd550e32b19795caed835be0227ac"
+  integrity sha512-JocVRGGSTLtqcLwSsbodU6ZWVf4OPN5X1ozmy2OfRhmRR7CfhHaImjT9N0MBZ9NcahH9V5XqLroRK7DZdqKJEg==
+  dependencies:
+    buffer "^6.0.3"
+    neo4j-driver-core "5.14.0"
+    string_decoder "^1.3.0"
+
+neo4j-driver-core@5.14.0:
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver-core/-/neo4j-driver-core-5.14.0.tgz#bdebcb1271a3fa4c521f482e272367020cb73981"
+  integrity sha512-IpO2BOazTF2QLGE7kYjwbicBxGdsu/JkDhdSmsziBcqEiRb9TBXRILhvlxiC00p1QyqMi7iVmJtIsbROqi5e/w==
+
+neo4j-driver@^5.14.0:
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/neo4j-driver/-/neo4j-driver-5.14.0.tgz#fff45744776bfe9c6b100deed6e3ca186a7216cc"
+  integrity sha512-K8x3UtEHXJQtfHLdqc+DU+OJsujNen2I9schZWs3mtnIYXcP+dFvWLusaXxRDQO1MBnplM3nvR54eYUYMqhfnw==
+  dependencies:
+    neo4j-driver-bolt-connection "5.14.0"
+    neo4j-driver-core "5.14.0"
+>>>>>>> 9a75d88 (authenticated new project)
     rxjs "^7.8.1"
 
 next-i18next@^15.0.0:
@@ -9952,7 +10184,10 @@ node-abort-controller@^3.0.1, node-abort-controller@^3.1.1:
   integrity sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 node-biginteger@^0.0.10:
   version "0.0.10"
@@ -9962,10 +10197,15 @@ node-biginteger@^0.0.10:
     clone "~0.2.0"
     long "~2.1.0"
 =======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 node-addon-api@^5.0.0:
   version "5.1.0"
   resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-5.1.0.tgz"
   integrity sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==
+<<<<<<< HEAD
+>>>>>>> 9a75d88 (authenticated new project)
+=======
 >>>>>>> 9a75d88 (authenticated new project)
 
 >>>>>>> 190d740 (authenticated new project)
@@ -10068,7 +10308,10 @@ nwsapi@^2.2.2:
   integrity sha512-ub5E4+FBPKwAZx0UwIQOjYWGHTEq5sPqHQNRN8Z9e4A7u3Tj1weLJsL59yH9vmvqEtBHaOmT6cYQKIZOxp35FQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 oauth-sign@~0.8.1:
   version "0.8.2"
@@ -10082,7 +10325,12 @@ oauth-sign@~0.9.0:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -10168,8 +10416,13 @@ object.values@^1.1.6, object.values@^1.1.7:
   integrity sha512-aU6xnDFYT3x17e/f0IiiwlGPTy2jzMySGfUB4fq6z7CV8l85CWHDk5ErhyhpfDHhrOMwGFhSQkhMGHaIotA6Ng==
   dependencies:
     call-bind "^1.0.2"
+<<<<<<< HEAD
     define-properties "^1.2.0"
     es-abstract "^1.22.1"
+=======
+    define-properties "^1.1.4"
+    es-abstract "^1.20.4"
+>>>>>>> 9a75d88 (authenticated new project)
 
 on-finished@2.4.1:
   version "2.4.1"
@@ -10388,7 +10641,10 @@ path-type@^4.0.0:
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 performance-now@^0.2.0:
   version "0.2.0"
@@ -10402,7 +10658,12 @@ performance-now@^2.1.0:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
@@ -10881,6 +11142,9 @@ pump@^3.0.0:
   dependencies:
     end-of-stream "^1.1.0"
     once "^1.3.1"
+<<<<<<< HEAD
+>>>>>>> 9a75d88 (authenticated new project)
+=======
 >>>>>>> 9a75d88 (authenticated new project)
 
 >>>>>>> 4117e6b (Authentication using firebase and directives)
@@ -10902,7 +11166,10 @@ qs@6.11.0:
     side-channel "^1.0.4"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 qs@~6.4.0:
   version "6.4.1"
@@ -10916,7 +11183,12 @@ qs@~6.5.2:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 querystringify@^2.1.1:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
@@ -11326,7 +11598,10 @@ relay-runtime@12.0.0:
     invariant "^2.2.4"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 request@2.88.2:
   version "2.88.2"
@@ -11384,7 +11659,12 @@ request@~2.81.0:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -11491,6 +11771,9 @@ rxjs@^7.8.1:
   dependencies:
     tslib "^2.1.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 
 safe-array-concat@^1.0.1:
   version "1.0.1"
@@ -11519,6 +11802,7 @@ safe-regex-test@^1.0.0:
     is-regex "^1.1.4"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 safe-stable-stringify@^2.3.1:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/safe-stable-stringify/-/safe-stable-stringify-2.4.3.tgz#138c84b6f6edb3db5f8ef3ef7115b8f55ccbf886"
@@ -11531,7 +11815,13 @@ safe-stable-stringify@^2.3.1:
 =======
 "safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
 >>>>>>> 69fbf29 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+"safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
@@ -11758,7 +12048,10 @@ sprintf-js@~1.0.2:
   integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 sshpk@^1.7.0:
   version "1.18.0"
@@ -11783,6 +12076,8 @@ stack-trace@0.0.x:
 
 =======
 >>>>>>> 69fbf29 (authenticated new project)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 stack-utils@^2.0.3:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-2.0.6.tgz#aaf0748169c02fc33c8232abccf933f54a1cc34f"
@@ -12181,7 +12476,10 @@ tough-cookie@^4.1.2:
     url-parse "^1.5.3"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 tough-cookie@~2.3.0:
   version "2.3.4"
@@ -12200,7 +12498,12 @@ tough-cookie@~2.5.0:
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
 tr46@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-3.0.0.tgz#555c4e297a950617e8eeddef633c87d4d9d6cbf9"
@@ -12263,8 +12566,11 @@ tsconfig-paths@^3.14.1, tsconfig-paths@^3.14.2:
     strip-bom "^3.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 tslib@^1.8.1:
 =======
+=======
+>>>>>>> c7642a4 (authenticated new project)
 <<<<<<< HEAD
 tslib@^1.11.1, tslib@^1.8.1:
 =======
@@ -12274,7 +12580,13 @@ tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0:
 tslib@^1.8.1:
 >>>>>>> 9a75d88 (authenticated new project)
 >>>>>>> 69fbf29 (authenticated new project)
+<<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+=======
+tslib@^1.8.1:
+>>>>>>> 9a75d88 (authenticated new project)
+>>>>>>> c7642a4 (authenticated new project)
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
@@ -12548,9 +12860,12 @@ utils-merge@1.0.1:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
+=======
+>>>>>>> c7642a4 (authenticated new project)
 uuid@^3.0.0, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
@@ -12561,6 +12876,8 @@ uuid@^3.0.0, uuid@^3.3.2:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> 9a75d88 (authenticated new project)
 uuid@^8.0.0:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
