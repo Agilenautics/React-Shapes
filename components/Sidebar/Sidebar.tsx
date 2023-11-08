@@ -31,11 +31,12 @@ import {
   updateUidMutation,
 } from "../../gql";
 import Link from "next/link";
-import projectStore, { Project } from "../AdminPage/Projects/projectStore";
+import projectStore from "../AdminPage/Projects/projectStore";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import AddProjectPopup from "../AdminPage/Projects/ProjectOverlay";
 import { ToastContainer, toast } from "react-toastify";
+import { Project } from "../../lib/appInterfaces";
 
 interface SideBar {
   isOpen: Boolean;
@@ -81,8 +82,9 @@ const Sidebar = ({ isOpen }: SideBar) => {
 
   const getuniqId = async () => {
     const uniqId = await getUidMethode(getUidQuery);
-    updateUids(uniqId.data.uids);
-    if (uniqId.data.uids.length === 0) {
+    if (uniqId && uniqId.data.uids.length) {
+      updateUids(uniqId.data.uids);
+    } else {
       await createUidMethode(createUidMutation);
     }
   };
@@ -184,7 +186,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
           data
         );
         console.log(fileInFolderResponse);
-       // add_file(fileInFolderResponse);
+        // add_file(fileInFolderResponse);
         handleUidUpdates();
       } else {
         const newFile = {

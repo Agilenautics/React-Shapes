@@ -5,10 +5,11 @@ import driver from "./dbConnection";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import typeDefs from "./typeDefs";
 import { NextApiRequest, NextApiResponse } from "next";
-import authMiddleware from "../../authMiddleware";
+// import authMiddleware from "../../authMiddleware";
 import { verify } from "jsonwebtoken";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import { Neo4jGraphQLAuthJWTPlugin } from "@neo4j/graphql-plugin-auth";
+import firebaseKeys from '../../react-flow-f9455-firebase-adminsdk-x3ung-d836e27093.json'
 
 import { Neo4jGraphQLAuthJWKSPlugin } from "@neo4j/graphql-plugin-auth";
 
@@ -22,21 +23,29 @@ EventEmitter.defaultMaxListeners = 15;
 // * This server is currently for development only, we will need to change
 // * to another server before production
 function getTokenFromHeader(header: string | undefined): string | null {
-  if (header && header.startsWith('Bearer ')) {
-    return header.split(' ')[1]; // Return the token part
+  if (header && header.startsWith("Bearer")) {
+    return header.split(" ")[1]; // Return the token part
   }
   return null;
 }
 
 
-const neoSchema = new Neo4jGraphQL({ typeDefs, driver,
+const neoSchema = new Neo4jGraphQL({
+  typeDefs,
+  driver,
+  // features:{
+  //   authorization:{
+  //     key:firebaseKeys.private_key
+  //     // key:"-----BEGIN PRIVATE KEY-----MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDIKYZh/HVAXFCbkF8OgQp57FKyNrseSi8cuj8Gew4FulvnZakVnuTn81HPtyi91AB1UJylW27uL97PyWAcOQWsqOKV4j3Xd1jP9Y5vNEdB/y5hkBZCzfLOJyx5XeLMaw/vgxsWH4KDy/yE83RHDOqdcaszbice3W/PIfhyB/fr9GYtbkAKXC9QmK9jwUn0np78bazSWRO0gwLsSivowcTSXWTSixJkHkdak8tnGANJ+2R4J6OammMJqNLgl+IuTSzDAotWNGOJj+6AsIr3QI3HUp0P+Yjq59j2tKuHwPFcNWvFNkDt+xTIYxp2Iwzw9l7ZrLQFMN3tcNOWEaOx2DBNAgMBAAECggEACRWiR4bhipC0QaXlWMhJM2/b8BeafS05NNYhz3zSRsUqTG/Xoy514vWSmMPxyooHlRKZ/snxkWSTQOxWLQcTSUzVaEpNgR6lyQiy9K4BoJloG++wMvXGYkAA6BIiHbAdXworKFMAAhvF/nOkckQxzxzatPuGNTyh15SYOy9au6xIBwbqj1tfKgdkJZifJewPzUJ7DE7Ur9Yv6ec5JQ+dX/gnUPDC8ohpy2uVrjzOuM8eIgkzF2cx/+b/ddpmbIOrLTLG/fWsr/aYaSFZgkeN9G7uFZ+xxkoP3k2yC4H0sPf7OccOKGun/Tecti21yWd2rSPTW6uXtIsUnI6SnYh0uQKBgQD2S9FpSWLgOAQTwraBN/kicibZjzFWTgBUbIp3cshtnDKZHxtOW+4wqv9CT0Afkb/UeMvGzZRgqJRjn6176ls2k665bde/Z2jHrIqRBonb9ayWCaLVjVl9wqhjz1yl7PAXkTq95srKfM7U50PFFkybAvAcIYhvYwYsf8LatdCGIwKBgQDQDGR9xppN2NfvX3NgfgUQLIQxXs103//YA3dz59duY8P/iJaBXMxlOygwMTNTBu4ssTXlbqG1CQi1OCYbFFBRMA7km1Kj1uWdAxWz21DeCf5m39GsrDwjvrqj132K98Csld0bcvqgP5Bu+9CwzDEmdRMw0zRQnbk30yaFFBf+zwKBgQDkpO36+A26aUYfshsLSpMVzzMRtUTwAel8dmb1DLHUT7UJQT9wNxegRp5BSKEWrY+QB7PlEuQz90wKUCoVZzLWL7N8oOQw5Cb5dswMZi2E7UUS5E8uQNJbVWJNhitUPemFd2U49hA8ejDopOjdBh6HqOqOsvKdtSf+F30k3LSAUQKBgQCO9UUELDkRbwSKJpOYZV/DSmOXrSYOvnEGFPO7AD9HSmR+rXOF9qc4lFq8KsKytZtpuGdpfQi+5jNGmwuMJfw+nYBOU/CIRn1G07zQ9s3tlP5r4DYqqbs1cLS9KrDIkg+iR+REHVDcVnE/4eb35YeMfnwuW6KiFo8ULhJU9Ya7fwKBgAOxOq8D0ZzHiVBb6NZR2UKPTzeamunbMiDJh/kkcse+Jytcz4Owt/U5T5N9Hc+ZhEiowiKwmophm+ekA2iX8OXQL1M8yiqchYtOMpriemOQ6iPdDnw+ptQ3OWekC8J0DGGuUgMO/i7TcXOzvTJaYuOnZf13WNyo0EMSTw/b9n2e-----END PRIVATE KEY-----",
+  //   }
+  // }
   plugins: {
     auth: new Neo4jGraphQLAuthJWTPlugin({
-        secret: "super-secret",
-        // jwksEndpoint: "https://www.googleapis.com/identitytoolkit/v3/relyingparty/publicKeys",
-        globalAuthentication: true,
-    })
-}
+      secret:firebaseKeys.private_key,
+      // "-----BEGIN PRIVATE KEY-----MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDIKYZh/HVAXFCbkF8OgQp57FKyNrseSi8cuj8Gew4FulvnZakVnuTn81HPtyi91AB1UJylW27uL97PyWAcOQWsqOKV4j3Xd1jP9Y5vNEdB/y5hkBZCzfLOJyx5XeLMaw/vgxsWH4KDy/yE83RHDOqdcaszbice3W/PIfhyB/fr9GYtbkAKXC9QmK9jwUn0np78bazSWRO0gwLsSivowcTSXWTSixJkHkdak8tnGANJ+2R4J6OammMJqNLgl+IuTSzDAotWNGOJj+6AsIr3QI3HUp0P+Yjq59j2tKuHwPFcNWvFNkDt+xTIYxp2Iwzw9l7ZrLQFMN3tcNOWEaOx2DBNAgMBAAECggEACRWiR4bhipC0QaXlWMhJM2/b8BeafS05NNYhz3zSRsUqTG/Xoy514vWSmMPxyooHlRKZ/snxkWSTQOxWLQcTSUzVaEpNgR6lyQiy9K4BoJloG++wMvXGYkAA6BIiHbAdXworKFMAAhvF/nOkckQxzxzatPuGNTyh15SYOy9au6xIBwbqj1tfKgdkJZifJewPzUJ7DE7Ur9Yv6ec5JQ+dX/gnUPDC8ohpy2uVrjzOuM8eIgkzF2cx/+b/ddpmbIOrLTLG/fWsr/aYaSFZgkeN9G7uFZ+xxkoP3k2yC4H0sPf7OccOKGun/Tecti21yWd2rSPTW6uXtIsUnI6SnYh0uQKBgQD2S9FpSWLgOAQTwraBN/kicibZjzFWTgBUbIp3cshtnDKZHxtOW+4wqv9CT0Afkb/UeMvGzZRgqJRjn6176ls2k665bde/Z2jHrIqRBonb9ayWCaLVjVl9wqhjz1yl7PAXkTq95srKfM7U50PFFkybAvAcIYhvYwYsf8LatdCGIwKBgQDQDGR9xppN2NfvX3NgfgUQLIQxXs103//YA3dz59duY8P/iJaBXMxlOygwMTNTBu4ssTXlbqG1CQi1OCYbFFBRMA7km1Kj1uWdAxWz21DeCf5m39GsrDwjvrqj132K98Csld0bcvqgP5Bu+9CwzDEmdRMw0zRQnbk30yaFFBf+zwKBgQDkpO36+A26aUYfshsLSpMVzzMRtUTwAel8dmb1DLHUT7UJQT9wNxegRp5BSKEWrY+QB7PlEuQz90wKUCoVZzLWL7N8oOQw5Cb5dswMZi2E7UUS5E8uQNJbVWJNhitUPemFd2U49hA8ejDopOjdBh6HqOqOsvKdtSf+F30k3LSAUQKBgQCO9UUELDkRbwSKJpOYZV/DSmOXrSYOvnEGFPO7AD9HSmR+rXOF9qc4lFq8KsKytZtpuGdpfQi+5jNGmwuMJfw+nYBOU/CIRn1G07zQ9s3tlP5r4DYqqbs1cLS9KrDIkg+iR+REHVDcVnE/4eb35YeMfnwuW6KiFo8ULhJU9Ya7fwKBgAOxOq8D0ZzHiVBb6NZR2UKPTzeamunbMiDJh/kkcse+Jytcz4Owt/U5T5N9Hc+ZhEiowiKwmophm+ekA2iX8OXQL1M8yiqchYtOMpriemOQ6iPdDnw+ptQ3OWekC8J0DGGuUgMO/i7TcXOzvTJaYuOnZf13WNyo0EMSTw/b9n2e-----END PRIVATE KEY-----",
+      globalAuthentication: true,
+    }),
+  },
 });
 
 const apolloServer = new ApolloServer({
@@ -45,13 +54,11 @@ const apolloServer = new ApolloServer({
   persistedQueries: false,
   context: ({ req }) => {
     const token = getTokenFromHeader(req.headers.authorization);
-    if (!token) throw new Error("No token provided");
-    return { token };
-},
-  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed : true })],
+    
+  },
+  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
 
   formatError: (err) => {
-    console.error(err.message);
     return err;
   },
 });
@@ -75,10 +82,10 @@ export default async function handler(
     return false;
   }
 
-    if (res.writableEnded) return;  
-    await apolloServer.createHandler({
-      path: '/api/graphql',
-    })(req, res);
+  if (res.writableEnded) return;
+  await apolloServer.createHandler({
+    path: "/api/graphql",
+  })(req, res);
 }
 
 export const config = {
