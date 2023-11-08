@@ -33,6 +33,7 @@ const nodeTypes = [
 ];
 
 const nodeCSS = [
+  "border-slate-400 bg-slate-300 text-slate-700",
   "border-node-blue-100 bg-node-blue-200",
   "border-node-green-100 bg-node-green-200",
   "border-node-red-100 bg-node-red-200",
@@ -43,7 +44,6 @@ const nodeCSS = [
   "border-node-red-100 bg-node-red-50",
   "border-node-orange-100 bg-node-orange-50",
   "border-node-purple-100 bg-node-purple-50",
-  "",
 ];
 
 const nodeTypeMap = Object.fromEntries(

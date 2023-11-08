@@ -79,6 +79,7 @@ export function LinkTree() {
             //@ts-ignore
             global.tree = tree;
           }}
+          
           data={backend.data}
           getChildren="children"
           isOpen="isOpen"

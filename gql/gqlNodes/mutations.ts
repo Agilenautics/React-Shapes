@@ -2,9 +2,6 @@ import { gql } from "@apollo/client";
 import { Node_Fragment, Info_Fragment } from "./fragments";
 import { Edge_Fragment } from "../gqlEdges/fragments";
 
-
-
-
 //createNode
 
 export const newNode = gql`
@@ -35,18 +32,16 @@ export const delNodeMutation = gql`
   }
 `;
 export const updateLinkedBy = gql`
-mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
-  updateLinkedBies 
-    
-  (where: $where, update: $update) {
-    linkedBies {
-      fileId
-      flag
-      id
-      label
+  mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
+    updateLinkedBies(where: $where, update: $update) {
+      linkedBies {
+        fileId
+        flag
+        id
+        label
+      }
     }
   }
-}
 `;
 export const updateLinkedToMutation = gql`
   mutation updateLinkedTo($where: NodeDataWhere, $update: NodeDataUpdateInput) {

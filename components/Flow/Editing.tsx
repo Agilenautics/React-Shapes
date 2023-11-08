@@ -105,13 +105,13 @@ function Editing({
   const addLinkMethod = async (key: string) => {
     //id of the current node
     const id = linkNodes.nodes[key].id;
+    console.log(key,id)
 
     // finding the node to collect the label of the node
     let nodeData = await findNode(getNode, linkNodeId);
 
     // getting the current file data
     const { data } = await getFileByNode(linkNodeId, getFile);
-    console.log(data);
 
     updateLinkedTo(linkNodeId, {
       label: linkNodes.nodes[key].hasdataNodedata.label,
@@ -224,7 +224,11 @@ function Editing({
                 return (
                   <div
                     key={key}
-                    className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${key==="diamond"?"rotate-45 translate-x-[10px] translate-y-[9px] rounded-md -rotate-45":nodeShapeMap[key][1]}`}
+                    className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${
+                      key === "diamond"
+                        ? "translate-x-[10px] translate-y-[9px] -rotate-45 rotate-45 rounded-md"
+                        : nodeShapeMap[key][1]
+                    }`}
                     id={key}
                     onClick={() => {
                       toggleDraggable(id, true);

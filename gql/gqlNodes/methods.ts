@@ -391,10 +391,10 @@ const updateLinkedByMethod = async (
         },
       },
       update: {
-        fileId: nodeData.data.linkedBy.fileId,
-        flag: nodeData.data.linkedBy.flag,
-        id: nodeData.data.linkedBy.id,
-        label: nodeData.data.linkedBy.label,
+        fileId: nodeData.data.hasLinkedBy.fileId,
+        flag: nodeData.data.hasLinkedBy.flag,
+        id: nodeData.data.hasLinkedBy.id,
+        label: nodeData.data.hasLinkedBy.label,
       },
     },
   });

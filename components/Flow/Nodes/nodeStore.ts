@@ -142,7 +142,7 @@ const nodeStore = create<NodeState>((set) => ({
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       const updated_node = {
         ...new_node,
-        data: { ...new_node.data, links: newLink, id },
+        data: { ...new_node.data, hasLinkedTo: newLink, id },
       };
       updateNodeData(updated_node, updateLinkedToMutation);
       return { nodes: [...to_be_updated, updated_node] };
@@ -164,7 +164,7 @@ const nodeStore = create<NodeState>((set) => ({
 
     const updated_node = {
       ...new_node,
-      data: { ...new_node.data, linkedBy: linkedBy },
+      data: { ...new_node.data, hasLinkedBy: linkedBy },
     };
     await updateLinkedByMethod(updated_node, updateLinkedBy);
     set((state): any => {

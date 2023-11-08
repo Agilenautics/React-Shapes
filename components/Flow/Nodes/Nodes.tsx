@@ -34,9 +34,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
   const linkedTo = () => {
     const x = findFile(data.hasLinkedTo.fileId);
-    //console.log('x: ', x);
+    console.log('x: lets see ', x);
     // @ts-ignore
     const nodes = x.hasFlowchart.hasNodes;
+    console.log(nodes)
     const nodeData = JSON.stringify(nodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
@@ -133,7 +134,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               >
                 <div className="text-xs h-auto "> {data.hasLinkedTo.label} </div>
                 <div>
-                  {" "}
                   <BiArrowToRight className="h-4 w-4" />{" "}
                 </div>
               </div>
@@ -196,7 +196,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 //@ts-ignore
 function defaultNode({ data, id }) {
   return PrototypicalNode(
-    "",
+    "border-slate-400 bg-slate-300 text-slate-900",
     data,
     id
   );

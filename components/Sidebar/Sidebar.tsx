@@ -214,10 +214,21 @@ const Sidebar = ({ isOpen }: SideBar) => {
     }
   };
 
+
+  const handleInsights = ()=>{
+    if(projectId){
+      setInsightsOpen(!insightsOpen)
+    }else{
+     window.alert("Please select a project")
+    }
+  }
+
+  
+
   return (
     <div
       className={` left-0 top-0 z-20  h-full font-sans text-slate-600 shadow duration-700 ease-in-out dark:bg-bgdarkcolor dark:text-white  ${
-        isOpen ? "w-64" : "w-0"
+        isOpen ? "w-[18rem]" : "w-0"
       }`}
     >
       {isOpen && (
@@ -339,7 +350,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
           </div>
 
           <div
-            onClick={() => setInsightsOpen(!insightsOpen)}
+            onClick={handleInsights}
             className="flex cursor-pointer select-none items-center justify-between p-1 px-3 duration-100"
           >
             <span>
@@ -391,7 +402,7 @@ const Sidebar = ({ isOpen }: SideBar) => {
                         <span>Add File</span>
                       </button>
                     </div>
-                    <div className="h-24 min-h-0 hover:min-h-full overflow-auto overflow-x-hidden">
+                    <div className="h-36 hover:min-h-full overflow-auto overflow-x-hidden">
                       <FileTree />
                     </div>
                   </div>

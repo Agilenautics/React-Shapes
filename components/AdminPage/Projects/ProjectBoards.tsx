@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import fileStore from "../../TreeView/fileStore";
@@ -285,4 +285,4 @@ function ProjectBoards() {
   );
 }
 
-export default ProjectBoards;
+export default memo(ProjectBoards);
