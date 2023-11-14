@@ -8,9 +8,7 @@ import client from "../../apollo-client";
 import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-import {
-  updateNodesMutation,
-} from "./mutations";
+import { updateNodesMutation } from "./mutations";
 import { allNodes } from "./queries";
 
 async function findNode(
@@ -70,6 +68,31 @@ async function getNodes(
   return { nodes, edges };
 }
 
+const checkUserDidComment = (message: string) => {
+  let updateQuery;
+  if (message) {
+    return {
+      create: [
+        {
+          node: {
+            message:null ,
+            userHas: {
+              connect: {
+                where: {
+                  node: {
+                    emailId:null ,
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    };
+  } else {
+    return null;
+  }
+};
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   updateNode: any,
@@ -78,162 +101,149 @@ async function createNode(
 ) {
   // const addRow = backlogStore(state=> state.addRow)
   var nodes: Array<Node> = [];
+
   try {
-    await client
-      .mutate({
-        mutation: mutation,
-        variables: {
-          where: {
-            id: data.story,
-          },
-          update: {
-            hasFlowchart: {
-              update: {
-                node: {
-                  hasNodes: [
-                    {
-                      create: [
-                        {
-                          node: {
-                            flowchart: "flowNode",
-                            draggable: true,
-                            type: data.type,
-                            uid: data.uid,
-                            hasComments: {
-                              create: [
-                                {
-                                  node: {
-                                    message: data.discussion,
-                                    userHas: {
-                                      connect: {
-                                        where: {
-                                          node: {
-                                            emailId: "irfan123@gmail.com",
-                                          },
-                                        },
-                                      },
-                                    },
-                                  },
-                                },
-                              ],
-                            },
-                            hasInfo: {
-                              create: {
-                                node: {
-                                  description: "",
-                                  assignedTo: data.assignedTo,
-                                  status: "To-Do",
-                                  dueDate: "",
-                                  sprint: "",
-                                },
-                              },
-                            },
-                            hasdataNodedata: {
-                              create: {
-                                node: {
-                                  label: data.name || data.label,
-                                  shape: data.symbol || "rectangle",
-                                  description: data.description,
-                                  hasLinkedTo: {
-                                    create: {
-                                      node: {
-                                        label: "",
-                                        id: "",
-                                        flag: false,
-                                        fileId: "",
-                                      },
-                                    },
-                                  },
-                                  hasLinkedBy: {
-                                    create: {
-                                      node: {
-                                        label: "",
-                                        id: "",
-                                        fileId: "",
-                                        flag: false,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                            hasSprint: {
-                              connect: [
-                                {
-                                  where: {
-                                    node: {
-                                      id: data.sprint,
-                                    },
-                                  },
-                                },
-                              ],
-                            },
-                            haspositionPosition: {
-                              create: {
-                                node: {
-                                  name: "pos",
-                                  x: 30,
-                                  y: 50,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      ],
+    return await client.mutate({
+      mutation,
+      variables: {
+        input: [
+          {
+            type: data.type,
+            uid: data.uid,
+            draggable: true,
+            flowchart: "flowchart",
+            flowchartHas: {
+              connect: {
+                where: {
+                  node: {
+                    hasFile: {
+                      id: data.story,
                     },
-                  ],
+                  },
                 },
               },
             },
+            hasdataNodedata: {
+              create: {
+                node: {
+                  label: data.name || data.label,
+                  shape: data.symbol || "rectangle",
+                  description: data.description,
+                  hasLinkedTo: {
+                    create: {
+                      node: {
+                        label: "",
+                        id: "",
+                        flag: false,
+                        fileId: "",
+                      },
+                    },
+                  },
+                  hasLinkedBy: {
+                    create: {
+                      node: {
+                        label: "",
+                        id: "",
+                        fileId: "",
+                        flag: false,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            haspositionPosition: {
+              create: {
+                node: {
+                  x: -50,
+                  y: 50,
+                  name: "Position",
+                },
+              },
+            },
+            hasInfo: {
+              create: {
+                node: {
+                  status: "To-Do",
+                  assignedTo: data.assignedTo,
+                  description: "",
+                  dueDate: "",
+                },
+              },
+            },
+            hasSprint: {
+              connect: [
+                {
+                  where: {
+                    node: {
+                      id: "",
+                    },
+                  },
+                },
+              ],
+            },
+            // todo conditionally creating
+            hasComments: {
+              create: [
+                {
+                  node: {
+                    message: null,
+                    userHas: {
+                      connect: {
+                        where: {
+                          node: {
+                            emailId: null,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
           },
-        },
-        // update: (
-        //   cache: ApolloCache<any> | any,
-        //   {
-        //     data: {
-        //       updateFiles: { files },
-        //     },
-        //   }
-        // ) => {
-        //   console.log(data.story);
-        //   const existanceCache = cache.readQuery({
-        //     query: allNodes,
-        //     variables: {
-        //       where: {
-        //         hasFile: {
-        //           id: data.story,
-        //         },
-        //       },
-        //     },
-        //   });
-
-        //   console.log(existanceCache, "data");
-        //   const nodes = existanceCache.flowcharts[0].hasNodes;
-        //   console.log(files);
-
-        //   // const updated_nodes =
-        // },
-      })
-      .then((result) => {
-        const nodes1 = JSON.stringify(
-          result.data.updateFiles.files[0].hasFlowchart.hasNodes
-        )
-          .replaceAll('"hasdataNodedata":', '"data":')
-          .replaceAll('"haspositionPosition":', '"position":');
-        //@ts-ignore
-        nodes = JSON.parse(nodes1);
-        data.status = data.status || "To-Do";
-        // data.uid = result.data.updateFiles.files[0].hasFlowchart.nodes[0].uid
-        data.parent = data.epic;
-        data.id = result.data.id;
-        data.hasSprint = result.data.hasSprint;
-        data.uid = result.data.uid;
-        addRow(data);
-        // addRow(data)
-        return updateNode(nodes);
-      });
+        ],
+      },
+      update: (
+        cache,
+        {
+          data: {
+            createFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        const { flowcharts } = cache.readQuery({
+          query: allNodes,
+          variables: {
+            where: {
+              hasFile: {
+                id: data.story,
+              },
+            },
+          },
+        }) as any;
+        const { hasNodes } = flowcharts[0];
+        const updaedFlowchart = {
+          ...flowcharts[0],
+          hasNodes: [...hasNodes, ...flowNodes],
+        };
+        cache.writeQuery({
+          query: allNodes,
+          variables: {
+            where: {
+              hasFile: {
+                id: data.story,
+              },
+            },
+          },
+          data: {
+            flowcharts: [updaedFlowchart],
+          },
+        });
+      },
+    });
   } catch (error) {
-    console.log(error, "while creating node");
+    console.log(error, "error while creating the node");
   }
 }
 async function deleteNodeBackend(
@@ -271,48 +281,38 @@ async function deleteNodeBackend(
           },
         },
       },
-      // update: (cache, { data }) => {
-      //   const existanceData = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //   });
-      //   const nodes = existanceData.flowcharts[0].hasNodes;
-      //   let deleted_node = nodes.filter((values: Node) => values.id !== nodeID);
-      //   const updaedFlowNodes = {
-      //     ...existanceData.flowcharts[0],
-      //     nodes: deleted_node,
-      //   };
-      //   cache.writeQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //     data: {
-      //       flowcharts: [updaedFlowNodes],
-      //     },
-      //   });
-      //   const existanceMain = cache.readQuery({
-      //     query: mainQuery,
-      //     variables: {
-      //       where: {
-      //         id: projectId,
-      //       },
-      //     },
-      //   });
-      //   console.log(existanceMain);
-      //   // const root = new TreeModel().parse(existanceMain.mains)
-      //   // console.log(root)
-      // },
+      update: (cache, { data }) => {
+        const { flowcharts } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              hasFile: {
+                id: fileId,
+              },
+            },
+          },
+        });
+
+        const { hasNodes } = flowcharts[0];
+        const deleted_node = hasNodes.filter(
+          (node: Node) => node.id !== nodeID
+        );
+        const updatedFlowcharts = { ...flowcharts[0], hasNodes: deleted_node };
+
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              hasFile: {
+                id: fileId,
+              },
+            },
+          },
+          data: {
+            flowcharts: [updatedFlowcharts],
+          },
+        });
+      },
     });
   } catch (error) {
     console.log(error, "while deleting the node..");
@@ -341,9 +341,15 @@ const updatePosition = async (
           y: node.position.y,
         },
       },
-      update: (cache, { data: { updatePositions } }) => {
-        console.log(fileId);
-        const existanceData = cache.readQuery({
+      update: (
+        cache,
+        {
+          data: {
+            updatePositions: { positions },
+          },
+        }
+      ) => {
+        const { flowcharts } = cache.readQuery({
           query,
           variables: {
             where: {
@@ -353,7 +359,32 @@ const updatePosition = async (
             },
           },
         });
-        console.log(existanceData, "");
+        const { hasNodes, ...flowchartsData } = flowcharts[0];
+        const updatedNode = hasNodes.map((nodeData: Node) => {
+          if (nodeData.id === node.id) {
+            return {
+              ...nodeData,
+              haspositionPosition: positions[0],
+            };
+          }
+          return {
+            ...nodeData,
+          };
+        });
+        const updatedFlowchart = { ...flowchartsData, hasNodes: updatedNode };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              hasFile: {
+                id: fileId,
+              },
+            },
+          },
+          data: {
+            flowcharts: [updatedFlowchart],
+          },
+        });
       },
     });
   } catch (error) {
@@ -361,19 +392,72 @@ const updatePosition = async (
   }
 };
 
-const updateNodeBackend = async (nodeData: any) => {
-  await client.mutate({
-    mutation: updateNodesMutation,
-    variables: {
-      where: {
-        id: nodeData.id,
+const updateNodeBackend = async (
+  nodeData: any,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  fileId: string
+) => {
+  try {
+    return await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id: nodeData.id,
+        },
+        update: {
+          type: nodeData.type,
+          draggable: true,
+        },
       },
-      update: {
-        type: nodeData.type,
-        draggable: true,
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        const { flowcharts } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              hasFile: {
+                id: fileId,
+              },
+            },
+          },
+        });
+        const { hasNodes, ...flowchartData } = flowcharts[0];
+        const updatedNode = hasNodes.map((node: Node) => {
+          if (node.id === nodeData.id) {
+            return {
+              ...flowNodes,
+            };
+          }
+          return {
+            ...node,
+          };
+        });
+        const updatedFlowchart = { ...flowchartData, hasNodes: updatedNode };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              hasFile: {
+                id: fileId,
+              },
+            },
+          },
+          data: {
+            flowcharts: [updatedFlowchart],
+          },
+        });
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log("Error while updating node", error);
+  }
 };
 
 const updateLinkedByMethod = async (
@@ -404,33 +488,85 @@ const updateLinkedByMethod = async (
 
 const updateNodeData = async (
   nodeData: any,
-  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
+  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  fileId: string
 ) => {
-  await client.mutate({
-    mutation: mutations,
-    variables: {
-      where: {
-        flownodeHasdata: {
-          id: nodeData.id,
+  try {
+    return await client.mutate({
+      mutation: mutations,
+      variables: {
+        where: {
+          flownodeHasdata: {
+            id: nodeData.id,
+          },
         },
-      },
-      update: {
-        description: nodeData.data.description,
-        shape: nodeData.data.shape,
-        label: nodeData.data.label,
-        hasLinkedTo: {
-          update: {
-            node: {
-              fileId: nodeData.data.hasLinkedTo.fileId,
-              flag: nodeData.data.hasLinkedTo.flag,
-              id: nodeData.data.hasLinkedTo.id,
-              label: nodeData.data.hasLinkedTo.label,
+        update: {
+          description: nodeData.data.description,
+          shape: nodeData.data.shape,
+          label: nodeData.data.label,
+          hasLinkedTo: {
+            update: {
+              node: {
+                fileId: nodeData.data.hasLinkedTo.fileId,
+                flag: nodeData.data.hasLinkedTo.flag,
+                id: nodeData.data.hasLinkedTo.id,
+                label: nodeData.data.hasLinkedTo.label,
+              },
             },
           },
         },
       },
-    },
-  });
+      update: (cache, { data: { updateNodeData } }) => {
+        const { flowcharts } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              hasFile: {
+                id: fileId,
+              },
+            },
+          },
+        });
+        const { hasNodes, ...flowchartData } = flowcharts[0];
+        const getNode = hasNodes.find((node: Node) => node.id === nodeData.id);
+        const { hasdataNodedata } = getNode;
+        const { hasLinkedBy } = hasdataNodedata;
+        const { hasLinkedTo, ...hasNodeData } = updateNodeData.nodeData[0];
+        const updatedHasNodeData = { ...hasNodeData, hasLinkedBy, hasLinkedTo };
+
+        const updatedNode = hasNodes.map((node: Node) => {
+          if (node.id === nodeData.id) {
+            return {
+              ...node,
+              hasdataNodedata: {
+                ...updatedHasNodeData,
+              },
+            };
+          }
+          return {
+            ...node,
+          };
+        });
+        const updatedFlowChart = { ...flowchartData, hasNodes: updatedNode };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              hasFile: {
+                id: fileId,
+              },
+            },
+          },
+          data: {
+            flowcharts: [updatedFlowChart],
+          },
+        });
+      },
+    });
+  } catch (error) {
+    console.log(error, "updating node data");
+  }
 };
 
 const updateTaskMethod = async (

@@ -13,7 +13,7 @@ import {
   allEdges,
   getEdges,
   getFileByNode,
-  } from "../../gql";
+} from "../../gql";
 import { gql } from "graphql-tag";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
@@ -169,6 +169,7 @@ export const TreeNode = ({
   }, []);
 
   if (state.isSelected) {
+    // console.log(state.isSelected)
     updateCurrentFlowchart(name, id);
     if (data.type === "file") {
       updateBreadCrumbs(data, id, "new");
@@ -193,13 +194,13 @@ export const TreeNode = ({
           .finally(() => {
             setIsLoading(false);
           });
-        getEdges(allEdges, data.id)
-          .then((result) => {
-            updateEdges(result);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
+        // getEdges(allEdges, data.id)
+        //   .then((result) => {
+        //     updateEdges(result);
+        //   })
+        //   .finally(() => {
+        //     setIsLoading(false);
+        //   });
       }
     };
   }
@@ -293,24 +294,9 @@ export const TreeNode2 = ({
     selectedNodeId = data.id!;
     // console.log("S:", selectedNodeId);
   }
-  const customQuery = gql`
-    query FindFileById($nodeId: String!) {
-      files(where: { hasFlowchart: { hasNodes: { id: { equals: $nodeId } } } }) {
-        id
-      }
-    }
-  `;
-  let result: any;
-  async function getfileId() {
-    try {
-      result = await getFileByNode(selectedNodeId, customQuery);
-      // console.log("R=", result);
-    } catch (error) {
-      console.error("Error retrieving file ID:", error);
-    }
-  }
+  
 
-  const fileId = nodeStore((state) => state.fileId);
+  const {fileId} = nodeStore()
   const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);

@@ -7,7 +7,6 @@ import { getAuth, GoogleAuthProvider,FacebookAuthProvider } from "firebase/auth"
 //console.log(process.env.apiKey)
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-console.log(process.env.apiKey)
 const firebaseConfig = {
   apiKey: "AIzaSyCRTufqYpj4_3HdEYqzU4EQ3zTu-oQmTyw",
   authDomain: "react-flow-f9455.firebaseapp.com",

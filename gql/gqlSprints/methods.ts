@@ -7,7 +7,7 @@ import {
 } from "@apollo/client";
 
 import { FetchError } from "node-fetch";
-import { GET_SPRINTS } from "./mutations";
+import { GET_SPRINTS } from "./queries";
 export interface Sprint {
   id: string;
   name?: string | null;

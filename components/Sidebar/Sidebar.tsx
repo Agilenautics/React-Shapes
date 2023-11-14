@@ -1,4 +1,4 @@
-import React,{ useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FileTree } from "../TreeView/fileRenderer";
 import {
@@ -16,8 +16,8 @@ import { BsPlus } from "react-icons/bs";
 import { RiFlowChart } from "react-icons/ri";
 import fileStore from "../TreeView/fileStore";
 import { useRouter } from "next/router";
-import { IoIosArrowDropleftCircle } from 'react-icons/io';
- import 'react-tooltip/dist/react-tooltip.css'
+import { IoIosArrowDropleftCircle } from "react-icons/io";
+import "react-tooltip/dist/react-tooltip.css";
 import {
   createFile,
   createFileMutation,
@@ -40,11 +40,13 @@ import AddProjectPopup from "../AdminPage/Projects/ProjectOverlay";
 import { ToastContainer, toast } from "react-toastify";
 import { Project } from "../../lib/appInterfaces";
 import { FetchResult } from "@apollo/client";
-import { Tooltip } from 'react-tooltip'
+import { Tooltip } from "react-tooltip";
+import { findById } from "../TreeView/backend";
+import TreeModel from "tree-model-improved";
 
 interface SideBar {
   isOpen: Boolean;
-  toggleSideBar: any
+  toggleSideBar: any;
 }
 
 const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
@@ -60,7 +62,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
   //projects stores
   const { projects: allProjects, loading } = projectStore();
   const [projectData, setProjectData] = useState<Project[]>([]);
-  
+
   const notify = () => toast.success("Project Created...");
 
   const {
@@ -72,11 +74,11 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     uid,
     idofUid,
     Id: selectedFolderId,
+    data: initData,
   } = fileStore();
 
   const router = useRouter();
   const projectId = (router.query.projectId as string) || "";
- 
 
   const getProjectId = async (id: string) => {
     const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
@@ -138,14 +140,12 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     // update_recentProject(id,recentProject_mutation);
   };
   const handleInsights = () => {
-    if(projectId){
-      setInsightsOpen(!insightsOpen)
+    if (projectId) {
+      setInsightsOpen(!insightsOpen);
+    } else {
+      setInsightsOpen(false);
     }
-    else{
-      setInsightsOpen(false)
-    }
-      
-    }
+  };
 
   useEffect(() => {
     if (
@@ -157,7 +157,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     }
     fetchRecentProject(allProjects);
     verificationToken();
-  }, [projectId, allProjects]);
+  }, [allProjects]);
 
   const handleUidUpdates = async () => {
     const uidResponse = (await updateUidMethode(
@@ -181,7 +181,6 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
         newFolder,
         getProjectByUser
       );
-    console.log(addFolderResponse?.data.createFolders.folders[0]);
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
   };
@@ -195,44 +194,77 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
       projectId,
     };
     try {
-      if (selectedFolderId) {
-        //adding file or story inside folder or epic
-        const fileInFolderResponse: FetchResult<any> | undefined =
-          await createFile(
-            "",
-            selectedFolderId,
-            createFileMutation,
-            data,
-            getProjectByUser
-          );
-        add_file(fileInFolderResponse?.data.createFiles.files[0]);
-        handleUidUpdates();
-      } else {
-        // adding file or story inside project
-        data.name = "FileInMain";
-        const fileInMainResponse: FetchResult<any> | undefined =
-          await createFile(
-            projectId,
-            "",
-            createFileMutation,
-            data,
-            getProjectByUser
-          );
-        add_file(fileInMainResponse?.data.createFiles.files[0]);
-        handleUidUpdates();
+      const root = new TreeModel().parse(initData);
+      const getData = findById(root, selectedFolderId);
+      const type = getData?.model.type||"";
+      switch (type) {
+        case "file":
+          const getParent = getData?.parent.model;
+          if (getParent.type === "folder") {
+            //adding file or story inside folder or epic
+            const fileInFolderResponse: FetchResult<any> | undefined =
+              await createFile(
+                "",
+                getParent.id,
+                createFileMutation,
+                data,
+                getProjectByUser
+              );
+            add_file(fileInFolderResponse?.data.createFiles.files[0]);
+            handleUidUpdates();
+          } else {
+            //  adding file or story inside project
+            data.name = "FileInMain";
+            const fileInMainResponse: FetchResult<any> | undefined =
+              await createFile(
+                getParent.id,
+                "",
+                createFileMutation,
+                data,
+                getProjectByUser
+              );
+            add_file(fileInMainResponse?.data.createFiles.files[0]);
+            handleUidUpdates();
+          }
+          break;
+        case "folder":
+          // adding file inside the folder
+          let { id } = getData?.model;
+          const fileInFolderResponse: FetchResult<any> | undefined =
+            await createFile(
+              "", //passing empty string (no project id)
+              id, //id of the folder
+              createFileMutation,
+              data,
+              getProjectByUser
+            );
+          add_file(fileInFolderResponse?.data.createFiles.files[0]);
+          handleUidUpdates();
+          break;
+        default:
+          // if u select main or project then file it will add inside the project
+          // adding file or story inside project
+          data.name = "FileInMain";
+          const fileInMainResponse: FetchResult<any> | undefined =
+            await createFile(
+              projectId,
+              "",
+              createFileMutation,
+              data,
+              getProjectByUser
+            );
+          add_file(fileInMainResponse?.data.createFiles.files[0]);
+          handleUidUpdates();
       }
     } catch (error) {
       console.log(error, "while creating file in main in bussiness plan");
     }
   };
 
-
   // const handleInsights = ()=>{
   //   if(projectId){
   //   }
   // }
-
-  
 
   return (
     <div
@@ -244,17 +276,20 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
         <nav>
           {/* top bar image section */}
           <div className="flex py-4">
-            <div className=" w-[90%] flex justify-center">
-            <Image
-              className="mx-auto"
-              src="/assets/flow-chart.png"
-              height={124}
-              width={124}
-              alt="Company Logo"
-              priority={false}
-            />
+            <div className=" flex w-[90%] justify-center">
+              <Image
+                className="mx-auto"
+                src="/assets/flow-chart.png"
+                height={124}
+                width={124}
+                alt="Company Logo"
+                priority={false}
+              />
             </div>
-              <button onClick={toggleSideBar} className="duration-200">  <IoIosArrowDropleftCircle className="text-2xl dark:text-blue-600 relative -right-3 top-6 text-slate-600 " /> </button>
+            <button onClick={toggleSideBar} className="duration-200">
+              {" "}
+              <IoIosArrowDropleftCircle className="relative -right-3 top-6 text-2xl text-slate-600 dark:text-blue-600 " />{" "}
+            </button>
           </div>
           {/* projects  */}
           <div>
@@ -292,10 +327,9 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                   className={`inline transition-transform ${
                     projectsFlag ? "rotate-180 transform" : ""
                   }`}
-                 />
-             
+                />
               </div>
-              </div>
+            </div>
             <div
               className={`max-h-0  overflow-hidden transition-all duration-300 ${
                 projectsFlag ? "max-h-screen" : ""
@@ -375,10 +409,11 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               }`}
               id="clickable"
             />
-           {!insightsOpen && <Tooltip anchorSelect="#clickable">
+            {!insightsOpen && (
+              <Tooltip anchorSelect="#clickable">
                 <button>Please Select Project</button>
-              </Tooltip>}
-              
+              </Tooltip>
+            )}
           </div>
 
           {/* insights */}
@@ -420,7 +455,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                         <span>Add File</span>
                       </button>
                     </div>
-                    <div className="h-36 hover:min-h-full overflow-auto overflow-x-hidden">
+                    <div className="h-36 overflow-auto overflow-x-hidden hover:min-h-full">
                       <FileTree />
                     </div>
                   </div>

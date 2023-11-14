@@ -77,6 +77,7 @@ const typeDefs = gql`
     flowchart: String!
     type: String!
     uid: Int!
+    flowchartHas:Flowchart @relationship(type: "HAS_FLOWNODES", direction:IN)
     uidHas:Uid @relationship (type:"HAS_UID",direction:OUT)
     status: String
     assignedTo: String

@@ -54,5 +54,13 @@ export const Node_Fragment = gql`
       x
       y
     }
+    flowNodeHas {
+      id
+      name
+      folderHas {
+        id
+        name
+      }
+    }
   }
 `;

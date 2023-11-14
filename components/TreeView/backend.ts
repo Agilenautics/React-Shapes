@@ -14,8 +14,10 @@ import {
   updateFilesMutation,
   deleteFoldersMutation,
   deleteFilesMutation,
+  getTreeNodeByUser,
 } from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
+import { useRouter } from "next/router";
 
 /**
  * It returns the first node in the tree that has a model with an id property that matches the id
@@ -49,7 +51,7 @@ export type MyData = {
   // hasContainsFile:Array<File>
 
   hasContainsFolder: Array<Folder>;
-  // hasContainsFile:Array<File>
+  hasContainsFile:Array<File>
 };
 
 /**
@@ -57,16 +59,37 @@ export type MyData = {
  */
 export function useBackend() {
   let initData = fileStore((state) => state.data);
+  let setLoading = fileStore((state) => state.setLoading);
   const delete_item = fileStore((state) => state.delete_item);
   const [data, setData] = useState<MyData>(initData as MyData);
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
 
+  // projectId
+  const router = useRouter();
+  const projectId = (router.query.projectId as string) || "";
+
+  const getProjectId = async (id: string) => {
+    const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
+    const data: MyData | any = initData[0];
+    setData(data);
+    //@ts-ignore
+    // updateInitData(data);
+    return initData;
+  };
+
+  // useEffect(() => {
+  //   if (projectId) {
+  //     getProjectId(projectId);
+  //   }
+  // }, [projectId]);
+
   useEffect(() => {
     setData(initData);
     update;
-  }, [initData, update]);
+  }, [initData]);
+
   return {
     data,
     onMove: (
@@ -156,7 +179,7 @@ export function useBackend() {
       const node = find(id);
       const projectId = initData.id;
       const deleteIds = {
-         id,
+        id,
         projectId,
         parentId: node?.parent.model.id,
       };
@@ -173,11 +196,15 @@ export function useBackend() {
         await deleteFolderBackend(
           deleteIds,
           deleteFoldersMutation,
-          getProjectByUser,
+          getProjectByUser
         );
         delete_item(id);
       } else {
-        await deleteFileBackend(deleteIds,deleteFilesMutation, getProjectByUser);
+        await deleteFileBackend(
+          deleteIds,
+          deleteFilesMutation,
+          getProjectByUser
+        );
         delete_item(id);
       }
     },

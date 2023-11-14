@@ -15,6 +15,7 @@ import {
   getSprintByProjectId,
   GET_SPRINTS,
   createFileMutation,
+  getProjectByUser,
 } from "../../gql";
 import { useRouter } from "next/router";
 import validationSchema from "../AdminPage/Projects/staticData/validationSchema";
@@ -81,10 +82,11 @@ export default function AddBacklogs({
         if (values.epic == projectId)
           try {
             const createFileResponse = await createFile(
+              projectId,
               values.epic,
-              "",
               createFileMutation,
-              values
+              values,
+              getProjectByUser
             );
             values.parent = values.epic;
             // values.id = createFileResponse.id;
@@ -103,17 +105,21 @@ export default function AddBacklogs({
             );
           }
         else
-          createFile("", values.epic, createFileMutation, values).then(
-            async (res) => {
-              values.parent = values.epic;
-              addRow(values);
-              const updateUidRespon = (await updateUidMethode(
-                idofUid,
-                updateUidMutation
-              )) as any;
-              updateUid(updateUidRespon.data.updateUids.uids);
-            }
-          );
+          createFile(
+            "",
+            values.epic,
+            createFileMutation,
+            getProjectByUser,
+            values
+          ).then(async (res) => {
+            values.parent = values.epic;
+            addRow(values);
+            const updateUidRespon = (await updateUidMethode(
+              idofUid,
+              updateUidMutation
+            )) as any;
+            updateUid(updateUidRespon.data.updateUids.uids);
+          });
       } else {
         try {
           await createNode(newNode, updateNode, values, addRow);

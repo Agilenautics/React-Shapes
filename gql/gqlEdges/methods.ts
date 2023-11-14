@@ -122,26 +122,30 @@ const updateEdgeBackend = async (
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   edgeData: any
 ) => {
-  await client.mutate({
-    mutation: mutation,
-    variables: {
-      where: {
-        id: edgeData.id,
-      },
-      update: {
-        hasedgedataEdgedata: {
-          update: {
-            node: {
-              label: edgeData.data.label,
-              bidirectional: edgeData.data.bidirectional,
-              boxCSS: edgeData.data.boxCSS,
-              pathCSS: edgeData.data.pathCSS,
+  try {
+    return await client.mutate({
+      mutation: mutation,
+      variables: {
+        where: {
+          id: edgeData.id,
+        },
+        update: {
+          hasedgedataEdgedata: {
+            update: {
+              node: {
+                label: edgeData.data.label,
+                bidirectional: edgeData.data.bidirectional,
+                boxCSS: edgeData.data.boxCSS,
+                pathCSS: edgeData.data.pathCSS,
+              },
             },
           },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log(error,"while updating edge")
+  }
 };
 
 // delete Edge

@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
 import {
   createNode,
@@ -20,6 +20,7 @@ import backlogStore from "../Backlogs/backlogStore";
 
 function AddNodeButton() {
   const currentId = fileStore((state) => state.Id);
+  const { addNode } = nodeStore();
   const updateNode = nodeStore((state) => state.updateNodes);
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -42,7 +43,13 @@ function AddNodeButton() {
       uid,
     };
     try {
-      await createNode(newNode, updateNode, data, addRow);
+      const createNodeResponse = await createNode(
+        newNode,
+        updateNode,
+        data,
+        addRow
+      );
+      addNode(createNodeResponse?.data.createFlowNodes.flowNodes);
       const updateUidResponse = (await updateUidMethode(
         idofUid,
         updateUidMutation
@@ -121,13 +128,11 @@ function AddNodeButton() {
                   .map(([symbol, styles], index) => (
                     <div key={index} className="text-center">
                       <span
-                      //@ts-ignore
+                        //@ts-ignore
                         className={`cursor-pointer ${styles[1]}`}
                         onClick={() => handleBPMNClick(symbol)}
                       />
-          
                     </div>
-                  
                   ))}
             </div>
           </div>

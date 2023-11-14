@@ -8,26 +8,42 @@ import userStore from "../../../components/AdminPage/Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "../../../gql";
+import { ApolloQueryResult } from "@apollo/client";
 
 
 
 
 const BusinessPlan = () => {
+  const {userEmail} = userStore()
   const updateProjects = projectStore((state) => state.updateProjectData);
   const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
   const updateUserType = userStore((state) => state.updateUserType);
   const updateLoginUser = userStore((state) => state.updateLoginUser);
 
-  const verificationToken = async () => {
-    onAuthStateChanged(auth, user => {
-      if (user && user.email) {
-        getUserByEmail(user.email, GET_USER, { updateLoginUser, updateProjects, updateUserType, updateRecycleBinProject })
-      }
-    })
-  }
+
+  const getProjects = async (email: string) => {
+    try {
+      const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
+        email,
+        GET_USER
+      );
+      const { hasProjects, ...userData } = response?.data.users[0];
+      updateProjects(hasProjects, response?.loading, response?.error);
+      updateRecycleBinProject(hasProjects);
+      updateLoginUser(userData);
+      updateUserType(userData.userType);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    verificationToken()
-  }, [])
+    if (userEmail) {
+      getProjects(userEmail);
+    }
+    // setIsButtonDisabled(userType.toLowerCase() === "user");
+    // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
+  }, [userEmail]);
+  
   return (
     <div>
       <ReactFlowProvider>

@@ -9,6 +9,8 @@ import {
   updateLinkedBy,
   updateLinkedToMutation,
   getFileByNode,
+  allNodes,
+  updateNodesMutation,
 } from "../../../gql";
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
@@ -70,9 +72,15 @@ const nodeStore = create<NodeState>((set) => ({
     }
   },
   addNode: (newNode) =>
-    set((state) => ({
-      nodes: [...state.nodes, { ...newNode, id: newNode.id }],
-    })),
+    set((state) => {
+      const to_be_updated = JSON.stringify(newNode)
+        .replaceAll('"hasdataNodedata":', '"data":')
+        .replaceAll('"haspositionPosition":', '"position":');
+      const updatedNode = JSON.parse(to_be_updated);
+      return {
+        nodes: [...state.nodes, ...updatedNode],
+      };
+    }),
   updateNodes: (nodes) =>
     set((state) => {
       // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
@@ -92,7 +100,12 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-      updateNodeData(updated_node, updateLinkedToMutation);
+      updateNodeData(
+        updated_node,
+        updateLinkedToMutation,
+        allNodes,
+        state.fileId
+      );
       return { nodes: [...to_be_updated, updated_node] };
     });
   },
@@ -100,24 +113,44 @@ const nodeStore = create<NodeState>((set) => ({
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      //@ts-ignore
       const updated_node = {
         ...old_node,
         data: { ...old_node.data, label: newLabel },
       };
-      updateNodeData(updated_node, updateLinkedToMutation);
+      if (!old_node.data?.label || old_node.data.label !== newLabel) {
+        updateNodeData(
+          updated_node,
+          updateLinkedToMutation,
+          allNodes,
+          state.fileId
+        );
+      }
+
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateShape: (id: string, newShape: string) =>
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      //@ts-ignore
+
       const updated_node = {
         ...old_node,
         data: { ...old_node.data, shape: newShape },
       };
-      updateNodeData(updated_node, updateLinkedToMutation);
+
+      //if the node has been changed from a non-default shape to default or vice versa we need to trigger an update in linkedTo mut
+      //if the node has a different shape or no shape at all we need to update it in the database
+      if (
+        (!old_node.data?.shape && newShape) ||
+        old_node.data?.shape !== newShape
+      ) {
+        updateNodeData(
+          updated_node,
+          updateLinkedToMutation,
+          allNodes,
+          state.fileId
+        );
+      }
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateNodeType: (id: string, newType: string) =>
@@ -126,7 +159,12 @@ const nodeStore = create<NodeState>((set) => ({
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       //@ts-ignore
       const updated_node = { ...old_node, type: newType };
-      updateNodeBackend(updated_node);
+      updateNodeBackend(
+        updated_node,
+        updateNodesMutation,
+        allNodes,
+        state.fileId
+      );
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateLinkedTo: async (
@@ -144,7 +182,12 @@ const nodeStore = create<NodeState>((set) => ({
         ...new_node,
         data: { ...new_node.data, hasLinkedTo: newLink, id },
       };
-      updateNodeData(updated_node, updateLinkedToMutation);
+      updateNodeData(
+        updated_node,
+        updateLinkedToMutation,
+        allNodes,
+        state.fileId
+      );
       return { nodes: [...to_be_updated, updated_node] };
     });
   },

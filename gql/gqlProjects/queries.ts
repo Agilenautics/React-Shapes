@@ -16,21 +16,21 @@ export const GET_PROJECTS = gql`
   }
 `;
 
-export const GET_PROJECTS_BY_ID = gql`
-  query Projects {
-    projects {
-      id
-      isOpen
-      name
-      recentProject
-      recycleBin
-      timeStamp
-      userName
-      deletedAT
-      description
-    }
-  }
-`;
+// export const GET_PROJECTS_BY_ID = gql`
+//   query Projects {
+//     projects {
+//       id
+//       isOpen
+//       name
+//       recentProject
+//       recycleBin
+//       timeStamp
+//       userName
+//       deletedAT
+//       description
+//     }
+//   }
+// `;
 
 export const UserSheme = gql`
   query GetUsers {

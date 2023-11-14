@@ -105,7 +105,6 @@ function Editing({
   const addLinkMethod = async (key: string) => {
     //id of the current node
     const id = linkNodes.nodes[key].id;
-    console.log(key,id)
 
     // finding the node to collect the label of the node
     let nodeData = await findNode(getNode, linkNodeId);
@@ -162,7 +161,7 @@ function Editing({
         ))}
       />
       {isEdge ? (
-        <div>
+        <>
           <ExpandableChip
             title="Arrows"
             expTrue={Atrue}
@@ -210,31 +209,37 @@ function Editing({
               </form>
             }
           />
-        </div>
+        </>
       ) : (
-        <div>
+        <>
           <ExpandableChip
             title="Shape"
             expTrue={pEtrue}
             expFalse={sEfalse}
             positioningCSS={"left-16 -top-5"}
             objects={Object.keys(nodeShapeMap)
-              .slice(0, 4)
+              // .slice(0, 4)
               .map((key, _) => {
+                const getBpmn = nodeShapeMap[key][1].split("-")[0];
+                const flag = getBpmn === "bpmn";
                 return (
-                  <div
-                    key={key}
-                    className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${
-                      key === "diamond"
-                        ? "translate-x-[10px] translate-y-[9px] -rotate-45 rotate-45 rounded-md"
-                        : nodeShapeMap[key][1]
-                    }`}
-                    id={key}
-                    onClick={() => {
-                      toggleDraggable(id, true);
-                      updateShape(id, key);
-                    }}
-                  ></div>
+                  <>
+                    <div
+                      key={key}
+                      className={`mx-1 !h-5 !w-5 cursor-pointer ${
+                        flag ? "text-black" : "my-1  bg-neutral-600 "
+                      }  !translate-x-0 !translate-y-0  transition-opacity duration-75 ease-in-out ${
+                        key === "diamond"
+                          ? "translate-x-[10px] translate-y-[9px] -rotate-45 rotate-45 rounded-md"
+                          : nodeShapeMap[key][1]
+                      }`}
+                      id={key}
+                      onClick={() => {
+                        toggleDraggable(id, true);
+                        updateShape(id, key);
+                      }}
+                    ></div>
+                  </>
                 );
               })}
           />
@@ -306,7 +311,7 @@ function Editing({
               </div>
             }
           />
-        </div>
+        </>
       )}
       <form
         onSubmit={(event: React.ChangeEvent<HTMLFormElement>) => {

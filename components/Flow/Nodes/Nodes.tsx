@@ -1,12 +1,11 @@
-import  Editing  from "../Editing";
-import React,{ useState } from "react";
+import Editing from "../Editing";
+import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
 import fileStore from "../../TreeView/fileStore";
 import edgeStore from "../Edges/edgeStore";
 import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
-import { updateLinkedToMutation, updateNodeData } from "../../../gql";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 
 /* This is the custom node component that is used */
@@ -27,17 +26,16 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const updateDescription = nodeStore((state) => state.updateDescription);
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
 
-  // @ts-ignore
   const label = data.label;
   const shapeCSS = nodeShapeMap[data.shape];
   const description = data.description;
-
+  let getBpmn = shapeCSS[1].split("-")[0];
+  const flag = getBpmn === "bpmn";
   const linkedTo = () => {
     const x = findFile(data.hasLinkedTo.fileId);
-    console.log('x: lets see ', x);
     // @ts-ignore
     const nodes = x.hasFlowchart.hasNodes;
-    console.log(nodes)
+    console.log(nodes);
     const nodeData = JSON.stringify(nodes)
       .replaceAll('"hasdataNodedata":', '"data":')
       .replaceAll('"haspositionPosition":', '"position":');
@@ -57,7 +55,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
   const linkedBy = () => {
     const x = findFile(data.hasLinkedBy.fileId);
-    console.log("x: ", x);
     // @ts-ignore
     const nodes = x.hasFlowchart.hasNodes;
     const nodeData = JSON.stringify(nodes)
@@ -73,8 +70,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
       updateEdges(JSON.parse(edgeData));
       updateNodes(JSON.parse(nodeData));
     }
-    updateBreadCrumbs(x, x.id, 'new')
-  }
+    updateBreadCrumbs(x, x.id, "new");
+  };
 
   return (
     <div>
@@ -99,13 +96,13 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         ) : null}
 
         <div
-          className={`${css_props} font-sans h-auto ${
+          className={`${css_props} h-auto font-sans ${
             shapeCSS[1]
           } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
             editing ? "cursor-default" : ""
           }`}
           onDoubleClick={() => {
-            if (!(shapeCSS[1].substring(0, 4) === "bpmn")){
+            if (!(shapeCSS[1].substring(0, 4) === "bpmn")) {
               setEditing(true);
               toggleDraggable(id, false);
             }
@@ -113,51 +110,55 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         >
           <div className={shapeCSS[2]}>
             {editing ? (
-              <div className={`relative flex-row text-center h-auto ${data.hasLinkedTo.flag && "mt-7"}`}>
-              <Editing
-                isEdge={false}
-                toggleDraggable={toggleDraggable}
-                id={id}
-                updateNodeType={updateNodeType}
-                setEditing={setEditing}
-                updateLabel={updateLabel}
-                label={label}
-                CSSMap={nodeCSSMap}
-                description={description}
-                updateDescription={updateDescription}
-                bidirectionalArrows={false}
-              />
-               {data.hasLinkedTo.flag ? (
               <div
-                className="flex cursor-pointer h-auto rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black h-auto "
-                onClick={linkedTo}
+                className={`relative h-auto flex-row text-center ${
+                  data.hasLinkedTo.flag && "mt-7"
+                }`}
               >
-                <div className="text-xs h-auto "> {data.hasLinkedTo.label} </div>
-                <div>
-                  <BiArrowToRight className="h-4 w-4" />{" "}
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
+                <Editing
+                  isEdge={false}
+                  toggleDraggable={toggleDraggable}
+                  id={id}
+                  updateNodeType={updateNodeType}
+                  setEditing={setEditing}
+                  updateLabel={updateLabel}
+                  label={label}
+                  CSSMap={nodeCSSMap}
+                  description={description}
+                  updateDescription={updateDescription}
+                  bidirectionalArrows={false}
+                />
+                {data.hasLinkedTo.flag ? (
+                  <div
+                    className="flex h-auto h-auto cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                    onClick={linkedTo}
+                  >
+                    <div className="h-auto text-xs ">
+                      {" "}
+                      {data.hasLinkedTo.label}{" "}
+                    </div>
+                    <div>
+                      <BiArrowToRight className="h-4 w-4" />{" "}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <div>
-              <p className="py-1 text-center text-[0.6rem]">{label}</p>
-              {data.hasLinkedTo.flag ? (
-              <div
-                className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-                onClick={linkedTo}
-              >
-                <div className="text-xs"> {data.hasLinkedTo.label} </div>
-                <div>
-                  {" "}
-                  <BiArrowToRight className="h-4 w-4" />{" "}
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
+                {flag ? null : (
+                  <p className="py-1 text-center text-[0.6rem]">{label}</p>
+                )}
+                {data.hasLinkedTo.flag ? (
+                  <div
+                    className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                    onClick={linkedTo}
+                  >
+                    <div className="text-xs"> {data.hasLinkedTo.label} </div>
+                    <div>
+                      <BiArrowToRight className="h-4 w-4" />{" "}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             )}
             {/* LinkedTo */}
@@ -172,13 +173,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                 >
                   <div className="text-xs"> {data.hasLinkedBy.label} </div>
                   <div>
-                    {" "}
                     <BiArrowBack className="h-4 w-4" />{" "}
                   </div>
                 </div>
-              ) : (
-                <></>
-              )
+              ) : null
             }
           </div>
         </div>
@@ -204,16 +202,15 @@ function defaultNode({ data, id }) {
 
 //@ts-ignore
 function BrightblueNode({ data, id }) {
-  return <>
-    {
-      PrototypicalNode(
+  return (
+    <>
+      {PrototypicalNode(
         "border-node-blue-100 bg-node-blue-200 text-white",
         data,
         id
-      )
-    }
-
-  </>
+      )}
+    </>
+  );
   // return PrototypicalNode(
   //   "border-node-blue-100 bg-node-blue-200 text-white",
   //   data,

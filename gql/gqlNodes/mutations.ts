@@ -6,19 +6,10 @@ import { Edge_Fragment } from "../gqlEdges/fragments";
 
 export const newNode = gql`
   ${Node_Fragment}
-  mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
-    updateFiles(where: $where, update: $update) {
-      files {
-        name
-        folderHas {
-          name
-        }
-        hasFlowchart {
-          name
-          hasNodes {
-            ...NodeFragment
-          }
-        }
+  mutation CreateFlowNodes($input: [FlowNodeCreateInput!]!) {
+    createFlowNodes(input: $input) {
+      flowNodes {
+        ...NodeFragment
       }
     }
   }
@@ -80,9 +71,6 @@ export const updatePositionMutation = gql`
         name
         x
         y
-        flownodeHasposition {
-          id
-        }
       }
     }
   }

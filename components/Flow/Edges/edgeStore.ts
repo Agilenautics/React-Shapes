@@ -48,6 +48,7 @@ const edgeStore = create<EdgeState>((set) => ({
       const edge = state.edges.filter((item) => item.id === id)[0];
       const to_be_updated = state.edges.filter((item) => item.id !== id);
       const updated_node = { ...edge, data: { ...edge.data, label: newLabel } };
+      console.log(newLabel)
       return { edges: [...to_be_updated, updated_node] };
     }),
 }));

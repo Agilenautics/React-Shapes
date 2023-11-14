@@ -32,7 +32,7 @@ import {
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
-  getProjectByUser
+  getProjectByUser,
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
 
@@ -123,7 +123,7 @@ function Flow() {
         updateEdgeBackend(updateEdgeMutation, curEle);
       });
     }
-  }, [defaultEdges, edgeId, nodeId, defaultNodes, updateNodeBackend]);
+  }, [defaultEdges, edgeId]);
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
@@ -192,7 +192,14 @@ function Flow() {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
       try {
-        await deleteNodeBackend(element.id, delNodeMutation, allNodes, fileId, projectId,getProjectByUser);
+        await deleteNodeBackend(
+          element.id,
+          delNodeMutation,
+          allNodes,
+          fileId,
+          projectId,
+          getProjectByUser
+        );
         deleteNode(element);
       } catch (error) {
         console.log(error, "deleting the node");
@@ -204,12 +211,10 @@ function Flow() {
     dragged.current = true;
   }, []);
 
-
   const onNodeDragStop = useCallback(
     async (event: React.MouseEvent, node: Node) => {
       try {
         if (dragged.current) {
-          console.log(fileId);
           await updatePosition(node, updatePositionMutation, allNodes, fileId);
         }
         dragged.current = false;
@@ -217,12 +222,12 @@ function Flow() {
         console.log(error, "while dragging the node");
       }
     },
-    []
+    [fileId]
   );
 
-  // const onSelectionChange = useCallback(() => {
-  //   console.count("onSelectionChange");
-  // }, []);
+  const onSelectionChange = useCallback(() => {
+    console.count("onSelectionChange");
+  }, []);
 
   // const onDrag = (event: any, node: Object) => {
   //   updatePosition(node);
@@ -269,10 +274,7 @@ function Flow() {
             onNodeDragStop(event, node);
           }}
           onNodeDrag={onNodeDrag} //this event we dont want
-          // onNodeDragStop={}
-          // onSelectionChange={onSelectionChange}
-          // onNodeMouseMove={(event, node) => onDrag(event, node)}
-          onNodesDelete={(selectedNodes) => onNodesDelete(selectedNodes)}
+          onNodesDelete={(selectedNode) => onNodesDelete(selectedNode)}
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
           onEdgeClick={onEdgeClick}
           onNodeClick={onNodeClick}
