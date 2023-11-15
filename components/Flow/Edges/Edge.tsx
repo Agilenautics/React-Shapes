@@ -155,6 +155,7 @@ export default function CustomEdge({
               className={`rounded-lg !bg-white p-0.5 text-sm dark:!bg-neutral-900 ${data.boxCSS}`}
               onDoubleClick={() => {
                 setEditing(true);
+                
               }}
             >
               {editing ? (

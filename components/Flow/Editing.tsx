@@ -38,7 +38,7 @@ function ExpandableChip({
         isCollapsed ? expTrue : expFalse
       } ${positioningCSS} dark:bg-neutral-900 `}
     >
-      <div className="ml-1 mt-[1px] flex text-black dark:text-white">
+      <div className="ml-1 mt-[1px] flex text-[9px] font-medium text-black dark:text-white">
         <div className="flex-none">{title}</div>
         <FiChevronRight
           className={`-mt-[2px] h-5 w-5 flex-none cursor-pointer stroke-slate-800 transition-transform dark:stroke-slate-200 ${
@@ -83,16 +83,17 @@ function Editing({
   updateDescription: Function;
   bidirectionalArrows: boolean;
 }) {
-  const pEtrue = isEdge ? "w-14 h-5 top-10" : "w-14 h-5 -top-5";
-  const pEfalse = isEdge ? "w-36 h-[52px] top-10" : "w-36 h-20 -top-5";
-  const sEfalse = "w-24 h-14 ";
-  const dEtrue = "w-[90px] h-5";
+  const pEtrue = isEdge ? "w-[43px] h-5 top-10" : "w-[47px] h-5 -top-5";
+  const pEfalse = isEdge ? "w-36 h-[52px] top-10 z-10" : "w-36 h-20 -top-5 z-10";
+  const sEtrue = "w-[49px] h-5 -top-16";
+  const sEfalse = "w-[119px] h-14 z-10";
+  const dEtrue = "w-[70px] h-5";
   const dEfalse = "w-[90px] h-20";
-  const Ltrue = "w-[70px] h-5";
+  const Ltrue = "w-[60px] h-5";
   const Lfalse = "w-40 h-40";
-  const Atrue = "w-[70px] h-5";
+  const Atrue = "w-[51px] h-5";
   const Afalse = "w-28 h-20";
-  const leftPositioning = isEdge ? "left-8" : "left-1";
+  const leftPositioning = isEdge ? "left-8" : "-top-8";
   const inputSize = isEdge ? "w-14 h-4" : "h-6 w-28";
   const updateShape = nodeStore((state) => state.updateShape);
   const updateArrows = edgeStore((state) => state.updateArrows);
@@ -101,10 +102,10 @@ function Editing({
   const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
   const linkNodeId = fileStore((state) => state.linkNodeId);
   const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
-
   const addLinkMethod = async (key: string) => {
     //id of the current node
     const id = linkNodes.nodes[key].id;
+    console.log(key, id);
 
     // finding the node to collect the label of the node
     let nodeData = await findNode(getNode, linkNodeId);
@@ -129,16 +130,27 @@ function Editing({
       },
       getFile
     );
+    setEditing(false);
   };
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
     updateDescription(id, event.target.description.value);
-  };
+     };
 
   const handleChanges = (event: any) => {
-    if (event.keyCode == 13) updateDescription(id, event.target.value);
+    if (event.keyCode == 13) 
+    {
+      updateDescription(id, event.target.value);
+      setEditing(false);
+    }
+
   };
+  const handleArrows =(e: React.ChangeEvent<HTMLFormElement>)=>{
+      updateArrows(id, e.target.value === "bidirectional");
+      setEditing(false);
+    
+  }
 
   return (
     <div>
@@ -147,7 +159,8 @@ function Editing({
         expTrue={pEtrue}
         expFalse={pEfalse}
         positioningCSS={leftPositioning}
-        objects={Object.keys(CSSMap).map((key, _) => (
+        objects={Object.keys(CSSMap).map((key, _) =>
+           (
           <div
             key={key}
             className={`mx-1 my-1 h-5 w-5 cursor-pointer rounded transition-opacity duration-75 ease-in-out
@@ -156,9 +169,12 @@ function Editing({
             onClick={() => {
               toggleDraggable(id, true);
               updateNodeType(id, isEdge ? CSSMap[key] : key);
+              setEditing(false);
             }}
           ></div>
-        ))}
+       )
+    
+         )}
       />
       {isEdge ? (
         <>
@@ -170,9 +186,7 @@ function Editing({
             objects={
               <form
                 className="scale-75"
-                onChange={(e: React.ChangeEvent<HTMLFormElement>) =>
-                  updateArrows(id, e.target.value === "bidirectional")
-                }
+                onChange={handleArrows}
               >
                 <div className="mb-4 flex items-center">
                   <input
@@ -214,9 +228,9 @@ function Editing({
         <>
           <ExpandableChip
             title="Shape"
-            expTrue={pEtrue}
+            expTrue={sEtrue}
             expFalse={sEfalse}
-            positioningCSS={"left-16 -top-5"}
+            positioningCSS={"-top-[56px] 1eft-1.5"}
             objects={Object.keys(nodeShapeMap)
               // .slice(0, 4)
               .map((key, _) => {
@@ -224,22 +238,22 @@ function Editing({
                 const flag = getBpmn === "bpmn";
                 return (
                   <>
-                    <div
-                      key={key}
-                      className={`mx-1 !h-5 !w-5 cursor-pointer ${
-                        flag ? "text-black" : "my-1  bg-neutral-600 "
-                      }  !translate-x-0 !translate-y-0  transition-opacity duration-75 ease-in-out ${
-                        key === "diamond"
-                          ? "translate-x-[10px] translate-y-[9px] -rotate-45 rotate-45 rounded-md"
-                          : nodeShapeMap[key][1]
-                      }`}
-                      id={key}
-                      onClick={() => {
-                        toggleDraggable(id, true);
-                        updateShape(id, key);
+                  <div
+                    key={key}
+                    className={`mx-1 !h-5 !w-5 cursor-pointer ${
+                      flag ? "text-black" : "my-1  bg-neutral-600 "
+                    }  !translate-x-0 !translate-y-0  transition-opacity duration-75 ease-in-out ${
+                      key === "diamond"
+                        ? "translate-x-[10px] translate-y-[9px] -rotate-45 rotate-45 rounded-md"
+                        : nodeShapeMap[key][1]
+                    }`}
+                    id={key}
+                    onClick={() => {
+                      toggleDraggable(id, true);
+                      updateShape(id, key);
+                      setEditing(false);
                       }}
-                    ></div>
-                  </>
+                  ></div></>
                 );
               })}
           />
@@ -247,7 +261,7 @@ function Editing({
             title="Description"
             expTrue={dEtrue}
             expFalse={dEfalse}
-            positioningCSS={"left-1 -top-12"}
+            positioningCSS={"-top-8 left-14"}
             objects={
               <form onSubmit={(e) => handleSubmit(e)} autoComplete="off">
                 <textarea
@@ -265,13 +279,13 @@ function Editing({
             title="Add Link"
             expTrue={Ltrue}
             expFalse={Lfalse}
-            positioningCSS={"left-24 -top-12"}
+            positioningCSS={"left-14 -top-[56px]"}
             objects={
               <div>
                 <div className="absolute left-1 top-5 text-black">
                   <button
                     type="button"
-                    className="absolute -top-[19px] right-2 flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5"
+                    className="absolute -top-[19px] right-2 flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5 "
                     onClick={() => {
                       updateLinkNodes({}, linkNodes.fileID);
                     }}
@@ -287,7 +301,7 @@ function Editing({
                         Object.keys(linkNodes.nodes).map((key, _) => (
                           <button
                             key={key}
-                            id={key}
+                            id={key} 
                             type="button"
                             onClick={(e) => addLinkMethod(key)}
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left

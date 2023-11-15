@@ -64,7 +64,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
   const [projectData, setProjectData] = useState<Project[]>([]);
 
   const notify = () => toast.success("Project Created...");
-
+ 
   const {
     updateInitData,
     add_file,
@@ -139,25 +139,29 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     localStorage.setItem("recentPid", id);
     // update_recentProject(id,recentProject_mutation);
   };
-  const handleInsights = () => {
-    if (projectId) {
-      setInsightsOpen(!insightsOpen);
-    } else {
-      setInsightsOpen(false);
-    }
-  };
-
+  // const handleProjectDown = () => {
+  //   if(projectId.length>0){
+  //     setProjectsFlag(true);
+  //   }
+  //   else
+  //   {
+  //     setProjectsFlag(!projectsFlag);
+    
+  // }}
   useEffect(() => {
     if (
       projectId &&
       router.asPath !== "/projects/06c94e7b-2a73-41b1-9683-61662706823a/sprints"
     ) {
-      // @ts-ignore
       getProjectId(projectId);
+      
+
     }
     fetchRecentProject(allProjects);
     verificationToken();
   }, [allProjects]);
+    
+  // }, [projectId, allProjects]);   Irfan
 
   const handleUidUpdates = async () => {
     const uidResponse = (await updateUidMethode(
@@ -183,7 +187,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
       );
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
-  };
+      };
 
   const handleAddFile = async () => {
     let data = {
@@ -261,10 +265,8 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     }
   };
 
-  // const handleInsights = ()=>{
-  //   if(projectId){
-  //   }
-  // }
+
+  
 
   return (
     <div
@@ -397,7 +399,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
           </div>
 
           <div
-            onClick={handleInsights}
+            onClick={()=>setInsightsOpen(!insightsOpen)}
             className="flex cursor-pointer select-none items-center justify-between p-1 px-3 duration-100"
           >
             <span>
@@ -409,11 +411,10 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               }`}
               id="clickable"
             />
-            {!insightsOpen && (
-              <Tooltip anchorSelect="#clickable">
+           { !insightsOpen && projectId.length<=0 && <Tooltip anchorSelect="#clickable">
                 <button>Please Select Project</button>
               </Tooltip>
-            )}
+            }
           </div>
 
           {/* insights */}
@@ -426,19 +427,20 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             {insightsOpen && (
               <>
                 <div className="p-1 duration-100">
-                  <Link href={`/projects/${projectId}/business-plan`}>
+                  <Link href={`/projects/${projectId}/business-process`}>
                     <a className="ml-7 flex w-full select-none items-center gap-2">
                       <RiFlowChart />
-                      <span> Business Plan</span>
+                      <span> Business Process</span>
                     </a>
                   </Link>
-                </div>
+
+                  </div>
 
                 {router.asPath ==
-                  "/projects/" + projectId + "/business-plan" && (
+                  "/projects/" + projectId + "/business-process"&&(
                   <div>
-                    <div className=" sticky top-0 grid grid-cols-2 gap-2 bg-white  p-1  text-white  ">
-                      <button
+                    <div className=" sticky top-0 grid grid-cols-2 gap-2 bg-white  p-1  text-white  "> 
+                       <button
                         type="button"
                         className=" flex items-center justify-center gap-1 rounded bg-sky-500 p-1 duration-300 hover:bg-sky-600"
                         onClick={handleAddFolder}

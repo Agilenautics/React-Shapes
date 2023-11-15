@@ -147,7 +147,7 @@ export const TreeNode = ({
   const [user, setUser] = useState([]);
   const [accessLevel, setAccessLevel] = useState("");
   const { onDelete } = useBackend();
-
+  
   const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
@@ -219,7 +219,7 @@ export const TreeNode = ({
   function handleDelete() {
     delete_item(id);
   }
-
+    
   return (
     // <> {name} </>
     <div
@@ -239,7 +239,7 @@ export const TreeNode = ({
         <i>
           <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
-        {state.isEditing ? (
+         {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
         ) : (
           <span className="group flex flex-row font-sans text-sm dark:text-white">
@@ -248,7 +248,7 @@ export const TreeNode = ({
               !state.isEditing &&
               accessLevel.toLowerCase() !== "user" && (
                 <div className="flex flex-row pl-2">
-                  <button className="text-gray-900" onClick={handlers.edit}>
+                   <button className="text-gray-900" onClick={handlers.edit}>
                     <FiEdit2 size={20} className="dark:text-white" />
                   </button>
                   <button
@@ -265,13 +265,13 @@ export const TreeNode = ({
                     className="ml-2"
                   >
                     <FiDelete size={20} className="dark:text-white" />
-                  </button>
-                </div>
-              )}
-          </span>
+                  </button> 
+                                  </div> 
+               )} 
+           </span>
         )}
-      </div>
-    </div>
+        </div>
+    </div> 
   );
 };
 

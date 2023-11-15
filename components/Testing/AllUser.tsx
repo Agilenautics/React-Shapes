@@ -2,7 +2,8 @@ import { MockedResponse,MockedProvider } from "@apollo/react-testing";
 import { renderHook } from "@testing-library/react";
 import { Children } from "react";
 import Users from "../AdminPage/Users/Users";
-import { ALL_USERS,DELETE_USER ,GET_USER,ADD_USER} from '../../gql';
+import Projects from "../AdminPage/Projects/Projects";
+import { ALL_USERS,DELETE_USER ,GET_USER,ADD_USER,GET_PROJECTS} from '../../gql';
 export const AllUsers=()=>{
     allUsers:{
         userMocks:[{
@@ -33,13 +34,28 @@ export const addUsers=()=>{
     }]
 }
 }
-export const ErrorMocks= {
-  users: { 
-     active:"true",
+export const ErrorMocks= ()=>{
+  users: [{ 
+     active:true,
        emailId:"irfan123@gmail.com",
        userName:"Irfan",
        id:"d3a43307-b133-4386-b129-a578f65eb829"
-      }}
+      }]}
+
+      export const getProjectdataMocks=()=>{
+        getProjects:{
+          projects:[
+            {
+              "id": "6144eaeb-633b-4a2a-8740-5176a7b81c8f",
+              "name": "Software Development",
+              "description": "sample software ",
+              "userHas": [
+                {
+                  "emailId": "irfan123@gmail.com"
+                }]}]
+        }
+      }
+
 
 //Successfull Mock data of render hook
 export const SuccessfullMockData:MockedResponse[]= [{
@@ -121,6 +137,14 @@ export const GetMockDataByUserId:MockedResponse[]= [{
     result:{data:usersData}
    }]
 
+   export const GetProjectDataByname:MockedResponse[]= [{
+    request:{
+      query:GET_PROJECTS,
+      variables:{
+        name:"Software Development"
+      }},
+      result:{data:getProjectdataMocks}
+   }]
 
 export function getAlluserWrapper(MockData:MockedResponse[] = []){
 
@@ -131,5 +155,15 @@ export function getAlluserWrapper(MockData:MockedResponse[] = []){
     return{
         result
     }
+}
+export function getAllProjectWrapper(MockData:MockedResponse[] = []){
+
+  const wrapper=({children}:React.PropsWithChildren)=>(
+      <MockedProvider mocks={MockData} addTypename={false} >{children}</MockedProvider>
+  );
+   const  {result}=renderHook(()=>Projects(),{wrapper})
+  return{
+      result
+  }
 }
 

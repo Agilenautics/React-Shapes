@@ -132,7 +132,7 @@ waitFor(async()=>{
   
   describe("error in UserPage",()=>{
     const { result } = getAlluserWrapper(ErrorMockData);
-       it("Renders a  error message  from query in users component",()=>{  
+       it("Renders a  error message using  query in users component",()=>{  
         waitFor(async()=>{
           expect(result).toBeDefined();
          expect(await screen.findByText("LoadingError!")).toBeInTheDocument();
@@ -149,6 +149,7 @@ waitFor(async()=>{
         });
       });       
        });
+       
 
 
 });

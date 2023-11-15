@@ -159,7 +159,7 @@ function ProjectBacklogs() {
               </span>
             </div>
             {showTypeDropdown && (
-              <div className="absolute right-0 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-gray-100 shadow-lg ring-1 ring-black ring-opacity-5 hover:bg-gray-200 dark:bg-slate-600 dark:text-white">
+              <div className="absolute right-0 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-gray-100 shadow-lg ring-1 ring-black ring-opacity-5 hover:bg-gray-200 dark:bg-slate-600 dark:text-white z-50">
                 <div className="py-1">
                   {types.map((type) => (
                     <label
@@ -173,12 +173,12 @@ function ProjectBacklogs() {
                         checked={selectedTypes.includes(type.value)}
                         onChange={() =>
                           setSelectedTypes((prevTypes) =>
-                            prevTypes.includes(type.value)
+                          prevTypes.includes(type.value)
                               ? prevTypes.filter((t) => t !== type.value)
-                              : [...prevTypes, type.value]
-                          )
+                               : [...prevTypes, type.value]
+                        )
                         }
-                      />
+                                              />
                     </label>
                   ))}
                 </div>

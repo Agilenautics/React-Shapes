@@ -168,7 +168,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               // @ts-ignore
               data.hasLinkedBy.flag ? (
                 <div
-                  className="absolute right-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                  className="absolute right-24 top-16 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                   onClick={linkedBy}
                 >
                   <div className="text-xs"> {data.hasLinkedBy.label} </div>
@@ -302,7 +302,7 @@ function WelcomeNode({ data, id }) {
     </div>
   );
 }
-export {
+export  {
   defaultNode,
   BrightblueNode,
   blueNode,
