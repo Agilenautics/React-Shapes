@@ -4,7 +4,7 @@ const typeDefs = gql`
   # directive @auth(operations: [String!]!) on OBJECT | FIELD_DEFINITION
 
   # ! Interfaces only work on relationships!
-  type user{
+  type user {
     id: ID! @id
     timeStamp: DateTime! @timestamp
     userName: String
