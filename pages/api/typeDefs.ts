@@ -50,6 +50,7 @@ const typeDefs = gql`
     hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
   }
 
+
   #epic scheme
   type Folder {
     # @authorization(
