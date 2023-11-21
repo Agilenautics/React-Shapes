@@ -74,8 +74,8 @@ const Login: React.FC = () => {
           //  check if active == true
 
           // Store the tokens in cookies
-          document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
-          document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
+          document.cookie = `accessToken=${accessToken};`;
+          document.cookie = `refreshToken=${refreshToken};`;
           //router.push("/projects");
           router.push(`/projects/${projectId}`);
         });
