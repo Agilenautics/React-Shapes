@@ -1,14 +1,19 @@
 import { gql } from "@apollo/client";
-
 const typeDefs = gql`
   # ! Interfaces only work on relationships!
   type User {
     id: ID! @id
     timeStamp: DateTime! @timestamp
     emailId: String!
-    userType: String
-    comments: [comments!]! @relationship(type: "hasUser", direction: IN)
-    hasProjects: [main!]! @relationship(type: "hasMain", direction: OUT)
+      @unique
+      @authorization(
+        validate: [
+          {
+           when: [BEFORE],
+            operations: [READ,UPDATE,DELETE],
+             where: { node: { emailId: "$jwt.email" } } }
+        ]
+      )
     active: Boolean!
     userName: String
     userType: String
@@ -17,7 +22,21 @@ const typeDefs = gql`
   }
 
   #project scheme
-  type Project {
+  type Project
+    @authorization(
+      validate: [         
+          {
+          when: [AFTER]
+          operations: [READ,CREATE]
+          where: { node: { userHas: { emailId: "$jwt.email" } } }
+        },
+        {
+          when: [AFTER]
+          operations: [UPDATE,DELETE]
+          where: { node: { userHas_SOME: { emailId: "$jwt.email" } } }
+        }
+      ]
+    ) {
     id: ID! @id
     timeStamp: DateTime! @timestamp
     name: String!
@@ -32,6 +51,7 @@ const typeDefs = gql`
     hasContainsFile: [File!]! @relationship(type: "HAS_FILE", direction: OUT)
     hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
   }
+
 
   #epic scheme
   type Folder {
