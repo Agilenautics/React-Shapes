@@ -2,8 +2,8 @@
 
 module.exports = {
   // ...nextConfig,
-  serverRuntimeConfig : {
-    FIREBASE_SERVICE_ACCOUNT_KEY : `{
+  serverRuntimeConfig: {
+    FIREBASE_SERVICE_ACCOUNT_KEY: `{
       "type": "service_account",
       "project_id": "react-flow-f9455",
       "private_key_id": "d836e27093fd394fcb8302c46176f3c805a6ccf8",
@@ -16,7 +16,7 @@ module.exports = {
       "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-x3ung%40react-flow-f9455.iam.gserviceaccount.com",
       "universe_domain": "googleapis.com"
     }
-    `
+    `,
   },
   env: {
     // DB_PASSWORD:"JTqKzr5_U4iRErGDGADJELjuoDQNubC9ZMhbzOlcYYY",
