@@ -404,8 +404,9 @@ const addProject_Backend = async (
   addProject: any,
   query: any
 ) => {
+  console.log("addProject",email,project);
   let data = [];
-  try {
+ // try {
     await client
       .mutate({
         mutation,
@@ -418,7 +419,16 @@ const addProject_Backend = async (
               name: project.name,
               recentProject: false,
               recycleBin: false,
-              userHas: {
+              "createdBy": {
+                "connect": {
+                  "where": {
+                    "node": {
+                      "emailId": email,
+                    }
+                  }
+                }
+              },
+              usersInProjects: {
                 connect: [
                   {
                     where: {
@@ -432,45 +442,45 @@ const addProject_Backend = async (
             },
           ],
         },
-        update: (
-          cache,
-          {
-            data: {
-              createProjects: { projects },
-            },
-          }
-        ) => {
-          // @ts-ignore
-          const { users } = cache.readQuery({
-            query,
-            variables: {
-              where: {
-                emailId: email,
-              },
-            },
-          });
-          const { hasProjects, ...user } = users[0];
-          const updated_projects = [...projects, ...hasProjects];
-          const updated_user = { ...user, hasProjects: updated_projects };
-          cache.writeQuery({
-            query,
-            variables: {
-              where: {
-                emailId: email,
-              },
-            },
-            data: {
-              users: [updated_user],
-            },
-          });
-        },
-      })
+      //   update: (
+      //     cache,
+      //     {
+      //       data: {
+      //         createProjects: { projects },
+      //       },
+      //     }
+      //   ) => {
+      //     // @ts-ignore
+      //     const { users } = cache.readQuery({
+      //       query,
+      //       variables: {
+      //         where: {
+      //           emailId: email,
+      //         },
+      //       },
+      //     });
+      //     const { hasProjects, ...user } = users[0];
+      //     const updated_projects = [...projects, ...hasProjects];
+      //     const updated_user = { ...user, hasProjects: updated_projects };
+      //     cache.writeQuery({
+      //       query,
+      //       variables: {
+      //         where: {
+      //           emailId: email,
+      //         },
+      //       },
+      //       data: {
+      //         users: [updated_user],
+      //       },
+      //     });
+      //   },
+       })
       .then((response) => {
         addProject(response.data.createProjects.projects[0]);
       });
-  } catch (error) {
-    console.log(error, "While adding the project");
-  }
+  // } catch (error) {
+  //   console.log(error, "While adding the project");
+  // }
 };
 
 const edit_Project = async (

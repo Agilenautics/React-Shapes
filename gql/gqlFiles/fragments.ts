@@ -26,7 +26,7 @@
         id
         message
         timeStamp
-        userHas {
+        createdBy {
           emailId
         }
       }

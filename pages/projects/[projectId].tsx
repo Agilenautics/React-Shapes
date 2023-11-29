@@ -33,11 +33,12 @@ function SideBar() {
         projectId.toString(),
         setLoading
       );
-      setTotal(initData[0].userHas.length);
+      console.log("initdata",initData)
+      setTotal(initData[0].usersInProjects.length);
       setProjectName(initData[0].name);
       setProjectDesc(initData[0].description);
-      const userHas = initData[0].userHas;
-      const userDetails = userHas.map((user: any) => ({
+      const usersInProjects = initData[0].usersInProjects;
+      const userDetails = usersInProjects.map((user: any) => ({
         email: user.emailId,
         userType: user.userType,
       }));

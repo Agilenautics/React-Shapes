@@ -96,7 +96,7 @@ export const updateTasksMutation = gql`
           id
           message
           timeStamp
-          userHas {
+          createdBy {
             emailId
           }
         }

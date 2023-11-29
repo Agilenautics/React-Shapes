@@ -37,7 +37,7 @@ async function getEdges(
 }
 
 //methode for creating edge
-const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
+const createFlowEdge = async (newEdge: any, id: string, email:string, updateEdges: any) => {
   var edges: Array<Edge> = [];
   await client
     .mutate({
@@ -70,6 +70,15 @@ const createFlowEdge = async (newEdge: any, id: string, updateEdges: any) => {
                                 pathCSS: newEdge.data.pathCSS,
                               },
                             },
+                          },
+                          "createdBy": {
+                            "connect": {
+                              "where": {
+                                "node": {
+                                  "emailId": email,
+                                }
+                              }
+                            }
                           },
                           flownodeConnectedby: {
                             connect: {

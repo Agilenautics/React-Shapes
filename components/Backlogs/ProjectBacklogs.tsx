@@ -71,13 +71,13 @@ function ProjectBacklogs() {
   }, [backlogs]);
 
   useEffect(() => {
-    if (backend.userHas && backend.userHas.length) {
-      setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas]);
+    if (backend.usersInProjects && backend.usersInProjects.length) {
+      setUsers([{ emailId: "Select User", value: "" }, ...backend.usersInProjects]);
     }
     // if (backlogs.length == 0) {
       updateBacklogsData(backend.children as any);
     // }
-  }, [backend.userHas]);
+  }, [backend.usersInProjects]);
 
   useEffect(() => {
     setStatuses(["Select Status", ...allStatus]);

@@ -96,7 +96,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     }
   };
 
-  const verificationToken = async () => {
+ const verificationToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         setUserEmail(user.email);
@@ -182,6 +182,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
       await createFolderInMain(
         newFolderInMain,
         projectId,
+        userEmail,
         newFolder,
         getProjectByUser
       );
@@ -210,6 +211,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               await createFile(
                 "",
                 getParent.id,
+                userEmail,
                 createFileMutation,
                 data,
                 getProjectByUser
@@ -223,6 +225,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               await createFile(
                 getParent.id,
                 "",
+                userEmail,
                 createFileMutation,
                 data,
                 getProjectByUser
@@ -238,6 +241,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             await createFile(
               "", //passing empty string (no project id)
               id, //id of the folder
+              userEmail,
               createFileMutation,
               data,
               getProjectByUser
@@ -253,6 +257,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             await createFile(
               projectId,
               "",
+              userEmail,
               createFileMutation,
               data,
               getProjectByUser

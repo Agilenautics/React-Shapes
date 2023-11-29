@@ -25,10 +25,10 @@ export default function Edit() {
 
    
 useEffect(()=>{
-if(backend.userHas && backend.userHas.length){
-setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas])
+if(backend.usersInProjects && backend.usersInProjects.length){
+setUsers([{ emailId: "Select User", value: "" }, ...backend.usersInProjects])
 }
-},[backend.userHas])
+},[backend.usersInProjects])
 
 
 if (loading || selectedElement.length==0) {

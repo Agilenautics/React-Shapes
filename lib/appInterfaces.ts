@@ -26,7 +26,7 @@ interface Project {
  hasContainsFolder: Folder[]|any;
   hasContainsFile: File[] | any;
   children?: (Folder | File)[] | any;
-  userHas: Array<User>;
+  usersInProjects: Array<User>;
 }
 
 // info type interface

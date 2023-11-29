@@ -24,6 +24,7 @@ EventEmitter.defaultMaxListeners = 15;
 // ? Here we provide authentication details for the Neo4j server
 // * This server is currently for development only, we will need to change
 // * to another server before production
+//
 function getTokenFromHeader(header: string | undefined): string | null {
   if (header && header.startsWith("Bearer")) {
     return header.split(" ")[1]; // Return the token part

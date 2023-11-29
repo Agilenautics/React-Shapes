@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Types } from "../AdminPage/Projects/staticData/types";
 
@@ -26,6 +26,7 @@ import fileStore from "../TreeView/fileStore";
 import Discussion from "./Discussion";
 import { getTypeLabel } from "../AdminPage/Projects/staticData/basicFunctions";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import userStore from "../AdminPage/Users/userStore";
 
 export default function AddBacklogs({
   types,
@@ -36,6 +37,8 @@ export default function AddBacklogs({
 }: any) {
   const { addRow, updateRow, allStories, parents } = backlogStore();
   const { uid, idofUid, updateUid } = fileStore();
+  const userEmail = userStore((state)=>state.userEmail);
+
 
   // const {data,error,loading} = useQuery(getUidQuery);
 
@@ -50,6 +53,7 @@ export default function AddBacklogs({
   const router = useRouter();
 
   const projectId = router.query.projectId as string;
+  
 
   const handleSubmit = async (values: any) => {
     if (selectedElement != null) {
@@ -84,6 +88,7 @@ export default function AddBacklogs({
             const createFileResponse = await createFile(
               projectId,
               values.epic,
+              userEmail,
               createFileMutation,
               values,
               getProjectByUser
@@ -108,6 +113,7 @@ export default function AddBacklogs({
           createFile(
             "",
             values.epic,
+            userEmail,
             createFileMutation,
             getProjectByUser,
             values
@@ -122,7 +128,7 @@ export default function AddBacklogs({
           });
       } else {
         try {
-          await createNode(newNode, updateNode, values, addRow);
+          await createNode(newNode, updateNode, values,userEmail,addRow);
           const updateUidRespon = (await updateUidMethode(
             idofUid,
             updateUidMutation

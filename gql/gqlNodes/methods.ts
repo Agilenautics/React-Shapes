@@ -75,12 +75,12 @@ const checkUserDidComment = (message: string) => {
       create: [
         {
           node: {
-            message:null ,
-            userHas: {
+            message: null,
+            createdBy: {
               connect: {
                 where: {
                   node: {
-                    emailId:null ,
+                    emailId: null,
                   },
                 },
               },
@@ -97,9 +97,11 @@ async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   updateNode: any,
   data: any,
+  email: string,
   addRow: any
 ) {
   // const addRow = backlogStore(state=> state.addRow)
+  console.log("email",email)
   var nodes: Array<Node> = [];
 
   try {
@@ -112,6 +114,15 @@ async function createNode(
             uid: data.uid,
             draggable: true,
             flowchart: "flowchart",
+            createdBy: {
+              connect: {
+                where: {
+                  node: {
+                    emailId: email,
+                  },
+                },
+              },
+            },
             flowchartHas: {
               connect: {
                 where: {
@@ -123,6 +134,7 @@ async function createNode(
                 },
               },
             },
+
             hasdataNodedata: {
               create: {
                 node: {
@@ -152,6 +164,7 @@ async function createNode(
                 },
               },
             },
+
             haspositionPosition: {
               create: {
                 node: {
@@ -183,24 +196,24 @@ async function createNode(
               ],
             },
             // todo conditionally creating
-            hasComments: {
-              create: [
-                {
-                  node: {
-                    message: null,
-                    userHas: {
-                      connect: {
-                        where: {
-                          node: {
-                            emailId: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
+            // hasComments: {
+            //   create: [
+            //     {
+            //       node: {
+            //         message: null,
+            //         createdBy: {
+            //           connect: {
+            //             where: {
+            //               node: {
+            //                 emailId: email,
+            //               },
+            //             },
+            //           },
+            //         },
+            //       },
+            //     },
+            //   ],
+            // },
           },
         ],
       },
@@ -618,7 +631,7 @@ const updateTaskMethod = async (
               {
                 node: {
                   message: data.discussion,
-                  userHas: {
+                  createdBy: {
                     connect: {
                       where: {
                         node: {
