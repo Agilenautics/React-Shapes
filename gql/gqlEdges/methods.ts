@@ -36,106 +36,114 @@ async function getEdges(
 }
 
 //methode for creating edge
-const createFlowEdge = async (
-  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  newEdge: Edge,
-  id: string,
-  cahchQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
-) => {
-  try {
-    return await client.mutate({
-      mutation,
+const createFlowEdge = async (newEdge: any, id: string, email:string, updateEdges: any) => {
+  var edges: Array<Edge> = [];
+  await client
+    .mutate({
+      mutation: createEdgeMutation,
       variables: {
-        input: [
-          {
-            name: "newEdge",
-            selected: true,
-            source: newEdge.source,
-            sourceHandle: newEdge.sourceHandle,
-            target: newEdge.target,
-            targetHandle: newEdge.targetHandle,
-            flowchartHas: {
-              connect: {
-                where: {
-                  node: {
-                    hasFile: {
-                      id,
-                    },
-                  },
-                },
-              },
-            },
-            hasedgedataEdgedata: {
-              create: {
-                node: {
-                  bidirectional: newEdge.data.bidirectional,
-                  boxCSS: newEdge.data.boxCSS,
-                  label: newEdge.data.label,
-                  pathCSS: newEdge.data.pathCSS,
-                },
-              },
-            },
-            flownodeConnectedby: {
-              connect: {
-                where: {
-                  node: {
-                    id: newEdge.source,
-                  },
-                },
-              },
-            },
-            connectedtoFlownode: {
-              connect: {
-                where: {
-                  node: {
-                    id: newEdge.target,
-                  },
-                },
-              },
-            },
-          },
+        where: {
+          id,
+        },
+        update: {
+          hasFlowchart: {
+            update: {
+              node: {
+                hasEdges: [
+                  {
+                    create: [
+                      {
+                        node: {
+                          name: "newEdge",
+                          selected: true,
+                          source: newEdge.source,
+                          sourceHandle: newEdge.sourceHandle,
+                          target: newEdge.target,
+                          targetHandle: newEdge.targetHandle,
+                          hasedgedataEdgedata: {
+                            create: {
+                              node: {
+                                bidirectional: newEdge.data.bidirectional,
+                                boxCSS: newEdge.data.boxCSS,
+                                label: newEdge.data.label,
+                                pathCSS: newEdge.data.pathCSS,
+                              },
+                            },
+                          },
+                          "createdBy": {
+                            "connect": {
+                              "where": {
+                                "node": {
+                                  "emailId": email,
+                                }
+                              }
+                            }
+                          },
+                          flownodeConnectedby: {
+                            connect: {
+                              where: {
+                                node: {
+                                  id: newEdge.source,
+                                },
+                              },
+                            },
+                          },
+                          connectedtoFlownode: {
+                            connect: {
+                              where: {
+                                node: {
+                                  id: newEdge.target,
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    ],
+                  },   
         ],
       },
-      update: (
-        cache,
-        {
-          data: {
-            createFlowEdges: { flowEdges },
-          },
+    },
+  },
+
         }
-      ) => {
-        const { flowcharts } = cache.readQuery({
-          query: cahchQuery,
-          variables: {
-            where: {
-              hasFile: {
-                id,
-              },
-            },
-          },
-        });
-        const { hasEdges, ...flowchartData } = flowcharts[0];
-        const updatedEdges = [...hasEdges, ...flowEdges];
-        const to_be_update = { ...flowchartData, hasEdges: updatedEdges };
-        cache.writeQuery({
-          query: cahchQuery,
-          variables: {
-            where: {
-              hasFile: {
-                id,
-              },
-            },
-          },
-          data: {
-            flowcharts: [{ ...to_be_update }],
-          },
-        });
-      },
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+      // update: (
+      //   cache,
+      //   {
+      //     data: {
+      //       createFlowEdges: { flowEdges },
+      //     },
+      //   }
+      // ) => {
+      //   const { flowcharts } = cache.readQuery({
+      //     query: cahchQuery,
+      //     variables: {
+      //       where: {
+      //         hasFile: {
+      //           id,
+      //         },
+      //       },
+      //     },
+      //   });
+      //   const { hasEdges, ...flowchartData } = flowcharts[0];
+      //   const updatedEdges = [...hasEdges, ...flowEdges];
+      //   const to_be_update = { ...flowchartData, hasEdges: updatedEdges };
+      //   cache.writeQuery({
+      //     query: cahchQuery,
+      //     variables: {
+      //       where: {
+      //         hasFile: {
+      //           id,
+      //         },
+      //       },
+      //     },
+      //     data: {
+      //       flowcharts: [{ ...to_be_update }],
+      //     },
+      //   });
+       },
+  });
+  };
 
 //update Edge mutation
 

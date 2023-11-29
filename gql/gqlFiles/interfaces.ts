@@ -20,6 +20,7 @@ export interface Folder {
 }
 
 export interface Project {
+  usersInProjects: any;
   name: string;
   isOpen: boolean;
   id: string;
@@ -27,7 +28,7 @@ export interface Project {
   hasContainsFolder: Folder[];
   children: (Folder | File)[];
   __typename: "project";
-  userHas: File[];
+ // usersInProjects: File[];
   description: string;
 }
 

@@ -36,6 +36,7 @@ import {
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
 import { FetchResult } from "@apollo/client";
+import userStore from "../AdminPage/Users/userStore";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -64,8 +65,13 @@ function Flow() {
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
   const [nodeId, setNodeId] = useState([]);
+  const userEmail = userStore((state)=>state.userEmail);
+
+
 
   const dragged = useRef(false);
+  
+ 
 
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
@@ -334,3 +340,7 @@ function Flow() {
 }
 
 export default Flow;
+function setUserEmail(email: any) {
+  throw new Error("Function not implemented.");
+}
+

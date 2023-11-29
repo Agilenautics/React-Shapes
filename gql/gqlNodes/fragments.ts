@@ -21,7 +21,7 @@ export const Node_Fragment = gql`
     uid
     hasComments {
       message
-      userHas {
+      createdBy {
         emailId
       }
     }

@@ -43,7 +43,7 @@ export function findById(node: any, id: string): TreeModel.Node<any> | null {
  * @property children - An array of MyData objects.
  */
 export type MyData = {
-  userHas: any;
+  usersInProjects: any;
   id: string;
   isOpen: boolean;
   name: string;

@@ -34,12 +34,17 @@ module.exports = {
     messagingSenderId: "715694870988",
     appId: "1:715694870988:web:a79f88f5ecfd27b9004d69",
     measurementId: "G-JG4RFPR5TB",
-    // cY6q4ZLzKF0IFA-6_pLI-9UYib4cv2Ahbv7b4Mx6Dnk db password irfans acount
-    DB_URL:"neo4j+s://8416c941.databases.neo4j.io",
-    DB_PASSWORD: "cY6q4ZLzKF0IFA-6_pLI-9UYib4cv2Ahbv7b4Mx6Dnk",
-    USER_NAME: 'neo4j',
+
+    // USER_NAME: "neo4j",
+    // GRAPHQL_API_KEY:
+    //   "user:fp.bf3c20e1-856e-4104-bae4-3095c7bb791d:pexWqkFMreZeDucahp4RFw",
+    // DB_URL: "neo4j+s://77c4b64b.databases.neo4j.io",
+    // DB_PASSWORD: "Iu4am2zvXvKYSvhtm3aEPP-WKv5a96IrP4NIvcgGoPo",
+     DB_URL: "neo4j+s://4f4d3c33.databases.neo4j.io",
+    DB_PASSWORD: "FbXY8mAHCK3nYUgkSck8BLrejKyDSkz-cRjSpX1tsfE",
+    USER_NAME: "neo4j",
     GRAPHQL_API_KEY: "user:fp.bf3c20e1-856e-4104-bae4-3095c7bb791d:pexWqkFMreZeDucahp4RFw",
-    BASE_URL: "http://localhost:3000"
+    BASE_URL: "http://localhost:3000",
   },
   webpack: (config) => {
     config.experiments = { topLevelAwait: true, layers: true }

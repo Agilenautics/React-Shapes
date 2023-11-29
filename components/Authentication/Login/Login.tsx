@@ -41,11 +41,11 @@ const Login: React.FC = () => {
         // https://firebase.google.com/docs/reference/js/auth.user
         console.log("user", user);
         //router.push("/projects")
-        if (projectId !== null) {
+       // if (projectId !== null) {
           router.push(`/projects/${projectId}`);
-        } else {
-          router.push(`/projects/c6ad6eda-445e-4001-a3f7-5a1c136cf364`);
-        }
+        // } else {
+        //   router.push(`/projects/c6ad6eda-445e-4001-a3f7-5a1c136cf364`);
+        // }
 
         // ...
       } else {

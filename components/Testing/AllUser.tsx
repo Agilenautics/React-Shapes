@@ -49,7 +49,7 @@ export const ErrorMocks= ()=>{
               "id": "6144eaeb-633b-4a2a-8740-5176a7b81c8f",
               "name": "Software Development",
               "description": "sample software ",
-              "userHas": [
+              "usersInProjects": [
                 {
                   "emailId": "irfan123@gmail.com"
                 }]}]
