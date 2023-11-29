@@ -160,7 +160,7 @@ export const updateStoryMutation = gql`
           id
           message
           timeStamp
-          userHas {
+          createdBy {
             emailId
           }
         }

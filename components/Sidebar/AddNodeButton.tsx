@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import userStore from "../AdminPage/Users/userStore";
 import { MdOutlineAdd } from "react-icons/md";
 import {
   createNode,
@@ -29,10 +30,12 @@ function AddNodeButton() {
   const uid = fileStore((state) => state.uid);
   const idofUid = fileStore((state) => state.idofUid);
   const updateUid = fileStore((state) => state.updateUid);
-
+  const userEmail = userStore((state)=>state.userEmail);
+  
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
     setIsLoading(true);
+    console.log("email",userEmail);
     const data = {
       story: currentId,
       symbol,
@@ -47,6 +50,7 @@ function AddNodeButton() {
         newNode,
         updateNode,
         data,
+        userEmail,
         addRow
       );
       addNode(createNodeResponse?.data.createFlowNodes.flowNodes);
@@ -75,13 +79,7 @@ function AddNodeButton() {
       uid,
     };
     try {
-      const createBpmnResponse = await createNode(
-        newNode,
-        updateNode,
-        data,
-        addRow
-      );
-      addNode(createBpmnResponse?.data.createFlowNodes.flowNodes);
+      await createNode(newNode, updateNode, data,userEmail,addRow);
       const updateUidResponse = updateUidMethode(
         idofUid,
         updateUidMutation

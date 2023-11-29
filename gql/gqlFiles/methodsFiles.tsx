@@ -13,6 +13,7 @@ import { File, Folder } from "../../lib/appInterfaces";
 const createFile = async (
   mainId: string,
   folderId: string,
+  email:string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileData: any,
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -53,6 +54,15 @@ const createFile = async (
                 },
               },
             },
+          },
+          "createdBy": {
+            "connect": {
+              "where": {
+                "node": {
+                  "emailId": email,
+                }
+              }
+            }
           },
           hasFlowchart: {
             create: {
@@ -506,7 +516,7 @@ const updateStoryMethod = async (
               {
                 node: {
                   message: discussion,
-                  userHas: {
+                  createdBy: {
                     connect: {
                       where: {
                         node: {

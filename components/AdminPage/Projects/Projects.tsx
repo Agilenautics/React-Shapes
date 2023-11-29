@@ -271,7 +271,7 @@ function Projects() {
       {/* project card */}
       <div className=" grid grid-cols-3   gap-6 ">
         {allProjects.map((projects, index) => {
-          const { name, id, description, userHas, recentProject } = projects;
+          const { name, id, description, usersInProjects, recentProject } = projects;
           return (
             <div
               key={index}
@@ -307,9 +307,9 @@ function Projects() {
                 </div>
                 <div className="flex justify-end -space-x-[2%]">
                   {" "}
-                  {userHas &&
-                    userHas.length &&
-                    projectAssignedUser(userHas)}{" "}
+                  {usersInProjects &&
+                    usersInProjects.length &&
+                    projectAssignedUser(usersInProjects)}{" "}
                 </div>
               </div>
 
@@ -340,8 +340,8 @@ export default Projects;
 
 // userList
 
-export const projectAssignedUser = (userHas: any) => {
-  const user = userHas.map((value: User, index: string) => {
+export const projectAssignedUser = (usersInProjects: any) => {
+  const user = usersInProjects.map((value: User, index: string) => {
     const { emailId } = value;
     return (
       <div

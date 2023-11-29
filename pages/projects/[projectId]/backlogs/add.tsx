@@ -11,10 +11,10 @@ export default function Add() {
   const loading = fileStore((state) => state.loading);
   const [users, setUsers] = useState<any[]>([]);
   useEffect(() => {
-    if (backend.userHas && backend.userHas.length) {
-      setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas]);
+    if (backend.usersInProjects && backend.usersInProjects.length) {
+      setUsers([{ emailId: "Select User", value: "" }, ...backend.usersInProjects]);
     }
-  }, [backend.userHas]);
+  }, [backend.usersInProjects]);
 
 
   return loading ? (

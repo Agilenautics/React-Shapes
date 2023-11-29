@@ -44,6 +44,7 @@ async function createFolderInFolder(
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string,
+  email:string,
   newFolderData: Folder | any,
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) {
@@ -76,6 +77,15 @@ async function createFolderInMain(
                   },
                 },
               },
+            },
+            "createdBy": {
+              "connect": {
+                "where": {
+                  "node": {
+                    "emailId": email,
+                  }
+                }
+              }
             },
             hasSprint: {
               connect: {

@@ -35,7 +35,7 @@ export const getProjectByUser = gql`
           ...FileFragment
         }
       }
-      userHas {
+      usersInProjects {
         emailId
         userType
       }

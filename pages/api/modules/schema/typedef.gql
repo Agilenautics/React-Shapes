@@ -1,8 +1,4 @@
-import { gql } from "@apollo/client";
-// created by needs to be clarify in future
-//No of users in the project in the front end
-const typeDefs = gql`
-  # ! Interfaces only work on relationships!
+# ! Interfaces only work on relationships!
   type User {
     id: ID! @id
     timeStamp: DateTime! @timestamp
@@ -12,12 +8,12 @@ const typeDefs = gql`
         validate: [
           {
            when: [BEFORE],
-            operations: [UPDATE,DELETE],
+            operations: [READ,UPDATE,DELETE],
              where: { node: { emailId: "$jwt.email" } } }
         ]
       ) 
     
-         active: Boolean!
+    active: Boolean!
     userName: String
     userType: String
     hasComments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: IN)
@@ -53,16 +49,7 @@ const typeDefs = gql`
 
 
   #epic scheme
-  type Folder @authorization(
-    validate: [         
-                {
-        when: [AFTER]
-        operations: [UPDATE,DELETE]
-        where: { node: { createdBy: { emailId: "$jwt.email" } } }
-      }
-    ]
-  )
-    {
+  type Folder {
     id: ID! @id
     type: String!
     isOpen: Boolean!
@@ -79,16 +66,7 @@ const typeDefs = gql`
   }
 
   # story scheme
-  type File @authorization(
-    validate: [         
-                {
-        when: [AFTER]
-        operations: [UPDATE,DELETE]
-        where: { node: { createdBy: { emailId: "$jwt.email" } } }
-      }
-    ]
-  )
-    {
+  type File {
     id: ID! @id
     #parentId: ID! @id 
     timeStamp: DateTime! @timestamp
@@ -112,16 +90,7 @@ const typeDefs = gql`
   }
 
   #task scheme
-  type FlowNode @authorization(
-    validate: [         
-                {
-        when: [AFTER]
-        operations: [UPDATE,DELETE]
-        where: { node: { createdBy: { emailId: "$jwt.email" } } }
-      }
-    ]
-  )
-    {
+  type FlowNode {
     id: ID! @id
     timeStamp: DateTime! @timestamp
     draggable: Boolean!
@@ -137,8 +106,8 @@ const typeDefs = gql`
     hasInfo: Info @relationship(type: "HAS_INFO", direction: IN)
     hasComments: [Comment!]!
       @relationship(type: "HAS_FLOWNODES", direction: OUT)
-    data: NodeData @relationship(type: "HAS_NODE_DATA", direction: OUT)
-    position: Position
+    hasdataNodedata: NodeData @relationship(type: "HAS_NODE_DATA", direction: OUT)
+    haspositionPosition: Position
       @relationship(type: "HAS_POSITION", direction: OUT)
     connectedbyFlowedge: [FlowEdge!]!
       @relationship(type: "NODE_CONNECTED_BY", direction: OUT)
@@ -190,16 +159,7 @@ const typeDefs = gql`
       @relationship(type: "HAS_EDGE_DATA", direction: IN)
   }
 
-  type FlowEdge @authorization(
-    validate: [         
-                {
-        when: [AFTER]
-        operations: [UPDATE,DELETE]
-        where: { node: { createdBy: { emailId: "$jwt.email" } } }
-      }
-    ]
-  )
-    {
+  type FlowEdge {
     id: ID! @id
     name: String!
     timeStamp: DateTime! @timestamp
@@ -243,16 +203,7 @@ const typeDefs = gql`
     hasProjects: Project @relationship(type: "HAS_SPRINT", direction: OUT)
   }
 
-  type Comment @authorization(
-    validate: [         
-                {
-        when: [AFTER]
-        operations: [UPDATE,DELETE]
-        where: { node: { createdBy: { emailId: "$jwt.email" } } }
-      }
-    ]
-  )
-    {
+  type Comment {
     id: ID! @id
     message: String
     timeStamp: DateTime! @timestamp
@@ -276,6 +227,3 @@ const typeDefs = gql`
     timeStamp: DateTime! @timestamp
     flownodeHastask: FlowNode @relationship(type: "HAS_TASKS", direction: IN)
   }
-`;
-
-export default typeDefs;

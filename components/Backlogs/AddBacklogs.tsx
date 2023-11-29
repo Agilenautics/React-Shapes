@@ -28,6 +28,7 @@ import fileStore from "../TreeView/fileStore";
 import Discussion from "./Discussion";
 import { getTypeLabel } from "../AdminPage/Projects/staticData/basicFunctions";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import userStore from "../AdminPage/Users/userStore";
 
 export default function AddBacklogs({
   types,
@@ -38,7 +39,8 @@ export default function AddBacklogs({
 }: any) {
   const { addRow, updateRow, allStories, parents } = backlogStore();
   const { uid, idofUid, updateUid } = fileStore();
-  // const [type, setType] = useState<string>("");
+  const userEmail = userStore((state)=>state.userEmail);
+
 
   // const {data,error,loading} = useQuery(getUidQuery);
 
@@ -53,6 +55,7 @@ export default function AddBacklogs({
   const router = useRouter();
 
   const projectId = router.query.projectId as string;
+  
 
   const handleSubmit = async (values: any) => {
     const backToThePage = () => router.back();
@@ -104,6 +107,7 @@ export default function AddBacklogs({
             const createFileResponse = await createFile(
               projectId,
               values.epic,
+              userEmail,
               createFileMutation,
               values,
               getProjectByUser
@@ -128,6 +132,7 @@ export default function AddBacklogs({
           createFile(
             "",
             values.epic,
+            userEmail,
             createFileMutation,
             getProjectByUser,
             values
@@ -142,7 +147,7 @@ export default function AddBacklogs({
           });
       } else {
         try {
-          await createNode(newNode, updateNode, values, addRow);
+          await createNode(newNode, updateNode, values,userEmail,addRow);
           const updateUidRespon = (await updateUidMethode(
             idofUid,
             updateUidMutation
