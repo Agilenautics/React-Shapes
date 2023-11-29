@@ -70,6 +70,8 @@ function Flow() {
   const userEmail = userStore((state) => state.userEmail);
 
   const dragged = useRef(false);
+  
+ 
 
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
