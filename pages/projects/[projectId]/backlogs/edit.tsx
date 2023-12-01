@@ -18,8 +18,9 @@ export default function Edit() {
   
 
   useEffect(()=>{
-    const element = data.filter(e => e.id==elementId)
-    console.log(element,"ele");
+    const element = data.filter(e => e.id==elementId);
+    const gg = backend.children?.filter((values)=>values.id===elementId)
+    // console.log(element,"ele",gg);
     setSelectedElement(element)  
   },[data,elementId]) 
 

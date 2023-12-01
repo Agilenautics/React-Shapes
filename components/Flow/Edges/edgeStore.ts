@@ -10,6 +10,7 @@ export interface EdgeState {
   updateArrows: (id: string, bidirectional: boolean) => void;
   updateLabel: (id: string, newLabel: string) => void;
   deleteEdge: (edge: Edge) => void;
+  addNewEdge: (edge: Edge) => void;
 }
 
 const edgeStore = create<EdgeState>((set) => ({
@@ -48,9 +49,20 @@ const edgeStore = create<EdgeState>((set) => ({
       const edge = state.edges.filter((item) => item.id === id)[0];
       const to_be_updated = state.edges.filter((item) => item.id !== id);
       const updated_node = { ...edge, data: { ...edge.data, label: newLabel } };
-      console.log(newLabel)
+      console.log(newLabel);
       return { edges: [...to_be_updated, updated_node] };
     }),
+  addNewEdge: (newEdge: Edge) => {
+    set((state) => {
+      const edgedData = JSON.stringify(newEdge).replaceAll(
+        '"hasedgedataEdgedata":',
+        '"data":'
+      );
+      const updatedToData = JSON.parse(edgedData);
+      const to_be_updated = [...state.edges, updatedToData];
+      return { edges: to_be_updated };
+    });
+  },
 }));
 
 export default edgeStore;

@@ -33,8 +33,10 @@ import {
   updateEdgeBackend,
   updateEdgeMutation,
   getProjectByUser,
+  createEdgeMutation,
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
+import { FetchResult } from "@apollo/client";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -58,7 +60,12 @@ function Flow() {
   const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
   const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
-  const { edges: defaultEdges, updateEdges, deleteEdge } = edgeStore();
+  const {
+    edges: defaultEdges,
+    updateEdges,
+    deleteEdge,
+    addNewEdge,
+  } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
@@ -70,9 +77,9 @@ function Flow() {
     defaultShowConfirmation
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
-    edge.map((curEle: any) => {
+    edge.map(async (curEle: any) => {
+      await deleteEdgeBackend(curEle.id, curEle.data.label, allNodes, fileId);
       deleteEdge(curEle);
-      deleteEdgeBackend(curEle.id, curEle.data.label);
     });
   };
   const handleConfirm = useCallback(() => {
@@ -120,7 +127,7 @@ function Flow() {
         (value: any) => value.id === edgeId
       );
       newEdgeData.map((curEle) => {
-        updateEdgeBackend(updateEdgeMutation, curEle);
+        updateEdgeBackend(updateEdgeMutation, curEle,allNodes,fileId);
       });
     }
   }, [defaultEdges, edgeId]);
@@ -130,17 +137,25 @@ function Flow() {
       setEdges((eds) => {
         return applyEdgeChanges(changes, eds);
       }),
-    [setEdges, defaultEdges, updateEdges, onEdgeClick]
+    []
   );
 
   const onConnect = useCallback(
-    (newEdge: Connection) =>
-      setEdges((eds) => {
-        createFlowEdge(newEdge, fileId, updateEdges);
-        updateEdges(getEdges());
-        return addEdge(newEdge, eds);
-      }),
-    [setEdges, getEdges, updateEdges, currentFlowchart]
+    async (newEdge: Edge | any) => {
+      const response: FetchResult<any | undefined> | any = await createFlowEdge(
+        createEdgeMutation,
+        newEdge,
+        fileId,
+        allNodes
+      );
+      const {
+        data: {
+          createFlowEdges: { flowEdges },
+        },
+      } = response;
+      addNewEdge(flowEdges[0]);
+    },
+    [defaultEdges]
   );
 
   useEffect(() => {
@@ -245,6 +260,10 @@ function Flow() {
   //     deleteEdge(CurEle.id, CurEle.data.label)
   //   })
   // }
+  // const edgeUpdate = (e:any,edge:Connection)=>{
+  //   console.log(e,edge)
+
+  // }
 
   return (
     <>
@@ -255,6 +274,7 @@ function Flow() {
           nodesDraggable={true}
           proOptions={proOptions}
           panOnScroll
+          // onEdgeUpdate={(e,edgeData)=>edgeUpdate(e,edgeData)}
           defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
           nodes={defaultNodes}
           edges={defaultEdges}

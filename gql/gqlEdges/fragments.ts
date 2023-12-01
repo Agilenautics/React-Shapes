@@ -3,6 +3,7 @@ import { gql} from "@apollo/client";
 export const Edge_Fragment = gql`
   fragment EdgeFragment on FlowEdge {
     id
+    name
     source
     target
     sourceHandle

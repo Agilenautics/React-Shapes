@@ -10,6 +10,8 @@ import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import { updateNodesMutation } from "./mutations";
 import { allNodes } from "./queries";
+import TreeModel from "tree-model-improved";
+import { findById } from "../../components/TreeView/backend";
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -75,12 +77,12 @@ const checkUserDidComment = (message: string) => {
       create: [
         {
           node: {
-            message:null ,
+            message: null,
             userHas: {
               connect: {
                 where: {
                   node: {
-                    emailId:null ,
+                    emailId: null,
                   },
                 },
               },
@@ -312,6 +314,18 @@ async function deleteNodeBackend(
             flowcharts: [updatedFlowcharts],
           },
         });
+
+        const { projects } = cache.readQuery({
+          query: mainQuery,
+          variables: {
+            where: {
+              id: projectId,
+            },
+          },
+        });
+        const root = new TreeModel().parse(projects[0]);
+        const node =findById(root,fileId);
+        console.log(node,root,fileId)
       },
     });
   } catch (error) {

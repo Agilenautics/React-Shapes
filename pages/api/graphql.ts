@@ -5,6 +5,7 @@ import driver from "./dbConnection";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import typeDefs from "./typeDefs";
 import { NextApiRequest, NextApiResponse } from "next";
+import { GraphQLError } from "graphql";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
@@ -19,6 +20,10 @@ EventEmitter.defaultMaxListeners = 15;
 const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
+  formatError:(error:GraphQLError)=>{
+    console.log(error)
+    return error
+  },
   introspection: true,
   persistedQueries: false,
   plugins: [ApolloServerPluginLandingPageLocalDefault()],

@@ -7,6 +7,7 @@ import fileStore from "../../TreeView/fileStore";
 import edgeStore from "../Edges/edgeStore";
 import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import { useRouter } from "next/router";
 
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
@@ -25,6 +26,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const updateEdges = edgeStore((state) => state.updateEdges);
   const updateDescription = nodeStore((state) => state.updateDescription);
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
+
+  const router = useRouter();
+  const projectId = router.query.projectId as string;
 
   const label = data.label;
   const shapeCSS = nodeShapeMap[data.shape];
@@ -73,6 +77,12 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     updateBreadCrumbs(x, x.id, "new");
   };
 
+  const toDetails = (nodeId: string) => {
+    router.push({
+      pathname: `/projects/${projectId}/backlogs/edit/`,
+      query: { id: nodeId },
+    });
+  };
   return (
     <div>
       <div
@@ -146,7 +156,12 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             ) : (
               <div>
                 {flag ? null : (
-                  <p className="py-1 text-center text-[0.6rem]">{label}</p>
+                  <p
+                    onClick={() => toDetails(id)}
+                    className="cursor-pointer py-1 text-center text-[0.6rem] duration-300 hover:underline"
+                  >
+                    {label}
+                  </p>
                 )}
                 {data.hasLinkedTo.flag ? (
                   <div
@@ -155,7 +170,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                   >
                     <div className="text-xs"> {data.hasLinkedTo.label} </div>
                     <div>
-                      <BiArrowToRight className="h-4 w-4" />{" "}
+                      <BiArrowToRight className="h-4 w-4" />
                     </div>
                   </div>
                 ) : null}
@@ -302,7 +317,7 @@ function WelcomeNode({ data, id }) {
     </div>
   );
 }
-export  {
+export {
   defaultNode,
   BrightblueNode,
   blueNode,

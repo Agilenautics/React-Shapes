@@ -75,7 +75,7 @@ function ProjectBacklogs() {
       setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas]);
     }
     // if (backlogs.length == 0) {
-      updateBacklogsData(backend.children as any);
+    updateBacklogsData(backend.children as any);
     // }
   }, [backend.userHas]);
 
@@ -113,8 +113,6 @@ function ProjectBacklogs() {
   const getSprintName: any = (id: string) => {
     if (id == "" || id == null) return "-";
   };
-  
-  
 
   return loading ? (
     <div className="flex h-screen items-center justify-center">
@@ -159,7 +157,7 @@ function ProjectBacklogs() {
               </span>
             </div>
             {showTypeDropdown && (
-              <div className="absolute right-0 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-gray-100 shadow-lg ring-1 ring-black ring-opacity-5 hover:bg-gray-200 dark:bg-slate-600 dark:text-white z-50">
+              <div className="absolute right-0 z-50 mt-1 w-40 origin-top-right divide-y divide-gray-100 rounded-md bg-gray-100 shadow-lg ring-1 ring-black ring-opacity-5 hover:bg-gray-200 dark:bg-slate-600 dark:text-white">
                 <div className="py-1">
                   {types.map((type) => (
                     <label
@@ -173,12 +171,12 @@ function ProjectBacklogs() {
                         checked={selectedTypes.includes(type.value)}
                         onChange={() =>
                           setSelectedTypes((prevTypes) =>
-                          prevTypes.includes(type.value)
+                            prevTypes.includes(type.value)
                               ? prevTypes.filter((t) => t !== type.value)
-                               : [...prevTypes, type.value]
-                        )
+                              : [...prevTypes, type.value]
+                          )
                         }
-                                              />
+                      />
                     </label>
                   ))}
                 </div>
@@ -232,30 +230,14 @@ function ProjectBacklogs() {
           <table className="mr-4 w-full table-auto ">
             <thead className=" sticky top-0 z-10">
               <tr>
-                <th className="bg-gray-200 px-1 py-2">
-                  Id
-                </th>
-                <th className=" bg-gray-200 px-1 py-2">
-                  Type
-                </th>
-                <th className=" bg-gray-200 px-1 py-2">
-                  Name
-                </th>
-                <th className=" bg-gray-200 px-1 py-2">
-                  Description
-                </th>
-                <th className="bg-gray-200 px-1 py-2">
-                  Epic
-                </th>
-                <th className=" bg-gray-200 px-1 py-2">
-                  Status
-                </th>
-                <th className=" bg-gray-200 px-1 py-2">
-                  Sprint
-                </th>
-                <th className="bg-gray-200 px-1 py-2">
-                  User
-                </th>
+                <th className="bg-gray-200 px-1 py-2">Id</th>
+                <th className=" bg-gray-200 px-1 py-2">Type</th>
+                <th className=" bg-gray-200 px-1 py-2">Name</th>
+                <th className=" bg-gray-200 px-1 py-2">Description</th>
+                <th className="bg-gray-200 px-1 py-2">Epic</th>
+                <th className=" bg-gray-200 px-1 py-2">Status</th>
+                <th className=" bg-gray-200 px-1 py-2">Sprint</th>
+                <th className="bg-gray-200 px-1 py-2">User</th>
               </tr>
             </thead>
             <tbody>

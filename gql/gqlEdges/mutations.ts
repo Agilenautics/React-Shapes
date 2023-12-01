@@ -5,16 +5,10 @@ import { Edge_Fragment } from "./fragments";
 
 export const createEdgeMutation = gql`
   ${Edge_Fragment}
-  mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
-    updateFiles(where: $where, update: $update) {
-      files {
-        name
-        hasFlowchart {
-          name
-          hasEdges {
-            ...EdgeFragment
-          }
-        }
+  mutation CreateFlowEdges($input: [FlowEdgeCreateInput!]!) {
+    createFlowEdges(input: $input) {
+      flowEdges {
+        ...EdgeFragment
       }
     }
   }

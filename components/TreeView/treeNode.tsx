@@ -7,19 +7,13 @@ import { AiOutlineFile, AiFillFolder, AiFillFolderOpen } from "react-icons/ai";
 import fileStore from "./fileStore";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import edgeStore from "../Flow/Edges/edgeStore";
-import {
-  allNodes,
-  getNodes,
-  allEdges,
-  getEdges,
-  getFileByNode,
-} from "../../gql";
-import { gql } from "graphql-tag";
+import { allNodes, getNodes, getFileByNode } from "../../gql";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import { get_user_method, GET_USER } from "../../gql";
 import LoadingIcon from "../LoadingIcon";
 import useBackend from "./backend";
+import { useRouter } from "next/router";
 
 // LoadingIcon component
 import classNames from "classnames";
@@ -136,7 +130,6 @@ export const TreeNode = ({
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
-  const delete_item = fileStore((state) => state.delete_item);
   const updateNodes = nodeStore((state) => state.updateNodes);
   const updateEdges = edgeStore((state) => state.updateEdges);
   const updateCurrentFlowchart = fileStore(
@@ -144,37 +137,39 @@ export const TreeNode = ({
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState([]);
   const [accessLevel, setAccessLevel] = useState("");
   const { onDelete } = useBackend();
-  
+  const router = useRouter();
+  const projectId = router.query.projectId;
+
   const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         get_user_method(user.email, GET_USER).then((res: any) => {
-          // setUser(res[0].userType);
           setAccessLevel(res[0].userType);
         });
       } else {
-        // setUser([]);
         setAccessLevel("");
       }
     });
   };
-
-  // console.log(accessLevel);
 
   useEffect(() => {
     verifyAuthToken();
   }, []);
 
   if (state.isSelected) {
-    // console.log(state.isSelected)
     updateCurrentFlowchart(name, id);
     if (data.type === "file") {
       updateBreadCrumbs(data, id, "new");
     }
   }
+  const toDetailPage = (selectedId: string) => {
+    router.push({
+      pathname: `/projects/${projectId}/backlogs/edit/`,
+      query: { id: selectedId },
+    });
+  };
 
   function loadNewFlow(
     handlers: NodeRendererProps<MyData> & {
@@ -212,16 +207,7 @@ export const TreeNode = ({
     );
   }
 
-  function handleRename() {
-    handlers.edit();
-  }
-
-  function handleDelete() {
-    delete_item(id);
-  }
-    
   return (
-    // <> {name} </>
     <div
       ref={innerRef}
       style={styles.row}
@@ -239,16 +225,16 @@ export const TreeNode = ({
         <i>
           <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
-         {state.isEditing ? (
+        {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
         ) : (
           <span className="group flex flex-row font-sans text-sm dark:text-white">
-            {name}{" "}
+            {name}
             {state.isSelected &&
               !state.isEditing &&
               accessLevel.toLowerCase() !== "user" && (
                 <div className="flex flex-row pl-2">
-                   <button className="text-gray-900" onClick={handlers.edit}>
+                  <button className="text-gray-900" onClick={handlers.edit}>
                     <FiEdit2 size={20} className="dark:text-white" />
                   </button>
                   <button
@@ -256,8 +242,6 @@ export const TreeNode = ({
                       const confirmation = window.confirm(
                         "Are you sure you want to delete?"
                       );
-                      // console.log(confirmation)
-
                       if (confirmation) {
                         onDelete(id);
                       }
@@ -265,13 +249,19 @@ export const TreeNode = ({
                     className="ml-2"
                   >
                     <FiDelete size={20} className="dark:text-white" />
-                  </button> 
-                                  </div> 
-               )} 
-           </span>
+                  </button>
+                  <button
+                    onClick={() => toDetailPage(id)}
+                    className="ml-5 cursor-pointer"
+                  >
+                    see
+                  </button>
+                </div>
+              )}
+          </span>
         )}
-        </div>
-    </div> 
+      </div>
+    </div>
   );
 };
 
@@ -287,16 +277,12 @@ export const TreeNode2 = ({
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
-  ////console.log(data);
   var selectedNodeId: string;
-
   if (state.isSelected) {
     selectedNodeId = data.id!;
-    // console.log("S:", selectedNodeId);
   }
-  
 
-  const {fileId} = nodeStore()
+  const { fileId } = nodeStore();
   const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);

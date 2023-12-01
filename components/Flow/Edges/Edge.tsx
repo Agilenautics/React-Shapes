@@ -107,7 +107,7 @@ export default function CustomEdge({
         <path
           d={`M0,0 L0,${markerSize} L${markerSize},${markerSize / 2} z`}
           className="edge-marker"
-        />{" "}
+        />
         {/* Smaller arrow */}
       </marker>
       {/* Edge marker at the start */}
@@ -155,7 +155,6 @@ export default function CustomEdge({
               className={`rounded-lg !bg-white p-0.5 text-sm dark:!bg-neutral-900 ${data.boxCSS}`}
               onDoubleClick={() => {
                 setEditing(true);
-                
               }}
             >
               {editing ? (

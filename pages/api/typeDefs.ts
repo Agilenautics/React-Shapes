@@ -148,6 +148,7 @@ const typeDefs = gql`
     targetHandle: String!
     selected: Boolean!
     # * Connections below
+    flowchartHas:Flowchart @relationship(type:"HAS_FLOWEDGES", direction:IN)
     flownodeConnectedby: FlowNode
       @relationship(type: "NODE_CONNECTED_BY", direction: IN)
     connectedtoFlownode: FlowNode

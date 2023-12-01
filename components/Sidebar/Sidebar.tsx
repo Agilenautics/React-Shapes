@@ -64,7 +64,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
   const [projectData, setProjectData] = useState<Project[]>([]);
 
   const notify = () => toast.success("Project Created...");
- 
+
   const {
     updateInitData,
     add_file,
@@ -146,7 +146,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
   //   else
   //   {
   //     setProjectsFlag(!projectsFlag);
-    
+
   // }}
   useEffect(() => {
     if (
@@ -154,13 +154,11 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
       router.asPath !== "/projects/06c94e7b-2a73-41b1-9683-61662706823a/sprints"
     ) {
       getProjectId(projectId);
-      
-
     }
     fetchRecentProject(allProjects);
     verificationToken();
   }, [allProjects]);
-    
+
   // }, [projectId, allProjects]);   Irfan
 
   const handleUidUpdates = async () => {
@@ -187,7 +185,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
       );
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
-      };
+  };
 
   const handleAddFile = async () => {
     let data = {
@@ -200,7 +198,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     try {
       const root = new TreeModel().parse(initData);
       const getData = findById(root, selectedFolderId);
-      const type = getData?.model.type||"";
+      const type = getData?.model.type || "";
       switch (type) {
         case "file":
           const getParent = getData?.parent.model;
@@ -264,9 +262,6 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
       console.log(error, "while creating file in main in bussiness plan");
     }
   };
-
-
-  
 
   return (
     <div
@@ -399,7 +394,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
           </div>
 
           <div
-            onClick={()=>setInsightsOpen(!insightsOpen)}
+            onClick={() => setInsightsOpen(!insightsOpen)}
             className="flex cursor-pointer select-none items-center justify-between p-1 px-3 duration-100"
           >
             <span>
@@ -411,10 +406,11 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               }`}
               id="clickable"
             />
-           { !insightsOpen && projectId.length<=0 && <Tooltip anchorSelect="#clickable">
+            {!insightsOpen && projectId.length <= 0 && (
+              <Tooltip anchorSelect="#clickable">
                 <button>Please Select Project</button>
               </Tooltip>
-            }
+            )}
           </div>
 
           {/* insights */}
@@ -433,14 +429,13 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                       <span> Business Process</span>
                     </a>
                   </Link>
-
-                  </div>
+                </div>
 
                 {router.asPath ==
-                  "/projects/" + projectId + "/business-process"&&(
+                  "/projects/" + projectId + "/business-process" && (
                   <div>
-                    <div className=" sticky top-0 grid grid-cols-2 gap-2 bg-white  p-1  text-white  "> 
-                       <button
+                    <div className=" sticky top-0 grid grid-cols-2 gap-2 bg-white  p-1  text-white  ">
+                      <button
                         type="button"
                         className=" flex items-center justify-center gap-1 rounded bg-sky-500 p-1 duration-300 hover:bg-sky-600"
                         onClick={handleAddFolder}
