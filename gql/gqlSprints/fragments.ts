@@ -33,7 +33,7 @@ export const TaskSprint_Fragment = gql`
     hasInfo {
       ...InfoFragment
     }
-    hasdataNodedata {
+    data {
       label
       description
     }

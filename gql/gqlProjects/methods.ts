@@ -289,10 +289,10 @@ const clearRecycleBin = async (
                     hasNodes: [
                       {
                         delete: {
-                          haspositionPosition: {
+                          position: {
                             delete: {},
                           },
-                          hasdataNodedata: {},
+                          data: {},
                         },
                       },
                     ],
@@ -319,8 +319,8 @@ const clearRecycleBin = async (
                           hasNodes: [
                             {
                               delete: {
-                                haspositionPosition: {},
-                                hasdataNodedata: {},
+                                position: {},
+                                data: {},
                               },
                             },
                           ],
@@ -340,8 +340,8 @@ const clearRecycleBin = async (
                                 hasNodes: [
                                   {
                                     delete: {
-                                      hasdataNodedata: {},
-                                      haspositionPosition: {},
+                                      data: {},
+                                      position: {},
                                     },
                                   },
                                 ],

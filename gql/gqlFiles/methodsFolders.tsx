@@ -149,13 +149,13 @@ async function deleteFolderBackend(
                     hasNodes: [
                       {
                         delete: {
-                          hasdataNodedata: {
+                          data: {
                             delete: {
                               hasLinkedTo: {},
                               hasLinkedBy: {},
                             },
                           },
-                          haspositionPosition: {},
+                          position: {},
                         },
                       },
                     ],

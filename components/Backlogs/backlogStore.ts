@@ -80,7 +80,7 @@ const backlogStore = create<BacklogState>((set) => ({
             }
             temproary.push({
               ...j.hasInfo,
-              ...j.hasdataNodedata,
+              ...j.data,
               hasSprint: j.hasSprint,
               id: j.id,
               type: j.type,

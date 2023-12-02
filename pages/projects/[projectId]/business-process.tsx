@@ -9,17 +9,19 @@ import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { GET_USER, getUserByEmail } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
-
-
-
+import fileStore from "../../../components/TreeView/fileStore";
+import backlogStore from "../../../components/Backlogs/backlogStore";
 
 const BusinessPlan = () => {
-  const {userEmail} = userStore()
+  const { userEmail } = userStore();
   const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject)
+  const updateRecycleBinProject = projectStore(
+    (state) => state.updateRecycleBinProject
+  );
   const updateUserType = userStore((state) => state.updateUserType);
   const updateLoginUser = userStore((state) => state.updateLoginUser);
-
+  const { data } = fileStore();
+  const {updateBacklogsData} = backlogStore()
 
   const getProjects = async (email: string) => {
     try {
@@ -43,7 +45,12 @@ const BusinessPlan = () => {
     // setIsButtonDisabled(userType.toLowerCase() === "user");
     // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
   }, [userEmail]);
-  
+
+  useEffect(()=>{
+    updateBacklogsData(data.children as any)
+  },[])
+
+
   return (
     <div>
       <ReactFlowProvider>

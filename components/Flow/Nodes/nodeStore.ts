@@ -74,8 +74,8 @@ const nodeStore = create<NodeState>((set) => ({
   addNode: (newNode) =>
     set((state) => {
       const to_be_updated = JSON.stringify(newNode)
-        .replaceAll('"hasdataNodedata":', '"data":')
-        .replaceAll('"haspositionPosition":', '"position":');
+        // .replaceAll('"data":', '"data":')
+        // .replaceAll('"position":', '"position":');
       const updatedNode = JSON.parse(to_be_updated);
       return {
         nodes: [...state.nodes, ...updatedNode],
@@ -197,8 +197,8 @@ const nodeStore = create<NodeState>((set) => ({
 
     const { data } = await getFileByNode(id, getNodeQuery);
     const nodes = JSON.stringify(data.files[0].hasFlowchart.hasNodes)
-      .replaceAll('"hasdataNodedata":', '"data":')
-      .replaceAll('"haspositionPosition":', '"position":');
+      .replaceAll('"data":', '"data":')
+      .replaceAll('"position":', '"position":');
     const nodesData = JSON.parse(nodes);
     const new_node = node_to_be[0];
     //add the saved data to the node to be replaced

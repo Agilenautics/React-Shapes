@@ -85,8 +85,8 @@ const typeDefs = gql`
     hasInfo: Info @relationship(type: "HAS_INFO", direction: IN)
     hasComments: [Comment!]!
       @relationship(type: "HAS_FLOWNODES", direction: OUT)
-    hasdataNodedata: NodeData @relationship(type: "HAS_NODE_DATA", direction: OUT)
-    haspositionPosition: Position
+    data: NodeData @relationship(type: "HAS_NODE_DATA", direction: OUT)
+    position: Position
       @relationship(type: "HAS_POSITION", direction: OUT)
     connectedbyFlowedge: [FlowEdge!]!
       @relationship(type: "NODE_CONNECTED_BY", direction: OUT)

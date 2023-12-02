@@ -14,6 +14,7 @@ import { get_user_method, GET_USER } from "../../gql";
 import LoadingIcon from "../LoadingIcon";
 import useBackend from "./backend";
 import { useRouter } from "next/router";
+import { FaAngleRight } from "react-icons/fa6";
 
 // LoadingIcon component
 import classNames from "classnames";
@@ -252,9 +253,9 @@ export const TreeNode = ({
                   </button>
                   <button
                     onClick={() => toDetailPage(id)}
-                    className="ml-5 cursor-pointer"
+                    className="ml-5 cursor-pointer hover:text-black hover:scale-110"
                   >
-                    see
+                   <FaAngleRight />
                   </button>
                 </div>
               )}

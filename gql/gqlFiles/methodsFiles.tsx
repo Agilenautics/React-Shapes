@@ -179,13 +179,13 @@ async function deleteFileBackend(
               hasNodes: [
                 {
                   delete: {
-                    hasdataNodedata: {
+                    data: {
                       delete: {
                         hasLinkedTo: {},
                         hasLinkedBy: {},
                       },
                     },
-                    haspositionPosition: {},
+                    position: {},
                   },
                 },
               ],

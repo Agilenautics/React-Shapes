@@ -16,7 +16,6 @@ export default function Add() {
     }
   }, [backend.userHas]);
 
-  console.log(users);
 
   return loading ? (
     <div className="flex h-screen items-center justify-center">

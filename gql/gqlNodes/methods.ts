@@ -29,8 +29,8 @@ async function findNode(
     .then((result) => {
       const nodes1 = JSON.stringify(result.data.flowNodes);
       const nodes2 = nodes1
-        .replaceAll('"hasdataNodedata":', '"data":')
-        .replaceAll('"haspositionPosition":', '"position":');
+        // .replaceAll('"data":', '"data":')
+        // .replaceAll('"position":', '"position":');
       // @ts-ignore
       nodes = JSON.parse(nodes2);
     });
@@ -61,8 +61,8 @@ async function getNodes(
       const edge2 = edge1.replaceAll('"hasedgedataEdgedata":', '"data":');
       edges = JSON.parse(edge2);
       const nodes2 = nodes1
-        .replaceAll('"hasdataNodedata":', '"data":')
-        .replaceAll('"haspositionPosition":', '"position":');
+        .replaceAll('"data":', '"data":')
+        .replaceAll('"position":', '"position":');
       //@ts-ignore
       nodes = JSON.parse(nodes2);
     });
@@ -125,7 +125,7 @@ async function createNode(
                 },
               },
             },
-            hasdataNodedata: {
+            data: {
               create: {
                 node: {
                   label: data.name || data.label,
@@ -154,7 +154,7 @@ async function createNode(
                 },
               },
             },
-            haspositionPosition: {
+            position: {
               create: {
                 node: {
                   x: -50,
@@ -264,13 +264,13 @@ async function deleteNodeBackend(
           id: nodeID,
         },
         delete: {
-          hasdataNodedata: {
+          data: {
             delete: {
               hasLinkedTo: {},
               hasLinkedBy: {},
             },
           },
-          haspositionPosition: {},
+          position: {},
           connectedbyFlowedge: {
             delete: {
               hasedgedataEdgedata: {},
@@ -378,7 +378,7 @@ const updatePosition = async (
           if (nodeData.id === node.id) {
             return {
               ...nodeData,
-              haspositionPosition: positions[0],
+              position: positions[0],
             };
           }
           return {
@@ -544,8 +544,8 @@ const updateNodeData = async (
         });
         const { hasNodes, ...flowchartData } = flowcharts[0];
         const getNode = hasNodes.find((node: Node) => node.id === nodeData.id);
-        const { hasdataNodedata } = getNode;
-        const { hasLinkedBy } = hasdataNodedata;
+        const { data } = getNode;
+        const { hasLinkedBy } = data;
         const { hasLinkedTo, ...hasNodeData } = updateNodeData.nodeData[0];
         const updatedHasNodeData = { ...hasNodeData, hasLinkedBy, hasLinkedTo };
 
@@ -553,7 +553,7 @@ const updateNodeData = async (
           if (node.id === nodeData.id) {
             return {
               ...node,
-              hasdataNodedata: {
+              data: {
                 ...updatedHasNodeData,
               },
             };
@@ -607,7 +607,7 @@ const updateTaskMethod = async (
           },
         },
 
-        hasdataNodedata: {
+        data: {
           update: {
             node: {
               label: data.name,

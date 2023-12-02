@@ -41,8 +41,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     const nodes = x.hasFlowchart.hasNodes;
     console.log(nodes);
     const nodeData = JSON.stringify(nodes)
-      .replaceAll('"hasdataNodedata":', '"data":')
-      .replaceAll('"haspositionPosition":', '"position":');
+      // .replaceAll('"data":', '"data":')
+      // .replaceAll('"position":', '"position":');
     // @ts-ignore
     const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(
@@ -62,8 +62,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     // @ts-ignore
     const nodes = x.hasFlowchart.hasNodes;
     const nodeData = JSON.stringify(nodes)
-      .replaceAll('"hasdataNodedata":', '"data":')
-      .replaceAll('"haspositionPosition":', '"position":');
+      .replaceAll('"data":', '"data":')
+      // .replaceAll('"position":', '"position":');
     // @ts-ignore
     const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(

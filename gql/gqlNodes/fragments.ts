@@ -32,7 +32,7 @@ export const Node_Fragment = gql`
     hasInfo {
       ...InfoFragment
     }
-    hasdataNodedata {
+    data {
       label
       shape
       description
@@ -49,7 +49,7 @@ export const Node_Fragment = gql`
         flag
       }
     }
-    haspositionPosition {
+    position {
       name
       x
       y

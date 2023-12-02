@@ -88,7 +88,7 @@ export const updateTasksMutation = gql`
         hasSprint {
           name
         }
-        hasdataNodedata {
+        data {
           label
           description
         }

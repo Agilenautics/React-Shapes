@@ -163,7 +163,7 @@ export default function AddBacklogs({
           epic: selectedElement ? selectedElement.parent.id : projectId,
           story:
             selectedElement && selectedElement.type !== "file"
-              ? selectedElement.story.id
+              ? selectedElement.story?.id
               : "",
         }}
         validationSchema={validationSchema}

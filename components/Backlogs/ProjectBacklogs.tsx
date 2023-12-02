@@ -103,10 +103,9 @@ function ProjectBacklogs() {
   );
 
   const openFormWithFilledData = (element: any) => {
-    setSelectedElement(element);
     router.push({
       pathname: `/projects/${projectId}/backlogs/edit/`,
-      query: { id: element.id },
+      query: {id:element.id },
     });
   };
 

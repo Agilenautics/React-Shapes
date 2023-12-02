@@ -218,10 +218,10 @@ function ProjectSprints() {
                             {getTypeLabel(item.type).type}
                           </td>
                           <td className="rounded-lg border px-1 py-2 text-center">
-                            {item.hasdataNodedata.label}
+                            {item.data.label}
                           </td>
                           <td className="description-cell w-[400px] break-all rounded-lg border px-1 py-2 text-center">
-                            {item.hasdataNodedata.description}
+                            {item.data.description}
                           </td>
                           <td className="rounded-lg border px-1 py-2 text-center">
                             {item.hasInfo.status}

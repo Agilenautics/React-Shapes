@@ -125,7 +125,7 @@ function Editing({
     const { data } = await getFileByNode(linkNodeId, getFile);
 
     updateLinkedTo(linkNodeId, {
-      label: linkNodes.nodes[key].hasdataNodedata.label,
+      label: linkNodes.nodes[key].data.label,
       flag: true,
       id,
       fileId: linkNodes.fileID,
@@ -318,7 +318,7 @@ function Editing({
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600
                                dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500"
                           >
-                            {linkNodes.nodes[key].hasdataNodedata.label}
+                            {linkNodes.nodes[key].data.label}
                           </button>
                         ))
                       }

@@ -55,7 +55,7 @@ export default function SprintBoard(data: any) {
                       className="bg-slate-100 border-box hover:shadow-lg p-2 rounded cursor-pointer transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105"
                       draggable="true"
                     >
-                      <div className="font-bold"> {item.name || item.hasdataNodedata.label}</div>
+                      <div className="font-bold"> {item.name || item.data.label}</div>
                       {/* @ts-ignore */}
                       <div>{getTypeLabel(item.type).type}</div>
 
