@@ -1,4 +1,20 @@
 /** @type {import('next').NextConfig} */
+
+
+// next.config.js
+
+const { withTranslation } = require('next-i18next');
+
+module.exports = withTranslation({
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en","ar","fr"]
+  }
+});
+
+
+
+
 // const nextConfig = {
 //   reactStrictMode: true,
 //   async rewrites() {
