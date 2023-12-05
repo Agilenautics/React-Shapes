@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-// @ts-ignore
-export default function ClientOnly({ children, ...delegated }) {
+import React,{ useEffect, useState } from "react";
+export default function ClientOnly({ children, ...delegated }: any) {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
-  },[]);
+  }, []);
 
   if (!hasMounted) {
     return null;

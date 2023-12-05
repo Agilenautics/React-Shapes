@@ -1,4 +1,4 @@
-export const lineColors = {
+export const lineColors:any = {
     "fill-node-purple": {
       "50": "#EEEEFF",
       "100": "#ACA9F1",

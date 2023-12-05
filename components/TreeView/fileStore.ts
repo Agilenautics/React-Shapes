@@ -2,18 +2,8 @@ import { create } from "zustand";
 // @ts-ignore
 import TreeModel from "tree-model-improved";
 import { MyData, findById } from "./backend";
-import {
-  createFolderInMain,
-  newFolderInMain,
-  createFolderInFolder,
-  newFolderInFolder,
-  createFileInFolder,
-  newFileInFolder,
-  createFileInMain,
-  newFileInMain,
-  Folder,
-} from "./gqlFiles";
-
+import { Folder } from "../../gql";
+import { File } from "../../lib/appInterfaces";
 
 function searchTree(element: any, matchingTitle: any): any {
   if (element.id == matchingTitle) {
@@ -33,7 +23,7 @@ interface files {
   data: MyData;
   updateInitData: (data: MyData) => void;
   linkNodeId: string;
-  idofUid: string,
+  idofUid: string;
   updateLinkNodeId: (nodeId: string) => void;
   Id: string;
   name: string;
@@ -48,7 +38,7 @@ interface files {
   find_file: (id: string) => MyData;
   loading: boolean;
   setLoading: (load: boolean) => void;
-  uid: number
+  uid: number;
   updateUid: (uid: Array<any>) => void;
 }
 const fileStore = create<files>((set) => ({
@@ -57,88 +47,138 @@ const fileStore = create<files>((set) => ({
   uid: 0,
   updateInitData: (data: MyData) =>
     set((state) => {
-      return { data }
+      return { data };
     }),
   linkNodeId: "",
   // Id: "",
   currentFlowchart: "",
   updateCurrentFlowchart: (currentFlowchart, Id) =>
     set((state) => {
-      let root = new TreeModel().parse(state.data);
-      let node = findById(root, Id);
+      // let root = new TreeModel().parse(state.data);
+      // let node = findById(root, Id);
       // if (node?.model.type === "folder") {
       //   return { currentFlowchart, Id }
       // } else {
       //   return { currentFlowchart, Id: "" }
       // }
-      return {currentFlowchart,Id}
+      return { currentFlowchart, Id };
     }),
   linkNodes: { nodes: {}, fileID: "" },
   updateLinkNodes: (nodes, id) =>
     set((state) => {
-      console.log(id, "linknode")
+      console.log(id, "linknode");
       return { linkNodes: { nodes: nodes, fileID: id } };
     }),
   updateLinkNodeId(nodeId) {
     set((state) => {
-      return { linkNodeId: nodeId }
-    })
+      return { linkNodeId: nodeId };
+    });
   },
-  add_file: (newFile: any) => {
+  add_file: (newFile: File) => {
     set((state) => {
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
       let node = findById(root, parentId);
-      if (node?.model.type === "folder") {
-
-        const getFolder = node.model;
-        const getChildren = node.model?.children;
-        const updated_children = [newFile, ...getChildren];
-
-        const updatedFolder = { ...getFolder, children: updated_children, hasFile: [newFile, ...getFolder.hasFile] }
-        const updatedState = state.data.children?.map((values) => {
-          if (values.id === parentId) {
+      const children = root.model?.children;
+      //updating the main
+      function getUpdatedMain(selectedFolder: Folder) {
+        //after getting folder data iam updating children of the main on that particular folder
+        const updated_children = children.map((folder: Folder) => {
+          if (folder.id === selectedFolder.id) {
             return {
-              ...updatedFolder
-            }
+              ...folder,
+              children: [...folder.children, newFile],
+              hasFile: [...folder.hasFile, newFile],
+            };
           }
-          return values
-        })
+          return {
+            ...folder,
+          };
+        });
+        // updating the folder array
         const updatedHasFolder = state.data.hasContainsFolder.map((values) => {
-          if (values.id === parentId) {
+          if (values.id === selectedFolder.id) {
             return {
-              ...updatedFolder
-            }
+              ...values,
+              children: [...values.children, newFile],
+              hasFile: [...values.hasFile, newFile],
+            };
           }
-          return values
-        })
-        const updated_main = { ...state.data, children: updatedState, hasContainsFolder: updatedHasFolder }
-        return { data: updated_main }
-      } else {
-        const getChildren = root.model?.children;
-        const updated_data = [...getChildren, newFile]
-        const updated_main = { ...state.data, children: updated_data }
-        return { data: updated_main }
+          return values;
+        });
+        // finally updating the main or project 
+        const updated_main = {
+          ...state.data,
+          children: updated_children,
+          hasContainsFolder: updatedHasFolder,
+        };
+        return updated_main;
       }
 
-    })
-  }
-  ,
+      function checkingParentisFileOrFolderOrProject(parentFolder: Folder) {
+        //checkeng passing data type if its folder
+        if (parentFolder.type === "folder") {
+          //here if its folder iam passing selected folder
+          return getUpdatedMain(parentFolder);
+        } else {
+          //if i selected file in project or main it will add file inside project
+          const updated_data = [...children, newFile];
+          const updated_main = {
+            ...state.data,
+            children: updated_data,
+            hasContainFiles: [...state.data.hasContainsFile, newFile],
+          };
+          return updated_main;
+        }
+      }
 
+      //if we select the folder
+      if (node?.model.type === "folder") {
+        //then we are getting that particular folder
+        const getFolder = node?.model;
+        //and returning or updating data by using checkingParent is File Or Folder Or Project
+        // then iam passing selected folder as myData interface
+        return { data: checkingParentisFileOrFolderOrProject(getFolder) as MyData };
+         // if i select the file in folder or in project
+      } else if (node?.model.type === "file") {
+        //then iam getting parent of that file
+        let getParent = node?.parent.model;
+        //finding that parent exist or not inside the parent 
+        // if its not then iam passing project to add file inside the the project
+        const findParent =
+          children?.find((folder: Folder) => folder.id === getParent.id) ||
+          getParent;
+        return { data: checkingParentisFileOrFolderOrProject(findParent) as MyData };
+      } else {
+        //file adding inside the main
+        const updated_data = [...children, newFile];
+        const updated_main = {
+          ...state.data,
+          children: updated_data,
+          hasContainFiles: [...state.data.hasContainsFile, newFile],
+        };
+        return { data: updated_main };
+      }
+    });
+  },
   add_folder: (newFolder: Folder) =>
     set((state) => {
       const updatedData = {
         ...newFolder,
         children: [],
         hasFile: [],
-        hasFolder: []
-      }
+        hasFolder: [],
+      };
       let root = new TreeModel().parse(state.data);
       const getChildren = root.model?.children;
       const getFolder = root.model?.hasContainsFolder;
       const to_be_update = [updatedData, ...getChildren];
       const updatedFolders = [...getFolder, updatedData];
-      const updatedState = { ...state.data, children: to_be_update, hasContainsFolder: updatedFolders }
+      const updatedState = {
+        ...state.data,
+        children: to_be_update,
+        hasContainsFolder: updatedFolders,
+      };
       return { data: updatedState };
     }),
 
@@ -148,34 +188,57 @@ const fileStore = create<files>((set) => ({
       const root = new TreeModel().parse(state.data);
       const node = findById(root, id);
       if (node?.model.type === "folder") {
-        const to_be_deleted = state.data.children?.filter((value) => value.id !== id);
+        const to_be_deleted = state.data.children?.filter(
+          (value) => value.id !== id
+        );
         // @ts-ignore
-        const hasFolder = state.data.hasContainsFolder.filter((value: any) => value.id !== id);
-        const updated_children = { ...state.data, children: to_be_deleted, hasContainsFolder: hasFolder };
-        return { data: updated_children }
+        const hasFolder = state.data.hasContainsFolder.filter(
+          (value: any) => value.id !== id
+        );
+        const updated_children = {
+          ...state.data,
+          children: to_be_deleted,
+          hasContainsFolder: hasFolder,
+        };
+        return { data: updated_children };
       } else if (node?.model.type === "file") {
         //  if file in folder
         const getParentId = node.parent?.model.id;
-        const getParent = node.parent?.model
-        const removeFileParent = getParent.children.filter((values: any) => values.id !== id);
-        const to_be_updateParent = { ...getParent, children: removeFileParent, hasFile: removeFileParent };
+        const getParent = node.parent?.model;
+        const removeFileParent = getParent.children.filter(
+          (values: any) => values.id !== id
+        );
+        const to_be_updateParent = {
+          ...getParent,
+          children: removeFileParent,
+          hasFile: removeFileParent,
+        };
         const updated_parent_children = state.data.children?.map((values) => {
           if (values.id === getParentId) {
             return {
-              ...to_be_updateParent
-            }
+              ...to_be_updateParent,
+            };
           }
-          return values
+          return values;
         });
-        const to_be_deleted = state.data.children?.filter((value) => value.id !== id);
-        const flag = to_be_deleted?.length === state.data.children?.length
+        const to_be_deleted = state.data.children?.filter(
+          (value) => value.id !== id
+        );
+        const flag = to_be_deleted?.length === state.data.children?.length;
         // file in folder
-        const updated_state = { ...state.data, children: updated_parent_children }
+        const updated_state = {
+          ...state.data,
+          children: updated_parent_children,
+        };
         // if its file in main
-        const updated_children = { ...state.data, children: to_be_deleted, hasContainsFile: to_be_deleted, }
+        const updated_children = {
+          ...state.data,
+          children: to_be_deleted,
+          hasContainsFile: to_be_deleted,
+        };
         // deleteFileBackend(id)
         const updatedValues = flag ? updated_state : updated_children;
-        return { data: updatedValues }
+        return { data: updatedValues as MyData };
       }
       const x = searchTree(state.data, id);
       // ? Figure out how to make this work
@@ -185,7 +248,6 @@ const fileStore = create<files>((set) => ({
   find_file: (id: string) => {
     var x = {};
     set((state) => {
-
       const targetNode = searchTree(state.data, id);
       x = targetNode;
       return {};
@@ -195,7 +257,6 @@ const fileStore = create<files>((set) => ({
 
   update_file: (id: string, updatedFile: MyData) =>
     set((state) => {
-
       const root = new TreeModel().parse(state.data);
       const node = findById(root, id);
       if (node) {
@@ -208,16 +269,17 @@ const fileStore = create<files>((set) => ({
     set((state) => {
       const arrayOfUids = collectionofIds.map((values) => values.uid);
       let uid = arrayOfUids.reduce((a, b) => Math.max(a, b), 0);
-      const filterUids = collectionofIds.filter((values) => values.uid === uid)[0]
-      let updated_uid = uid === 0 ? 1 : uid
-      return { uid: updated_uid, idofUid: filterUids.id }
+      const filterUids = collectionofIds.filter(
+        (values) => values.uid === uid
+      )[0];
+      let updated_uid = uid === 0 ? 1 : uid;
+      return { uid: updated_uid, idofUid: filterUids.id };
     }),
   loading: true,
   setLoading: (load: boolean) =>
     set((state) => {
-      return { loading: load }
-    }
-    )
+      return { loading: load };
+    }),
 }));
 
 export default fileStore;

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Edge } from "reactflow";
-import edges from "./flowchart1";
+//import edges from "./flowchart1";
 
 /* This is the store for managing the state of the edges in the present flowchart. */
 export interface EdgeState {
@@ -9,11 +9,12 @@ export interface EdgeState {
   updateEdgeCSS: (id: string, CSS: Array<string>) => void;
   updateArrows: (id: string, bidirectional: boolean) => void;
   updateLabel: (id: string, newLabel: string) => void;
-  deleteEdge: (edge: Object) => void;
+  deleteEdge: (edge: Edge) => void;
+  addNewEdge: (edge: Edge) => void;
 }
 
 const edgeStore = create<EdgeState>((set) => ({
-  edges: edges,
+  edges: [],
   updateEdges: (edges) =>
     set((state): any => {
       return { edges: edges };
@@ -27,7 +28,6 @@ const edgeStore = create<EdgeState>((set) => ({
     set((state) => {
       const old_edge = state.edges.filter((item) => item.id === id)[0];
       const to_be_updated = state.edges.filter((item) => item.id !== id);
-      //@ts-ignore
       const updated_node = {
         ...old_edge,
         data: { ...old_edge.data, boxCSS: CSS[0], pathCSS: CSS[1] },
@@ -38,7 +38,6 @@ const edgeStore = create<EdgeState>((set) => ({
     set((state) => {
       const old_edge = state.edges.filter((item) => item.id === id)[0];
       const to_be_updated = state.edges.filter((item) => item.id !== id);
-      //@ts-ignore
       const updated_node = {
         ...old_edge,
         data: { ...old_edge.data, bidirectional: bidirectional },
@@ -49,10 +48,21 @@ const edgeStore = create<EdgeState>((set) => ({
     set((state) => {
       const edge = state.edges.filter((item) => item.id === id)[0];
       const to_be_updated = state.edges.filter((item) => item.id !== id);
-      //@ts-ignore
       const updated_node = { ...edge, data: { ...edge.data, label: newLabel } };
+      console.log(newLabel);
       return { edges: [...to_be_updated, updated_node] };
     }),
+  addNewEdge: (newEdge: Edge) => {
+    set((state) => {
+      const edgedData = JSON.stringify(newEdge).replaceAll(
+        '"hasedgedataEdgedata":',
+        '"data":'
+      );
+      const updatedToData = JSON.parse(edgedData);
+      const to_be_updated = [...state.edges, updatedToData];
+      return { edges: to_be_updated };
+    });
+  },
 }));
 
 export default edgeStore;

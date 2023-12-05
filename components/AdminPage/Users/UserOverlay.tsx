@@ -3,11 +3,8 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { usersList } from "./UsersList";
 import { useMutation } from "@apollo/client";
-import { ADD_USER, ALL_USERS } from "./gqlUsers";
-import { GET_PROJECTS } from "../Projects/gqlProject";
+import { ADD_USER, ALL_USERS } from "../../../gql";
 import { sendLink } from "../../Authentication/SignInLink/sendLink";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../auth";
 
 interface Project {
   id: string;
@@ -26,7 +23,6 @@ interface User {
 
 interface UserOverlayProps {
   onClose: () => void;
-  //onAddUser: (user: User, selectedProjects: string[]) => void;
   projectData: Array<Project>;
   handleMessage: (message: string) => void; // Add the prop for handleMessage function
 }
@@ -73,7 +69,6 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
   };
 
   // Mutation of add new user
-
   const [createNewUser, { data, error, loading }] = useMutation(ADD_USER);
 
   const handleProjectSelect = (selectedOptions: any) => {
@@ -84,7 +79,6 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     }));
   };
 
-  console.log(projectData);
 
   const handleAddUser = () => {
     const newUser = {
@@ -144,7 +138,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-6/12 rounded-lg bg-white p-8">
+      <div className="w-6/12 rounded-lg bg-white p-8 dark:bg-bgdarkcolor dark:text-white">
         <h2 className="mb-4 text-lg font-semibold">Add User</h2>
         <div className="mb-4">
           <label className="mb-1 block">Email</label>
@@ -153,7 +147,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            className="w-full rounded-md border border-gray-300 p-1"
+            className="w-full rounded-md border border-gray-300 p-1 dark:text-slate-600"
             required
           />
         </div>
@@ -163,7 +157,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
             name="accessLevel"
             value={formData.accessLevel}
             onChange={handleInputChange}
-            className="w-full rounded-md border border-gray-300 p-1"
+            className="w-full rounded-md border border-gray-300 p-1 dark:text-slate-600"
             required
           >
             <option value="">Select Access Level</option>
@@ -181,6 +175,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
               .map((project) => ({ value: project.id, label: project.name }))}
             onChange={handleProjectSelect}
             classNamePrefix="react-select"
+            className="dark:text-slate-600"
             isMulti
             closeMenuOnSelect={false}
             components={animatedComponents}
@@ -209,7 +204,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
               Add User
             </button>
             <button
-              className="rounded-md bg-gray-300 px-4 py-2 text-sm text-gray-700"
+              className="rounded-md bg-gray-300 px-4 py-2 text-sm text-gray-700 dark:bg-blue-500 dark:text-white"
               onClick={onClose}
             >
               Cancel

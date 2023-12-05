@@ -7,19 +7,14 @@ import { AiOutlineFile, AiFillFolder, AiFillFolderOpen } from "react-icons/ai";
 import fileStore from "./fileStore";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import edgeStore from "../Flow/Edges/edgeStore";
-import { allNodes, getNodes } from "../Flow/Nodes/gqlNodes";
-import { allEdges, getEdges } from "../Flow/Edges/gqlEdges";
-import { updateFileBackend, updateFolderBackend } from "./gqlFiles";
-import { getFileByNode } from "./gqlFiles";
-import { gql } from "graphql-tag";
-import styles from "../Flow/Nodes/styles.module.css";
+import { allNodes, getNodes, getFileByNode } from "../../gql";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
-import { GET_USER, get_user_method } from "../AdminPage/Projects/gqlProject";
+import { get_user_method, GET_USER } from "../../gql";
 import LoadingIcon from "../LoadingIcon";
-import { ApolloQueryResult } from "@apollo/client";
-import TreeModel from "tree-model-improved";
-import useBackend from './backend'
+import useBackend from "./backend";
+import { useRouter } from "next/router";
+import { FaAngleRight } from "react-icons/fa6";
 
 // LoadingIcon component
 import classNames from "classnames";
@@ -35,7 +30,7 @@ function ExpandableChip({ onRename, onDelete }: any) {
     <div className="expandable-chip">
       <button
         onClick={() => setExpanded(!expanded)}
-        className={`expand-button ${expanded ? 'expanded' : ''}`}
+        className={`expand-button ${expanded ? "expanded" : ""}`}
       >
         {expanded ? <span>X</span> : <span>...</span>}
       </button>
@@ -52,7 +47,6 @@ function ExpandableChip({ onRename, onDelete }: any) {
     </div>
   );
 }
-
 
 /**
  * `MaybeToggleButton` is a function that takes an object with three properties: `toggle`, `isOpen`,
@@ -137,7 +131,6 @@ export const TreeNode = ({
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
-  const delete_item = fileStore((state) => state.delete_item);
   const updateNodes = nodeStore((state) => state.updateNodes);
   const updateEdges = edgeStore((state) => state.updateEdges);
   const updateCurrentFlowchart = fileStore(
@@ -145,25 +138,22 @@ export const TreeNode = ({
   );
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState([]);
   const [accessLevel, setAccessLevel] = useState("");
   const { onDelete } = useBackend();
+  const router = useRouter();
+  const projectId = router.query.projectId;
 
   const verifyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         get_user_method(user.email, GET_USER).then((res: any) => {
-          // setUser(res[0].userType);
           setAccessLevel(res[0].userType);
         });
       } else {
-        // setUser([]);
         setAccessLevel("");
       }
     });
   };
-
-  // console.log(accessLevel);
 
   useEffect(() => {
     verifyAuthToken();
@@ -175,6 +165,12 @@ export const TreeNode = ({
       updateBreadCrumbs(data, id, "new");
     }
   }
+  const toDetailPage = (selectedId: string) => {
+    router.push({
+      pathname: `/projects/${projectId}/backlogs/edit/`,
+      query: { id: selectedId },
+    });
+  };
 
   function loadNewFlow(
     handlers: NodeRendererProps<MyData> & {
@@ -194,13 +190,13 @@ export const TreeNode = ({
           .finally(() => {
             setIsLoading(false);
           });
-        getEdges(allEdges, data.id)
-          .then((result) => {
-            updateEdges(result);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
+        // getEdges(allEdges, data.id)
+        //   .then((result) => {
+        //     updateEdges(result);
+        //   })
+        //   .finally(() => {
+        //     setIsLoading(false);
+        //   });
       }
     };
   }
@@ -212,16 +208,7 @@ export const TreeNode = ({
     );
   }
 
-  function handleRename() {
-    handlers.edit();
-  }
-
-  function handleDelete() {
-    delete_item(id);
-  }
-
   return (
-    // <> {name} </>
     <div
       ref={innerRef}
       style={styles.row}
@@ -237,17 +224,13 @@ export const TreeNode = ({
           isSelected={state.isSelected}
         />
         <i>
-          <Icon
-            isFolder={folder}
-            isSelected={state.isSelected}
-            isOpen={open}
-          />
+          <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
         {state.isEditing ? (
           <RenameForm defaultValue={name} {...handlers} />
         ) : (
-          <span className="flex flex-row text-sm group font-sans dark:text-white">
-            {name}{" "}
+          <span className="group flex flex-row font-sans text-sm dark:text-white">
+            {name}
             {state.isSelected &&
               !state.isEditing &&
               accessLevel.toLowerCase() !== "user" && (
@@ -257,9 +240,9 @@ export const TreeNode = ({
                   </button>
                   <button
                     onClick={() => {
-                      const confirmation = window.confirm('Are you sure you want to delete?');
-                      // console.log(confirmation)
-
+                      const confirmation = window.confirm(
+                        "Are you sure you want to delete?"
+                      );
                       if (confirmation) {
                         onDelete(id);
                       }
@@ -267,6 +250,12 @@ export const TreeNode = ({
                     className="ml-2"
                   >
                     <FiDelete size={20} className="dark:text-white" />
+                  </button>
+                  <button
+                    onClick={() => toDetailPage(id)}
+                    className="ml-5 cursor-pointer hover:text-black hover:scale-110"
+                  >
+                   <FaAngleRight />
                   </button>
                 </div>
               )}
@@ -276,10 +265,6 @@ export const TreeNode = ({
     </div>
   );
 };
-
-
-
-
 
 export const TreeNode2 = ({
   innerRef,
@@ -293,31 +278,12 @@ export const TreeNode2 = ({
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
-  ////console.log(data);
   var selectedNodeId: string;
-
   if (state.isSelected) {
     selectedNodeId = data.id!;
-    // console.log("S:", selectedNodeId);
-  }
-  const customQuery = gql`
-    query FindFileById($nodeId: String!) {
-      files(where: { hasflowchart: { nodes: { id: { equals: $nodeId } } } }) {
-        id
-      }
-    }
-  `;
-  let result: any;
-  async function getfileId() {
-    try {
-      result = await getFileByNode(selectedNodeId, customQuery);
-      // console.log("R=", result);
-    } catch (error) {
-      console.error("Error retrieving file ID:", error);
-    }
   }
 
-  const fileId = nodeStore((state) => state.fileId);
+  const { fileId } = nodeStore();
   const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
@@ -330,7 +296,7 @@ export const TreeNode2 = ({
       }
       handlers.select(e);
       if (data.children == null) {
-        return updateLinkNodes(data.hasflowchart.nodes, data.id);
+        return updateLinkNodes(data.hasFlowchart.hasNodes, data.id);
       }
     };
   }
@@ -345,7 +311,11 @@ export const TreeNode2 = ({
     <div
       ref={innerRef}
       style={{ ...styles.row, ...nodeStyles }}
-      className={`${classNames("row", state, disabledCursorClass)} dark:text-white`}
+      className={`${classNames(
+        "row",
+        state,
+        disabledCursorClass
+      )} dark:text-white`}
       onClick={loadFlowNodes(handlers, data)}
     >
       <div className="row-contents" style={styles.indent}>
@@ -373,6 +343,3 @@ export const TreeNode2 = ({
     </div>
   );
 };
-
-
-

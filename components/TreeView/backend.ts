@@ -1,8 +1,23 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
-import { connectToFolderBackendOnMove, disconnectFromFolderBackendOnMove, updateFileBackend, updateFolderBackend, getMainByUser, getTreeNodeByUser, deleteFileBackend, deleteFolderBackend, Folder } from "./gqlFiles";
+import {
+  connectToFolderBackendOnMove,
+  disconnectFromFolderBackendOnMove,
+  updateFileBackend,
+  updateFolderBackend,
+  deleteFileBackend,
+  deleteFolderBackend,
+  Folder,
+  getProjectByUser,
+  updateFoldersMutation,
+  updateFilesMutation,
+  deleteFoldersMutation,
+  deleteFilesMutation,
+  getTreeNodeByUser,
+} from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
+import { useRouter } from "next/router";
 
 /**
  * It returns the first node in the tree that has a model with an id property that matches the id
@@ -35,8 +50,8 @@ export type MyData = {
   type: string;
   // hasContainsFile:Array<File>
 
-  hasContainsFolder: Array<Folder>
-  // hasContainsFile:Array<File>
+  hasContainsFolder: Array<Folder>;
+  hasContainsFile:Array<File>
 };
 
 /**
@@ -44,22 +59,37 @@ export type MyData = {
  */
 export function useBackend() {
   let initData = fileStore((state) => state.data);
+  let setLoading = fileStore((state) => state.setLoading);
+  const delete_item = fileStore((state) => state.delete_item);
   const [data, setData] = useState<MyData>(initData as MyData);
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
-  const delete_item = fileStore((state) => state.delete_item);
-  const updateNodes = nodeStore((state) => state.updateNodes)
 
+  // projectId
+  const router = useRouter();
+  const projectId = (router.query.projectId as string) || "";
 
+  const getProjectId = async (id: string) => {
+    const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
+    const data: MyData | any = initData[0];
+    setData(data);
+    //@ts-ignore
+    // updateInitData(data);
+    return initData;
+  };
 
-  // console.log(initData);
-
+  // useEffect(() => {
+  //   if (projectId) {
+  //     getProjectId(projectId);
+  //   }
+  // }, [projectId]);
 
   useEffect(() => {
     setData(initData);
     update;
-  }, [initData, update]);
+  }, [initData]);
+
   return {
     data,
     onMove: (
@@ -91,6 +121,11 @@ export function useBackend() {
 
     onEdit: async (id: string, name: string) => {
       const node = find(id);
+      let editedData = {
+        id,
+        name,
+        projectId: initData.id,
+      };
 
       const nodeData = [
         {
@@ -100,58 +135,80 @@ export function useBackend() {
               "Welcome!\nTo get started, use the sidebar button on the top left.",
             shape: "rectangle",
             description: "",
-            links: {},
+            hasLinkedTo: {},
           },
           position: { x: 0, y: 0 },
           type: "WelcomeNode",
           draggable: false,
         },
-      ]
+      ];
 
       // making writable copy
-      const updatedData = { ...node?.model, name }
+      const updatedData = { ...node?.model, name };
 
       // getting element index
-      const ind = initData.children?.findIndex(element => element.id == id)
+      const ind = initData.children?.findIndex((element) => element.id == id);
 
       // updating state in real time
 
       // @ts-ignore
-      initData.children[ind] = updatedData
-      setData(initData)
-      update()
+      initData.children[ind] = updatedData;
+      setData(initData);
+      update();
 
-
-
-      const { type } = node?.model
+      const { type } = node?.model;
       if (type === "folder") {
-        await updateFolderBackend(id, name);
+        await updateFolderBackend(
+          editedData,
+          updateFoldersMutation,
+          getProjectByUser
+        );
         // updateNodes(nodeData);
       }
       if (type === "file") {
-        await updateFileBackend(id, name);
+        await updateFileBackend(
+          editedData,
+          updateFilesMutation,
+          getProjectByUser
+        );
         // updateNodes(nodeData);
       }
-
     },
 
     onDelete: async (id: string) => {
       const node = find(id);
-      const { type } = node?.model
-      const readableData = { ...initData }
-      const updatedChild = readableData.children?.filter(element => element.id !== id)
-      initData = { ...readableData, children: updatedChild }
-      setData(initData)
-      update()
+      const projectId = initData.id;
+      const deleteIds = {
+        id,
+        projectId,
+        parentId: node?.parent.model.id,
+      };
+      const { type } = node?.model;
+
+      const readableData = { ...initData };
+      const updatedChild = readableData.children?.filter(
+        (element) => element.id !== id
+      );
+      initData = { ...readableData, children: updatedChild };
+      setData(initData);
+      update();
       if (type === "folder") {
-        await deleteFolderBackend(id, delete_item)
-      }
-      if (type === "file") {
-        await deleteFileBackend(id, delete_item);
+        await deleteFolderBackend(
+          deleteIds,
+          deleteFoldersMutation,
+          getProjectByUser
+        );
+        delete_item(id);
+      } else {
+        await deleteFileBackend(
+          deleteIds,
+          deleteFilesMutation,
+          getProjectByUser
+        );
+        delete_item(id);
       }
     },
   };
-
 }
 
 export default useBackend;

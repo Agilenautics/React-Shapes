@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Policies = () => {
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 pl-8">
       <h1 className="mb-4 text-3xl font-bold">Access Level Policies</h1>
       <div className="mb-8">
         <h2 className="mb-2 text-xl font-bold">Admin</h2>

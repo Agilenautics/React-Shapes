@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import RecycleBin from "../components/AdminPage/Projects/RecycleBin";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/router";

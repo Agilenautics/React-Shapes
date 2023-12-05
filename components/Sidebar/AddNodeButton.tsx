@@ -1,6 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
-import { newNode, createNode } from "../Flow/Nodes/gqlNodes";
+import {
+  createNode,
+  newNode,
+  updateUidMethode,
+  updateUidMutation,
+} from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import fileStore from "../TreeView/fileStore";
 
@@ -12,19 +17,18 @@ import fileStore from "../TreeView/fileStore";
 import { nodeShapeMap } from "../Flow/Nodes/nodeTypes";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import backlogStore from "../Backlogs/backlogStore";
-import { updateUidMethode, updateUidMutation } from "../TreeView/gqlFiles";
 
 function AddNodeButton() {
   const currentId = fileStore((state) => state.Id);
+  const { addNode } = nodeStore();
   const updateNode = nodeStore((state) => state.updateNodes);
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExpandedAdd, setIsExpandedAdd] = useState(false);
-  const addRow = backlogStore(state => state.addRow);
+  const addRow = backlogStore((state) => state.addRow);
   const uid = fileStore((state) => state.uid);
-  const idofUid = fileStore(state => state.idofUid);
-  const updateUid = fileStore((state) => state.updateUid)
-
+  const idofUid = fileStore((state) => state.idofUid);
+  const updateUid = fileStore((state) => state.updateUid);
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
@@ -36,16 +40,24 @@ function AddNodeButton() {
       type: "blueNode",
       description: "",
       assignedTo: "",
-      uid
-    }
+      uid,
+    };
     try {
-      await createNode(newNode, updateNode, data, addRow);
-      const updateUidResponse = await updateUidMethode(idofUid, updateUidMutation) as any;
-      updateUid(updateUidResponse.data.updateUids.uids)
-    }catch(err){
-      console.log(err,"while creating node")
-    }
-    finally {
+      const createNodeResponse = await createNode(
+        newNode,
+        updateNode,
+        data,
+        addRow
+      );
+      addNode(createNodeResponse?.data.createFlowNodes.flowNodes);
+      const updateUidResponse = (await updateUidMethode(
+        idofUid,
+        updateUidMutation
+      )) as any;
+      updateUid(updateUidResponse.data.updateUids.uids);
+    } catch (err) {
+      console.log(err, "while creating node");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -60,20 +72,23 @@ function AddNodeButton() {
       type: "defaultNode",
       description: "",
       assignedTo: "",
-      uid
-    }
+      uid,
+    };
     try {
       await createNode(newNode, updateNode, data, addRow);
-      const updateUidResponse = updateUidMethode(idofUid, updateUidMutation) as any;
-      if (!updateUidResponse?.errors && !updateUidResponse?.data) { return null }
+      const updateUidResponse = updateUidMethode(
+        idofUid,
+        updateUidMutation
+      ) as any;
+      if (!updateUidResponse?.errors && !updateUidResponse?.data) {
+        return null;
+      }
       //       else{return <div>Error</div>}
       //      console.log("Update Uid Response : ", JSON.stringify({...updateUidResponse}))
-      updateUid(updateUidResponse.data.updateUids.uids)
-    }
-    catch(err){
-      console.log(err,"while creating bpmn symbole")
-    }
-     finally {
+      // updateUid(updateUidResponse.data.updateUids.uids)
+    } catch (err) {
+      console.log(err, "while creating bpmn symbole");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -82,34 +97,43 @@ function AddNodeButton() {
     <div className="absolute bottom-44 right-6">
       <div className="flex flex-col items-center space-y-4">
         {isExpandedAdd && (
-          <div className="bg-white rounded-lg shadow p-4 max-h-40 overflow-y-auto">
+          <div className="max-h-40 overflow-y-auto rounded-lg bg-white p-4 shadow">
             <div className="grid grid-cols-4 gap-1">
               <div className="col-span-4">
                 <span className="font-sm">Shapes</span>
               </div>
-              {Object.keys(nodeShapeMap).slice(0, 4).map((key, _) => (
-                <div
-                  key={key}
-                  className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${
-                    //@ts-ignore
-                    nodeShapeMap[key][1]}`}
-                  onClick={() => handleAddNode(key)}
-                ></div>
-              ))}
+              {Object.keys(nodeShapeMap)
+                .slice(0, 4)
+                .map((key, _) => (
+                  <div
+                    key={key}
+                    className={`mx-1 my-1 !h-5 !w-5 !translate-x-0 !translate-y-0 cursor-pointer bg-neutral-600 transition-opacity duration-75 ease-in-out ${
+                      //@ts-ignore
+                      nodeShapeMap[key][1]
+                    }`}
+                    onClick={() => handleAddNode(key)}
+                  ></div>
+                ))}
               <div className="col-span-4">
-                <button className="font-sm" onClick={() => setIsExpanded(!isExpanded)}>
+                <button
+                  className="font-sm"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
                   BPMN Shapes {isExpanded ? "▲" : "▼"}
                 </button>
               </div>
               {isExpanded &&
-                Object.entries(nodeShapeMap).slice(4).map(([symbol, styles], index) => (
-                  <div key={index} className="text-center">
-                    <span
-                      className={`cursor-pointer ${styles[1]}`}
-                      onClick={() => handleBPMNClick(symbol)}
-                    />
-                  </div>
-                ))}
+                Object.entries(nodeShapeMap)
+                  .slice(4)
+                  .map(([symbol, styles], index) => (
+                    <div key={index} className="text-center">
+                      <span
+                        //@ts-ignore
+                        className={`cursor-pointer ${styles[1]}`}
+                        onClick={() => handleBPMNClick(symbol)}
+                      />
+                    </div>
+                  ))}
             </div>
           </div>
         )}
@@ -123,16 +147,10 @@ function AddNodeButton() {
         >
           {isLoading ? (
             //<LoadingIcon color="white" />
-            <MdOutlineAdd
-              className="h-6 w-6"
-              style={{ color: "white" }}
-            />
+            <MdOutlineAdd className="h-6 w-6" style={{ color: "white" }} />
           ) : (
             <>
-              <MdOutlineAdd
-                className="h-6 w-6"
-                style={{ color: "white" }}
-              />
+              <MdOutlineAdd className="h-6 w-6" style={{ color: "white" }} />
             </>
           )}
         </button>
@@ -140,5 +158,4 @@ function AddNodeButton() {
     </div>
   );
 }
-
 export default AddNodeButton;

@@ -33,6 +33,7 @@ const nodeTypes = [
 ];
 
 const nodeCSS = [
+  "border-slate-400 bg-slate-300 text-slate-700",
   "border-node-blue-100 bg-node-blue-200",
   "border-node-green-100 bg-node-green-200",
   "border-node-red-100 bg-node-red-200",
@@ -43,7 +44,6 @@ const nodeCSS = [
   "border-node-red-100 bg-node-red-50",
   "border-node-orange-100 bg-node-orange-50",
   "border-node-purple-100 bg-node-purple-50",
-  "",
 ];
 
 const nodeTypeMap = Object.fromEntries(
@@ -53,15 +53,15 @@ const nodeCSSMap = Object.fromEntries(
   nodeStrings.map((_, i) => [nodeStrings[i], nodeCSS[i]])
 );
 
-const nodeShapeMap = {
+const nodeShapeMap:any = {
   rectangle: ["w-36 h-10", "h-7 rounded-md", ""],
   diamond: [
     "!h-24 w-24",
-    "!h-[77%] w-[69%] rotate-45 translate-x-[10px] translate-y-[9px] rounded-md -rotate-45",
+    "!h-[78%] !w-[69%] rotate-45 translate-x-[10px] translate-y-[9px] rounded-md -rotate-45",
     "-rotate-45",
   ],
   circle: ["h-30 w-30", "!h-20 w-20 rounded-full", "rotate-0"],
-  parallelogram: ["h-30 w-30", styles.parallelogram, "rotate-0"],
+  parallelogram: ["h-30 w-30", "h-30 w-30", "rotate-0 h-14 w-20 flex items-center justify-center"],
   screw: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-screw-wrench", "rotate-0"],
   trash: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-trash", "rotate-0"],
   gatewayParallel: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-gateway-parallel", "rotate-0"],

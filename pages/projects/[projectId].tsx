@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import React,{ useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
-  getMainByUser,
+  getProjectByUser,
   getTreeNodeByUser,
-} from "../../components/TreeView/gqlFiles";
+} from "../../gql";
 // import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import LoadingIcon from "../../components/LoadingIcon";
 // import MembersTable from "../../components/AdminPage/Projects/MembersTable";
@@ -29,7 +29,7 @@ function SideBar() {
   async function fetchData() {
     if (projectId) {
       const initData = await getTreeNodeByUser(
-        getMainByUser,
+        getProjectByUser,
         projectId.toString(),
         setLoading
       );

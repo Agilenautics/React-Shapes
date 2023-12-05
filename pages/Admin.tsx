@@ -1,12 +1,17 @@
-import { useState } from "react";
+import React,{ useState } from "react";
 import Projects from "../components/AdminPage/Projects/Projects";
 import MembersPage from "../components/AdminPage/Users/MembersPage";
 import Layout from "../components/AdminPage/Layout";
 import { useRouter } from "next/router";
 
-function App() {
+
+
+function  App() {
   const [activeLink, setActiveLink] = useState("Projects");
   const router = useRouter();
+  const projectId = router.query.projectId as string;
+ 
+
 
   const handleLinkClick = (link: string) => {
     setActiveLink(link);

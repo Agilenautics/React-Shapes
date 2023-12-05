@@ -36,6 +36,7 @@ module.exports = {
           100: "#93C69B",
           200: "#65BF73",
         },
+        "bgdarkcolor":"#353744",
       },
     },
   },

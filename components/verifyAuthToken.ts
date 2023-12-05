@@ -1,17 +1,15 @@
-import { auth } from '../auth'
-import { onAuthStateChanged } from 'firebase/auth'
-
+import { auth } from "../auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 const verifyAuthToken = async () => {
-    let users = {}
-    await onAuthStateChanged(auth, (user) => {
-        if (user) {
-            users = user
-        } else {
+  let users = {};
+  await onAuthStateChanged(auth, (user) => {
+    if (user) {
+      users = user;
+    } else {
+    }
+  });
+  return users;
+};
 
-        }
-    })
-    return users
-}
-
-export default verifyAuthToken
+export default verifyAuthToken;

@@ -16,14 +16,13 @@ export default function Add() {
     }
   }, [backend.userHas]);
 
-  console.log(users);
 
   return loading ? (
     <div className="flex h-screen items-center justify-center">
       <LoadingIcon />
     </div>
   ) : (
-    <div className="w-[100%] overflow-x-hidden overflow-y-scroll rounded-lg bg-white shadow-lg">
+    <div className="w-[100%] rounded-lg bg-white shadow-lg">
       <AddBacklogs
         types={types}
         users={users}

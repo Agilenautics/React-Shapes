@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useRouter } from "next/router";
 import "reactflow/dist/style.css";
 import ReactFlow, {
   addEdge,
@@ -15,24 +16,27 @@ import ReactFlow, {
 } from "reactflow";
 import { nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
-import CustomControls from "./CustomControls";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
 import {
+  allNodes,
+  delNodeMutation,
   deleteNodeBackend,
   findNode,
   getNode,
   updateNodeBackend,
   updatePosition,
-} from "./Nodes/gqlNodes";
-import {
+  updatePositionMutation,
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
-} from "./Edges/gqlEdges";
+  getProjectByUser,
+  createEdgeMutation,
+} from "../../gql";
 import fileStore from "../TreeView/fileStore";
+import { FetchResult } from "@apollo/client";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -52,45 +56,42 @@ const defaultShowConfirmation = {
 
 function Flow() {
   const snapGrid: [number, number] = [10, 10];
+  const router = useRouter();
+  const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
-  const defaultNodes = nodeStore((state) => state.nodes);
-  const defaultEdges = edgeStore((state) => state.edges);
-  const updateEdges = edgeStore((state) => state.updateEdges);
-  const updateNodes = nodeStore((state) => state.updateNodes);
-  const deleteNode = nodeStore((state) => state.deleteNode);
+  const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
+  const {
+    edges: defaultEdges,
+    updateEdges,
+    deleteEdge,
+    addNewEdge,
+  } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
-  const currentFlowchart = fileStore((state) => state.currentFlowchart);
-  const fileId = fileStore((state) => state.Id);
-  const updateLinkNodeId = fileStore((state) => state.updateLinkNodeId);
-  const deleteEdge = edgeStore((state) => state.deleteEdge);
+  const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
   const [nodeId, setNodeId] = useState([]);
 
   const dragged = useRef(false);
 
-  const [showConfirmation, setShowConfirmation] = useState(
+  const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
-    edge.map((curEle: any) => {
+    edge.map(async (curEle: any) => {
+      await deleteEdgeBackend(curEle.id, curEle.data.label, allNodes, fileId);
       deleteEdge(curEle);
-      deleteEdgeBackend(curEle.id, curEle.data.label);
     });
   };
   const handleConfirm = useCallback(() => {
     if (showConfirmation) {
-      //@ts-ignore
       const selectedItems = showConfirmation.selectedItems;
       if (showConfirmation.type === "node") {
-        //console.log(findNode(selectedItems));
         onNodesDelete(selectedItems);
       } else if (showConfirmation.type === "links") {
-        //console.log(findNode(selectedItems));
         onNodesDelete(selectedItems);
       } else if (showConfirmation.type === "edge") {
         onDeleteEdge(selectedItems);
       }
-      //@ts-ignore
       setShowConfirmation(null);
     }
     setShowConfirmation(defaultShowConfirmation);
@@ -116,7 +117,7 @@ function Flow() {
 
   const [edgeId, setEdgeId] = useState([]);
 
-  const onEdgeClick = (event:React.MouseEvent, edge: any) => {
+  const onEdgeClick = (event: React.MouseEvent, edge: any) => {
     setEdgeId(edge.id);
   };
 
@@ -126,27 +127,35 @@ function Flow() {
         (value: any) => value.id === edgeId
       );
       newEdgeData.map((curEle) => {
-        updateEdgeBackend(updateEdgeMutation, curEle);
+        updateEdgeBackend(updateEdgeMutation, curEle,allNodes,fileId);
       });
     }
-  }, [defaultEdges, edgeId, nodeId, defaultNodes, updateNodeBackend]);
+  }, [defaultEdges, edgeId]);
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
       setEdges((eds) => {
         return applyEdgeChanges(changes, eds);
       }),
-    [setEdges, defaultEdges, updateEdges, onEdgeClick]
+    []
   );
 
   const onConnect = useCallback(
-    (newEdge: Connection) =>
-      setEdges((eds) => {
-        createFlowEdge(newEdge, fileId, updateEdges);
-        updateEdges(getEdges());
-        return addEdge(newEdge, eds);
-      }),
-    [setEdges, getEdges, updateEdges, currentFlowchart]
+    async (newEdge: Edge | any) => {
+      const response: FetchResult<any | undefined> | any = await createFlowEdge(
+        createEdgeMutation,
+        newEdge,
+        fileId,
+        allNodes
+      );
+      const {
+        data: {
+          createFlowEdges: { flowEdges },
+        },
+      } = response;
+      addNewEdge(flowEdges[0]);
+    },
+    [defaultEdges]
   );
 
   useEffect(() => {
@@ -161,21 +170,19 @@ function Flow() {
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
           const node = await findNode(getNode, selectedNodes[0].id);
-          const linkA = node[0].data.linkedBy.flag;
-          const linkB = node[0].data.links.flag;
+          const linkA = node[0].data.hasLinkedBy.flag;
+          const linkB = node[0].data.hasLinkedTo.flag;
           //.flowNode.nodeData.linked
           if (linkA || linkB) {
             setShowConfirmation({
               type: "links",
               show: true,
-              // @ts-ignore
               selectedItems: selectedNodes,
             });
           } else {
             setShowConfirmation({
               type: "node",
               show: true,
-              // @ts-ignore
               selectedItems: selectedNodes,
             });
           }
@@ -183,7 +190,6 @@ function Flow() {
           setShowConfirmation({
             type: "edge",
             show: true,
-            // @ts-ignore
             selectedItems: selectedEdges,
           });
         } else {
@@ -197,11 +203,22 @@ function Flow() {
       document.removeEventListener("keydown", handleBackspace);
     };
   }, [getNodes, getEdges]);
-  function onNodesDelete(nodes: Array<Node>) {
+  async function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
-      deleteNodeBackend(element.id);
-      deleteNode(element);
+      try {
+        await deleteNodeBackend(
+          element.id,
+          delNodeMutation,
+          allNodes,
+          fileId,
+          projectId,
+          getProjectByUser
+        );
+        deleteNode(element);
+      } catch (error) {
+        console.log(error, "deleting the node");
+      }
     }
   }
 
@@ -209,28 +226,32 @@ function Flow() {
     dragged.current = true;
   }, []);
 
-  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
-    if (dragged.current) {
-      updatePosition(node);
-    }
-    dragged.current = false;
-  }, []);
+  const onNodeDragStop = useCallback(
+    async (event: React.MouseEvent, node: Node) => {
+      try {
+        if (dragged.current) {
+          await updatePosition(node, updatePositionMutation, allNodes, fileId);
+        }
+        dragged.current = false;
+      } catch (error) {
+        console.log(error, "while dragging the node");
+      }
+    },
+    [fileId]
+  );
 
-  // const onSelectionChange = useCallback(() => {
-  //   console.count("onSelectionChange");
-  // }, []);
+  const onSelectionChange = useCallback(() => {
+    console.count("onSelectionChange");
+  }, []);
 
   // const onDrag = (event: any, node: Object) => {
   //   updatePosition(node);
   //   console.log(node);
   // };
-  const onNodeClick = (e:React.MouseEvent, nodeData: any) => {
+  const onNodeClick = (e: React.MouseEvent, nodeData: any) => {
     updateLinkNodeId(nodeData.id);
   };
   const proOptions = { hideAttribution: true };
-
-
-
 
   //TODO here iam calling deleteEdge methode inside onDeleteEdge
 
@@ -238,7 +259,11 @@ function Flow() {
   //   edge.map((CurEle: any) => {
   //     deleteEdge(CurEle.id, CurEle.data.label)
   //   })
-  // } 
+  // }
+  // const edgeUpdate = (e:any,edge:Connection)=>{
+  //   console.log(e,edge)
+
+  // }
 
   return (
     <>
@@ -249,6 +274,7 @@ function Flow() {
           nodesDraggable={true}
           proOptions={proOptions}
           panOnScroll
+          // onEdgeUpdate={(e,edgeData)=>edgeUpdate(e,edgeData)}
           defaultNodes={defaultNodes} // This part is because the nodes wern't draggable
           nodes={defaultNodes}
           edges={defaultEdges}
@@ -260,19 +286,15 @@ function Flow() {
           connectionLineComponent={ConnectionLine}
           snapGrid={snapGrid}
           zoomOnDoubleClick={false}
-          //@ts-ignore
           edgeTypes={edgeTypeMap}
           nodeTypes={nodeTypeMap}
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
             updateNodes(getNodes());
-            onNodeDragStop(event, node)
+            onNodeDragStop(event, node);
           }}
-          onNodeDrag={onNodeDrag} //this event we dont want 
-          // onNodeDragStop={}
-          // onSelectionChange={onSelectionChange}
-          // onNodeMouseMove={(event, node) => onDrag(event, node)}
-          onNodesDelete={(selectedNodes) => onNodesDelete(selectedNodes)}
+          onNodeDrag={onNodeDrag} //this event we dont want
+          onNodesDelete={(selectedNode) => onNodesDelete(selectedNode)}
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
           onEdgeClick={onEdgeClick}
           onNodeClick={onNodeClick}
@@ -294,10 +316,9 @@ function Flow() {
                 Are you sure you want to delete the selected
                 {showConfirmation.type === "node"
                   ? "node"
-                  : // @ts-ignore
-                  showConfirmation.type === "links"
-                    ? "node with attached links"
-                    : "edge"}
+                  : showConfirmation.type === "links"
+                  ? "node with attached links"
+                  : "edge"}
                 ?
               </p>
               <div>

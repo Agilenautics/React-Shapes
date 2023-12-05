@@ -1,91 +1,38 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import Signout from "../Authentication/Signout/Signout";
 //import { auth } from "../../auth";
-import { AiOutlineMail } from "react-icons/ai";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useRouter } from "next/router";
-
-import { BsFillSunFill } from "react-icons/bs";
-import { useDarkMode } from "../Sidebar/DarkModeToggleButton";
-import { FaBars } from 'react-icons/fa'
-import { HiMiniXMark } from 'react-icons/hi2'
+import { FaBars } from "react-icons/fa";
+import { IoIosArrowDropleftCircle } from "react-icons/io";
 import DarkModeToggleButton from "../Sidebar/DarkModeToggleButton";
+import { getInitials } from "./Users/Users";
+import userStore from "./Users/userStore";
 
 const auth = getAuth();
 
-function getInitials(name: string) {
-  const nameArray = getNameFromEmail(name);
-  const initials = [nameArray].map((name) => name.charAt(0)).join("");
-  return initials;
-}
-
-const getNameFromEmail = (email: string) => {
-  let regex = /[^a-z]/gi;
-  const name = email.split("@")[0].toLocaleUpperCase();
-  return name.replace(regex, "");
-};
 
 interface Flag {
-  toggleSideBar: () => void
+  toggleSideBar: () => void;
   flag: Boolean;
 }
 
 function TopBar({ toggleSideBar, flag }: Flag) {
   const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
 
-
-
- 
-
-
-
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
+  const {userEmail} = userStore()
 
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user && user.email) {
-        setEmail(user.email);
-      }
-    });
-  }, [auth]);
-
-
+  
 
   return (
-    <div className="sticky left-0  right-0 top-0 shadow-bottom    z-10  flex justify-between bg-white  p-2 px-6 font-sans  dark:bg-slate-600">
+    <div className=" sticky left-0  right-0 top-0 z-10    flex  justify-between bg-white p-2  px-6 font-sans shadow-bottom  dark:bg-bgdarkcolor">
       {/* logo  */}
       <div className="flex gap-6">
-        {/* <div
-        className={` z-50 rounded p-1 border duration-700 ease-in-out focus:outline-none ${showSidebar ? "bg-transparent" : "bg-white dark:bg-neutral-900"
-          }`}
-      >
-        <button
-          className="group flex h-10 w-10 flex-col items-center rounded"
-          onClick={toggleSideBar}
-        >
-          <div
-            className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "translate-y-3 rotate-45" : ""
-              }`}
-          />
-          <div
-            className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "opacity-0" : ""
-              }`}
-          />
-          <div
-            className={`${genericHamburgerLine} ${menuOpen === "h-fit" ? "-translate-y-3 -rotate-45 " : ""
-              }`}
-          />
-        </button>
-
-      </div> */}
-
-        <button onClick={toggleSideBar} className=" duration-200"> {flag ? <HiMiniXMark className="text-3xl" /> : <FaBars className="text-2xl" />} </button>
-        <span className=" text-2xl font-bold text-gray-400">
+      <button onClick={toggleSideBar} className="duration-200"> {!flag && <FaBars className="text-2xl dark:text-white text-slate-600" />} </button>
+        <span className=" text-2xl font-bold text-gray-400" data-testId="test-TextElement">
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>
       </div>
@@ -108,13 +55,13 @@ function TopBar({ toggleSideBar, flag }: Flag) {
             className="mr-12 flex h-8 w-8 items-center justify-center rounded-full bg-slate-600 font-semibold text-white"
             onClick={toggleDropdown}
           >
-            {getInitials(email)}
+            {getInitials(userEmail)}
           </button>
           {dropdownOpen && (
             <div className="absolute right-0 top-12 z-40 mr-4 w-48 rounded border border-gray-300 bg-white shadow">
               <div className="p-4">
-                <p className="mb-2 text-sm text-gray-600">{email}</p>
-                <Signout  />
+                <p className="mb-2 text-sm text-gray-600">{userEmail}</p>
+                <Signout />
               </div>
             </div>
           )}

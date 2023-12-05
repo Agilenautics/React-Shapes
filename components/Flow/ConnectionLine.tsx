@@ -1,5 +1,5 @@
-//@ts-nocheck
 /* This is the custom connection line that is used when connecting two nodes. */
+import React from 'react';
 import { ConnectionLineComponent } from "reactflow";
 import { getSmoothStepPath } from "reactflow";
 const ConnectionLine: ConnectionLineComponent = ({

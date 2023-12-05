@@ -6,19 +6,11 @@ import {
   allocateProjectToUserMutation,
   deAllocateProjectToUserMethod,
   deAllocateProjectToUserMutation,
-} from "./gqlUsers";
+} from "../../../gql";
+import { User } from "../../../lib/appInterfaces";
 
 interface ManageAccountOverlayProps {
-  user: {
-    id: string;
-    name: string;
-    userType: string;
-    dateAdded: string;
-    hasProjects: {
-      id: string;
-      name: string;
-    }[];
-  };
+  user: User;
   adminProjects: {
     id: string;
     name: string;
@@ -40,7 +32,6 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
     } | null>
   >(
     user.hasProjects.map((projectId) => {
-      console.log(projectId);
       const project = user.hasProjects.find((p) => p.id === projectId.id);
       return project ? { value: project.id, label: project.name } : null;
     })
@@ -87,9 +78,6 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
       })
       .filter(Boolean);
 
-    console.log("Deleted Projects:", deletedProjects);
-    console.log("Added Projects:", addedProjects);
-
     for (let i = 0; i < addedProjects.length; i++) {
       const id = addedProjects[i]?.id || "";
       allocateProjectToUserMethod(id, user.id, allocateProjectToUserMutation);
@@ -109,7 +97,6 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
       hasProjects: currentProjects,
     };
 
-    console.log("Edited User:", editedUser);
     onClose();
   };
 
@@ -118,7 +105,7 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
       <div className="w-2/5 rounded-lg bg-white p-8">
         <h3 className="mb-4 text-xl font-semibold">Manage Account</h3>
         <div className="mb-4 flex flex-col">
-          <p className="">{user.name}</p>
+          <p className="">{user.emailId}</p>
         </div>
         <div className="mb-4 flex items-center">
           <h2 className="mr-2 font-semibold">Access Level:</h2>

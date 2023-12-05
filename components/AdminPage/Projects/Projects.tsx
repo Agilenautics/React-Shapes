@@ -1,127 +1,99 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
-import { auth } from '../../../auth'
+import { auth } from "../../../auth";
 import {
-  DELETE_PROJECT,
   GET_USER,
-  EDIT_PROJECT,
-  edit_Project,
+  DELETE_PROJECT,
   delete_Project,
-  update_recentProject,
-  recentProject_mutation,
-  GET_PROJECTS,
-  GET_PROJECTS_BY_ID,
-} from "./gqlProject";
+  getUserByEmail,
+} from "../../../gql";
 import Link from "next/link";
 import LoadingIcon from "../../LoadingIcon";
-import { User, getInitials } from "../Users/Users";
-import projectStore, { Project } from "./projectStore";
+import { getInitials } from "../Users/Users";
+import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { BiDotsVerticalRounded, } from 'react-icons/bi'
-import { HiArrowsUpDown, HiXMark } from 'react-icons/hi2'
-import { MdKeyboardArrowRight } from 'react-icons/md'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { BiDotsVerticalRounded } from "react-icons/bi";
+import { HiArrowsUpDown, HiXMark } from "react-icons/hi2";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
+import { ApolloQueryResult, useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
+import { Project, User } from "../../../lib/appInterfaces";
 
 function Projects() {
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
-  const [projectName, setProjectName] = useState("");
-  const [projectDesc, setProjectDesc] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [projectData, setProjectData] = useState<Project[]>([]);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [isNewProjectDisabled, setIsNewProjectDisabled] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-
-  const [recentProjectId, setRecentProjectId] = useState<string | null>(null);
-
-
   const [projectTrackChanges, setProjectTrackChanges] = useState(false);
 
-  const allProjects = projectStore((state) => state.projects);
-  const handleSorting = projectStore((state) => state.handleSorting);
-  const sortValue = projectStore((state) => state.sortOrder);
-  const updateSortOrder = projectStore((state) => state.updateSortOrder);
-  const deleteProject = projectStore((state) => state.deleteProject);
-  const updateProject = projectStore((state) => state.updateProject);
-  // const loading = projectStore((state) => state.loading);
-  const recycleBinProject = projectStore((state) => state.recycleBin)
+  // project store
+  const {
+    projects: allProjects,
+    MovetoRecycleBin,
+    error,
+    updateProject,
+    recycleBin: recycleBinProject,
+    handleSorting,
+    sortOrder: sortValue,
+    updateSortOrder,
+    updateProjectData: updateProjects,
+    loading,
+    updateRecycleBinProject,
+  } = projectStore();
+
   // user store
-  const userType = userStore((state) => state.userType);
-  const loginUser = userStore((state) => state.user);
-  const updateProjects = projectStore((state) => state.updateProjectData);
-  const updateRecycleBinProject = projectStore((state) => state.updateRecycleBinProject);
-
-
-  const updateUserType = userStore((state) => state.updateUserType);
-  const updateLoginUser = userStore((state) => state.updateLoginUser)
-
-
+  const {
+    userType,
+    user: loginUser,
+    updateUserType,
+    userEmail,
+    updateLoginUser,
+  } = userStore();
   const router = useRouter();
+  // from the toestify library
   const notify = () => toast.success("Project Created...");
   const deleteNotify = () => toast.error("Project Got Deleted...");
 
-
-
-
-  const { data, error, loading } = useQuery(GET_USER, {
-    variables: {
-      where: {
-        emailId: userEmail,
-      },
-    },
-    
-  });
-
-  const getProjects = (response: any) => {
-    if (!loading && response && response.users.length) {
-      const projects = response.users[0].hasProjects;
-      const userType = data.users[0].userType;
-      updateProjects(projects, loading);
-      updateLoginUser(data.users);
-      updateUserType(userType)
-      setProjectData(response.users[0].hasProjects);
-      updateRecycleBinProject(projects);
+  const getProjects = async (email: string) => {
+    try {
+      const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
+        email,
+        GET_USER
+      );
+      const { hasProjects, ...userData } = response?.data.users[0];
+      updateProjects(hasProjects, response?.loading, response?.error);
+      setProjectData(hasProjects);
+      updateRecycleBinProject(hasProjects);
+      updateLoginUser(userData);
+      updateUserType(userData.userType);
+    } catch (error) {
+      console.log(error);
     }
-    
-    
-  }
-
-  const verificationToken = async () => {
-    onAuthStateChanged(auth, user => {
-      if (user && user.email) {
-        console.log(user.uid,"userId")
-        setUserEmail(user.email);
-        getProjects(data)
-      }
-    })
-  }
-
+  };
+  useEffect(() => {
+    if (userEmail) {
+      getProjects(userEmail);
+    }
+    // setIsButtonDisabled(userType.toLowerCase() === "user");
+    // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
+  }, [userEmail]);
+  
 
   useEffect(() => {
-    const filteredProjects = projectData.filter((project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    updateProjects(filteredProjects, false)
+    if (projectData && projectData.length) {
+      const filteredProjects = projectData.filter((project) =>
+        project.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      updateProjects(filteredProjects, false, null);
+    }
   }, [searchTerm]);
-
-  useEffect(() => {
-    setIsButtonDisabled(userType.toLowerCase() === "user");
-    setIsNewProjectDisabled(userType.toLowerCase() === "super user");
-    verificationToken()
-    if (loginUser && loginUser.length) {
-      setUserEmail(loginUser[0].emailId)
-    }
-  }, [data]);
 
   const handleSortClick = () => {
     const newSortOrder = sortValue === "asc" ? "desc" : "asc";
@@ -129,49 +101,30 @@ function Projects() {
     handleSorting();
   };
 
-  const handleEditButtonClick = (
-    projectId: string,
-    projectName: string,
-    projectDesc: string
-  ) => {
-    setProjectId(projectId);
-    setProjectName(projectName);
-    setProjectDesc(projectDesc);
-  };
-
-  const handleSaveButtonClick = (projectId: string) => {
-    const result = { projectName, projectDesc };
-    edit_Project(projectId, projectName, projectDesc, EDIT_PROJECT, GET_USER);
-    updateProject(projectId, result);
-    setProjectId(null);
-    setProjectName("");
-  };
-
-  const handleDelete_Project = (id: string) => {
-    // Display confirmation box
-    // setShowConfirmation(true);
-    delete_Project(id, DELETE_PROJECT, GET_USER).then((response)=>{
-      setProjectTrackChanges(!projectTrackChanges);
-      deleteNotify()
-    })
+  const handleDelete_Project = async (id: string) => {
+    await delete_Project(id, DELETE_PROJECT, GET_USER, userEmail);
+    // adding a project to recycle bin
+    MovetoRecycleBin(id);
+    setProjectTrackChanges(!projectTrackChanges);
+    deleteNotify();
     // setProjectId(projectId);
   };
 
-  const handleConfirm = useCallback(() => {
-    // Delete the project if confirmed
-    setShowConfirmation(false);
-    if (projectId) {
-      delete_Project(projectId, DELETE_PROJECT, GET_PROJECTS);
-      deleteProject(projectId);
-      setProjectId(null);
-    }
-  }, [projectId]);
+  // const handleConfirm = useCallback(() => {
+  //   // Delete the project if confirmed
+  //   setShowConfirmation(false);
+  //   if (projectId) {
+  //     // delete_Project(projectId, DELETE_PROJECT, GET_USER);
+  //     deleteProject(projectId);
+  //     setProjectId(null);
+  //   }
+  // }, [projectId]);
 
-  const handleCancel = useCallback(() => {
-    // Cancel the delete operation
-    setShowConfirmation(false);
-    setProjectId(null);
-  }, []);
+  // const handleCancel = useCallback(() => {
+  //   // Cancel the delete operation
+  //   setShowConfirmation(false);
+  //   setProjectId(null);
+  // }, []);
 
   const handleAddProjectClick = () => {
     setShowForm(true);
@@ -184,13 +137,6 @@ function Projects() {
   const handleCloseForm = () => {
     setShowForm(false);
   };
-
-  // const handleMessage = () => {
-  //   setIsLoading(true);
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 5000);
-  // };
 
   // to navigate recycle bin
   const toRecycleBin = () => {
@@ -205,10 +151,12 @@ function Projects() {
   const handleRecentOpenProject = (id: string | any) => {
     localStorage.setItem("recentPid", id);
     // update_recentProject(id,recentProject_mutation);
-  }
+  };
 
   if (error) {
-    return <div className="text-center text-danger">{error && error.message}</div>
+    return (
+      <div className="text-danger text-center">{error && error.message}</div>
+    );
   }
 
   if (loading) {
@@ -220,14 +168,11 @@ function Projects() {
   }
 
 
-
   return (
-   
-
     // container
     <div className="p-7">
       {/* Greeting to a user  */}
-      <div className="item-center mb-4 grid grid-cols-2 justify-center gap-6 rounded bg-white shadow-md dark:bg-slate-600">
+      <div className="item-center mb-4 grid grid-cols-2 justify-center gap-6 rounded bg-white shadow-md dark:bg-bgdarkcolor">
         <div className=" item-center flex justify-center">
           <img
             src="/assets/grretingImage.png"
@@ -239,9 +184,7 @@ function Projects() {
 
         <div className="flex flex-col justify-around">
           <div>
-            <h2 className="text-4xl">
-              Welcome! {getNameFromEmail(userEmail)}
-            </h2>
+            <h2 className="text-4xl">Welcome! {getNameFromEmail(userEmail)}</h2>
             <p className="m-2 text-xl">
               Quality is never an accident; it is always the result of high
               intention, sincere effort, intelligent direction, and skillful
@@ -263,7 +206,7 @@ function Projects() {
       {/* project heading bar (functionality) */}
       <div
         id="activities"
-        className="mb-6 grid h-fit grid-cols-4 items-center gap-6 bg-white p-4 text-center shadow dark:bg-slate-600"
+        className="mb-6 grid h-fit grid-cols-4 items-center gap-6 bg-white p-4 text-center shadow dark:bg-bgdarkcolor"
       >
         <div className="rounded border border-slate-400 p-1">
           <input
@@ -314,9 +257,9 @@ function Projects() {
       {showForm && (
         <ProjectOverlay
           notify={notify}
+          //@ts-ignore
           onAddProject={handleAddProject}
           onClose={handleCloseForm}
-          // @ts-ignore
           projectData={allProjects}
           userEmail={userEmail}
         />
@@ -329,11 +272,11 @@ function Projects() {
           return (
             <div
               key={index}
-              className="san-sarif  relative flex flex-col justify-between rounded  bg-white  p-4 shadow-md duration-200 hover:shadow-xl dark:bg-slate-600"
+              className="san-sarif  relative flex flex-col justify-between rounded  bg-white  p-4 shadow-md duration-200 hover:shadow-xl dark:bg-bgdarkcolor"
             >
               <div>
                 <div className="flex justify-between">
-                  <h3 className="text-lg font-bold"> {name} </h3>
+                  <h3 className="text-lg font-bold "> {name} </h3>
                   <button
                     onClick={() => handleDotClick(id)}
                     className="text-xl"
@@ -350,10 +293,20 @@ function Projects() {
               <div>
                 <div className="text-sky-500 ">
                   <Link href={`/projects/` + id}>
-                    <a className="hover:underline duration-300" onClick={() => handleRecentOpenProject(id)}>see more  <MdKeyboardArrowRight className="inline" /></a>
+                    <a
+                      className="duration-300 hover:underline"
+                      onClick={() => handleRecentOpenProject(id)}
+                    >
+                      see more <MdKeyboardArrowRight className="inline" />
+                    </a>
                   </Link>
                 </div>
-                <div className="flex justify-end -space-x-[2%]"> {userHas && userHas.length && projectAssignedUser(userHas)} </div>
+                <div className="flex justify-end -space-x-[2%]">
+                  {" "}
+                  {userHas &&
+                    userHas.length &&
+                    projectAssignedUser(userHas)}{" "}
+                </div>
               </div>
 
               {projectId === id && projectTrackChanges ? (
@@ -385,7 +338,7 @@ export default Projects;
 
 export const projectAssignedUser = (userHas: any) => {
   const user = userHas.map((value: User, index: string) => {
-    const { emailId } = value
+    const { emailId } = value;
     return (
       <div
         style={{ backgroundColor: getRandomColor() }}

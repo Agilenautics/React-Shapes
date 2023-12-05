@@ -1,155 +1,144 @@
 import { gql } from "@apollo/client";
 
 const typeDefs = gql`
-
-  type Query {
-    projects: [main!]! 
-    getUsers(emailId:String!): [user]
-  }
   # ! Interfaces only work on relationships!
-  type user {
+  type User {
     id: ID! @id
     timeStamp: DateTime! @timestamp
-    userName: String
     emailId: String!
-    userType: String
-    comments:[comments!]!  @relationship(type:"hasUser",direction:IN)
-    hasProjects: [main!]! @relationship(type: "hasMain", direction: OUT)
     active: Boolean!
+    userName: String
+    userType: String
+    hasComments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: IN)
+    hasProjects: [Project!]! @relationship(type: "HAS_PROJECT", direction: OUT)
   }
 
   #project scheme
-  type main {
+  type Project {
     id: ID! @id
     timeStamp: DateTime! @timestamp
-    userName: String
-    description: String
     name: String!
     isOpen: Boolean!
-    recycleBin:Boolean!
-    recentProject:Boolean!
-    deletedAT:String!
-    userHas: [user!]! @relationship(type: "hasMain", direction: IN)
-    hasContainsFolder: [folder!]!
-      @relationship(type: "hasFolder", direction: OUT)
-    hasContainsFile: [file!]! @relationship(type: "hasFile", direction: OUT)
-    hasSprint: [sprint!]! @relationship(type:"hasSprint",direction:IN)
+    recycleBin: Boolean!
+    recentProject: Boolean!
+    deletedAT: String!
+    description: String
+    userHas: [User!]! @relationship(type: "HAS_PROJECT", direction: IN)
+    hasContainsFolder: [Folder!]!
+      @relationship(type: "HAS_FOLDER", direction: OUT)
+    hasContainsFile: [File!]! @relationship(type: "HAS_FILE", direction: OUT)
+    hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
   }
 
-
-
-
-
-
   #epic scheme
-  type folder {
+  type Folder {
     id: ID! @id
-    #parentId: ID! @id
     type: String!
     isOpen: Boolean!
     timeStamp: DateTime @timestamp
     name: String!
-    uid:Int!
-    comments:[comments!]! @relationship(type:"folderHas",direction:IN)
-    hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
-    hasInfo:info @relationship( type:"hasInfo",direction:IN)
-    mainHas: main @relationship(type: "hasFolder", direction: IN)
-    hasFolder: [folder!]! @relationship(type: "hasFolder", direction: OUT)
-    hasFile: [file!]! @relationship(type: "hasFile", direction: OUT)
+    uid: Int!
+    hasComments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: IN)
+    hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
+    hasInfo: Info @relationship(type: "HAS_INFO", direction: IN)
+    projectHas: Project @relationship(type: "HAS_FOLDER", direction: IN)
+    hasFolder: [Folder!]! @relationship(type: "HAS_FOLDER", direction: OUT)
+    hasFile: [File!]! @relationship(type: "HAS_FILE", direction: OUT)
   }
 
   # story scheme
-  type file {
+  type File {
     id: ID! @id
-    #parentId: ID! @id
+    #parentId: ID! @id 
     timeStamp: DateTime! @timestamp
     type: String!
     name: String!
-    uid:Int!
-    hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
-    comments:[comments!]! @relationship(type:"hasFile",direction:IN)
-    hasInfo:info! @relationship( type:"hasInfo",direction:IN)
-    hasflowchart: flowchart @relationship(type: "hasFlowchart", direction: OUT)
-    folderHas: folder @relationship(type: "hasFile", direction: IN)
-    #hasFlownodes: [flowNode!]! @relationship (type:"hasFlownodes", direction:OUT)
-    mainHas: main @relationship(type: "hasFile", direction: IN)
+    uid: Int!
+    hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
+    hasComments: [Comment!]! @relationship(type: "HAS_FILE", direction: IN)
+    hasInfo: Info! @relationship(type: "HAS_INFO", direction: IN)
+    hasFlowchart: Flowchart @relationship(type: "HAS_FLOWCHART", direction: OUT)
+    folderHas: Folder @relationship(type: "HAS_FILE", direction: IN)
+    projectHas: Project @relationship(type: "HAS_FILE", direction: IN)
   }
 
-  type flowchart {
+  type Flowchart {
     name: String!
-    hasFile: file @relationship(type: "hasFlowchart", direction: IN)
-    nodes: [flowNode!]! @relationship(type: "hasFlownodes", direction: OUT)
-    edges: [flowEdge!]! @relationship(type: "hasFlowedges", direction: OUT)
+    hasFile: File @relationship(type: "HAS_FLOWCHART", direction: IN)
+    hasNodes: [FlowNode!]! @relationship(type: "HAS_FLOWNODES", direction: OUT)
+    hasEdges: [FlowEdge!]! @relationship(type: "HAS_FLOWEDGES", direction: OUT)
   }
-  
+
   #task scheme
-  type flowNode {
+  type FlowNode {
     id: ID! @id
     timeStamp: DateTime! @timestamp
     draggable: Boolean!
     flowchart: String!
     type: String!
-    uid:Int!
-    hasSprint:[sprint!]! @relationship(type: "hasSprint", direction: IN)
-    hasInfo:info @relationship( type:"hasInfo",direction:IN)
-    status:String
-    assignedTo:String
-    comments:[comments!]!@relationship(type:"hasFlownodes",direction:OUT)
-    hasdataNodedata: nodeData @relationship(type: "hasData", direction: OUT)
-    haspositionPosition: position
-      @relationship(type: "hasPosition", direction: OUT)
-    connectedbyFlowedge: [flowEdge!]!
-      @relationship(type: "connectedBy", direction: OUT)
-    flowNodeHas: file @relationship(type: "hasFile", direction: IN)
-    hasTasks: tasks @relationship(type: "hasTasks", direction: OUT)
-    flowedgeConnectedto: [flowEdge!]!
-      @relationship(type: "connectedTo", direction: IN)
+    uid: Int!
+    flowchartHas:Flowchart @relationship(type: "HAS_FLOWNODES", direction:IN)
+    uidHas:Uid @relationship (type:"HAS_UID",direction:OUT)
+    status: String
+    assignedTo: String
+    hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
+    hasInfo: Info @relationship(type: "HAS_INFO", direction: IN)
+    hasComments: [Comment!]!
+      @relationship(type: "HAS_FLOWNODES", direction: OUT)
+    data: NodeData @relationship(type: "HAS_NODE_DATA", direction: OUT)
+    position: Position
+      @relationship(type: "HAS_POSITION", direction: OUT)
+    connectedbyFlowedge: [FlowEdge!]!
+      @relationship(type: "NODE_CONNECTED_BY", direction: OUT)
+    flowNodeHas: File @relationship(type: "HAS_FILE", direction: IN)
+    hasTasks: Tasks @relationship(type: "HAS_TASKS", direction: OUT)
+    flowedgeConnectedto: [FlowEdge!]!
+      @relationship(type: "NODE_CONNECTED_TO", direction: IN)
   }
-  
 
-  type nodeData {
+  type NodeData {
     label: String!
     shape: String!
     description: String
-    links: link @relationship(type: "hasLink", direction: OUT)
-    linkedBy: linked @relationship(type: "hasLinkedBy", direction: OUT)
-    flownodeHasdata: flowNode @relationship(type: "hasData", direction: IN)
+    hasLinkedTo: LinkedTo @relationship(type: "HAS_LINKED_TO", direction: OUT)
+    hasLinkedBy: LinkedBy @relationship(type: "HAS_LINKED_BY", direction: OUT)
+    flownodeHasdata: FlowNode @relationship(type: "HAS_NODE_DATA", direction: IN)
   }
 
-  type link {
+  type LinkedTo {
     label: String
     id: ID
     flag: Boolean!
     fileId: String
-    hasLink: nodeData @relationship(type: "hasLink", direction: IN)
+    hasLinkedTo: NodeData @relationship(type: "HAS_LINKED_TO", direction: IN)
   }
-  type linked {
+  type LinkedBy {
     label: String
     id: ID
     flag: Boolean!
     fileId: String
-    hasLinked: nodeData @relationship(type: "hasLinkedBy", direction: IN)
+    hasLinkedBy: NodeData @relationship(type: "HAS_LINKED_BY", direction: IN)
   }
 
-  type position {
+  type Position {
     name: String!
     x: Float!
     y: Float!
-    flownodeHasposition: flowNode
-      @relationship(type: "hasPosition", direction: IN)
+    flownodeHasposition: FlowNode
+      @relationship(type: "HAS_POSITION", direction: IN)
   }
 
-  type edgeData {
+  type EdgeData {
     id: ID! @id
     label: String
     pathCSS: String!
     boxCSS: String!
     bidirectional: Boolean!
-    flowedgeHasedgedata: flowEdge
-      @relationship(type: "hasEdgeData", direction: IN)
+    flowedgeHasedgedata: FlowEdge
+      @relationship(type: "HAS_EDGE_DATA", direction: IN)
   }
 
-  type flowEdge {
+  type FlowEdge {
     id: ID! @id
     name: String!
     timeStamp: DateTime! @timestamp
@@ -159,104 +148,64 @@ const typeDefs = gql`
     targetHandle: String!
     selected: Boolean!
     # * Connections below
-    flownodeConnectedby: flowNode
-      @relationship(type: "connectedBy", direction: IN)
-    connectedtoFlownode: flowNode
-      @relationship(type: "connectedTo", direction: OUT)
-    hasedgedataEdgedata: edgeData
-      @relationship(type: "hasEdgeData", direction: OUT)
+    flowchartHas:Flowchart @relationship(type:"HAS_FLOWEDGES", direction:IN)
+    flownodeConnectedby: FlowNode
+      @relationship(type: "NODE_CONNECTED_BY", direction: IN)
+    connectedtoFlownode: FlowNode
+      @relationship(type: "NODE_CONNECTED_TO", direction: OUT)
+    hasedgedataEdgedata: EdgeData
+      @relationship(type: "HAS_EDGE_DATA", direction: OUT)
   }
 
-  type info {
-    description:String
+  type Info {
+    description: String
     assignedTo: String
-    status:String!
-    dueDate:String
-    sprint:String
-    # hasInfo:folder @relationship( type:"hasInfo",direction:OUT)
-    # hasInfo:file @relationship( type:"hasInfo",direction:OUT)
- }
+    status: String!
+    dueDate: String
+    sprint: String
+  }
 
- type sprint{
-  id: ID! @id
-  timeStamp: DateTime! @timestamp
-  name: String!
-  startDate: String!
-  endDate:String!
-  description: String
-  #Epics
-  folderHas: [folder!]! @relationship(type:"hasSprint",direction:OUT)
-  #stories
-  fileHas: [file!]! @ relationship(type:"hasSprint",direction:OUT)
-  #Task
-  flownodeHas: [flowNode!]! @relationship(type:"hasSprint",direction:OUT)
-  #projects
-  hasProjects:main @relationship(type:"hasProjects",direction:OUT)
- }
-
- type comments{
-  id:ID! @id
-  message:String
-  timeStamp: DateTime! @timestamp
-  user:user @relationship(type:"hasUser",direction:OUT)
-  task:flowNode @relationship(type:"hasFlownodes",direction:OUT)
-  story:file @relationship(type:"hasFile",direction:OUT)
-  epic:folder @relationship(type:"hasFolder",direction:OUT)
-  sprint:sprint @relationship(type:"hasSprint",direction:OUT)
- }
-
- type uid{
- id:ID! @id
- uid:Int!
- flownode:flowNode @relationship(type:"hasId",direction:OUT)
- }
-
-  type tasks {
+  type Sprint {
     id: ID! @id
     timeStamp: DateTime! @timestamp
-    flownodeHastask: flowNode @relationship(type: "hasTasks", direction: IN)
-  }
-
-
-
-  type Mutation {
-    createProject(newProject: projectInput!): main
-    updateProject(projectData: projectInput!): updateData
-    addUser(newUser: userInput!): user
-    deleteNode(nodeId:nodeId):Boolean
-  }
-
-  input nodeId{
-  id:String!
-  }
-
-  input userEmail {
-    email: String!
-  }
-
-  input projectInput {
     name: String!
+    startDate: String!
+    endDate: String!
     description: String
-    userName: String!
-    isOpen: Boolean!
+    #Epics
+    folderHas: [Folder!]! @relationship(type: "HAS_SPRINT", direction: OUT)
+    #stories
+    fileHas: [File!]! @relationship(type: "HAS_SPRINT", direction: OUT)
+    #Task
+    flownodeHas: [FlowNode!]! @relationship(type: "HAS_SPRINT", direction: OUT)
+    #projects
+    hasProjects: Project @relationship(type: "HAS_SPRINT", direction: OUT)
   }
 
-  input userInput {
-    userName: String!
-    emailId: String!
-    userType: String
-    active: Boolean!
+  type Comment {
+    id: ID! @id
+    message: String
+    timeStamp: DateTime! @timestamp
+    userHas: User @relationship(type: "HAS_COMMENT", direction: OUT)
+    taskHas: FlowNode @relationship(type: "HAS_COMMENT", direction: OUT)
+    storyHas: File @relationship(type: "HAS_COMMENT", direction: OUT)
+    epicHas: Folder @relationship(type: "HAS_COMMENT", direction: OUT)
+    sprintHas: Sprint @relationship(type: "HAS_COMMENT", direction: OUT)
+   # createdAt:DateTime! @timestamp(operations: CREATE)
+    #updatedAt:DateTime! @timestamp(operations: UPDATE)
   }
 
-  type updateData {
-    id: ID!
-    name: String!
-    description: String!
-    userName: String!
-    isOpen: Boolean!
-  }
+  type Uid {
+    id: ID! @id
+    uid: Int!
+    uidHas:FlowNode @relationship (type:"HAS_UID",direction:IN)
+      }
 
-  
+  type Tasks {
+    id: ID! @id
+    timeStamp: DateTime! @timestamp
+    flownodeHastask: FlowNode @relationship(type: "HAS_TASKS", direction: IN)
+  }
 `;
 
 export default typeDefs;

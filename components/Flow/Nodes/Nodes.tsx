@@ -1,15 +1,13 @@
-import { Editing } from "../Editing";
-import { useState, useEffect, useCallback } from "react";
-import { Handle, NodeResizer, Position, applyNodeChanges } from "reactflow";
+import Editing from "../Editing";
+import React, { useState } from "react";
+import { Handle, Position } from "reactflow";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
 import fileStore from "../../TreeView/fileStore";
 import edgeStore from "../Edges/edgeStore";
-import Tags from "./Tags";
-import Progress from "./Progress";
 import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
-import { updateLinksMutation, updateNodeData } from "./gqlNodes";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import { useRouter } from "next/router";
 
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
@@ -29,37 +27,24 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const updateDescription = nodeStore((state) => state.updateDescription);
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
 
-  // @ts-ignore
+  const router = useRouter();
+  const projectId = router.query.projectId as string;
+
   const label = data.label;
-  // @ts-ignore
   const shapeCSS = nodeShapeMap[data.shape];
-  // @ts-ignore
   const description = data.description;
-
-
-  // const updateNodeData_Links = async () => {
-  //console.log(shapeCSS)
-// const updateNodeData_Links = async () => {
-  //   if (linkNodeId === id) {
-  //     return await updateNodeData(data, id, updateLinksMutation)
-  //   }
-  // }
-  
-  //useEffect(() => {
-  //  updateNodeData_Links()
-  //}, [updateNodeData_Links])
-
-
+  let getBpmn = shapeCSS[1].split("-")[0];
+  const flag = getBpmn === "bpmn";
   const linkedTo = () => {
-    const x = findFile(data.links.fileId);
-    //console.log('x: ', x);
+    const x = findFile(data.hasLinkedTo.fileId);
     // @ts-ignore
-    const nodes = x.hasflowchart.nodes;
+    const nodes = x.hasFlowchart.hasNodes;
+    console.log(nodes);
     const nodeData = JSON.stringify(nodes)
-      .replaceAll('"hasdataNodedata":', '"data":')
-      .replaceAll('"haspositionPosition":', '"position":');
+      // .replaceAll('"data":', '"data":')
+      // .replaceAll('"position":', '"position":');
     // @ts-ignore
-    const edges = x.hasflowchart.edges;
+    const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(
       '"hasedgedataEdgedata":',
       '"data":'
@@ -73,15 +58,14 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   };
 
   const linkedBy = () => {
-    const x = findFile(data.linkedBy.fileId);
-    console.log("x: ", x);
+    const x = findFile(data.hasLinkedBy.fileId);
     // @ts-ignore
-    const nodes = x.hasflowchart.nodes;
+    const nodes = x.hasFlowchart.hasNodes;
     const nodeData = JSON.stringify(nodes)
-      .replaceAll('"hasdataNodedata":', '"data":')
-      .replaceAll('"haspositionPosition":', '"position":');
+      .replaceAll('"data":', '"data":')
+      // .replaceAll('"position":', '"position":');
     // @ts-ignore
-    const edges = x.hasflowchart.edges;
+    const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(
       '"hasedgedataEdgedata":',
       '"data":'
@@ -90,9 +74,15 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
       updateEdges(JSON.parse(edgeData));
       updateNodes(JSON.parse(nodeData));
     }
-    updateBreadCrumbs(x, x.id, 'new')
-  }
+    updateBreadCrumbs(x, x.id, "new");
+  };
 
+  const toDetails = (nodeId: string) => {
+    router.push({
+      pathname: `/projects/${projectId}/backlogs/edit/`,
+      query: { id: nodeId },
+    });
+  };
   return (
     <div>
       <div
@@ -116,13 +106,13 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         ) : null}
 
         <div
-          className={`${css_props} font-sans h-auto ${
+          className={`${css_props} h-auto font-sans ${
             shapeCSS[1]
           } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
             editing ? "cursor-default" : ""
           }`}
           onDoubleClick={() => {
-            if (!(shapeCSS[1].substring(0, 4) === "bpmn")){
+            if (!(shapeCSS[1].substring(0, 4) === "bpmn")) {
               setEditing(true);
               toggleDraggable(id, false);
             }
@@ -130,52 +120,60 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         >
           <div className={shapeCSS[2]}>
             {editing ? (
-              <div className={`relative flex-row text-center h-auto ${data.links.flag && "mt-7"}`}>
-              <Editing
-                isEdge={false}
-                toggleDraggable={toggleDraggable}
-                id={id}
-                updateNodeType={updateNodeType}
-                setEditing={setEditing}
-                updateLabel={updateLabel}
-                label={label}
-                CSSMap={nodeCSSMap}
-                description={description}
-                updateDescription={updateDescription}
-                bidirectionalArrows={false}
-              />
-               {data.links.flag ? (
               <div
-                className="flex cursor-pointer h-auto rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black h-auto "
-                onClick={linkedTo}
+                className={`relative h-auto flex-row text-center ${
+                  data.hasLinkedTo.flag && "mt-7"
+                }`}
               >
-                <div className="text-xs h-auto "> {data.links.label} </div>
-                <div>
-                  {" "}
-                  <BiArrowToRight className="h-4 w-4" />{" "}
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
+                <Editing
+                  isEdge={false}
+                  toggleDraggable={toggleDraggable}
+                  id={id}
+                  updateNodeType={updateNodeType}
+                  setEditing={setEditing}
+                  updateLabel={updateLabel}
+                  label={label}
+                  CSSMap={nodeCSSMap}
+                  description={description}
+                  updateDescription={updateDescription}
+                  bidirectionalArrows={false}
+                />
+                {data.hasLinkedTo.flag ? (
+                  <div
+                    className="flex h-auto h-auto cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                    onClick={linkedTo}
+                  >
+                    <div className="h-auto text-xs ">
+                      {" "}
+                      {data.hasLinkedTo.label}{" "}
+                    </div>
+                    <div>
+                      <BiArrowToRight className="h-4 w-4" />{" "}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <div>
-              <p className="py-1 text-center text-[0.6rem]">{label}</p>
-              {data.links.flag ? (
-              <div
-                className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-                onClick={linkedTo}
-              >
-                <div className="text-xs"> {data.links.label} </div>
-                <div>
-                  {" "}
-                  <BiArrowToRight className="h-4 w-4" />{" "}
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
+                {flag ? null : (
+                  <p
+                    onClick={() => toDetails(id)}
+                    className="cursor-pointer py-1 text-center text-[0.6rem] duration-300 hover:underline"
+                  >
+                    {label}
+                  </p>
+                )}
+                {data.hasLinkedTo.flag ? (
+                  <div
+                    className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                    onClick={linkedTo}
+                  >
+                    <div className="text-xs"> {data.hasLinkedTo.label} </div>
+                    <div>
+                      <BiArrowToRight className="h-4 w-4" />
+                    </div>
+                  </div>
+                ) : null}
               </div>
             )}
             {/* LinkedTo */}
@@ -183,20 +181,17 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             {/* linked by node  */}
             {
               // @ts-ignore
-              data.linkedBy.flag ? (
+              data.hasLinkedBy.flag ? (
                 <div
-                  className="absolute right-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                  className="absolute right-24 top-16 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                   onClick={linkedBy}
                 >
-                  <div className="text-xs"> {data.linkedBy.label} </div>
+                  <div className="text-xs"> {data.hasLinkedBy.label} </div>
                   <div>
-                    {" "}
                     <BiArrowBack className="h-4 w-4" />{" "}
                   </div>
                 </div>
-              ) : (
-                <></>
-              )
+              ) : null
             }
           </div>
         </div>
@@ -214,7 +209,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 //@ts-ignore
 function defaultNode({ data, id }) {
   return PrototypicalNode(
-    "",
+    "border-slate-400 bg-slate-300 text-slate-900",
     data,
     id
   );
@@ -222,16 +217,15 @@ function defaultNode({ data, id }) {
 
 //@ts-ignore
 function BrightblueNode({ data, id }) {
-  return <>
-    {
-      PrototypicalNode(
+  return (
+    <>
+      {PrototypicalNode(
         "border-node-blue-100 bg-node-blue-200 text-white",
         data,
         id
-      )
-    }
-
-  </>
+      )}
+    </>
+  );
   // return PrototypicalNode(
   //   "border-node-blue-100 bg-node-blue-200 text-white",
   //   data,
