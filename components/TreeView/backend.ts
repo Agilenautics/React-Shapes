@@ -48,8 +48,6 @@ export type MyData = {
   name: string;
   children?: Array<MyData>;
   type: string;
-  // hasContainsFile:Array<File>
-
   hasContainsFolder: Array<Folder>;
   hasContainsFile:Array<File>
 };
@@ -135,7 +133,7 @@ export function useBackend() {
               "Welcome!\nTo get started, use the sidebar button on the top left.",
             shape: "rectangle",
             description: "",
-            hasLinkedTo: {},
+            isLinked: {},
           },
           position: { x: 0, y: 0 },
           type: "WelcomeNode",

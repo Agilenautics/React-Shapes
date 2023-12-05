@@ -13,22 +13,6 @@ export const createFileMutation = gql`
   }
 `;
 
-export const newFolderInFolder = gql`
-  mutation Mutation($where: FolderWhere, $create: FolderRelationInput) {
-    updateFolders(where: $where, create: $create) {
-      folders {
-        name
-        hasFolder {
-          name
-          id
-          type
-          isOpen
-        }
-      }
-    }
-  }
-`;
-
 export const newFolderInMain = gql`
   ${Info_Fragment}
   ${File_Fragment}

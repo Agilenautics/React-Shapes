@@ -14,7 +14,7 @@ export const getProjectByUser = gql`
       description
       isOpen
       id
-      
+
       hasContainsFile {
         ...FileFragment
       }
@@ -49,21 +49,18 @@ export const getFile = gql`
       name
       id
       type
-      hasFlowchart {
-        name
-        hasNodes {
-          ...NodeFragment
-        }
+      hasNodes {
+        ...NodeFragment
       }
     }
   }
 `;
-//getting uid 
+//getting uid
 export const getUidQuery = gql`
   query Uids {
-  uids {
-    id
-    uid
+    uids {
+      id
+      uid
+    }
   }
-}
-`
+`;

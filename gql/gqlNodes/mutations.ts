@@ -22,35 +22,35 @@ export const delNodeMutation = gql`
     }
   }
 `;
-export const updateLinkedBy = gql`
-  mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
-    updateLinkedBies(where: $where, update: $update) {
-      linkedBies {
-        fileId
-        flag
-        id
-        label
-      }
-    }
-  }
-`;
-export const updateLinkedToMutation = gql`
-  mutation updateLinkedTo($where: NodeDataWhere, $update: NodeDataUpdateInput) {
-    updateNodeData(where: $where, update: $update) {
-      nodeData {
-        label
-        description
-        shape
-        hasLinkedTo {
-          label
-          id
-          fileId
-          flag
-        }
-      }
-    }
-  }
-`;
+// export const updateLinkedBy = gql`
+//   mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
+//     updateLinkedBies(where: $where, update: $update) {
+//       linkedBies {
+//         fileId
+//         flag
+//         id
+//         label
+//       }
+//     }
+//   }
+// `;
+// export const updateLinkedToMutation = gql`
+//   mutation updateLinkedTo($where: NodeDataWhere, $update: NodeDataUpdateInput) {
+//     updateNodeData(where: $where, update: $update) {
+//       nodeData {
+//         label
+//         description
+//         shape
+//         hasLinkedTo {
+//           label
+//           id
+//           fileId
+//           flag
+//         }
+//       }
+//     }
+//   }
+// `;
 export const updateNodesMutation = gql`
   ${Node_Fragment}
   mutation updateFlowNode($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
@@ -64,19 +64,18 @@ export const updateNodesMutation = gql`
 
 //updete position mutation
 
-export const updatePositionMutation = gql`
-  mutation updatePosition($update: PositionUpdateInput, $where: PositionWhere) {
-    updatePositions(update: $update, where: $where) {
-      positions {
-        name
-        x
-        y
-      }
+ export const updatePositionMutation = gql`
+   mutation Mutation($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
+  updateFlowNodes(where: $where, update: $update) {
+    flowNodes {
+      id
+      x
+      y
     }
   }
-`;
+}
+ `;
 export const updateTasksMutation = gql`
-  ${Info_Fragment}
   mutation updateTasks($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {
       flowNodes {
@@ -87,10 +86,6 @@ export const updateTasksMutation = gql`
         }
         hasSprint {
           name
-        }
-        hasdataNodedata {
-          label
-          description
         }
         hasComments {
           id

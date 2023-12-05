@@ -5,8 +5,8 @@ import { Edge_Fragment } from "../gqlEdges/fragments";
 export const allNodes = gql`
   ${Node_Fragment}
   ${Edge_Fragment}
-  query getAllNodes($where: FlowchartWhere) {
-    flowcharts(where: $where) {
+  query getAllNodes($where: FileWhere) {
+    files(where: $where) {
       name
       hasNodes {
         ...NodeFragment

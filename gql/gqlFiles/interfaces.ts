@@ -1,7 +1,8 @@
 export interface File {
   name: string;
   id: string;
-  hasFlowchart: any;
+  hasNodes: any;
+  hasEdges:any;
   flowchart: any;
   type: "file";
   __typename: "file";
@@ -71,7 +72,8 @@ export function transformObject(root: RootObject): RootObject {
       if (item.type === "file") {
         return {
           ...item,
-          flowchart: item.hasFlowchart,
+          nodes: item.hasNodes,
+          edges:item.hasEdges
         };
       }
       return transformFolder(item);

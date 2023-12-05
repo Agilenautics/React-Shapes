@@ -6,7 +6,7 @@ import {
 import client from "../../apollo-client";
 import { Edge } from "reactflow";
 import { createEdgeMutation, deleteEdgeMutation } from "./mutations";
-import { allEdges } from "./queries";
+//import { allEdges } from "./queries";
 
 async function getEdges(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -37,87 +37,78 @@ async function getEdges(
 }
 
 //methode for creating edge
-const createFlowEdge = async (newEdge: any, id: string, email:string, updateEdges: any) => {
+const createFlowEdge = async (
+  newEdge: any,
+  id: string,
+  email: string,
+  updateEdges: any
+) => {
   var edges: Array<Edge> = [];
   await client
     .mutate({
       mutation: createEdgeMutation,
       variables: {
-        where: {
-          id,
-        },
-        update: {
-          hasFlowchart: {
-            update: {
-              node: {
-                hasEdges: [
-                  {
-                    create: [
-                      {
-                        node: {
-                          name: "newEdge",
-                          selected: true,
-                          source: newEdge.source,
-                          sourceHandle: newEdge.sourceHandle,
-                          target: newEdge.target,
-                          targetHandle: newEdge.targetHandle,
-                          hasedgedataEdgedata: {
-                            create: {
-                              node: {
-                                bidirectional: newEdge.data.bidirectional,
-                                boxCSS: newEdge.data.boxCSS,
-                                label: newEdge.data.label,
-                                pathCSS: newEdge.data.pathCSS,
-                              },
-                            },
-                          },
-                          "createdBy": {
-                            "connect": {
-                              "where": {
-                                "node": {
-                                  "emailId": email,
-                                }
-                              }
-                            }
-                          },
-                          flownodeConnectedby: {
-                            connect: {
-                              where: {
-                                node: {
-                                  id: newEdge.source,
-                                },
-                              },
-                            },
-                          },
-                          connectedtoFlownode: {
-                            connect: {
-                              where: {
-                                node: {
-                                  id: newEdge.target,
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    ],
+        input: [
+          {
+            name: "newEdge",
+            selected: true,
+            source: newEdge.source,
+            sourceHandle: newEdge.sourceHandle,
+            target: newEdge.target,
+            targetHandle: newEdge.targetHandle,
+            bidirectional: newEdge.data.bidirectional,
+            boxCSS: newEdge.data.boxCSS,
+            label: newEdge.data.label,
+            pathCSS: newEdge.data.pathCSS,
+            createdBy: {
+              connect: {
+                where: {
+                  node: {
+                    emailId: email,
                   },
-                ],
+                },
+              },
+            },
+            flownodeConnectedby: {
+              connect: {
+                where: {
+                  node: {
+                    id: newEdge.source,
+                  },
+                },
+              },
+            },
+            connectedtoFlownode: {
+              connect: {
+                where: {
+                  node: {
+                    id: newEdge.target,
+                  },
+                },
+              },
+            },
+            hasFile: {
+              connect: {
+                where: {
+                  node: {
+                    id: id,
+                  },
+                },
               },
             },
           },
-        },
+        ],
       },
     })
     .then((result) => {
-      const edges1 = JSON.stringify(
-        result.data.updateFiles.files[0].hasFlowchart.hasEdges
-      );
-      //@ts-ignore
-      edges = JSON.parse(
-        edges1.replaceAll('"hasedgedataEdgedata":', '"data":')
-      );
-      return updateEdges(edges);
+      // const edges1 = JSON.stringify(
+      //   result.data.updateFiles.files[0].hasEdges
+      // );
+      // //@ts-ignore
+      // edges = JSON.parse(
+      //   edges1.replaceAll('"hasedgedataEdgedata":', '"data":')
+      // );
+      // return updateEdges(edges);
     })
     .catch((error) => {
       console.error(error);
@@ -139,21 +130,15 @@ const updateEdgeBackend = async (
           id: edgeData.id,
         },
         update: {
-          hasedgedataEdgedata: {
-            update: {
-              node: {
-                label: edgeData.data.label,
-                bidirectional: edgeData.data.bidirectional,
-                boxCSS: edgeData.data.boxCSS,
-                pathCSS: edgeData.data.pathCSS,
-              },
-            },
-          },
+          label: edgeData.data.label,
+          bidirectional: edgeData.data.bidirectional,
+          boxCSS: edgeData.data.boxCSS,
+          pathCSS: edgeData.data.pathCSS,
         },
       },
     });
   } catch (error) {
-    console.log(error,"while updating edge")
+    console.log(error, "while updating edge");
   }
 };
 
@@ -168,11 +153,9 @@ const deleteEdgeBackend = async (edgeId: string, label: string) => {
         id: edgeId,
       },
       delete: {
-        hasedgedataEdgedata: {
-          where: {
-            node: {
-              label,
-            },
+        where: {
+          node: {
+            label,
           },
         },
       },
@@ -183,7 +166,7 @@ const deleteEdgeBackend = async (edgeId: string, label: string) => {
 };
 
 export {
-  allEdges,
+ // allEdges,
   getEdges,
   createFlowEdge,
   deleteEdgeBackend,
