@@ -67,12 +67,14 @@ function Projects() {
         email,
         GET_USER
       );
-      const { hasProjects, ...userData } = response?.data.users[0];
-      updateProjects(hasProjects, response?.loading, response?.error);
-      setProjectData(hasProjects);
-      updateRecycleBinProject(hasProjects);
-      updateLoginUser(userData);
-      updateUserType(userData.userType);
+      if (response?.data && response.data.users.length) {
+        const { hasProjects, ...userData } = response?.data.users[0];
+        updateProjects(hasProjects, response?.loading, response?.error);
+        setProjectData(hasProjects);
+        updateRecycleBinProject(hasProjects);
+        updateLoginUser(userData);
+        updateUserType(userData.userType);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -84,7 +86,6 @@ function Projects() {
     // setIsButtonDisabled(userType.toLowerCase() === "user");
     // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
   }, [userEmail]);
-  
 
   useEffect(() => {
     if (projectData && projectData.length) {
@@ -166,7 +167,6 @@ function Projects() {
       </div>
     );
   }
-
 
   return (
     // container

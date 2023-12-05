@@ -20,8 +20,8 @@ const getUserByEmail = async (
         },
       },
     });
-  } catch (error) {
-    console.log(error, "while getUser by email");
+  } catch (errors) {
+    console.log(errors, "while getUser by email");
   }
 };
 

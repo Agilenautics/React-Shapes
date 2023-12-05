@@ -58,7 +58,6 @@ module.exports = {
     BASE_URL: "http://localhost:3000"
   },
   webpack: (config) => {
-
     config.experiments = { topLevelAwait: true, layers: true }
     return config;
   },

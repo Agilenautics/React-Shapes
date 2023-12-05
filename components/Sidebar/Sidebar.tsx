@@ -90,9 +90,10 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
 
   const getuniqId = async () => {
     const uniqId = await getUidMethode(getUidQuery);
-    updateUid(uniqId.data.uids);
-    if (uniqId.data.uids.length === 0) {
-      await createUidMethode(createUidMutation);
+    if (uniqId && uniqId.data.uids.length) {
+      updateUid(uniqId.data.uids);
+    } else {
+      // await createUidMethode(createUidMutation);
     }
   };
 

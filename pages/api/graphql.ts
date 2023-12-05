@@ -6,6 +6,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import typeDefs from "./typeDefs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { GraphQLError } from "graphql";
+import errorHandling from "./errorHandling";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
@@ -16,13 +17,11 @@ EventEmitter.defaultMaxListeners = 15;
 // ? Here we provide authentication details for the Neo4j server
 // * This server is currently for development only, we will need to change
 // * to another server before production
-
 const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
-  formatError:(error:GraphQLError)=>{
-    console.log(error)
-    return error
+  formatError: (error: GraphQLError) => {
+    return errorHandling(error);
   },
   introspection: true,
   persistedQueries: false,
@@ -31,7 +30,7 @@ const apolloServer = new ApolloServer({
 
 // neoSchema.
 const startServer = apolloServer.start();
-
+//creatin server using handler function (nextsJs syntax)
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
