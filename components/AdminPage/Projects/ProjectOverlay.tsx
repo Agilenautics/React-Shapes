@@ -4,6 +4,8 @@ import { GET_USER, addProject_Backend, ADD_PROJECT } from "../../../gql";
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
 import { Project } from "../../../lib/appInterfaces";
+import { useTranslation } from "react-i18next";
+
 
 interface AddProjectPopupProps {
   onClose: () => void;
@@ -18,6 +20,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   userEmail,
   projectData,
 }) => {
+  const { t } = useTranslation(); // useTranslation hook
   const [formData, setFormData] = useState({ name: "", description: "" });
   const [errors, setError] = useState<string | null>(null);
   const { addProject, loading } = projectStore();
@@ -65,11 +68,11 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-[45%] rounded bg-white p-8 dark:bg-bgdarkcolor dark:text-white">
-        <h2 className="mb-4 text-lg font-semibold">Add New Project</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t("add_new_project")} </h2>
         <form onSubmit={handleFormSubmit}>
           <div className="">
             <label htmlFor="projectName" className="mb-2 block font-medium">
-              Project Name <span className="text-xl text-red-500">*</span>
+            {t("project_name")} <span className="text-xl text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -88,7 +91,7 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
           </div>
           <div className="mb-4">
             <label htmlFor="projectDesc" className="mb-2 block font-medium">
-              Project Description
+            {t("project_description")} 
             </label>
             <textarea
               id="projectDesc"
@@ -105,14 +108,16 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
               className="mr-2 rounded-lg bg-gray-200 px-4 py-2 dark:bg-blue-500"
               onClick={onClose}
             >
-              Cancel
+               {t("cancel")} 
+              
             </button>
             <button
               type="submit"
               className="rounded-lg bg-blue-500 px-4 py-2 text-white"
               disabled={formData.name === ""}
             >
-              Add Project
+               {t("add_project")} 
+             
             </button>
           </div>
         </form>

@@ -6,6 +6,8 @@ import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 import { GET_USER, getUserByEmail } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
+import { useTranslation } from "react-i18next";
+
 
 interface ProjectOverviewProps {
   projectName: string;
@@ -25,6 +27,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     (state) => state.updateRecycleBinProject
   );
   const { userEmail, updateUserType, updateLoginUser } = userStore();
+  const { t } = useTranslation(); // useTranslation hook
 
   const getProjects = async (email: string) => {
     try {
@@ -57,12 +60,12 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         <h1 className="ml-4 text-2xl font-bold ">{projectName}</h1>
       </div>
       <div className="mt-10">
-        <h3 className="pl-1 text-lg font-semibold">Description</h3>
+        <h3 className="pl-1 text-lg font-semibold">{t("description")}</h3>
         <p className="mt-2">{projectDesc}</p>
       </div>
-      <h2 className="mt-10 pl-1 text-lg font-semibold">Project Members</h2>
+      <h2 className="mt-10 pl-1 text-lg font-semibold">{t("project_members")}</h2>
       <div className="mt-2 flex items-center">
-        <h4 className="">Total</h4>
+        <h4 className="">{t("total")}</h4>
         <p className="ml-4 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs dark:bg-slate-500">
           {" "}
           {total}

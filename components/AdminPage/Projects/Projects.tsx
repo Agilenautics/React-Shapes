@@ -24,8 +24,11 @@ import { useRouter } from "next/router";
 import { ApolloQueryResult, useQuery } from "@apollo/client";
 import { onAuthStateChanged } from "firebase/auth";
 import { Project, User } from "../../../lib/appInterfaces";
+import { useTranslation } from "react-i18next";
 
 function Projects() {
+  const { t } = useTranslation(); // useTranslation hook
+
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -84,7 +87,6 @@ function Projects() {
     // setIsButtonDisabled(userType.toLowerCase() === "user");
     // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
   }, [userEmail]);
-  
 
   useEffect(() => {
     if (projectData && projectData.length) {
@@ -167,7 +169,6 @@ function Projects() {
     );
   }
 
-
   return (
     // container
     <div className="p-7">
@@ -184,24 +185,22 @@ function Projects() {
 
         <div className="flex flex-col justify-around">
           <div>
-            <h2 className="text-4xl">Welcome! {getNameFromEmail(userEmail)}</h2>
-            <p className="m-2 text-xl">
-              Quality is never an accident; it is always the result of high
-              intention, sincere effort, intelligent direction, and skillful
-              execution
-            </p>
+            <h2 className="text-4xl">
+              {t("welcome")} {getNameFromEmail(userEmail)}
+            </h2>
+            <p className="m-2 text-xl">{t("headtitle")}</p>
           </div>
           <a
             href="#activities"
             className="m-2 cursor-pointer text-sky-500 underline duration-300 hover:text-sky-700"
           >
-            see the daily activities
+            {t("activities")}
           </a>
         </div>
       </div>
 
       {/* Project  heading*/}
-      <h2 className="mb-6 text-2xl font-semibold">Projects</h2>
+      <h2 className="mb-6 text-2xl font-semibold"> {t("projects")}</h2>
 
       {/* project heading bar (functionality) */}
       <div
@@ -213,7 +212,7 @@ function Projects() {
             className=" bg-white-200 bg:text-slate-100 h-full w-full outline-none dark:bg-transparent"
             type="text"
             id="search"
-            placeholder="Search"
+            placeholder={t("search")}
             autoComplete="off"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -221,12 +220,14 @@ function Projects() {
         </div>
 
         <div className=" col-span-2">
-          <span className="ml-5">Total : {allProjects.length}</span>
+          <span className="ml-5">
+            {t("total")} : {allProjects.length}
+          </span>
           <button
             onClick={handleSortClick}
             className="ml-5 rounded-lg p-2 duration-300 hover:bg-slate-100 hover:text-slate-500"
           >
-            sorting:
+            {t("sorting")}:
             <HiArrowsUpDown
               className={`inline ${sortValue === "asc" ? "" : "rotate-180"}`}
             />{" "}
@@ -235,7 +236,7 @@ function Projects() {
             onClick={toRecycleBin}
             className="relative ml-5 rounded-lg  rounded-lg p-2 duration-300 hover:bg-slate-100 hover:text-slate-500"
           >
-            RecycleBin: <AiFillDelete className="inline text-xl" />
+            {t("recyclebin")}: <AiFillDelete className="inline text-xl" />
             <span className="absolute right-[1px] top-1 h-[20px] w-4 rounded-full bg-sky-500 text-sm text-white">
               {recycleBinProject.length}
             </span>
@@ -247,7 +248,7 @@ function Projects() {
             onClick={handleAddProjectClick}
             className="rounded border border-sky-500/75 bg-sky-500/75 p-2 text-white duration-300 hover:border hover:border-sky-500/75 hover:bg-transparent hover:text-sky-500"
           >
-            Add Project
+            {t("add_project")}
           </button>
         </div>
       </div>
@@ -297,7 +298,8 @@ function Projects() {
                       className="duration-300 hover:underline"
                       onClick={() => handleRecentOpenProject(id)}
                     >
-                      see more <MdKeyboardArrowRight className="inline" />
+                      {t("see_more")}{" "}
+                      <MdKeyboardArrowRight className="inline" />
                     </a>
                   </Link>
                 </div>
@@ -312,13 +314,13 @@ function Projects() {
               {projectId === id && projectTrackChanges ? (
                 <div className="absolute -right-[20px] top-10 flex flex-col bg-white shadow">
                   <button className="border-b-2 bg-yellow-500 p-1 text-xs text-white">
-                    Edit
+                    {t("edit")}
                   </button>
                   <button
                     className="bg-red-500 p-1 text-xs text-white"
                     onClick={() => handleDelete_Project(id)}
                   >
-                    Delete
+                    {t("delete")}
                   </button>
                 </div>
               ) : null}

@@ -1,6 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, } from "firebase/app";
 import { getAuth, GoogleAuthProvider,FacebookAuthProvider } from "firebase/auth";
+import {
+  activate,
+  fetchAndActivate,
+  fetchConfig,
+  getRemoteConfig,
+  getValue,
+  
+} from "firebase/remote-config";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -23,3 +31,10 @@ const app = initializeApp(firebaseConfig);
 // export const facebookProvider = new FacebookAuthProvider();
 
 export const auth = getAuth(app);
+let remoteConfig;
+if (typeof window !== 'undefined') {
+  remoteConfig = getRemoteConfig();
+  remoteConfig.settings.minimumFetchIntervalMillis = 1000;
+}
+
+export { remoteConfig, activate, fetchAndActivate, fetchConfig, getValue };
