@@ -12,6 +12,7 @@ export const createEdgeMutation = gql`
       }
     }
   }
+
 `;
 
 export const deleteEdgeMutation = gql`
@@ -29,11 +30,9 @@ export const updateEdgeMutation = gql`
   mutation updateEdge($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
     updateFlowEdges(where: $where, update: $update) {
       flowEdges {
-        hasedgedataEdgedata {
-          label
-          bidirectional
-          boxCSS
-        }
+        label
+        bidirectional
+        boxCSS
       }
     }
   }

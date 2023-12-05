@@ -78,7 +78,7 @@ function Flow() {
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map(async (curEle: any) => {
-      await deleteEdgeBackend(curEle.id, curEle.data.label, allNodes, fileId);
+      await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
     });
   };
@@ -172,33 +172,28 @@ function Flow() {
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
           const node = await findNode(getNode, selectedNodes[0].id);
-          const linkA = node[0].data.hasLinkedBy.flag;
-          const linkB = node[0].data.hasLinkedTo.flag;
-          //.flowNode.nodeData.linked
-          if (linkA || linkB) {
-            setShowConfirmation({
-              type: "links",
-              show: true,
-              selectedItems: selectedNodes,
-            });
-          } else {
-            setShowConfirmation({
+          // const linkA = node[0].data.hasLinkedBy.flag;
+          // const linkB = node[0].data.hasLinkedTo.flag;
+          // //.flowNode.nodeData.linked
+                      setShowConfirmation({
               type: "node",
               show: true,
               selectedItems: selectedNodes,
             });
           }
-        } else if (selectedEdges.length > 0) {
+        //} 
+        //else if (selectedEdges.length > 0) {
           setShowConfirmation({
             type: "edge",
             show: true,
             selectedItems: selectedEdges,
           });
-        } else {
+       // } 
+       // else {
           setShowConfirmation(defaultShowConfirmation);
         }
       }
-    };
+   // };
 
     document.addEventListener("keydown", handleBackspace);
     return () => {

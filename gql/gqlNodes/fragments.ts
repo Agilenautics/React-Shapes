@@ -6,7 +6,6 @@ export const Info_Fragment = gql`
     assignedTo
     status
     dueDate
-    sprint
   }
 `;
 
@@ -19,6 +18,21 @@ export const Node_Fragment = gql`
     type
     timeStamp
     uid
+    label
+    shape
+       x
+    y
+    
+    isLinkedConnection {
+      edges {
+        label
+        flag
+        isLeft
+      }
+    }
+    hasInfo{
+      ...InfoFragment
+    }
     hasComments {
       message
       createdBy {
@@ -29,32 +43,7 @@ export const Node_Fragment = gql`
       id
       name
     }
-    hasInfo {
-      ...InfoFragment
-    }
-    data {
-      label
-      shape
-      description
-      hasLinkedTo {
-        label
-        id
-        flag
-        fileId
-      }
-      hasLinkedBy {
-        label
-        id
-        fileId
-        flag
-      }
-    }
-    position {
-      name
-      x
-      y
-    }
-    flowNodeHas {
+    hasFile {
       id
       name
       folderHas {
