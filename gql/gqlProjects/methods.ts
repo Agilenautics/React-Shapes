@@ -275,30 +275,23 @@ const clearRecycleBin = async (
           hasContainsFile: [
             {
               delete: {
-                hasFlowchart: {
-                  delete: {
                     hasEdges: [
                       {
                         delete: {
-                          hasedgedataEdgedata: {
-                            delete: {},
                           },
                         },
-                      },
+                     
                     ],
                     hasNodes: [
                       {
                         delete: {
-                          position: {
-                            delete: {},
                           },
-                          data: {},
                         },
-                      },
+                      
                     ],
-                  },
+                  
                 },
-              },
+              
             },
           ],
           hasContainsFolder: [
@@ -307,27 +300,23 @@ const clearRecycleBin = async (
                 hasFile: [
                   {
                     delete: {
-                      hasFlowchart: {
-                        delete: {
+                      
                           hasEdges: [
                             {
                               delete: {
-                                hasedgedataEdgedata: {},
                               },
                             },
                           ],
                           hasNodes: [
                             {
                               delete: {
-                                position: {},
-                                data: {},
                               },
                             },
                           ],
                         },
                       },
-                    },
-                  },
+                    
+                  
                 ],
                 hasFolder: [
                   {
@@ -335,27 +324,22 @@ const clearRecycleBin = async (
                       hasFile: [
                         {
                           delete: {
-                            hasFlowchart: {
-                              delete: {
                                 hasNodes: [
                                   {
                                     delete: {
-                                      data: {},
-                                      position: {},
                                     },
                                   },
                                 ],
                                 hasEdges: [
                                   {
                                     delete: {
-                                      hasedgedataEdgedata: {},
                                     },
                                   },
                                 ],
                               },
                             },
-                          },
-                        },
+                          
+                        
                       ],
                     },
                   },
@@ -365,32 +349,32 @@ const clearRecycleBin = async (
           ],
         },
       },
-      update: (cache, { data }) => {
-        const existingData = cache.readQuery({
-          query,
-          variables: {
-            where: {
-              emailId: email,
-            },
-          },
-        });
-        const { hasProjects, ...userData } = existingData.users[0];
-        const to_be_updated = hasProjects.filter(
-          (values: Project) => values.recycleBin !== true
-        );
-        const updated_user = { ...userData, hasProjects: to_be_updated };
-        cache.writeQuery({
-          query,
-          variables: {
-            where: {
-              emailId: "irfan123@gmail.com",
-            },
-          },
-          data: {
-            users: [updated_user],
-          },
-        });
-      },
+      // update: (cache, { data }) => {
+      //   const existingData = cache.readQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         emailId: email,
+      //       },
+      //     },
+      //   });
+      //   const { hasProjects, ...userData } = existingData.users[0];
+      //   const to_be_updated = hasProjects.filter(
+      //     (values: Project) => values.recycleBin !== true
+      //   );
+      //   const updated_user = { ...userData, hasProjects: to_be_updated };
+      //   cache.writeQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         emailId: "irfan123@gmail.com",
+      //       },
+      //     },
+      //     data: {
+      //       users: [updated_user],
+      //     },
+      //   });
+      // },
     });
   } catch (error) {
     console.log(error, "error while clearing recycleBin projects");

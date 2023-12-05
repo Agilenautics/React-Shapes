@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SyntheticEvent } from "react";
+ import React, { useState, useEffect, SyntheticEvent } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
 import { MyData } from "./backend";
@@ -7,7 +7,14 @@ import { AiOutlineFile, AiFillFolder, AiFillFolderOpen } from "react-icons/ai";
 import fileStore from "./fileStore";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import edgeStore from "../Flow/Edges/edgeStore";
-import { allNodes, getNodes, getFileByNode } from "../../gql";
+import {
+  allNodes,
+  getNodes,
+  //allEdges,
+  //getEdges,
+  // getFileByNode,
+} from "../../gql";
+import { gql } from "graphql-tag";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../auth";
 import { get_user_method, GET_USER } from "../../gql";
@@ -175,6 +182,7 @@ export const TreeNode = ({
         setIsLoading(true);
         getNodes(allNodes, data.id)
           .then((result) => {
+            console.log(result, "res");
             updateNodes(result.nodes);
             updateEdges(result.edges);
           })

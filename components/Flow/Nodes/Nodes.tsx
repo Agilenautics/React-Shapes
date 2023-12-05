@@ -33,48 +33,50 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const label = data.label;
   const shapeCSS = nodeShapeMap[data.shape];
   const description = data.description;
-  let getBpmn = shapeCSS[1].split("-")[0];
+  console.log(data,"data");
+  let getBpmn = shapeCSS[1]?.split("-")[0];
   const flag = getBpmn === "bpmn";
   const linkedTo = () => {
-    const x = findFile(data.hasLinkedTo.fileId);
+    const x = findFile(data.isLinked.hasFile.id);
     // @ts-ignore
-    const nodes = x.hasFlowchart.hasNodes;
+    const nodes = x.hasNodes;
     console.log(nodes);
-    const nodeData = JSON.stringify(nodes);
-    // .replaceAll('"data":', '"data":')
-    // .replaceAll('"position":', '"position":');
-    // @ts-ignore
-    const edges = x.hasFlowchart.hasEdges;
-    const edgeData = JSON.stringify(edges).replaceAll(
-      '"hasedgedataEdgedata":',
-      '"data":'
-    );
+    const nodeData =  nodes.map((items:any)=>{
+      const {x,y,label,shape,...rest} =items
+      return {...rest,data:{label,shape},position:{x,y}}
+    });
+    // const edges = x.hasEdges;
+    // const edgeData = JSON.stringify(edges).replaceAll(
+    //   '"hasedgedataEdgedata":',
+    //   '"data":'
+    // );
     if (x.children == null) {
       // @ts-ignore
-      updateEdges(JSON.parse(edgeData));
-      updateNodes(JSON.parse(nodeData));
+      //updateEdges(JSON.parse(edgeData));
+      updateNodes(nodeData);
     }
     updateBreadCrumbs(x, x.id, "push");
   };
 
-  const linkedBy = () => {
-    const x = findFile(data.hasLinkedBy.fileId);
-    // @ts-ignore
-    const nodes = x.hasFlowchart.hasNodes;
-    const nodeData = JSON.stringify(nodes).replaceAll('"data":', '"data":');
-    // .replaceAll('"position":', '"position":');
-    // @ts-ignore
-    const edges = x.hasFlowchart.hasEdges;
-    const edgeData = JSON.stringify(edges).replaceAll(
-      '"hasedgedataEdgedata":',
-      '"data":'
-    );
-    if (x.children == null) {
-      updateEdges(JSON.parse(edgeData));
-      updateNodes(JSON.parse(nodeData));
-    }
-    updateBreadCrumbs(x, x.id, "new");
-  };
+  // const linkedBy = () => {
+  //   const x = findFile(data.hasLinkedBy.fileId);
+  //   // @ts-ignore
+  //   const nodes = x.hasNodes;
+  //   const nodeData = JSON.stringify(nodes)
+  //     .replaceAll('"hasdataNodedata":', '"data":')
+  //     .replaceAll('"haspositionPosition":', '"position":');
+  //   // @ts-ignore
+  //   const edges = x.hasEdges;
+  //   const edgeData = JSON.stringify(edges).replaceAll(
+  //     '"hasedgedataEdgedata":',
+  //     '"data":'
+  //   );
+  //   if (x.children == null) {
+  //     updateEdges(JSON.parse(edgeData));
+  //     updateNodes(JSON.parse(nodeData));
+  //   }
+  //   updateBreadCrumbs(x, x.id, "new");
+  // };
 
   const toDetails = (nodeId: string) => {
     router.push({
@@ -120,9 +122,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
           <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>
             {editing ? (
               <div
-                className={`relative h-auto flex-row text-center ${
-                  data.hasLinkedTo.flag && "mt-7"
-                }`}
+                // className={`relative h-auto flex-row text-center ${
+                //   data.hasLinkedTo.flag && "mt-7"
+                // }`}
               >
                 <Editing
                   isEdge={false}
@@ -137,7 +139,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                   updateDescription={updateDescription}
                   bidirectionalArrows={false}
                 />
-                {data.hasLinkedTo.flag ? (
+                {/* {data.isLinkedConnection.edges.flag ? (
                   <div
                     className="flex h-auto h-auto cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                     onClick={linkedTo}
@@ -150,14 +152,14 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                       <BiArrowToRight className="h-4 w-4" />{" "}
                     </div>
                   </div>
-                ) : null}
+                ) : null} */}
               </div>
             ) : (
               <div>
-                {flag ? null : (
+                 {flag ? null : (
                   <p className="py-1 text-center text-[0.6rem]">{label}</p>
                 )}
-                {data.hasLinkedTo.flag ? (
+               { /*{data.hasLinkedTo.flag ? (
                   <div
                     className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                     onClick={linkedTo}
@@ -167,7 +169,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                       <BiArrowToRight className="h-4 w-4" />
                     </div>
                   </div>
-                ) : null}
+               ) : null} */}
               </div>
             )}
             {/* LinkedTo */}
@@ -175,17 +177,17 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             {/* linked by node  */}
             {
               // @ts-ignore
-              data.hasLinkedBy.flag ? (
-                <div
-                  className="absolute right-24 top-16 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-                  onClick={linkedBy}
-                >
-                  <div className="text-xs"> {data.hasLinkedBy.label} </div>
-                  <div>
-                    <BiArrowBack className="h-4 w-4" />{" "}
-                  </div>
-                </div>
-              ) : null
+              // data.hasLinkedBy.flag ? (
+              //   <div
+              //     className="absolute right-24 top-16 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+              //     onClick={linkedBy}
+              //   >
+              //     <div className="text-xs"> {data.hasLinkedBy.label} </div>
+              //     <div>
+              //       <BiArrowBack className="h-4 w-4" />{" "}
+              //     </div>
+              //   </div>
+              // ) : null
             }
           </div>
         </div>
@@ -199,7 +201,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 // ! These functions have basically become outdated since you can change
 // ! the CSS directly, so need to phase this out by changing how the nodes
 // ! are updated.
-
 //@ts-ignore
 function defaultNode({ data, id }) {
   return PrototypicalNode(

@@ -65,20 +65,16 @@ function Flow() {
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
   const [nodeId, setNodeId] = useState([]);
-  const userEmail = userStore((state)=>state.userEmail);
-
-
+  const userEmail = userStore((state) => state.userEmail);
 
   const dragged = useRef(false);
-  
- 
 
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map(async (curEle: any) => {
-      await deleteEdgeBackend(curEle.id, curEle.data.label, allNodes, fileId);
+      await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
     });
   };
@@ -175,43 +171,28 @@ function Flow() {
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
           const node = await findNode(getNode, selectedNodes[0].id);
-          const linkA = node[0].data.hasLinkedBy.flag;
-          const linkB = node[0].data.hasLinkedTo.flag;
-          //.flowNode.nodeData.linked
-          if (linkA || linkB) {
-            setShowConfirmation({
-              type: "links",
-              show: true,
-              selectedItems: selectedNodes,
-            });
-          } else {
-            setShowConfirmation({
-              type: "node",
-              show: true,
-              selectedItems: selectedNodes,
-            });
-          }
-        } else if (selectedEdges.length > 0) {
+          // const linkA = node[0].data.hasLinkedBy.flag;
+          // const linkB = node[0].data.hasLinkedTo.flag;
+          // //.flowNode.nodeData.linked
           setShowConfirmation({
-            type: "edge",
+            type: "node",
             show: true,
-            selectedItems: selectedEdges,
+            selectedItems: selectedNodes,
           });
-        } else {
-          setShowConfirmation(defaultShowConfirmation);
         }
+        //}
+        //else if (selectedEdges.length > 0) {
+        setShowConfirmation({
+          type: "edge",
+          show: true,
+          selectedItems: selectedEdges,
+        });
+        // }
+        // else {
+        setShowConfirmation(defaultShowConfirmation);
       }
-      // if (event.key === "Delete") {
-      //   const selectedEdges = getEdges().filter((edge) => edge.selected);
-      //   if (selectedEdges.length > 0) {
-      //     setShowConfirmation({
-      //       type: "edge" || "node",
-      //       show: true,
-      //       selectedItems: selectedEdges,
-      //     });
-      //   }
-      // }
     };
+    // };
 
     document.addEventListener("keydown", handleBackspace);
     return () => {
@@ -356,4 +337,3 @@ export default Flow;
 function setUserEmail(email: any) {
   throw new Error("Function not implemented.");
 }
-

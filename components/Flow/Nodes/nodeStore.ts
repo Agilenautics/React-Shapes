@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { Node } from "reactflow";
 import {
   findNode,
-  updateLinkedByMethod,
+  //updateLinkedByMethod,
   updateNodeData,
   updateNodeBackend,
   getNode,
-  updateLinkedBy,
-  updateLinkedToMutation,
-  getFileByNode,
+ // updateLinkedBy,
+  //updateLinkedToMutation,
+  //getFileByNode,
   allNodes,
   updateNodesMutation,
 } from "../../../gql";
@@ -17,7 +17,7 @@ import {
 
 export interface NodeState {
   nodes: Array<Node>;
-  addNode: (newNode: Node) => void;
+  addNode: (newNode: Array<Node>) => void;
   updateNodes: (nodes: Array<Node>) => void;
   deleteNode: (node: Node) => void;
   updateLabel: (id: string, newLabel: string) => void;
@@ -73,18 +73,29 @@ const nodeStore = create<NodeState>((set) => ({
   },
   addNode: (newNode) =>
     set((state) => {
-      const to_be_updated = JSON.stringify(newNode)
-        // .replaceAll('"data":', '"data":')
-        // .replaceAll('"position":', '"position":');
-      const updatedNode = JSON.parse(to_be_updated);
+      console.log("newNode",newNode);
+      const updatedNode =  newNode.map((item:any)=>{
+        const description= item.hasInfo.description;
+        const {x,y,label,shape,...rest} =item
+        return {...rest,data:{label,shape,description},position:{x,y}}
+      })
       return {
         nodes: [...state.nodes, ...updatedNode],
       };
     }),
   updateNodes: (nodes) =>
     set((state) => {
+      console.log("nodes",nodes)
       // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
-      return { nodes: nodes };
+      const newData =  nodes.map((item:any)=>{
+        const description= item.hasInfo.description;
+        const {x,y,label,shape,...rest} =item
+        return {...rest,data:{label,shape,description},position:{x,y}}
+      })
+      console.log(newData,"newData")
+
+  
+      return { nodes: newData };
     }),
   deleteNode: (node) => {
     set((state) => {
@@ -100,12 +111,12 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-      updateNodeData(
-        updated_node,
-        updateLinkedToMutation,
-        allNodes,
-        state.fileId
-      );
+    //  updateNodeData(
+    //     updated_node,
+    //     updateLinkedToMutation,
+    //     allNodes,
+    //     state.fileId
+    //   );
       return { nodes: [...to_be_updated, updated_node] };
     });
   },
@@ -118,12 +129,12 @@ const nodeStore = create<NodeState>((set) => ({
         data: { ...old_node.data, label: newLabel },
       };
       if (!old_node.data?.label || old_node.data.label !== newLabel) {
-        updateNodeData(
-          updated_node,
-          updateLinkedToMutation,
-          allNodes,
-          state.fileId
-        );
+        // updateNodeData(
+        //   updated_node,
+        //   updateLinkedToMutation,
+        //   allNodes,
+        //   state.fileId
+        // );
       }
 
       return { nodes: [...to_be_updated, updated_node] };
@@ -144,12 +155,12 @@ const nodeStore = create<NodeState>((set) => ({
         (!old_node.data?.shape && newShape) ||
         old_node.data?.shape !== newShape
       ) {
-        updateNodeData(
-          updated_node,
-          updateLinkedToMutation,
-          allNodes,
-          state.fileId
-        );
+        // updateNodeData(
+        //   updated_node,
+        //   updateLinkedToMutation,
+        //   allNodes,
+        //   state.fileId
+        //);
       }
       return { nodes: [...to_be_updated, updated_node] };
     }),
@@ -159,12 +170,12 @@ const nodeStore = create<NodeState>((set) => ({
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       //@ts-ignore
       const updated_node = { ...old_node, type: newType };
-      updateNodeBackend(
-        updated_node,
-        updateNodesMutation,
-        allNodes,
-        state.fileId
-      );
+      // updateNodeBackend(
+      //   updated_node,
+      //   updateNodesMutation,
+      //   allNodes,
+      //   state.fileId
+      // );
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateLinkedTo: async (
@@ -174,52 +185,52 @@ const nodeStore = create<NodeState>((set) => ({
     //find data of new node
     const node_to_be = await findNode(getNode, id);
     //save data of new node
-    const new_node = node_to_be[0];
+    //const new_node = node_to_be[0];
     //add the saved data to the node to be replaced
-    set((state): any => {
-      const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      const updated_node = {
-        ...new_node,
-        data: { ...new_node.data, hasLinkedTo: newLink, id },
-      };
-      updateNodeData(
-        updated_node,
-        updateLinkedToMutation,
-        allNodes,
-        state.fileId
-      );
-      return { nodes: [...to_be_updated, updated_node] };
-    });
+    // set((state): any => {
+    //   const to_be_updated = state.nodes.filter((item) => item.id !== id);
+    //   const updated_node = {
+    //     ...new_node,
+    //     data: { ...new_node.data, hasLinkedTo: newLink, id },
+    //   };
+    //   // updateNodeData(
+    //   //   updated_node,
+    //   //   updateLinkedToMutation,
+    //   //   allNodes,
+    //   //   state.fileId
+    //   // );
+    //   return { nodes: [...to_be_updated, updated_node] };
+    // });
   },
   updateLinkedBy: async (id: string, linkedBy: any, getNodeQuery: any) => {
     const node_to_be = await findNode(getNode, id);
     //save data of new node
 
-    const { data } = await getFileByNode(id, getNodeQuery);
-    const nodes = JSON.stringify(data.files[0].hasFlowchart.hasNodes)
-      .replaceAll('"data":', '"data":')
-      .replaceAll('"position":', '"position":');
-    const nodesData = JSON.parse(nodes);
-    const new_node = node_to_be[0];
+    //const { data } = await getFileByNode(id, getNodeQuery);
+    //const nodes = JSON.stringify(data.files[0].hasNodes)
+      //.replaceAll('"hasdataNodedata":', '"data":')
+      //.replaceAll('"haspositionPosition":', '"position":');
+   // const nodesData = JSON.parse(nodes);
+   // const new_node = node_to_be[0];
     //add the saved data to the node to be replaced
 
-    const to_be_updated = nodesData.filter((item: any) => item.id !== id);
+   // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
 
-    const updated_node = {
-      ...new_node,
-      data: { ...new_node.data, hasLinkedBy: linkedBy },
-    };
-    await updateLinkedByMethod(updated_node, updateLinkedBy);
-    set((state): any => {
-      // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
+    //const updated_node = {
+      //...new_node,
+      //data: { ...new_node.data, hasLinkedBy: linkedBy },
+    //};
+   // await updateLinkedByMethod(updated_node, updateLinkedBy);
+    // set((state): any => {
+    //   // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
 
-      // const updated_node = {
-      //   ...new_node,
-      //   data: { ...new_node.data, linkedBy: linkedBy },
-      // };
-      return Object.entries({ nodes: [...to_be_updated, updated_node] });
-      // return { nodes: [...to_be_updated, updated_node] }
-    });
+    //   // const updated_node = {
+    //   //   ...new_node,
+    //   //   data: { ...new_node.data, linkedBy: linkedBy },
+    //   // };
+    //   return Object.entries({ nodes: [...to_be_updated, updated_node] });
+    //   // return { nodes: [...to_be_updated, updated_node] }
+    // });
   },
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {

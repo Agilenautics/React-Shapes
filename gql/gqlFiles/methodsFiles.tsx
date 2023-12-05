@@ -13,7 +13,7 @@ import { File, Folder } from "../../lib/appInterfaces";
 const createFile = async (
   mainId: string,
   folderId: string,
-  email:string,
+  email: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileData: any,
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -33,7 +33,6 @@ const createFile = async (
                 assignedTo: "",
                 dueDate: "",
                 description: fileData.discription || "",
-                sprint: "",
               },
             },
           },
@@ -55,90 +54,81 @@ const createFile = async (
               },
             },
           },
-          "createdBy": {
-            "connect": {
-              "where": {
-                "node": {
-                  "emailId": email,
-                }
-              }
-            }
-          },
-          hasFlowchart: {
-            create: {
-              node: {
-                name: "flowchart",
+          createdBy: {
+            connect: {
+              where: {
+                node: {
+                  emailId: email,
+                },
               },
             },
           },
         },
       },
-      update: (
-        cache,
-        {
-          data: {
-            createFiles: { files },
-          },
-        }
-      ) => {
-        const { projects } = cache.readQuery({
-          query,
-          variables: {
-            where: {
-              id: fileData.projectId,
-            },
-          },
-        });
-        const { hasContainsFile, hasContainsFolder, ...projectData } =
-          projects[0];
-        const findParent = hasContainsFolder.find(
-          (folder: Folder) => folder.id === folderId
-        ) as Folder;
-        if (findParent?.type === "folder") {
-          const updateFileInFolder = hasContainsFolder.map((folder: Folder) => {
-            if (folder.id === folderId) {
-              return {
-                ...folder,
-                hasFile: [...folder.hasFile, ...files],
-              };
-            }
-            return folder;
-          });
-          const updatedProject = {
-            ...projectData,
-            hasContainsFile,
-            hasContainsFolder: updateFileInFolder,
-          };
-          cache.writeQuery({
-            query,
-            variables: {
-              where: {
-                id: fileData.projectId,
-              },
-            },
-            data: {
-              projects: [updatedProject],
-            },
-          });
-        } else {
-          const updatedFiles = [...hasContainsFile, ...files];
-          const updatedProject = {
-            ...projects[0],
-            hasContainsFile: updatedFiles,
-          };
-          cache.writeQuery({
-            query,
-            variables: {
-              where: {
-                id: fileData.projectId,
-              },
-            },
-            data: {
-              projects: [updatedProject],
-            },
-          });
-        }
-      },
+      // update: (
+      //   cache,
+      //   {
+      //     data: {
+      //       createFiles: { files },
+      //     },
+      //   }
+      // ) => {
+      //   const { projects } = cache.readQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         id: fileData.projectId,
+      //       },
+      //     },
+      //   });
+      //   const { hasContainsFile, hasContainsFolder, ...projectData } =
+      //     projects[0];
+      //     const findParent = hasContainsFolder.find((folder:Folder)=>folder.id===folderId) as Folder;
+      //   if (findParent?.type==='folder') {
+      //     const updateFileInFolder = hasContainsFolder.map((folder: Folder) => {
+      //       if (folder.id === folderId) {
+      //         return {
+      //           ...folder,
+      //           hasFile: [...folder.hasFile, ...files],
+      //         };
+      //       }
+      //       return folder;
+      //     });
+      //     const updatedProject = {
+      //       ...projectData,
+      //       hasContainsFile,
+      //       hasContainsFolder: updateFileInFolder,
+      //     };
+      //     cache.writeQuery({
+      //       query,
+      //       variables: {
+      //         where: {
+      //           id: fileData.projectId,
+      //         },
+      //       },
+      //       data: {
+      //         projects: [updatedProject],
+      //       },
+      //     });
+      //   } else {
+      //     const updatedFiles = [...hasContainsFile, ...files];
+      //     const updatedProject = {
+      //       ...projects[0],
+      //       hasContainsFile: updatedFiles,
+      //     };
+      //     cache.writeQuery({
+      //       query,
+      //       variables: {
+      //         where: {
+      //           id: fileData.projectId,
+      //         },
+      //       },
+      //       data: {
+      //         projects: [updatedProject],
+      //       },
+      //     });
+      //   }
+      // },
     });
   } catch (error) {
     console.log("Error in creating new file", error);
@@ -186,100 +176,89 @@ async function deleteFileBackend(
           id: deleteIds.id,
         },
         delete: {
-          hasFlowchart: {
-            delete: {
-              hasNodes: [
-                {
-                  delete: {
-                    data: {
-                      delete: {
-                        hasLinkedTo: {},
-                        hasLinkedBy: {},
-                      },
-                    },
-                    position: {},
-                  },
-                },
-              ],
-              hasEdges: [
-                {
-                  delete: {
-                    hasedgedataEdgedata: {},
-                  },
-                },
-              ],
-            },
-          },
-        },
-      },
-      update: (cache, { data }) => {
-        const { projects } = cache.readQuery({
-          query,
-          variables: {
-            where: {
-              id: deleteIds.projectId,
-            },
-          },
-        });
-        //getting folders or epics and file or story from the readQuery projects
-        const { hasContainsFile, hasContainsFolder, ...projectData } =
-          projects[0];
-        // finding the parent of the file or story
-        const findParent = hasContainsFolder.find(
-          (folder: Folder) => folder.id === deleteIds.parentId
-        ) as Folder;
-        //checking if its folder then iam removing file inside the folder
-        if (findParent?.type === "folder") {
-          const { hasFile } = findParent;
-          const newHasFile = hasFile.filter(
-            (file: File) => file.id !== deleteIds.id
-          );
-          // updating removed data to the folder
-          const updatedFolder = hasContainsFolder.map((folder: Folder) => {
-            if (folder.id === deleteIds.parentId) {
-              return {
-                ...folder,
-                hasFile: newHasFile,
-              };
-            }
-            return {
-              folder,
-            };
-          });
-          // and finally updating the project
-          const updatedProject = {
-            ...projectData,
-            hasContainsFile,
-            hasContainsFolder: updatedFolder,
-          };
-          cache.writeQuery({
-            query,
-            variables: {
-              where: {
-                id: deleteIds.projectId,
+          hasNodes: [
+            {
+              delete: {
+                delete: {},
               },
             },
-            data: {
-              projects: [updatedProject],
+          ],
+          hasEdges: [
+            {
+              delete: {},
             },
-          });
-        } else {
-          const to_be_update = hasContainsFile.filter(
-            (file: File) => file.id !== deleteIds.id
-          );
-
-          const updatedProject = {
-            ...projectData,
-            hasContainsFile: to_be_update,
-            hasContainsFolder,
-          };
-          cache.writeQuery({
-            query,
-            variables: { where: { id: deleteIds.projectId } },
-            data: { projects: [updatedProject] },
-          });
-        }
+          ],
+        },
       },
+
+      //     update: (cache, { data }) => {
+      //   const { projects } = cache.readQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         id: deleteIds.projectId,
+      //       },
+      //     },
+      //   });
+      //   //getting folders or epics and file or story from the readQuery projects
+      //   const { hasContainsFile, hasContainsFolder, ...projectData } =
+      //     projects[0];
+      //   // finding the parent of the file or story
+      //   const findParent = hasContainsFolder.find(
+      //     (folder: Folder) => folder.id === deleteIds.parentId
+      //   ) as Folder;
+      //   //checking if its folder then iam removing file inside the folder
+      //   if (findParent?.type === "folder") {
+      //     const { hasFile } = findParent;
+      //     const newHasFile = hasFile.filter(
+      //       (file: File) => file.id !== deleteIds.id
+      //     );
+      //     // updating removed data to the folder
+      //     const updatedFolder = hasContainsFolder.map((folder: Folder) => {
+      //       if (folder.id === deleteIds.parentId) {
+      //         return {
+      //           ...folder,
+      //           hasFile: newHasFile,
+      //         };
+      //       }
+      //       return {
+      //         folder,
+      //       };
+      //     });
+      //     // and finally updating the project
+      //     const updatedProject = {
+      //       ...projectData,
+      //       hasContainsFile,
+      //       hasContainsFolder: updatedFolder,
+      //     };
+      //     cache.writeQuery({
+      //       query,
+      //       variables: {
+      //         where: {
+      //           id: deleteIds.projectId,
+      //         },
+      //       },
+      //       data: {
+      //         projects: [updatedProject],
+      //       },
+      //     });
+      //   } else {
+      //     const to_be_update = hasContainsFile.filter(
+      //       (file: File) => file.id !== deleteIds.id
+      //     );
+
+      //     const updatedProject = {
+      //       ...projectData,
+      //       hasContainsFile: to_be_update,
+      //       hasContainsFolder
+      //     };
+      //     cache.writeQuery({
+      //       query,
+      //       variables: { where: { id: deleteIds.projectId } },
+      //       data: { projects: [updatedProject] },
+      //     });
+      //   }
+      // },
     });
   } catch (error) {
     console.error("Error deleting the file", error);
@@ -401,75 +380,75 @@ const updateFileBackend = async (
         name: fileData.name,
       },
     },
-    update: (
-      cache,
-      {
-        data: {
-          updateFiles: { files },
-        },
-      }
-    ) => {
-      const { projects } = cache.readQuery({
-        query,
-        variables: {
-          where: {
-            id: fileData.projectId,
-          },
-        },
-      });
-      const { hasContainsFile, hasContainsFolder, ...projectsData } =
-        projects[0];
-      const updatedFile = hasContainsFile.map((file: File) => {
-        if (file.id === fileData.id) {
-          return {
-            ...file,
-            name: files[0].name,
-          };
-        }
-        return file;
-      });
-      const updatedProject = {
-        ...projectsData,
-        hasContainsFile: updatedFile,
-        hasContainsFolder,
-      };
-      cache.writeQuery({
-        query,
-        variables: {
-          where: {
-            id: fileData.projectId,
-          },
-        },
-        data: {
-          projects: [updatedProject],
-        },
-      });
-    },
+    // update: (
+    //   cache,
+    //   {
+    //     data: {
+    //       updateFiles: { files },
+    //     },
+    //   }
+    // ) => {
+    //   const { projects } = cache.readQuery({
+    //     query,
+    //     variables: {
+    //       where: {
+    //         id: fileData.projectId,
+    //       },
+    //     },
+    //   });
+    //   const { hasContainsFile, hasContainsFolder, ...projectsData } =
+    //     projects[0];
+    //   const updatedFile = hasContainsFile.map((file: File) => {
+    //     if (file.id === fileData.id) {
+    //       return {
+    //         ...file,
+    //         name: files[0].name,
+    //       };
+    //     }
+    //     return file;
+    //   });
+    //   const updatedProject = {
+    //     ...projectsData,
+    //     hasContainsFile: updatedFile,
+    //     hasContainsFolder,
+    //   };
+    //   cache.writeQuery({
+    //     query,
+    //     variables: {
+    //       where: {
+    //         id: fileData.projectId,
+    //       },
+    //     },
+    //     data: {
+    //       projects: [updatedProject],
+    //     },
+    //   });
+    // },
   });
 };
-const getFileByNode = async (
-  nodeId: string,
-  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
-) => {
-  let file: any;
-  await client
-    .query({
-      query: customQuery,
-      variables: {
-        where: {
-          hasFlowchart: {
-            hasNodes_SINGLE: {
-              id: nodeId,
-            },
-          },
-        },
-      },
-    })
-    .then((result) => {
-      file = result;
-    });
-  return file;
-};
+// const getFileByNode = async (
+//   nodeId: string,
+//   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+// ) => {
+//   let file: any;
+//   await client
+//     .query({
+//       query: customQuery,
+//       variables: {
+//         where: {
+//           hasFlowchart: {
+//             hasNodes_SINGLE: {
+//               id: nodeId,
+//             },
+//           },
+//         },
+//       },
+//     })
+//     .then((result) => {
+//       file = result;
+//     });
+//   return file;
+// };
 
 const updateStoryMethod = async (
   id: string,
@@ -492,7 +471,6 @@ const updateStoryMethod = async (
           update: {
             node: {
               status,
-              sprint,
               dueDate,
               description,
               assignedTo,
@@ -541,7 +519,7 @@ export {
   deleteFileBackend,
   updateFileBackend,
   moveFileBackend,
-  getFileByNode,
+  // getFileByNode,
   getTreeNodeByUser,
   updateStoryMethod,
   createFile,
