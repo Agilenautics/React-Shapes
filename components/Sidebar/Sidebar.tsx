@@ -44,6 +44,7 @@ import { Tooltip } from "react-tooltip";
 import { findById } from "../TreeView/backend";
 import TreeModel from "tree-model-improved";
 import Edit from "../../pages/projects/[projectId]/business-process/edit";
+import { useTranslation } from "react-i18next";
 
 interface SideBar {
   isOpen: Boolean;
@@ -51,6 +52,7 @@ interface SideBar {
 }
 
 const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
+  const { t } = useTranslation(); // useTranslation hook
   // const genericHamburgerLine = `h-1 w-8 my-1 rounded-full bg-gray-700 transition ease transform duration-300 dark:bg-gray-100`;
   const [insightsOpen, setInsightsOpen] = useState(false);
   const [projectsFlag, setProjectsFlag] = useState(false);
@@ -290,7 +292,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               <Image
                 className="mx-auto"
                 src="/assets/flow-chart.png"
-                height={124}
+                height={100}
                 width={124}
                 alt="Company Logo"
                 priority={false}
@@ -308,7 +310,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                 onClick={() => setProjectsFlag(!projectsFlag)}
                 className="cursor-pointer"
               >
-                <LiaProjectDiagramSolid className="inline" /> Projects
+                <LiaProjectDiagramSolid className="inline" /> {t("project")}
               </span>
               {/* absolute whitespace-nowrap text-sm */}
               <div
@@ -326,7 +328,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                   ref={tooltipRef}
                   className="invisible absolute top-full z-20 mt-2 whitespace-nowrap rounded bg-black p-1 text-[0.8rem] text-white opacity-0 transition group-hover:visible group-hover:opacity-100"
                 >
-                  ADD PROJECT
+                  
                 </span>
               </div>
               <div
@@ -389,12 +391,29 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             </div>
           </div>
 
+          <div className=" p-1 px-3 duration-100">
+            <Link href="/projects">
+              <a className="flex w-full items-center gap-2">
+                <AiTwotoneHome />
+                <span> {t("home")} </span>
+              </a>
+            </Link>
+          </div>
+          <div className="p-1 px-3 duration-100">
+            <Link href={`/projects/${projectId}`}>
+              <a className="flex w-full items-center gap-2">
+                <GrOverview className="text-slate-600  dark:bg-slate-200 " />
+                <span> {t("overview")}</span>
+              </a>
+            </Link>
+          </div>
+
           <div
             onClick={() => (projectId ? setInsightsOpen(!insightsOpen) : null)}
             className="flex cursor-pointer select-none items-center justify-between p-1 px-3 duration-100"
           >
             <span>
-              <CgInsights className="inline" /> Insights
+              <CgInsights className="inline" />  {t("insights")}
             </span>
             <FaChevronDown
               className={`transition-transform ${
@@ -404,7 +423,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             />
             {!insightsOpen && projectId.length <= 0 && (
               <Tooltip anchorSelect="#clickable">
-                <button>Please Select Project</button>
+                <button>{t("please_select_project")}</button>
               </Tooltip>
             )}
           </div>
@@ -430,7 +449,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                   <Link href={`/projects/${projectId}/business-process`}>
                     <a className="ml-7 flex w-full select-none items-center gap-2">
                       <RiFlowChart />
-                      <span> Business Process</span>
+                      <span>{t("business_process")}</span>
                     </a>
                   </Link>
                 </div>
@@ -447,7 +466,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                         onClick={handleAddFolder}
                       >
                         <AiFillFolderAdd className="text-xl" />
-                        <span>Add Folder</span>
+                        <span>{t("add_folder")}</span>
                       </button>
                       <button
                         type="button"
@@ -455,7 +474,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                         onClick={handleAddFile}
                       >
                         <AiFillFileAdd className="text-xl" />
-                        <span>Add File</span>
+                        <span>{t("add_file")}</span>
                       </button>
                     </div>
                     <div className="h-36 overflow-auto overflow-x-hidden hover:min-h-full">
@@ -467,7 +486,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                   <Link href={`/projects/${projectId}/boards`}>
                     <a className="ml-7 flex w-full select-none items-center gap-2">
                       <FaChalkboard />
-                      <span> Boards</span>
+                      <span>{t("boards")}</span>
                     </a>
                   </Link>
                 </div>
@@ -478,7 +497,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                         className="font-weight: 900 dark:text-white"
                         size={18}
                       />
-                      <span> Backlogs</span>
+                      <span>{t("backlogs")}</span>
                     </a>
                   </Link>
                 </div>
@@ -486,7 +505,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                   <Link href={`/projects/${projectId}/sprints`}>
                     <a className="ml-7 flex w-full select-none items-center gap-2">
                       <GiSprint />
-                      <span> Sprints</span>
+                      <span>{t("sprints")} </span>
                     </a>
                   </Link>
                 </div>
