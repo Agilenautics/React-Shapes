@@ -1,5 +1,5 @@
-import React,{ useEffect, useState } from "react";
-import Editing  from "../Editing";
+import React, { useEffect, useState } from "react";
+import Editing from "../Editing";
 import { getSmoothStepPath, getBezierPath, Position } from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
@@ -60,7 +60,6 @@ export default function CustomEdge({
     const strokeWidth = lineColorPath.split("-").slice(-1)[0];
     setLineColor(lineColors[fillPath][strokeWidth]);
   }, [data.pathCSS]);
-
 
   const markerSize = 6; // Adjust the size of the markers here
 
@@ -155,7 +154,6 @@ export default function CustomEdge({
               className={`rounded-lg !bg-white p-0.5 text-sm dark:!bg-neutral-900 ${data.boxCSS}`}
               onDoubleClick={() => {
                 setEditing(true);
-                
               }}
             >
               {editing ? (

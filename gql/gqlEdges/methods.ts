@@ -52,10 +52,6 @@ const createFlowEdge = async (
           {
             name: "newEdge",
             selected: true,
-            source: newEdge.source,
-            sourceHandle: newEdge.sourceHandle,
-            target: newEdge.target,
-            targetHandle: newEdge.targetHandle,
             bidirectional: newEdge.data.bidirectional,
             boxCSS: newEdge.data.boxCSS,
             label: newEdge.data.label,
@@ -75,6 +71,9 @@ const createFlowEdge = async (
                   node: {
                     id: newEdge.source,
                   },
+                  edge:{
+                    handle: newEdge.sourceHandle,
+                  }
                 },
               },
             },
@@ -84,6 +83,9 @@ const createFlowEdge = async (
                   node: {
                     id: newEdge.target,
                   },
+                  edge:{
+                    handle: newEdge.targetHandle,
+                  }
                 },
               },
             },

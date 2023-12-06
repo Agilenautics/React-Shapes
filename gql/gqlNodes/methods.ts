@@ -54,20 +54,9 @@ async function getNodes(
       },
     })
     .then((result) => {
-      console.log("data", result.data.files[0].hasNodes);
       nodes = result.data.files[0].hasNodes;
       edges = result.data.files[0].hasEdges;
-      console.log(nodes, "nodes");
-      console.log(edges, "edges");
-      // const edge2 = edge1.replaceAll('"hasedgedataEdgedata":', '"data":');
-      // edges = JSON.parse(edge2);
-      // const nodes2 = nodes1
-      //   .replaceAll('"hasdataNodedata":', '"data":')
-      //   .replaceAll('"haspositionPosition":', '"position":');
-      // //@ts-ignore
-      // nodes = JSON.parse(nodes2);
     });
-  console.log("res", nodes);
   return { nodes, edges };
 }
 

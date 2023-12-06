@@ -16,7 +16,15 @@ const edgeStore = create<EdgeState>((set) => ({
   edges: [],
   updateEdges: (edges) =>
     set((state): any => {
-      return { edges: edges };
+      const newEdgeData =  edges.map((item:any)=>{
+        const source = item.flownodeConnectedby.id;
+        const sourceHandle=item.flownodeConnectedbyConnection.handle;
+        const target = item.connectedtoFlownode.id;
+        const targetHandle = item.connectedtoFlownodeConnection.handle;
+        const {id,label,pathCSS,boxCSS,bidirectional,...rest} =item
+        return {...rest,data:{id,label,pathCSS,boxCSS,bidirectional},source,target,sourceHandle,targetHandle}
+      })
+      return { edges: newEdgeData };
     }),
   deleteEdge: (edge: any) =>
     set((state) => {
