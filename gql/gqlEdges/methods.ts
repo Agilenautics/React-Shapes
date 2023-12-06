@@ -41,7 +41,7 @@ const createFlowEdge = async (
   email: string,
   updateEdges: any
 ) => {
-  console.log("newEdge",newEdge)
+  console.log("newEdge", newEdge);
   var edges: Array<Edge> = [];
   await client
     .mutate({
@@ -169,7 +169,6 @@ const updateEdgeBackend = async (
         // });
         // const updatedFlowChart = { ...flowchartData, hasEdges: updatedEdge };
         // console.log(updatedFlowChart);
-        
         // cache.writeQuery({
         //   query: cahchQuery,
         //   variables: {
@@ -184,19 +183,19 @@ const updateEdgeBackend = async (
         //   },
         // });
       },
-      refetchQueries:[{
-        query:cahchQuery,
-        variables:{
-          where:{
-            hasFile:{
-              id:selectedFileId
-            }
-          }
-        }
-      }]
-      
+      refetchQueries: [
+        {
+          query: cahchQuery,
+          variables: {
+            where: {
+              hasFile: {
+                id: selectedFileId,
+              },
+            },
+          },
+        },
+      ],
     });
-    
   } catch (error) {
     console.log(error, "while updating edge");
   }
@@ -248,11 +247,11 @@ const deleteEdgeBackend = async (edgeId: string, label: string) => {
       //       flowcharts: [updatedFlowchart],
       //     },
       //   });
-       },
-    });
+    },
+  });
   // } catch (error) {
   //   console.log(error, "while deletin the edge");
- // }
+  // }
 };
 
 export {
