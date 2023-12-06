@@ -100,7 +100,7 @@ const typeDefs = gql`
     folderHas: Folder @relationship(type: "HAS_FILE", direction: IN)
     projectHas: Project @relationship(type: "HAS_FILE", direction: IN)
     hasNodes: [FlowNode!]! @relationship(type: "HAS_FLOWNODES", direction: IN)
-    hasEdges: [FlowEdge!]! @relationship(type: "HAS_FLOWEDGES", direction: OUT)
+    hasEdges: [FlowEdge!]! @relationship(type: "HAS_FLOWEDGES", direction: IN)
   }
 
   #task scheme
@@ -165,10 +165,6 @@ const typeDefs = gql`
     # )
     id: ID! @id
     timeStamp: DateTime! @timestamp
-    source: String!
-    target: String!
-    sourceHandle: String!
-    targetHandle: String!
     selected: Boolean!
     label: String
     pathCSS: String!
@@ -177,11 +173,14 @@ const typeDefs = gql`
     # * Connections below
     createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     flownodeConnectedby: FlowNode
-      @relationship(type: "NODE_CONNECTED_BY", direction: IN)
+      @relationship(type: "NODE_CONNECTED_BY", properties: "HANDLE", direction: IN)
     connectedtoFlownode: FlowNode
-      @relationship(type: "NODE_CONNECTED_TO", direction: OUT)
+      @relationship(type: "NODE_CONNECTED_TO", properties: "HANDLE",direction: OUT)
       # surafel suggested to remove has file connection
-    hasFile: File @relationship(type: "HAS_FILE", direction: IN)
+    hasFile: File @relationship(type: "HAS_FLOWEDGES", direction: OUT)
+  }
+  interface HANDLE @relationshipProperties{
+    handle:String!
   }
 
   type Info {
