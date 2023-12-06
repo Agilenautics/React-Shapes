@@ -79,6 +79,7 @@
     "reactflow": "^11.4.0-next.1",
     "tree-model-improved": "^2.0.1",
     "waait": "^1.0.5",
+    "winston": "^3.11.0",
     "yarn": "^1.22.19",
     "yup": "^1.2.0",
     "zustand": "^4.3.7"
