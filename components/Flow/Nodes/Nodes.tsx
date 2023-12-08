@@ -157,8 +157,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               <div>
                 {flag ? null : (
                   <p
-                    onClick={() => toDetails(id)}
-                    className="cursor-pointer py-1 text-center text-[0.6rem] duration-300 hover:underline"
+                    className="py-1 text-center text-[0.6rem]"
                   >
                     {label}
                   </p>

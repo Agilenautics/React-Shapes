@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Types } from "../AdminPage/Projects/staticData/types";
 
@@ -16,6 +16,8 @@ import {
   GET_SPRINTS,
   createFileMutation,
   getProjectByUser,
+  updateFolderBackend,
+  updateFoldersMutation,
 } from "../../gql";
 import { useRouter } from "next/router";
 import validationSchema from "../AdminPage/Projects/staticData/validationSchema";
@@ -36,6 +38,7 @@ export default function AddBacklogs({
 }: any) {
   const { addRow, updateRow, allStories, parents } = backlogStore();
   const { uid, idofUid, updateUid } = fileStore();
+  const [type, setType] = useState<string>("");
 
   // const {data,error,loading} = useQuery(getUidQuery);
 
@@ -52,32 +55,49 @@ export default function AddBacklogs({
   const projectId = router.query.projectId as string;
 
   const handleSubmit = async (values: any) => {
+    const  backToThePage = ()=>  router.back()
     if (selectedElement != null) {
       values.uid = selectedElement.uid;
       values.id = selectedElement.id;
       values.parent = selectedElement.parent;
-      if (selectedElement.type != "file") {
-        updateTaskMethod(selectedElement.id, updateTasksMutation, values).then(
-          (res) => {
+      switch (type) {
+        case "file":
+          updateStoryMethod(
+            selectedElement.id,
+            updateStoryMutation,
+            values
+          ).then((res) => {
+            values.hasSprint = res.data.updateFiles.files[0].hasSprint;
+            backToThePage()
+            updateRow(values);
+          });
+          break;
+        case "folder":
+          const updatedvalues = {...values,projectId}
+          await updateFolderBackend(
+            updatedvalues,
+            updateFoldersMutation,
+            getProjectByUser
+          );
+          backToThePage()
+          break;
+        default:
+          updateTaskMethod(
+            selectedElement.id,
+            updateTasksMutation,
+            values
+          ).then((res) => {
             addTaskOrEpicOrStoryToSprint(
               values.addToSprint,
               res.data.updateFlowNodes.flowNodes
             );
-            values.hasSprint = res.data.updateFiles.files[0].hasSprint;
+            values.hasSprint = res.data.updateFlowNodes.flowNodes[0]?.hasSprint;
+            backToThePage()
             updateRow(values);
-          }
-        );
-      } else {
-        updateStoryMethod(selectedElement.id, updateStoryMutation, values).then(
-          (res) => {
-            values.hasSprint = res.data.updateFiles.files[0].hasSprint;
-            updateRow(values);
-          }
-        );
+          });
       }
     } else {
       values.uid = uid;
-
       if (values.type == "file") {
         if (values.epic == projectId)
           try {
@@ -133,20 +153,19 @@ export default function AddBacklogs({
         }
       }
     }
-    router.push({
-      pathname: `/projects/${projectId}/backlogs/`,
-    });
+   
   };
 
   const handleCancel = () => {
-    router.push({
-      pathname: `/projects/${projectId}/backlogs/`,
-    });
+    router.back();
   };
 
   useEffect(() => {
     getSprintByProjectId(projectId, GET_SPRINTS, updateSprints);
   }, []);
+  useEffect(() => {
+    setType(selectedElement.type);
+  }, [selectedElement]);
 
   return (
     <div className="p-6">
@@ -159,7 +178,7 @@ export default function AddBacklogs({
           description: selectedElement ? selectedElement.description : "",
           status: selectedElement ? selectedElement.status : "To-Do",
           assignedTo: selectedElement ? selectedElement.assignedTo : "",
-          sprint: selectedElement ? selectedElement.hasSprint.id : "",
+          sprint: selectedElement ? selectedElement.hasSprint?.id : "",
           epic: selectedElement ? selectedElement.parent.id : projectId,
           story:
             selectedElement && selectedElement.type !== "file"
@@ -282,6 +301,7 @@ export default function AddBacklogs({
                   </label>
                   <Field
                     as="select"
+                    initialValue="To-do"
                     name="status"
                     className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
                   >
@@ -308,57 +328,61 @@ export default function AddBacklogs({
                 </div>
               </div>
               <div className="mb-2 flex space-x-4">
-                {values.type != "file" ? (
-                  <div className="mb-4 flex">
-                    <label
-                      htmlFor="story"
-                      className="block w-fit rounded p-1 text-sm hover:text-sky-600"
-                    >
-                      Story :
-                    </label>
-                    <Field
-                      as="select"
-                      name="story"
-                      className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
-                    >
-                      <option value="">Select Story</option>
-                      {allStories.map((story: any) => (
-                        <option key={story.id} value={story.id}>
-                          {story.name}
-                        </option>
-                      ))}
-                    </Field>
-                    <ErrorMessage
-                      name="story"
-                      component="div"
-                      className="mt-1 text-red-500"
-                    />
-                  </div>
-                ) : (
-                  <div className="mb-2 flex">
-                    <label
-                      htmlFor="epic"
-                      className="block w-fit rounded p-1 text-sm hover:text-sky-600"
-                    >
-                      Epic :
-                    </label>
-                    <Field
-                      as="select"
-                      name="epic"
-                      className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
-                    >
-                      {parents.map((epic: any) => (
-                        <option key={epic.id} value={epic.id}>
-                          {epic.name}
-                        </option>
-                      ))}
-                    </Field>
-                    <ErrorMessage
-                      name="epic"
-                      component="div"
-                      className="mt-1 text-red-500"
-                    />
-                  </div>
+                {values.type !== "folder" && (
+                  <>
+                    {values.type != "file" ? (
+                      <div className="mb-4 flex">
+                        <label
+                          htmlFor="story"
+                          className="block w-fit rounded p-1 text-sm hover:text-sky-600"
+                        >
+                          Story :
+                        </label>
+                        <Field
+                          as="select"
+                          name="story"
+                          className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
+                        >
+                          <option value="">Select Story</option>
+                          {allStories.map((story: any) => (
+                            <option key={story.id} value={story.id}>
+                              {story.name}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name="story"
+                          component="div"
+                          className="mt-1 text-red-500"
+                        />
+                      </div>
+                    ) : (
+                      <div className="mb-2 flex">
+                        <label
+                          htmlFor="epic"
+                          className="block w-fit rounded p-1 text-sm hover:text-sky-600"
+                        >
+                          Epic :
+                        </label>
+                        <Field
+                          as="select"
+                          name="epic"
+                          className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
+                        >
+                          {parents.map((epic: any) => (
+                            <option key={epic.id} value={epic.id}>
+                              {epic.name}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name="epic"
+                          component="div"
+                          className="mt-1 text-red-500"
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
 
                 <div className="flex w-fit">

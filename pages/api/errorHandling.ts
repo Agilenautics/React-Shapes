@@ -15,13 +15,9 @@ const errorHandling = (error: GraphQLError) => {
     case "PERSISTED_QUERY_NOT_FOUND":
     case "PERSISTED_QUERY_NOT_SUPPORTED":
       logger?.warn(`code:${code},(${error.message})`);
-      logger?.error(`code:${code},(${error.message})`);
-      logger?.info(`code:${code},(${error.message})`);
       return new ApolloError(errorMessages[code], code);
     default:
-      logger?.warn(`code:${code},(${error.message})`);
       logger?.error(`code:${code},(${error.message})`);
-      logger?.info(`code:${code},(${error.message})`);
       return new ApolloError("Internal server error.", code);
   }
 };
