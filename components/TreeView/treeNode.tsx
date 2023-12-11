@@ -190,7 +190,7 @@ export const TreeNode = ({
           .then((result) => {
             console.log(result, "res");
             updateNodes(result.nodes);
-            updateEdges(result.edges);
+           // updateEdges(result.edges);
           })
           .finally(() => {
             setIsLoading(false);

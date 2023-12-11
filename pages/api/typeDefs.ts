@@ -100,7 +100,6 @@ const typeDefs = gql`
     folderHas: Folder @relationship(type: "HAS_FILE", direction: IN)
     projectHas: Project @relationship(type: "HAS_FILE", direction: IN)
     hasNodes: [FlowNode!]! @relationship(type: "HAS_FLOWNODES", direction: IN)
-    hasEdges: [FlowEdge!]! @relationship(type: "HAS_FLOWEDGES", direction: IN)
   }
 
   #task scheme
@@ -128,13 +127,8 @@ const typeDefs = gql`
     hasInfo: Info @relationship(type: "HAS_INFO", direction: OUT)
     hasComments: [Comment!]!
       @relationship(type: "HAS_FLOWNODES", direction: OUT)
-    # haspositionPosition: Position
-      # @relationship(type: "HAS_POSITION", direction: OUT)
-    connectedbyFlowedge: [FlowEdge!]!
-      @relationship(type: "NODE_CONNECTED_BY", direction: OUT)
-    # hasTasks: Tasks @relationship(type: "HAS_TASKS", direction: OUT)
-    flowedgeConnectedto: [FlowEdge!]!
-      @relationship(type: "NODE_CONNECTED_TO", direction: IN)
+    flowEdge: [FlowEdge!]!
+      @relationship(type: "NODE_CONNECTED", properties: "NODE_CONNECTED" direction: OUT)
     createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     # uidHas: Uid @relationship(type: "HAS_UID", direction: OUT)
     hasFile: File @relationship(type: "HAS_FLOWNODES", direction: OUT)
@@ -172,14 +166,12 @@ const typeDefs = gql`
     bidirectional: Boolean!
     # * Connections below
     createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
-    flownodeConnectedby: FlowNode
-      @relationship(type: "NODE_CONNECTED_BY", properties: "HANDLE", direction: IN)
-    connectedtoFlownode: FlowNode
-      @relationship(type: "NODE_CONNECTED_TO", properties: "HANDLE",direction: OUT)
+    flowNode: [FlowNode!]!
+      @relationship(type: "NODE_CONNECTED", properties: "NODE_CONNECTED", direction: IN)
       # surafel suggested to remove has file connection
-    hasFile: File @relationship(type: "HAS_FLOWEDGES", direction: OUT)
   }
-  interface HANDLE @relationshipProperties{
+  interface NODE_CONNECTED @relationshipProperties{
+    isLeft:Boolean
     handle:String!
   }
 

@@ -24,7 +24,7 @@ import {
   delNodeMutation,
   deleteNodeBackend,
   findNode,
-  getNode,
+  getFlowNode,
  //updateNodeBackend,
  updatePosition,
  updatePositionMutation,
@@ -160,7 +160,7 @@ function Flow() {
         const selectedNodes = getNodes().filter((node) => node.selected);
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
-          const node = await findNode(getNode, selectedNodes[0].id);
+          const node = await findNode(getFlowNode, selectedNodes[0].id);
           const linkA = node[0].data.hasLinkedBy.flag;
           const linkB = node[0].data.hasLinkedTo.flag;
           //.flowNode.nodeData.linked
