@@ -1,11 +1,10 @@
 import { Node_Fragment, Info_Fragment } from "../gqlNodes";
-import { Edge_Fragment } from "../gqlEdges";
+//import { Edge_Fragment } from "../gqlEdges";
 
 import { gql } from "@apollo/client";
 
 export const File_Fragment = gql`
   ${Node_Fragment}
-  ${Edge_Fragment}
   ${Info_Fragment}
   fragment FileFragment on File {
     type
@@ -38,8 +37,6 @@ export const File_Fragment = gql`
     hasNodes {
       ...NodeFragment
     }
-    hasEdges {
-      ...EdgeFragment
-    }
+    
   }
 `;

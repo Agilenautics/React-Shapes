@@ -24,7 +24,8 @@ import {
   delNodeMutation,
   deleteNodeBackend,
   findNode,
-  getNode,
+  getFlowNode,
+  //updateNodeBackend,
   updatePosition,
   updatePositionMutation,
   createFlowEdge,
@@ -168,12 +169,32 @@ function Flow() {
         (event.key === "Backspace" || event.key === "Delete")
       ) {
         const selectedNodes = getNodes().filter((node) => node.selected);
+        //@ts-ignore
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
-          const node = await findNode(getNode, selectedNodes[0].id);
-          // const linkA = node[0].data.hasLinkedBy.flag;
-          // const linkB = node[0].data.hasLinkedTo.flag;
-          // //.flowNode.nodeData.linked
+          const node = await findNode(getFlowNode, selectedNodes[0].id);
+          //@ts-ignore
+
+          const linkA = node[0].data.hasLinkedBy.flag;
+          //@ts-ignore
+
+          const linkB = node[0].data.hasLinkedTo.flag;
+          //.flowNode.nodeData.linked
+          if (linkA || linkB) {
+            setShowConfirmation({
+              type: "links",
+              show: true,
+              selectedItems: selectedNodes,
+            });
+          } else {
+            setShowConfirmation({
+              type: "node",
+              show: true,
+              selectedItems: selectedNodes,
+            });
+          }
+          //}
+          //else if (selectedEdges.length > 0) {
           setShowConfirmation({
             type: "node",
             show: true,

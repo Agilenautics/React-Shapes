@@ -460,6 +460,7 @@ const addProject_Backend = async (
       //   },
        })
       .then((response) => {
+        console.log(response);
         addProject(response.data.createProjects.projects[0]);
       });
   // } catch (error) {
