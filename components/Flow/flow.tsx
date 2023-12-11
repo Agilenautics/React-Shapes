@@ -24,9 +24,10 @@ import {
   delNodeMutation,
   deleteNodeBackend,
   findNode,
-  getNode,
-  updatePosition,
-  updatePositionMutation,
+  getFlowNode,
+ //updateNodeBackend,
+ updatePosition,
+ updatePositionMutation,
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
@@ -168,14 +169,27 @@ function Flow() {
         focusedElement instanceof HTMLTextAreaElement;
 
       if (!isTextFieldFocused && event.key === "Backspace") {
+        //@ts-ignore
         const selectedNodes = getNodes().filter((node) => node.selected);
+        //@ts-ignore
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
-          const node = await findNode(getNode, selectedNodes[0].id);
-          // const linkA = node[0].data.hasLinkedBy.flag;
-          // const linkB = node[0].data.hasLinkedTo.flag;
-          // //.flowNode.nodeData.linked
-                      setShowConfirmation({
+          const node = await findNode(getFlowNode, selectedNodes[0].id);
+        //@ts-ignore
+
+          const linkA = node[0].data.hasLinkedBy.flag;
+        //@ts-ignore
+
+          const linkB = node[0].data.hasLinkedTo.flag;
+          //.flowNode.nodeData.linked
+          if (linkA || linkB) {
+            setShowConfirmation({
+              type: "links",
+              show: true,
+              selectedItems: selectedNodes,
+            });
+          } else {
+            setShowConfirmation({
               type: "node",
               show: true,
               selectedItems: selectedNodes,
@@ -199,7 +213,8 @@ function Flow() {
     return () => {
       document.removeEventListener("keydown", handleBackspace);
     };
-  }, [getNodes, getEdges]);
+      }    
+  }, [getNodes,getEdges ]);
   async function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
