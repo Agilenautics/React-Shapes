@@ -16,7 +16,6 @@ import LoadingIcon from "../LoadingIcon";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { ApolloQueryResult } from "@apollo/client";
 
-import $ from "jquery";
 function ProjectBacklogs() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
@@ -25,7 +24,6 @@ function ProjectBacklogs() {
   const [selectedEpic, setSelectedEpic] = useState("");
   const [selectedSprint, setSelectedSprint] = useState("");
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
-  const [selectedElement, setSelectedElement] = useState(null);
   const [users, setUsers] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
   // from backlog store iam taking allStatus and parents

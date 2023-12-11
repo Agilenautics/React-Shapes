@@ -36,6 +36,7 @@ interface files {
   add_folder: (newFolder: Folder) => void;
   delete_item: (id: string) => void;
   find_file: (id: string) => MyData;
+  update_file: (id: string, updatedFile: MyData)=>void
   loading: boolean;
   setLoading: (load: boolean) => void;
   uid: number;
@@ -66,7 +67,6 @@ const fileStore = create<files>((set) => ({
   linkNodes: { nodes: {}, fileID: "" },
   updateLinkNodes: (nodes, id) =>
     set((state) => {
-      console.log(id, "linknode");
       return { linkNodes: { nodes: nodes, fileID: id } };
     }),
   updateLinkNodeId(nodeId) {
@@ -74,7 +74,7 @@ const fileStore = create<files>((set) => ({
       return { linkNodeId: nodeId };
     });
   },
-  add_file: (newFile: File) => {
+  add_file: (newFile:any) => {
     set((state) => {
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
@@ -82,6 +82,7 @@ const fileStore = create<files>((set) => ({
       const children = root.model?.children;
       //updating the main
       function getUpdatedMain(selectedFolder: Folder) {
+        console.log("iam in child funtion")
         //after getting folder data iam updating children of the main on that particular folder
         const updated_children = children.map((folder: Folder) => {
           if (folder.id === selectedFolder.id) {
@@ -116,6 +117,7 @@ const fileStore = create<files>((set) => ({
       }
 
       function checkingParentisFileOrFolderOrProject(parentFolder: Folder) {
+        console.log("iam in parent function")
         //checkeng passing data type if its folder
         if (parentFolder.type === "folder") {
           //here if its folder iam passing selected folder
@@ -126,7 +128,7 @@ const fileStore = create<files>((set) => ({
           const updated_main = {
             ...state.data,
             children: updated_data,
-            hasContainFiles: [...state.data.hasContainsFile, newFile],
+            hasContainsFile: [...state.data.hasContainsFile, newFile],
           };
           return updated_main;
         }
@@ -134,13 +136,15 @@ const fileStore = create<files>((set) => ({
 
       //if we select the folder
       if (node?.model.type === "folder") {
+        console.log("folder")
         //then we are getting that particular folder
         const getFolder = node?.model;
         //and returning or updating data by using checkingParent is File Or Folder Or Project
         // then iam passing selected folder as myData interface
-        return { data: checkingParentisFileOrFolderOrProject(getFolder) as MyData };
+        return { data: checkingParentisFileOrFolderOrProject(getFolder) };
          // if i select the file in folder or in project
       } else if (node?.model.type === "file") {
+        console.log("file")
         //then iam getting parent of that file
         let getParent = node?.parent.model;
         //finding that parent exist or not inside the parent 
@@ -148,15 +152,16 @@ const fileStore = create<files>((set) => ({
         const findParent =
           children?.find((folder: Folder) => folder.id === getParent.id) ||
           getParent;
-        return { data: checkingParentisFileOrFolderOrProject(findParent) as MyData };
+        return { data: checkingParentisFileOrFolderOrProject(findParent)};
       } else {
         //file adding inside the main
         const updated_data = [...children, newFile];
         const updated_main = {
           ...state.data,
           children: updated_data,
-          hasContainFiles: [...state.data.hasContainsFile, newFile],
+          hasContainsFile: [...state.data.hasContainsFile, newFile],
         };
+        console.log(updated_main,"filestore")
         return { data: updated_main };
       }
     });
@@ -262,7 +267,8 @@ const fileStore = create<files>((set) => ({
       if (node) {
         node.model = updatedFile;
       }
-      return { data: root.model };
+     
+      return { data:updatedFile };
     }),
 
   updateUid: (collectionofIds: Array<any>) =>

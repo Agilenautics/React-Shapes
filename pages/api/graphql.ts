@@ -2,7 +2,7 @@ import { ApolloServer } from "apollo-server-micro";
 import { Neo4jGraphQL } from "@neo4j/graphql";
 import EventEmitter from "events";
 import driver from "./dbConnection";
-import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
+import { ApolloError, ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import typeDefs from "./typeDefs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { GraphQLError } from "graphql";
@@ -22,7 +22,7 @@ const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
   formatError: (error) => {
-    // console.log(error instanceof GraphQLError)
+    console.log(error instanceof ApolloError)
     return errorHandling(error);
   },
   introspection: true,

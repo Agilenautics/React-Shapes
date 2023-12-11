@@ -11,9 +11,6 @@ export function FileTree() {
   const backend = useBackend();
   const loading = fileStore((state) => state.loading)
 
-
-
-
   if (loading) {
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
@@ -54,6 +51,9 @@ export function FileTree() {
 export function LinkTree() {
   const backend = useBackend();
   const [isLoading, setIsLoading] = useState(true);
+
+
+  
 
   useEffect(() => {
     // Simulate an asynchronous operation

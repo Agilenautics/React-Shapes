@@ -81,8 +81,10 @@ const createFile = async (
         });
         const { hasContainsFile, hasContainsFolder, ...projectData } =
           projects[0];
-          const findParent = hasContainsFolder.find((folder:Folder)=>folder.id===folderId) as Folder;
-        if (findParent?.type==='folder') {
+        const findParent = hasContainsFolder.find(
+          (folder: Folder) => folder.id === folderId
+        ) as Folder;
+        if (findParent?.type === "folder") {
           const updateFileInFolder = hasContainsFolder.map((folder: Folder) => {
             if (folder.id === folderId) {
               return {
@@ -259,7 +261,7 @@ async function deleteFileBackend(
           const updatedProject = {
             ...projectData,
             hasContainsFile: to_be_update,
-            hasContainsFolder
+            hasContainsFolder,
           };
           cache.writeQuery({
             query,
@@ -418,6 +420,7 @@ const updateStoryMethod = async (
         id,
       },
       update: {
+        name,
         hasInfo: {
           update: {
             node: {

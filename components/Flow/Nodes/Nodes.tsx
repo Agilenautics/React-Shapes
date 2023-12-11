@@ -40,9 +40,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     // @ts-ignore
     const nodes = x.hasFlowchart.hasNodes;
     console.log(nodes);
-    const nodeData = JSON.stringify(nodes)
-      // .replaceAll('"data":', '"data":')
-      // .replaceAll('"position":', '"position":');
+    const nodeData = JSON.stringify(nodes);
+    // .replaceAll('"data":', '"data":')
+    // .replaceAll('"position":', '"position":');
     // @ts-ignore
     const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(
@@ -61,9 +61,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     const x = findFile(data.hasLinkedBy.fileId);
     // @ts-ignore
     const nodes = x.hasFlowchart.hasNodes;
-    const nodeData = JSON.stringify(nodes)
-      .replaceAll('"data":', '"data":')
-      // .replaceAll('"position":', '"position":');
+    const nodeData = JSON.stringify(nodes).replaceAll('"data":', '"data":');
+    // .replaceAll('"position":', '"position":');
     // @ts-ignore
     const edges = x.hasFlowchart.hasEdges;
     const edgeData = JSON.stringify(edges).replaceAll(
@@ -156,11 +155,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             ) : (
               <div>
                 {flag ? null : (
-                  <p
-                    className="py-1 text-center text-[0.6rem]"
-                  >
-                    {label}
-                  </p>
+                  <p className="py-1 text-center text-[0.6rem]">{label}</p>
                 )}
                 {data.hasLinkedTo.flag ? (
                   <div
@@ -216,14 +211,10 @@ function defaultNode({ data, id }) {
 
 //@ts-ignore
 function BrightblueNode({ data, id }) {
-  return (
-    <>
-      {PrototypicalNode(
-        "border-node-blue-100 bg-node-blue-200 text-white",
-        data,
-        id
-      )}
-    </>
+  return PrototypicalNode(
+    "border-node-blue-100 bg-node-blue-200 text-white",
+    data,
+    id
   );
   // return PrototypicalNode(
   //   "border-node-blue-100 bg-node-blue-200 text-white",

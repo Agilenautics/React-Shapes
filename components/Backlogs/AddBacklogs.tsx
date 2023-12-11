@@ -38,7 +38,7 @@ export default function AddBacklogs({
 }: any) {
   const { addRow, updateRow, allStories, parents } = backlogStore();
   const { uid, idofUid, updateUid } = fileStore();
-  const [type, setType] = useState<string>("");
+  // const [type, setType] = useState<string>("");
 
   // const {data,error,loading} = useQuery(getUidQuery);
 
@@ -56,11 +56,12 @@ export default function AddBacklogs({
 
   const handleSubmit = async (values: any) => {
     const  backToThePage = ()=>  router.back()
+    console.log(values)
     if (selectedElement != null) {
       values.uid = selectedElement.uid;
       values.id = selectedElement.id;
       values.parent = selectedElement.parent;
-      switch (type) {
+      switch (selectedElement.type) {
         case "file":
           updateStoryMethod(
             selectedElement.id,
@@ -68,8 +69,8 @@ export default function AddBacklogs({
             values
           ).then((res) => {
             values.hasSprint = res.data.updateFiles.files[0].hasSprint;
-            backToThePage()
             updateRow(values);
+            backToThePage()
           });
           break;
         case "folder":
@@ -92,8 +93,8 @@ export default function AddBacklogs({
               res.data.updateFlowNodes.flowNodes
             );
             values.hasSprint = res.data.updateFlowNodes.flowNodes[0]?.hasSprint;
-            backToThePage()
             updateRow(values);
+            backToThePage()
           });
       }
     } else {
@@ -163,9 +164,9 @@ export default function AddBacklogs({
   useEffect(() => {
     getSprintByProjectId(projectId, GET_SPRINTS, updateSprints);
   }, []);
-  useEffect(() => {
-    setType(selectedElement.type);
-  }, [selectedElement]);
+  // useEffect(() => {
+  //   setType(selectedElement.type);
+  // }, [selectedElement]);
 
   return (
     <div className="p-6">

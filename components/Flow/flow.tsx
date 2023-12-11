@@ -25,7 +25,6 @@ import {
   deleteNodeBackend,
   findNode,
   getNode,
-  updateNodeBackend,
   updatePosition,
   updatePositionMutation,
   createFlowEdge,
@@ -62,7 +61,6 @@ function Flow() {
   const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
   const {
     edges: defaultEdges,
-    updateEdges,
     deleteEdge,
     addNewEdge,
   } = edgeStore();
