@@ -65,7 +65,6 @@ export default function CustomEdge({
   const markerSize = 6; // Adjust the size of the markers here
 
   const onhandleEdgeLine = () => {
-    console.log(data.tempLabel)
     if (
       id &&
       data.label.length === 0 &&
@@ -74,6 +73,7 @@ export default function CustomEdge({
     ) {
       updateLabel(id, data.tempLabel);
     }
+    setEditing(true)
   };
 
   return (

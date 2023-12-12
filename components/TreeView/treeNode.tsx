@@ -18,6 +18,9 @@ import { FaAngleRight } from "react-icons/fa6";
 
 // LoadingIcon component
 import classNames from "classnames";
+import RenameFormForTreeStructur from "./renameForm";
+import MaybeToggleButton from "./toggleArrowbuttons";
+import Icon from "./IconsForFolderAndFile";
 
 // LoadingIcon component
 
@@ -53,71 +56,59 @@ function ExpandableChip({ onRename, onDelete }: any) {
  * and `isFolder`, and returns a button that toggles the folder open or closed. The appearance of the
  * button changes as well, based on the state of the folder.
  */
-function MaybeToggleButton({ toggle, isOpen, isFolder, isSelected }: any) {
-  if (isFolder) {
-    const Icon = isOpen ? ChevronDown : ChevronRight;
-    return (
-      <button tabIndex={-1} onClick={toggle} className="mx-1">
-        <Icon size={20} className=" stroke-2 text-gray-700 dark:text-white" />
-      </button>
-    );
-  } else {
-    return <div className="spacer" />;
-  }
-}
+
 
 /**
  * It returns an icon based on the props passed in.
  * @param {any} - isFolder - whether the node is a folder or not.
  * @param {any} - isOpen - whether the folder is open or not.
  */
-function Icon({ isFolder, isSelected, isOpen }: any) {
-  const cname = "rounded text-blue-500 w-5 h-5 pb-[1px]";
-  if (isFolder) {
-    if (isOpen) {
-      return <AiFillFolderOpen className={cname} size={18} />;
-    } else {
-      return <AiFillFolder className={cname} size={18} />;
-    }
-  } else {
-    return <AiOutlineFile className={cname} size={18} />;
-  }
-}
+// function Icon({ isFolder, isSelected, isOpen }: any) {
+//   const cname = "rounded text-blue-500 w-5 h-5 pb-[1px]";
+//   if (isFolder) {
+//     if (isOpen) {
+//       return <AiFillFolderOpen className={cname} size={18} />;
+//     } else {
+//       return <AiFillFolder className={cname} size={18} />;
+//     }
+//   } else {
+//     return <AiOutlineFile className={cname} size={18} />;
+//   }
+// }
 
-type FormProps = { defaultValue: string } & NodeHandlers;
 
 /**
  * It's a React component that handles the renaming of a file or folder.
  * @param {FormProps} - FormProps
  * @returns An input field.
  */
-function RenameForm({ defaultValue, submit, reset }: FormProps) {
-  const inputProps = {
-    defaultValue,
-    autoFocus: true,
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
-      submit(e.currentTarget.value);
-    },
-    onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
-      switch (e.key) {
-        case "Enter":
-          submit(e.currentTarget.value);
-          break;
-        case "Escape":
-          reset();
-          break;
-      }
-    },
-  };
+// function RenameForm({ defaultValue, submit, reset }: FormProps) {
+//   const inputProps = {
+//     defaultValue,
+//     autoFocus: true,
+//     onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
+//       submit(e.currentTarget.value);
+//     },
+//     onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => {
+//       switch (e.key) {
+//         case "Enter":
+//           submit(e.currentTarget.value);
+//           break;
+//         case "Escape":
+//           reset();
+//           break;
+//       }
+//     },
+//   };
 
-  return (
-    <input
-      className="rounded-lg bg-blue-100 text-lg dark:bg-blue-400"
-      type="text"
-      {...inputProps}
-    />
-  );
-}
+//   return (
+//     <input
+//       className="rounded-lg bg-blue-100 text-lg dark:bg-blue-400"
+//       type="text"
+//       {...inputProps}
+//     />
+//   );
+// }
 
 export const TreeNode = ({
   innerRef,
@@ -227,7 +218,7 @@ export const TreeNode = ({
           <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
         </i>
         {state.isEditing ? (
-          <RenameForm defaultValue={name} {...handlers} />
+          <RenameFormForTreeStructur defaultValue={name} {...handlers} />
         ) : (
           <span className="group flex flex-row font-sans text-sm dark:text-white">
             {name}
@@ -253,9 +244,9 @@ export const TreeNode = ({
                   </button>
                   <button
                     onClick={() => toDetailPage(id)}
-                    className="ml-5 cursor-pointer hover:text-black hover:scale-110"
+                    className="ml-5 cursor-pointer hover:scale-110 hover:text-black"
                   >
-                   <FaAngleRight />
+                    <FaAngleRight />
                   </button>
                 </div>
               )}
@@ -266,80 +257,83 @@ export const TreeNode = ({
   );
 };
 
-export const TreeNode2 = ({
-  innerRef,
-  data,
-  styles,
-  state,
-  handlers,
-  tree,
-}: any) => {
-  const folder = Array.isArray(data.children);
-  const open = state.isOpen;
-  const name = data.name;
-  const id = data.id;
-  var selectedNodeId: string;
-  if (state.isSelected) {
-    selectedNodeId = data.id!;
-  }
+// export const TreeNode2 = ({
+//   innerRef,
+//   data,
+//   styles,
+//   state,
+//   handlers,
+//   tree,
+// }: any) => {
+//   const folder = Array.isArray(data.children);
+//   const open = state.isOpen;
+//   const name = data.name;
+//   const id = data.id;
+//   var selectedNodeId: string;
+//   if (state.isSelected) {
+//     selectedNodeId = data.id!;
+//   }
 
-  const { fileId } = nodeStore();
-  const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
+//   const { fileId } = nodeStore();
+//   const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
 
-  const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
+//   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
 
-  function loadFlowNodes(handlers: any, data: any) {
-    return (e: SyntheticEvent) => {
-      if (data.id === currentFileId) {
-        e.stopPropagation(); // Prevent event propagation for the current file's node
-        return; // Disable click for the current file's node
-      }
-      handlers.select(e);
-      if (data.children == null) {
-        return updateLinkNodes(data.hasFlowchart.hasNodes, data.id);
-      }
-    };
-  }
+//   function loadFlowNodes(handlers: any, data: any) {
+//     return (e: SyntheticEvent) => {
+//       if (data.id === currentFileId) {
+//         e.stopPropagation(); // Prevent event propagation for the current file's node
+//         return; // Disable click for the current file's node
+//       }
+//       handlers.select(e);
+//       if (data.hasFlowchart.hasNodes && data.hasFlowchart.hasNodes.length) {
+//         return updateLinkNodes(data.hasFlowchart.hasNodes, data.id);
+//       } else {
+//        return null
+//       }
+//     };
+//   }
 
-  const isCurrentFile = data.id === currentFileId;
-  const nodeStyles = isCurrentFile
-    ? { pointerEvents: "none", opacity: 0.5 }
-    : {};
-  const disabledCursorClass = isCurrentFile ? styles.disabledCursor : "";
+//   const isCurrentFile = data.id === currentFileId;
+//   const nodeStyles = isCurrentFile
+//     ? { pointerEvents: "none", opacity: 0.5 }
+//     : {};
+//   const disabledCursorClass = isCurrentFile ? styles.disabledCursor : "";
+//   console.log(data);
 
-  return (
-    <div
-      ref={innerRef}
-      style={{ ...styles.row, ...nodeStyles }}
-      className={`${classNames(
-        "row",
-        state,
-        disabledCursorClass
-      )} dark:text-white`}
-      onClick={loadFlowNodes(handlers, data)}
-    >
-      <div className="row-contents" style={styles.indent}>
-        <MaybeToggleButton
-          toggle={handlers.toggle}
-          isOpen={open}
-          isFolder={folder}
-          isSelected={state.isSelected}
-        />
-        <i>
-          <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
-        </i>
-        {state.isEditing ? (
-          <RenameForm
-            defaultValue={name}
-            {...handlers}
-            disabled={isCurrentFile}
-          />
-        ) : (
-          <span className="flex flex-row">
-            {name} {state.isSelected}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div
+//       ref={innerRef}
+//       style={{ ...styles.row, ...nodeStyles }}
+//       className={`${classNames(
+//         "row",
+//         state,
+//         disabledCursorClass
+//       )} dark:text-white`}
+//       onClick={loadFlowNodes(handlers, data)}
+//     >
+//       <div className="row-contents" style={styles.indent}>
+//         <MaybeToggleButton
+//           toggle={handlers.toggle}
+//           isOpen={open}
+//           isFolder={folder}
+//           isSelected={state.isSelected}
+//         />
+//         <i>
+//           <Icon isFolder={folder} isSelected={state.isSelected} isOpen={open} />
+//         </i>
+//         {state.isEditing ? (
+//           <RenameForm
+//             defaultValue={name}
+//             {...handlers}
+//             disabled={isCurrentFile}
+//           />
+//         ) : (
+//           <span className="flex flex-row">
+//             {name} {state.isSelected}
+//           </span>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
