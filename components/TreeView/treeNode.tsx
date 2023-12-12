@@ -182,7 +182,6 @@ export const TreeNode = ({
         setIsLoading(true);
         getNodes(allNodes, data.id)
           .then((result) => {
-            console.log(result, "res");
             updateNodes(result.nodes);
           })
           .finally(() => {
