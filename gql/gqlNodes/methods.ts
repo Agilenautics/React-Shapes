@@ -95,10 +95,6 @@ async function createNode(
   addRow: any
 ) {
   // const addRow = backlogStore(state=> state.addRow)
-  console.log("email", email);
-  console.log(data, "data");
-  var nodes: Array<Node> = [];
-
   try {
     return await client.mutate({
       mutation,
@@ -175,44 +171,42 @@ async function createNode(
           },
         ],
       },
-      // update: (
-      //   cache,
-      //   {
-      //     data: {
-      //       createFlowNodes: { flowNodes },
-      //     },
-      //   }
-      // ) => {
-      //   const { flowcharts } = cache.readQuery({
-      //     query: allNodes,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: data.story,
-      //         },
-      //       },
-      //     },
-      //   }) as any;
-      //   const { hasNodes } = flowcharts[0];
-      //   const updaedFlowchart = {
-      //     ...flowcharts[0],
-      //     hasNodes: [...hasNodes, ...flowNodes],
-      //   };
-      //   cache.writeQuery({
-      //     query: allNodes,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: data.story,
-      //         },
-      //       },
-      //     },
-      //     data: {
-      //       flowcharts: [updaedFlowchart],
-      //     },
-      //   });
-      // },
+      update: (
+        cache,
+        {
+          data: {
+            createFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        const { files } = cache.readQuery({
+          query: allNodes,
+          variables: {
+            where: {
+              id: data.story,
+            },
+          },
+        }) as any;
+        const { hasNodes } = files[0];
+        const updaedFlowchart = {
+          ...files[0],
+          hasNodes: [...hasNodes, ...flowNodes],
+        };
+        console.log(updaedFlowchart)
+        cache.writeQuery({
+          query: allNodes,
+          variables: {
+            where: {
+              id: data.story,
+            },
+          },
+          data: {
+            files: [updaedFlowchart],
+          },
+        });
+      },
     });
+   
   } catch (error) {
     console.log(error, "error while creating the node");
   }
@@ -283,6 +277,7 @@ const updatePosition = async (
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileId: string
 ) => {
+  const { position } = node;
   try {
     await client.mutate({
       mutation,
@@ -291,55 +286,54 @@ const updatePosition = async (
           id: node.id,
         },
         update: {
-          x: node.position.x,
-          y: node.position.y,
+          x: position.x,
+          y: position.y,
         },
       },
-      // update: (
-      //   cache,
-      //   {
-      //     data: {
-      //       updatePositions: { positions },
-      //     },
-      //   }
-      // ) => {
-      //   const { flowcharts } = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //   });
-      //   const { hasNodes, ...flowchartsData } = flowcharts[0];
-      //   const updatedNode = hasNodes.map((nodeData: Node) => {
-      //     if (nodeData.id === node.id) {
-      //       return {
-      //         ...nodeData,
-      //         haspositionPosition: positions[0],
-      //       };
-      //     }
-      //     return {
-      //       ...nodeData,
-      //     };
-      //   });
-      //   const updatedFlowchart = { ...flowchartsData, hasNodes: updatedNode };
-      //   cache.writeQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //     data: {
-      //       flowcharts: [updatedFlowchart],
-      //     },
-      //   });
-      // },
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        const { files } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: fileId,
+            },
+          },
+        });
+
+        const { hasNodes, ...FileData } = files[0];
+        const { x, y, id } = flowNodes[0];
+        const updatedNode = hasNodes.map((node: Node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              x,
+              y,
+            };
+          }
+          return {
+            ...node,
+          };
+        });
+        const updatedFile = { ...FileData, hasNodes: updatedNode };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              id: fileId,
+            },
+          },
+          data: {
+            files: [updatedFile],
+          },
+        });
+      },
     });
   } catch (error) {
     console.log(error, "whiele updating positin of the node");

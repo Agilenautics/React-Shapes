@@ -6,11 +6,11 @@ export const allNodes = gql`
   ${Node_Fragment}
   query getAllNodes($where: FileWhere) {
     files(where: $where) {
+      id
       name
       hasNodes {
         ...NodeFragment
       }
-      
     }
   }
 `;
