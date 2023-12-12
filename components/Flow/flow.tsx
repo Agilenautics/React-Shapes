@@ -25,9 +25,9 @@ import {
   deleteNodeBackend,
   findNode,
   getFlowNode,
- //updateNodeBackend,
- updatePosition,
- updatePositionMutation,
+  //updateNodeBackend,
+  updatePosition,
+  updatePositionMutation,
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
@@ -66,13 +66,12 @@ function Flow() {
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
   const [nodeId, setNodeId] = useState([]);
-  const userEmail = userStore((state)=>state.userEmail);
-
-
+  const userEmail = userStore((state) => state.userEmail);
 
   const dragged = useRef(false);
-  
- 
+
+
+
 
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
@@ -243,6 +242,7 @@ function Flow() {
       try {
         if (dragged.current) {
           await updatePosition(node, updatePositionMutation, allNodes, fileId);
+          console.log("hii")
         }
         dragged.current = false;
       } catch (error) {
@@ -302,7 +302,7 @@ function Flow() {
           nodeTypes={nodeTypeMap}
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
-            updateNodes(getNodes());
+            // updateNodes(getNodes());
             onNodeDragStop(event, node);
           }}
           onNodeDrag={onNodeDrag} //this event we dont want
@@ -353,4 +353,3 @@ export default Flow;
 function setUserEmail(email: any) {
   throw new Error("Function not implemented.");
 }
-
