@@ -1,5 +1,5 @@
-import React,{ useEffect, useState } from "react";
-import Editing  from "../Editing";
+import React, { useEffect, useState } from "react";
+import Editing from "../Editing";
 import { getSmoothStepPath, getBezierPath, Position } from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
@@ -34,6 +34,7 @@ export default function CustomEdge({
     pathCSS: string;
     boxCSS: string;
     bidirectional: boolean;
+    tempLabel: string;
   };
   style: Object;
 }) {
@@ -61,8 +62,19 @@ export default function CustomEdge({
     setLineColor(lineColors[fillPath][strokeWidth]);
   }, [data.pathCSS]);
 
-
   const markerSize = 6; // Adjust the size of the markers here
+
+  const onhandleEdgeLine = () => {
+    console.log(data.tempLabel)
+    if (
+      id &&
+      data.label.length === 0 &&
+      "tempLabel" in data &&
+      data.tempLabel.length > 0
+    ) {
+      updateLabel(id, data.tempLabel);
+    }
+  };
 
   return (
     <>
@@ -149,10 +161,10 @@ export default function CustomEdge({
         y={labelY - 145 / 2}
         requiredExtensions="http://www.w3.org/1999/xhtml"
       >
-        <div className="flex h-full items-center justify-center">
+        <div className="flex h-full items-center justify-center " onDoubleClick={onhandleEdgeLine}>
           {data.label.length !== 0 ? (
             <div
-              className={`rounded-lg !bg-white p-0.5 text-sm dark:!bg-neutral-900 ${data.boxCSS}`}
+              className={`rounded-lg !bg-slate px-1 text-[0.5rem] dark:!bg-neutral-900 ${data.boxCSS}`}
               onDoubleClick={() => {
                 setEditing(true);
               }}

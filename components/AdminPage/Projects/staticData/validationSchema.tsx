@@ -8,10 +8,11 @@ const validationSchema = Yup.object().shape({
   sprint: Yup.string(),
   assign: Yup.string().email(),
   story: Yup.string().when("type", (type: any, schema) => {
-    if (type != "file") return schema.required("Must enter Story");
+    if (type[0] === "folder") return schema;
+    if (type[0] !== "file") return schema.required("Must enter Story");
     return schema;
   }),
-  epic: Yup.string().when("type", (type:any, schema) => {
+  epic: Yup.string().when("type", (type: any, schema) => {
     if (type === "file") return schema.required("Must enter Epic");
     return schema;
   }),

@@ -10,7 +10,7 @@ const productionLogger = () => {
     format: combine(
       timestamp({ format: "YYYY-MM-DD HH:MM:SS" }),
       myFormat,
-    //   json()
+      json()
     ),
     transports: [
       new transports.Console(),

@@ -2,11 +2,12 @@ import { ApolloServer } from "apollo-server-micro";
 import { Neo4jGraphQL } from "@neo4j/graphql";
 import EventEmitter from "events";
 import driver from "./dbConnection";
-import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
+import { ApolloError, ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import typeDefs from "./typeDefs";
 import { NextApiRequest, NextApiResponse } from "next";
 import { GraphQLError } from "graphql";
 import errorHandling from "./errorHandling";
+import logger from "./logger";
 
 // ? The function below takes the path from the root directory
 // ? The file referrenced here contains the schema for GraphQL
@@ -20,7 +21,8 @@ EventEmitter.defaultMaxListeners = 15;
 const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
-  formatError: (error: GraphQLError) => {
+  formatError: (error) => {
+    console.log(error instanceof ApolloError)
     return errorHandling(error);
   },
   introspection: true,
@@ -36,6 +38,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   await startServer;
+  //logger info level
+  logger?.info("server started successfully...")
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -57,5 +61,7 @@ export default async function handler(
 export const config = {
   api: {
     bodyParser: false,
+    sizeLimit: '500kb',
+    maxDuration: 5,
   },
 };

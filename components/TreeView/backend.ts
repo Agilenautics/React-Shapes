@@ -18,6 +18,7 @@ import {
 } from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import { useRouter } from "next/router";
+import { File } from "../../lib/appInterfaces";
 
 /**
  * It returns the first node in the tree that has a model with an id property that matches the id
@@ -51,7 +52,7 @@ export type MyData = {
   // hasContainsFile:Array<File>
 
   hasContainsFolder: Array<Folder>;
-  hasContainsFile:Array<File>
+  hasContainsFile: Array<File>;
 };
 
 /**
@@ -61,10 +62,13 @@ export function useBackend() {
   let initData = fileStore((state) => state.data);
   let setLoading = fileStore((state) => state.setLoading);
   const delete_item = fileStore((state) => state.delete_item);
+  const updateFile = fileStore((state) => state.update_file);
   const [data, setData] = useState<MyData>(initData as MyData);
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
+
+  // console.log(data);
 
   // projectId
   const router = useRouter();
@@ -121,6 +125,9 @@ export function useBackend() {
 
     onEdit: async (id: string, name: string) => {
       const node = find(id);
+      console.log(node)
+      const getParent  = node?.parent.model as Folder
+      console.log(getParent)
       let editedData = {
         id,
         name,
@@ -148,13 +155,27 @@ export function useBackend() {
 
       // getting element index
       const ind = initData.children?.findIndex((element) => element.id == id);
+      let indexForHasContainsFile = initData.hasContainsFile?.findIndex(
+        (element: File) => element.id === id
+      );
+      // console.log(indexForHasContainsFile)
+      // if (indexForHasContainsFile < 0) {
+      //   indexForHasContainsFile = initData.hasContainsFolder.children.findIndex(
+      //     (value: File) => value.id === id
+      //   );
+      //   initData.hasContainsFolder.children[indexForHasContainsFile] = updatedData;
+      // }
+      console.log(initData.children)
 
       // updating state in real time
 
       // @ts-ignore
       initData.children[ind] = updatedData;
+      // initData.hasContainsFile[indexForHasContainsFile] = updatedData
+
       setData(initData);
       update();
+      console.log(initData,'initdata')
 
       const { type } = node?.model;
       if (type === "folder") {
@@ -171,6 +192,7 @@ export function useBackend() {
           updateFilesMutation,
           getProjectByUser
         );
+        updateFile(id, initData);
         // updateNodes(nodeData);
       }
     },

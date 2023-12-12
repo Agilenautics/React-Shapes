@@ -43,6 +43,7 @@ import { FetchResult } from "@apollo/client";
 import { Tooltip } from "react-tooltip";
 import { findById } from "../TreeView/backend";
 import TreeModel from "tree-model-improved";
+import Edit from "../../pages/projects/[projectId]/business-process/edit";
 
 interface SideBar {
   isOpen: Boolean;
@@ -79,6 +80,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
 
   const router = useRouter();
   const projectId = (router.query.projectId as string) || "";
+  // console.log(router.asPath===`/projects/${projectId}/business-process/edit?id=${router.query.id}`)
 
   const getProjectId = async (id: string) => {
     const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
@@ -114,6 +116,14 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     });
     setProjectData(filteredProject);
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (projectId) {
+      setInsightsOpen(true);
+    } else {
+      setInsightsOpen(false);
+    }
+  }, [projectId]);
 
   // fetch recent project
   const fetchRecentProject = (project: any) => {
@@ -187,6 +197,8 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
   };
+
+  // console.log(router.asPath===`/projects/${projectId}/business-process/edit`)
 
   const handleAddFile = async () => {
     let data = {
@@ -377,25 +389,8 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             </div>
           </div>
 
-          <div className=" p-1 px-3 duration-100">
-            <Link href="/projects">
-              <a className="flex w-full items-center gap-2">
-                <AiTwotoneHome />
-                <span> Home </span>
-              </a>
-            </Link>
-          </div>
-          <div className="p-1 px-3 duration-100">
-            <Link href={`/projects/${projectId}`}>
-              <a className="flex w-full items-center gap-2">
-                <GrOverview className="text-slate-600  dark:bg-slate-200 " />
-                <span>Overview</span>
-              </a>
-            </Link>
-          </div>
-
           <div
-            onClick={() => setInsightsOpen(!insightsOpen)}
+            onClick={() => (projectId ? setInsightsOpen(!insightsOpen) : null)}
             className="flex cursor-pointer select-none items-center justify-between p-1 px-3 duration-100"
           >
             <span>
@@ -423,6 +418,14 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
           >
             {insightsOpen && (
               <>
+                <div className="p-1  duration-100">
+                  <Link href={`/projects/${projectId}`}>
+                    <a className="ml-7 flex w-full items-center gap-2">
+                      <GrOverview className="text-slate-600  dark:bg-slate-200 " />
+                      <span>Overview</span>
+                    </a>
+                  </Link>
+                </div>
                 <div className="p-1 duration-100">
                   <Link href={`/projects/${projectId}/business-process`}>
                     <a className="ml-7 flex w-full select-none items-center gap-2">
@@ -431,6 +434,8 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                     </a>
                   </Link>
                 </div>
+                {/* {router.asPath===`/projects/${projectId}/business-process/edit?id=${router.query.id}` && <Edit />} */}
+                {/* {router.pathname === "/parent/child2" && <Child2 />} */}
 
                 {router.asPath ==
                   "/projects/" + projectId + "/business-process" && (

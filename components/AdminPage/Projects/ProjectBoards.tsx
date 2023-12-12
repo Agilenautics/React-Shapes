@@ -19,8 +19,10 @@ import {
   updateTasksMutation,
 } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
+import { useRouter } from "next/router";
 
 function ProjectBoards() {
+  const router = useRouter();
   const allStatus = backlogStore((state) => state.allStatus);
   const [selectedTypeFilters, setSelectedTypeFilters] = useState<string[]>([]);
   const [statuses, setStatuses] = useState([]);
@@ -113,10 +115,6 @@ function ProjectBoards() {
     localStorage.clear();
   };
 
-  if (loading) {
-    return <div>...loading</div>;
-  }
-
   const addBoard = (name: string) => {
     if (name == "") {
       alert("Please give a name");
@@ -126,6 +124,19 @@ function ProjectBoards() {
     setNewBoardName("");
     setShowForm(false);
   };
+
+  const projectId = router.query.projectId;
+
+  const toDetailPage = (selectedId: string) => {
+    router.push({
+      pathname: `/projects/${projectId}/boards/edit/`,
+      query: { id: selectedId },
+    });
+  };
+
+  if (loading) {
+    return <div>...loading</div>;
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -222,11 +233,12 @@ function ProjectBoards() {
                       className="border-box transform cursor-pointer rounded bg-slate-100 p-2 transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg"
                       draggable="true"
                       onDrag={(e) => handleDragStart(e, task)}
+                      
 
                       // onDragStart={(e) => handleDragStart(e, task)}
                       // onDragEnd={(e) => handleDrop(e, column.id)}
                     >
-                      <div className="font-bold">{task.name || task.label}</div>
+                      <div className="font-bold hover:text-blue-500 hover:underline duration-300 " onClick={() => toDetailPage(task.id)}>{task.name || task.label}</div>
                       <div>{getTypeLabel(task.type).type}</div>
                     </div>
                   ) : null
