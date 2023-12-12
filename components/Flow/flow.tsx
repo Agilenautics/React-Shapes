@@ -59,11 +59,7 @@ function Flow() {
   const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
   const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
-  const {
-    edges: defaultEdges,
-    deleteEdge,
-    addNewEdge,
-  } = edgeStore();
+  const { edges: defaultEdges, deleteEdge, addNewEdge } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
@@ -125,7 +121,9 @@ function Flow() {
         (value: any) => value.id === edgeId
       );
       newEdgeData.map((curEle) => {
-        updateEdgeBackend(updateEdgeMutation, curEle,allNodes,fileId);
+        if (fileId) {
+          updateEdgeBackend(updateEdgeMutation, curEle, allNodes, fileId);
+        }
       });
     }
   }, [defaultEdges, edgeId]);

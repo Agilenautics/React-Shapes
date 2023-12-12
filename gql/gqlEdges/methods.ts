@@ -146,6 +146,7 @@ const updateEdgeBackend = async (
   cahchQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   selectedFileId: string
 ) => {
+  const { data } = edgeData;
   try {
     return await client.mutate({
       mutation: mutation,
@@ -157,68 +158,82 @@ const updateEdgeBackend = async (
           hasedgedataEdgedata: {
             update: {
               node: {
-                label: edgeData.label,
-                bidirectional: edgeData.bidirectional,
-                boxCSS: edgeData.boxCSS,
-                pathCSS: edgeData.pathCSS,
+                label: data.label,
+                bidirectional: data.bidirectional,
+                boxCSS: data.boxCSS,
+                pathCSS: data.pathCSS,
               },
             },
           },
         },
       },
-      // update: (
-      //   cache,
-      //   {
-      //     data: {
-      //       updateFlowEdges: { flowEdges },
-      //     },
-      //   }
-      // ) => {
-      //   console.log(selectedFileId);
-      //   const { flowcharts } = cache.readQuery({
-      //     query: cahchQuery,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: selectedFileId,
-      //         },
-      //       },
-      //     },
-      //   });
-      //   const { hasEdges, ...flowchartData } = flowcharts[0];
-      //   const responseData = { ...flowEdges[0].hasedgedataEdgedata };
-      //   const updatedEdge = hasEdges.map((edge: Edge) => {
-      //     if (edge.id === edgeData.id) {
-      //       return {
-      //         ...edge,
-      //         hasedgedataEdgedata: {
-      //           label: responseData.label,
-      //           bidirectional: responseData.bidirectional,
-      //           boxCSS: responseData.boxCSS,
-      //         },
-      //       };
-      //     }
-      //     return {
-      //       ...edge,
-      //     };
-      //   });
-      //   const updatedFlowChart = { ...flowchartData, hasEdges: updatedEdge };
-      //   console.log(updatedFlowChart);
-      //   cache.writeQuery({
-      //     query: cahchQuery,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: selectedFileId,
-      //         },
-      //       },
-      //     },
-      //     data: {
-      //       flowcharts: [updatedFlowChart],
-      //     },
-      //   });
-      // },
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowEdges: { flowEdges },
+          },
+        }
+      ) => {
+        // const existanceData = cache.readQuery({
+        //   query: cahchQuery,
+        //   variables: {
+        //     where: {
+        //       hasFile: {
+        //         id: selectedFileId,
+        //       },
+        //     },
+        //   },
+        // });
+        // console.log(existanceData)
+        // const {flowcharts} = existanceData
+        // const { hasEdges, ...flowchartData } = flowcharts[0];
+        // // const responseData = { ...flowEdges[0].hasedgedataEdgedata };
+        // const updatedEdge = hasEdges.map((edge: Edge) => {
+        //   if (edge.id === edgeData.id) {
+        //     return {
+        //       ...edge,
+        //       hasedgedataEdgedata: {
+        //         label: data.label,
+        //         bidirectional: data.bidirectional,
+        //         boxCSS: data.boxCSS,
+        //       },
+        //     };
+        //   }
+        //   return {
+        //     ...edge,
+        //   };
+        // });
+        // const updatedFlowChart = { ...flowchartData, hasEdges: updatedEdge };
+        // console.log(updatedFlowChart);
+        
+        // cache.writeQuery({
+        //   query: cahchQuery,
+        //   variables: {
+        //     where: {
+        //       hasFile: {
+        //         id: selectedFileId,
+        //       },
+        //     },
+        //   },
+        //   data: {
+        //     flowcharts: [updatedFlowChart],
+        //   },
+        // });
+      },
+      refetchQueries:[{
+        query:cahchQuery,
+        variables:{
+          where:{
+            hasFile:{
+              id:selectedFileId
+            }
+          }
+        }
+      }]
+      
     });
+    
   } catch (error) {
     console.log(error, "while updating edge");
   }
@@ -280,9 +295,4 @@ const deleteEdgeBackend = async (
   }
 };
 
-export {
-  getEdges,
-  createFlowEdge,
-  deleteEdgeBackend,
-  updateEdgeBackend,
-};
+export { getEdges, createFlowEdge, deleteEdgeBackend, updateEdgeBackend };
