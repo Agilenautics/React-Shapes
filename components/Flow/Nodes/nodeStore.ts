@@ -5,8 +5,8 @@ import {
   //updateLinkedByMethod,
   updateNodeData,
   updateNodeBackend,
-  getNode,
- // updateLinkedBy,
+  getNodes,
+  // updateLinkedBy,
   //updateLinkedToMutation,
   //getFileByNode,
   allNodes,
@@ -73,28 +73,32 @@ const nodeStore = create<NodeState>((set) => ({
   },
   addNode: (newNode) =>
     set((state) => {
-      console.log("newNode",newNode);
-      const updatedNode =  newNode.map((item:any)=>{
-        const description= item.hasInfo.description;
-        const {x,y,label,shape,...rest} =item
-        return {...rest,data:{label,shape,description},position:{x,y}}
-      })
+      const updatedNode = newNode.map((item: any) => {
+        const description = item.hasInfo.description;
+        const { x, y, label, shape, ...rest } = item;
+        return {
+          ...rest,
+          data: { label, shape, description },
+          position: { x, y },
+        };
+      });
       return {
         nodes: [...state.nodes, ...updatedNode],
       };
     }),
   updateNodes: (nodes) =>
     set((state) => {
-      console.log("nodes",nodes)
       // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
-      const newData =  nodes.map((item:any)=>{
-        const description= item.hasInfo.description;
-        const {x,y,label,shape,...rest} =item
-        return {...rest,data:{label,shape,description},position:{x,y}}
-      })
-      console.log(newData,"newData")
-
-  
+      const newData = nodes.map((item: any) => {
+        const description = item.hasInfo.description;
+        const { x, y, label, shape, ...rest } = item;
+        return {
+          ...rest,
+          data: { label, shape, description },
+          position: { x, y },
+        };
+      });
+      console.log(newData, "newData");
       return { nodes: newData };
     }),
   deleteNode: (node) => {
@@ -111,12 +115,12 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-    //  updateNodeData(
-    //     updated_node,
-    //     updateLinkedToMutation,
-    //     allNodes,
-    //     state.fileId
-    //   );
+      //  updateNodeData(
+      //     updated_node,
+      //     updateLinkedToMutation,
+      //     allNodes,
+      //     state.fileId
+      //   );
       return { nodes: [...to_be_updated, updated_node] };
     });
   },
@@ -176,6 +180,7 @@ const nodeStore = create<NodeState>((set) => ({
       //   allNodes,
       //   state.fileId
       // );
+      console.log(updated_node,"hhhh")
       return { nodes: [...to_be_updated, updated_node] };
     }),
   updateLinkedTo: async (
@@ -220,7 +225,7 @@ const nodeStore = create<NodeState>((set) => ({
       ...new_node,
       data: { ...new_node.data, hasLinkedBy: linkedBy },
     };
-   // await updateLinkedByMethod(updated_node, updateLinkedBy);
+    // await updateLinkedByMethod(updated_node, updateLinkedBy);
     set((state): any => {
       // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
 

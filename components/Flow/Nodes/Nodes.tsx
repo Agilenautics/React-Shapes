@@ -29,9 +29,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const label = data.label;
   const shapeCSS = nodeShapeMap[data.shape];
   const description = data.description;
-  console.log(data,"data");
-  let getBpmn = shapeCSS[1]?.split("-")[0];
-  const flag = getBpmn === "bpmn";
+  // let getBpmn = shapeCSS[1]?.split("-")[0];
+  // console.log(shapeCSS[1],getBpmn)
+  // const flag = getBpmn === "bpmn";
   const linkedTo = () => {
     const x = findFile(data.isLinked.hasFile.id);
     // @ts-ignore
@@ -146,9 +146,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               </div>
             ) : (
               <div>
-                 {flag ? null : (
+                 {/* {flag ? null : ( */}
                   <p className="py-1 text-center text-[0.6rem]">{label}</p>
-                )}
+                {/* )} */}
                { /*{data.hasLinkedTo.flag ? (
                   <div
                     className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
@@ -219,7 +219,7 @@ function BrightblueNode({ data, id }) {
   // );
 }
 //@ts-ignore
-function blueNode({ data, id }) {
+function blueNode({data,id}) {
   return PrototypicalNode(
     "border-node-blue-100 bg-node-blue-50 text-node-blue-200",
     data,
