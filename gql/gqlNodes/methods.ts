@@ -14,27 +14,16 @@ async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
-  var nodes: Array<Node> = [];
-
-  await client
-    .query({
+  try {
+    return await client.query({
       query: customQuery,
       variables: {
-        where: { id: id },
+        where: { id },
       },
-    })
-    .then((result) => {
-      const nodes1 = JSON.stringify(result.data.flowNodes);
-      console.log("flownodes", nodes1);
-
-      //     const nodes2 = nodes1
-      //       .replaceAll('"hasdataNodedata":', '"data":')
-      //       .replaceAll('"haspositionPosition":', '"position":');
-      //     // @ts-ignore
-      //     nodes = JSON.parse(nodes2);
     });
-
-  // return nodes;
+  } catch (error) {
+    console.log(error, "whiele find node by id ");
+  }
 }
 
 async function getNodes(
@@ -222,43 +211,32 @@ async function deleteNodeBackend(
         where: {
           id: nodeID,
         },
-        delete: {
-          connectedbyFlowedge: {},
-          flowedgeConnectedto: {},
-        },
       },
-      // update: (cache, { data }) => {
-      //   const { flowcharts } = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //   });
-
-      //   const { hasNodes } = flowcharts[0];
-      //   const deleted_node = hasNodes.filter(
-      //     (node: Node) => node.id !== nodeID
-      //   );
-      //   const updatedFlowcharts = { ...flowcharts[0], hasNodes: deleted_node };
-
-      //   cache.writeQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //     data: {
-      //       flowcharts: [updatedFlowcharts],
-      //     },
-      //   });
-      // },
+      update: (cache, { data }) => {
+        const { files } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: fileId,
+            },
+          },
+        });
+        const { hasNodes, ...filedata } = files[0];
+        const deleted_node = hasNodes.filter(
+          (node: Node) => node.id !== nodeID
+        );
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              id: fileId,
+            },
+          },
+          data: {
+            files: [{ ...filedata, hasNodes: deleted_node }],
+          },
+        });
+      },
     });
   } catch (error) {
     console.log(error, "while deleting the node..");

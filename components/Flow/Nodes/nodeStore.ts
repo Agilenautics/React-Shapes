@@ -30,6 +30,7 @@ export interface NodeState {
   breadCrumbs: Array<Node>;
   updateBreadCrumbs: (breadCrumbs: Object, id: string, action: string) => void;
   updateDescription: (id: string, description: string) => void;
+  updateNodePosition: (node: Node) => void;
   fileId: string;
 }
 
@@ -101,6 +102,23 @@ const nodeStore = create<NodeState>((set) => ({
       });
       return { nodes: newData };
     }),
+  updateNodePosition: (node: Node) => {
+    set((state) => {
+      const { id, position } = node;
+      const updatedNodes = state.nodes.map((node: Node) => {
+        if (node.id === id) {
+          return {
+            ...node,
+            position,
+          };
+        }
+        return {
+          ...node,
+        };
+      });
+      return { nodes:updatedNodes };
+    });
+  },
   deleteNode: (node) => {
     set((state) => {
       const updated_nodes = state.nodes.filter((item) => item.id !== node.id);
