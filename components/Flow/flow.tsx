@@ -71,9 +71,6 @@ function Flow() {
 
   const dragged = useRef(false);
 
-
-
-
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
   );
