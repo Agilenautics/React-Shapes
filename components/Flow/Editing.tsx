@@ -84,7 +84,9 @@ function Editing({
   bidirectionalArrows: boolean;
 }) {
   const pEtrue = isEdge ? "w-[43px] h-5 top-10" : "w-[47px] h-5 -top-5";
-  const pEfalse = isEdge ? "w-36 h-[52px] top-10 z-10" : "w-36 h-20 -top-5 z-10";
+  const pEfalse = isEdge
+    ? "w-36 h-[52px] top-10 z-10"
+    : "w-36 h-20 -top-5 z-10";
   const sEtrue = "w-[49px] h-5 -top-16";
   const sEfalse = "w-[119px] h-14 z-10";
   const dEtrue = "w-[70px] h-5";
@@ -99,9 +101,9 @@ function Editing({
   const updateArrows = edgeStore((state) => state.updateArrows);
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
-  const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
+  // const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
   const linkNodeId = fileStore((state) => state.linkNodeId);
-  const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
+  // const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
   const addLinkMethod = async (key: string) => {
     //id of the current node
     const id = linkNodes.nodes[key].id;
@@ -136,21 +138,18 @@ function Editing({
   const handleSubmit = (event: any) => {
     event.preventDefault();
     updateDescription(id, event.target.description.value);
-     };
+  };
 
   const handleChanges = (event: any) => {
-    if (event.keyCode == 13) 
-    {
+    if (event.keyCode == 13) {
       updateDescription(id, event.target.value);
       setEditing(false);
     }
-
   };
-  const handleArrows =(e: React.ChangeEvent<HTMLFormElement>)=>{
-      updateArrows(id, e.target.value === "bidirectional");
-      setEditing(false);
-    
-  }
+  const handleArrows = (e: React.ChangeEvent<HTMLFormElement>) => {
+    updateArrows(id, e.target.value === "bidirectional");
+    setEditing(false);
+  };
 
   return (
     <div>
@@ -159,8 +158,7 @@ function Editing({
         expTrue={pEtrue}
         expFalse={pEfalse}
         positioningCSS={leftPositioning}
-        objects={Object.keys(CSSMap).map((key, _) =>
-           (
+        objects={Object.keys(CSSMap).map((key, _) => (
           <div
             key={key}
             className={`mx-1 my-1 h-5 w-5 cursor-pointer rounded transition-opacity duration-75 ease-in-out
@@ -172,9 +170,7 @@ function Editing({
               setEditing(false);
             }}
           ></div>
-       )
-    
-         )}
+        ))}
       />
       {isEdge ? (
         <>
@@ -184,10 +180,7 @@ function Editing({
             expFalse={Afalse}
             positioningCSS={"left-[90px] top-10"}
             objects={
-              <form
-                className="scale-75"
-                onChange={handleArrows}
-              >
+              <form className="scale-75" onChange={handleArrows}>
                 <div className="mb-4 flex items-center">
                   <input
                     checked={!bidirectionalArrows}
@@ -238,22 +231,23 @@ function Editing({
                 const flag = getBpmn === "bpmn";
                 return (
                   <>
-                  <div
-                    key={key}
-                    className={`mx-1 !h-5 !w-5 cursor-pointer ${
-                      flag ? "text-black" : "my-1  bg-neutral-600 "
-                    }  !translate-x-0 !translate-y-0  transition-opacity duration-75 ease-in-out ${
-                      key === "diamond"
-                        ? "translate-x-[10px] translate-y-[9px] -rotate-45 rotate-45 rounded-md"
-                        : nodeShapeMap[key][1]
-                    }`}
-                    id={key}
-                    onClick={() => {
-                      toggleDraggable(id, true);
-                      updateShape(id, key);
-                      setEditing(false);
+                    <div
+                      key={key}
+                      className={`mx-1 !h-5 !w-5 cursor-pointer ${
+                        flag ? "text-black" : "my-1  bg-neutral-600 "
+                      }  !translate-x-0 !translate-y-0  transition-opacity duration-75 ease-in-out ${
+                        key === "diamond"
+                          ? "translate-x-[10px] translate-y-[9px] -rotate-45 rotate-45 rounded-md"
+                          : nodeShapeMap[key][1]
+                      }`}
+                      id={key}
+                      onClick={() => {
+                        toggleDraggable(id, true);
+                        updateShape(id, key);
+                        setEditing(false);
                       }}
-                  ></div></>
+                    ></div>
+                  </>
                 );
               })}
           />
@@ -301,7 +295,7 @@ function Editing({
                         Object.keys(linkNodes.nodes).map((key, _) => (
                           <button
                             key={key}
-                            id={key} 
+                            id={key}
                             type="button"
                             onClick={(e) => addLinkMethod(key)}
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
