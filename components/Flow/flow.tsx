@@ -38,6 +38,7 @@ import {
 import fileStore from "../TreeView/fileStore";
 import { FetchResult } from "@apollo/client";
 import userStore from "../AdminPage/Users/userStore";
+import { ApolloQueryResult } from "@apollo/client";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -60,8 +61,8 @@ function Flow() {
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
-  const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
-  const { edges: defaultEdges, deleteEdge, addNewEdge } = edgeStore();
+  const { nodes: defaultNodes, updateNodes, deleteNode,updateNodePosition } = nodeStore();
+  const { edges: defaultEdges, updateEdges, deleteEdge } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
@@ -69,9 +70,6 @@ function Flow() {
   const userEmail = userStore((state) => state.userEmail);
 
   const dragged = useRef(false);
-
-
-
 
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
@@ -155,7 +153,7 @@ function Flow() {
           createFlowEdges: { flowEdges },
         },
       } = response;
-      addNewEdge(flowEdges[0]);
+     // addNewEdge(flowEdges[0]);
     },
     [defaultEdges]
   );
@@ -173,13 +171,12 @@ function Flow() {
         //@ts-ignore
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
-          const node = await findNode(getFlowNode, selectedNodes[0].id);
-        //@ts-ignore
-
-          const linkA = node[0].data.hasLinkedBy.flag;
-        //@ts-ignore
-
-          const linkB = node[0].data.hasLinkedTo.flag;
+          const node: ApolloQueryResult<Node> | undefined = await findNode(
+            getFlowNode,
+            selectedNodes[0].id
+          );
+          const linkA = node?.data;
+          const linkB = node?.data;
           //.flowNode.nodeData.linked
           if (linkA || linkB) {
             setShowConfirmation({
@@ -242,7 +239,7 @@ function Flow() {
       try {
         if (dragged.current) {
           await updatePosition(node, updatePositionMutation, allNodes, fileId);
-          console.log("hii")
+          updateNodePosition(node)
         }
         dragged.current = false;
       } catch (error) {
