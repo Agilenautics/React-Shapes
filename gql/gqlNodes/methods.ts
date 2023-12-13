@@ -8,7 +8,6 @@ import client from "../../apollo-client";
 import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-import { updateNodesMutation } from "./mutations";
 import { allNodes } from "./queries";
 import TreeModel from "tree-model-improved";
 import { findById } from "../../components/TreeView/backend";
@@ -192,7 +191,7 @@ async function createNode(
           ...files[0],
           hasNodes: [...hasNodes, ...flowNodes],
         };
-        console.log(updaedFlowchart)
+        console.log(updaedFlowchart);
         cache.writeQuery({
           query: allNodes,
           variables: {
@@ -206,7 +205,6 @@ async function createNode(
         });
       },
     });
-   
   } catch (error) {
     console.log(error, "error while creating the node");
   }
@@ -440,20 +438,25 @@ const updateNodeData = async (
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileId: string
 ) => {
+  const { id, data, type, hasInfo } = nodeData;
   try {
     return await client.mutate({
       mutation: mutations,
       variables: {
         where: {
-          id: nodeData.id,
+          id,
         },
         update: {
-          shape: nodeData.data.shape,
-          label: nodeData.data.label,
+          label: data.label,
+          shape: data.shape,
+          type: type,
           hasInfo: {
             update: {
               node: {
-                description: nodeData.data.description,
+                assignedTo: hasInfo.assignedTo,
+                description: data.description,
+                dueDate: hasInfo.dueDate,
+                status: hasInfo.status,
               },
             },
           },

@@ -128,26 +128,26 @@ const typeDefs = gql`
     hasComments: [Comment!]!
       @relationship(type: "HAS_FLOWNODES", direction: OUT)
     flowEdge: [FlowEdge!]!
-      @relationship(type: "NODE_CONNECTED", properties: "NODE_CONNECTED" direction: OUT)
+      @relationship(
+        type: "NODE_CONNECTED"
+        properties: "NODE_CONNECTED"
+        direction: OUT
+      )
     createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     # uidHas: Uid @relationship(type: "HAS_UID", direction: OUT)
     hasFile: File @relationship(type: "HAS_FLOWNODES", direction: OUT)
 
     isLinked: FlowNode
-      @relationship(
-        type: "HAS_LINKED"
-        properties: "LINKED"
-        direction: OUT
-      )
-}
+      @relationship(type: "HAS_LINKED", properties: "LINKED", direction: OUT)
+  }
 
   interface LINKED @relationshipProperties {
     label: String
     flag: Boolean!
-    isLeft:Boolean!
+    isLeft: Boolean!
   }
- 
-   type FlowEdge {
+
+  type FlowEdge {
     # @authorization(
     #   validate: [
     #     {
@@ -167,12 +167,16 @@ const typeDefs = gql`
     # * Connections below
     createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     flowNode: [FlowNode!]!
-      @relationship(type: "NODE_CONNECTED", properties: "NODE_CONNECTED", direction: IN)
-      # surafel suggested to remove has file connection
+      @relationship(
+        type: "NODE_CONNECTED"
+        properties: "NODE_CONNECTED"
+        direction: IN
+      )
+    # surafel suggested to remove has file connection
   }
-  interface NODE_CONNECTED @relationshipProperties{
-    isLeft:Boolean
-    handle:String!
+  interface NODE_CONNECTED @relationshipProperties {
+    isLeft: Boolean
+    handle: String!
   }
 
   type Info {
@@ -180,7 +184,7 @@ const typeDefs = gql`
     assignedTo: String
     status: String!
     dueDate: String
-      }
+  }
 
   type Sprint {
     id: ID! @id

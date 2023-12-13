@@ -8,10 +8,10 @@ import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
 import useStore from "../Sidebar/SidebarContext";
 import {
-  getNode,
+ // getNode,
   findNode,
   getFile,
-  getFileByNode,
+ // getFileByNode,
   updateEdgeBackend,
   updateEdgeMutation,
   allNodes,
@@ -110,9 +110,9 @@ function Editing({
   const updateArrows = edgeStore((state) => state.updateArrows);
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
-  const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
+  // const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
   const linkNodeId = fileStore((state) => state.linkNodeId);
-  const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
+  // const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
   const fileId = fileStore((state) => state.Id);
   const { isSideBarOpen, setIsSideBarOpen } = useStore();
 
@@ -122,28 +122,28 @@ function Editing({
     console.log(key, id);
 
     // finding the node to collect the label of the node
-    let nodeData = await findNode(getNode, linkNodeId);
+    //let nodeData = await findNode(getNode, linkNodeId);
 
     // getting the current file data
-    const { data } = await getFileByNode(linkNodeId, getFile);
+   //const { data } = await getFileByNode(linkNodeId, getFile);
 
-    updateLinkedTo(linkNodeId, {
-      label: linkNodes.nodes[key].data.label,
-      flag: true,
-      id,
-      fileId: linkNodes.fileID,
-    });
+    // updateLinkedTo(linkNodeId, {
+    //   label: linkNodes.nodes[key].data.label,
+    //   flag: true,
+    //   id,
+    //   fileId: linkNodes.fileID,
+    // });
 
-    updateLinkedBy(
-      id,
-      {
-        label: nodeData[0].data.label,
-        id: linkNodeId,
-        fileId: data.files[0].id,
-        flag: true,
-      },
-      getFile
-    );
+    // updateLinkedBy(
+    //   id,
+    //   {
+    //     label: nodeData[0].data.label,
+    //     id: linkNodeId,
+    //     fileId: data.files[0].id,
+    //     flag: true,
+    //   },
+    //   getFile
+    // );
     setEditing(false);
   };
 
