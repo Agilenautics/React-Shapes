@@ -38,6 +38,7 @@ import {
 import fileStore from "../TreeView/fileStore";
 import { FetchResult } from "@apollo/client";
 import userStore from "../AdminPage/Users/userStore";
+import { ApolloQueryResult } from "@apollo/client";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -60,8 +61,8 @@ function Flow() {
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
-  const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
-  const { edges: defaultEdges, deleteEdge, addNewEdge } = edgeStore();
+  const { nodes: defaultNodes, updateNodes, deleteNode,updateNodePosition } = nodeStore();
+  const { edges: defaultEdges, updateEdges, deleteEdge } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
@@ -152,7 +153,7 @@ function Flow() {
           createFlowEdges: { flowEdges },
         },
       } = response;
-      addNewEdge(flowEdges[0]);
+     // addNewEdge(flowEdges[0]);
     },
     [defaultEdges]
   );
@@ -248,7 +249,7 @@ function Flow() {
       try {
         if (dragged.current) {
           await updatePosition(node, updatePositionMutation, allNodes, fileId);
-          console.log("hii")
+          updateNodePosition(node)
         }
         dragged.current = false;
       } catch (error) {
