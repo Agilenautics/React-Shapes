@@ -141,21 +141,13 @@ function Flow() {
   );
 
   const onConnect = useCallback(
-    async (newEdge: Edge | any) => {
-      const response: FetchResult<any | undefined> | any = await createFlowEdge(
-        createEdgeMutation,
-        newEdge,
-        fileId,
-        allNodes
-      );
-      const {
-        data: {
-          createFlowEdges: { flowEdges },
-        },
-      } = response;
-     // addNewEdge(flowEdges[0]);
-    },
-    [defaultEdges]
+    (newEdge: Connection) =>
+      setEdges((eds) => {
+        createFlowEdge(newEdge,userEmail, updateEdges);
+        updateEdges(getEdges());
+        return addEdge(newEdge, eds);
+      }),
+    [setEdges, getEdges, updateEdges, currentFlowchart]
   );
 
   useEffect(() => {

@@ -3,29 +3,25 @@ import { gql } from "@apollo/client";
 export const Edge_Fragment = gql`
   fragment EdgeFragment on FlowEdge {
     id
-    selected
     label
-    pathCSS
-    boxCSS
     bidirectional
-    connectedtoFlownode {
+    boxCSS
+    pathCSS
+    selected
+    createdBy {
       id
+      emailId
     }
-    connectedtoFlownodeConnection {
+
+    flowNodeConnection {
+      totalCount
       edges {
+        cursor
         handle
+        node {
+          id
+        }
       }
-    }
-    flownodeConnectedby {
-      id
-    }
-    flownodeConnectedbyConnection {
-      edges {
-        handle
-      }
-    }
-    hasFile {
-      name
     }
   }
 `;
