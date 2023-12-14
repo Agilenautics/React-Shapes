@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { auth,  } from "../../../auth";//googleProvider, facebookProvider
+import { auth } from "../../../auth"; //googleProvider, facebookProvider
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -41,8 +41,8 @@ const Login: React.FC = () => {
         // https://firebase.google.com/docs/reference/js/auth.user
         console.log("user", user);
         //router.push("/projects")
-       // if (projectId !== null) {
-          router.push(`/projects/${projectId}`);
+        // if (projectId !== null) {
+        router.push(`/projects/${projectId}`);
         // } else {
         //   router.push(`/projects/c6ad6eda-445e-4001-a3f7-5a1c136cf364`);
         // }
@@ -94,43 +94,42 @@ const Login: React.FC = () => {
       });
   };
 
-   const handleLoginWithGoogle = () => {
-  //   const auth = getAuth();
-  //   signInWithPopup(auth, googleProvider)
-  //     .then((result) => {
-  //       console.log(result);
-  //       const cridential = GoogleAuthProvider.credentialFromResult(result);
-  //       const token = cridential?.accessToken;
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //     });
-   };
+  const handleLoginWithGoogle = () => {
+    //   const auth = getAuth();
+    //   signInWithPopup(auth, googleProvider)
+    //     .then((result) => {
+    //       console.log(result);
+    //       const cridential = GoogleAuthProvider.credentialFromResult(result);
+    //       const token = cridential?.accessToken;
+    //     })
+    //     .catch((error) => {
+    //       const errorCode = error.code;
+    //       const errorMessage = error.message;
+    //       // The email of the user's account used.
+    //       const email = error.customData.email;
+    //       // The AuthCredential type that was used.
+    //       const credential = GoogleAuthProvider.credentialFromError(error);
+    //     });
+  };
 
   const handleLoginWithFacebook = () => {
-  //   signInWithPopup(auth, facebookProvider)
-  //     .then((result) => {
-  //       const user = result.user;
-  //       const cridential = FacebookAuthProvider.credentialFromResult(result);
-  //       const accessToken = cridential?.accessToken;
-  //     })
-  //     .catch((error) => {
-  //       // Handle Errors here.
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       const email = error.customData.email;
-  //       // The AuthCredential type that was used.
-  //       const credential = FacebookAuthProvider.credentialFromError(error);
-
-  //       // ...
-  //     });
-   };
+    //   signInWithPopup(auth, facebookProvider)
+    //     .then((result) => {
+    //       const user = result.user;
+    //       const cridential = FacebookAuthProvider.credentialFromResult(result);
+    //       const accessToken = cridential?.accessToken;
+    //     })
+    //     .catch((error) => {
+    //       // Handle Errors here.
+    //       const errorCode = error.code;
+    //       const errorMessage = error.message;
+    //       // The email of the user's account used.
+    //       const email = error.customData.email;
+    //       // The AuthCredential type that was used.
+    //       const credential = FacebookAuthProvider.credentialFromError(error);
+    //       // ...
+    //     });
+  };
 
   const handleForgotPassword = () => {
     router.push("/forgot-password");
@@ -174,7 +173,9 @@ const Login: React.FC = () => {
       ></div>
       {/* login form section */}
       <div className="p-8">
-        <h2 className="text-center text-4xl" data-testId="login-button-element">WELCOME</h2>
+        <h2 className="text-center text-4xl" data-testId="login-button-element">
+          WELCOME
+        </h2>
         <div className=" ml-14 mr-14 flex flex-col gap-7  p-14 ">
           <div className="flex justify-center  text-center">
             <img
@@ -251,19 +252,28 @@ const Login: React.FC = () => {
           </div>
           <div className="flex gap-4 ">
             <div>Or Loging Using :</div>
-            <div className="flex items-center rounded-full border border-blue-700 bg-blue-700 text-white duration-300 hover:bg-transparent hover:text-blue-700" data-testId="testiconid1">
+            <div
+              className="flex items-center rounded-full border border-blue-700 bg-blue-700 text-white duration-300 hover:bg-transparent hover:text-blue-700"
+              data-testId="testiconid1"
+            >
               <button className="p-1 text-lg" onClick={handleLoginWithFacebook}>
                 {" "}
                 <BiLogoFacebook />{" "}
               </button>
             </div>
-            <div className="flex items-center rounded-full border border-red-700 bg-red-700 text-white duration-300 hover:bg-transparent hover:text-red-700"  data-testId="testiconid2">
+            <div
+              className="flex items-center rounded-full border border-red-700 bg-red-700 text-white duration-300 hover:bg-transparent hover:text-red-700"
+              data-testId="testiconid2"
+            >
               <button className="p-1 text-xl" onClick={handleLoginWithGoogle}>
                 {" "}
                 <BiLogoGoogle />{" "}
               </button>
             </div>
-            <div className="flex items-center rounded-full border border-black bg-black text-white duration-300 hover:bg-transparent hover:text-black"  data-testId="testiconid3">
+            <div
+              className="flex items-center rounded-full border border-black bg-black text-white duration-300 hover:bg-transparent hover:text-black"
+              data-testId="testiconid3"
+            >
               <button className="p-1 text-xl">
                 {" "}
                 <TbBrandGithubFilled />{" "}
