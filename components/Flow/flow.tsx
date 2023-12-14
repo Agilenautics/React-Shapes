@@ -139,7 +139,7 @@ function Flow() {
   const onConnect = useCallback(
     (newEdge: Connection) =>
       setEdges((eds) => {
-        createFlowEdge(newEdge, fileId, userEmail, updateEdges);
+        createFlowEdge(newEdge,userEmail, updateEdges);
         updateEdges(getEdges());
         return addEdge(newEdge, eds);
       }),

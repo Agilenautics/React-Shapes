@@ -43,7 +43,8 @@ async function getNodes(
     })
     .then((result) => {
       nodes = result.data.files[0].hasNodes;
-      edges = result.data.files[0].hasEdges;
+      edges = result.data.files[0].hasNodes[0].flowEdge;
+      console.log(edges,"edge")
     });
   return { nodes, edges };
 }
