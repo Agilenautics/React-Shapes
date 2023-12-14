@@ -49,54 +49,44 @@ const createFlowEdge = async (
       variables: {
         input: [
           {
-            name: "newEdge",
-            selected: true,
-            bidirectional: newEdge.data.bidirectional,
-            boxCSS: newEdge.data.boxCSS,
-            label: newEdge.data.label,
-            pathCSS: newEdge.data.pathCSS,
             createdBy: {
               connect: {
                 where: {
                   node: {
-                    emailId: email,
+                    emailId: "anitha@agilenautics.com",
                   },
                 },
               },
             },
-            flownodeConnectedby: {
-              connect: {
-                where: {
-                  node: {
-                    id: newEdge.source,
+            flowNode: {
+              connect: [
+                {
+                  where: {
+                    node: {
+                      id: "1af76172-3095-4c7e-9304-4a0451e3c14f",
+                    },
                   },
-                  edge:{
-                    handle: newEdge.sourceHandle,
-                  }
-                },
-              },
-            },
-            connectedtoFlownode: {
-              connect: {
-                where: {
-                  node: {
-                    id: newEdge.target,
-                  },
-                  edge:{
-                    handle: newEdge.targetHandle,
-                  }
-                },
-              },
-            },
-            hasFile: {
-              connect: {
-                where: {
-                  node: {
-                    id: id,
+                  edge: {
+                    handle: "",
                   },
                 },
-              },
+                {
+                  where: {
+                    node: {
+                      id: "1325439e-053c-4029-b5fd-333bcfb085bf",
+                    },
+                  },
+                  edge: {
+                    handle: "",
+                  },
+                },
+              ],
             },
+            bidirectional: false,
+            boxCSS: "",
+            label: "",
+            pathCSS: "",
+            selected: false,
           },
         ],
       },
@@ -266,7 +256,7 @@ const deleteEdgeBackend = async (edgeId: string, label: string) => {
 };
 
 export {
- // allEdges,
+  // allEdges,
   getEdges,
   createFlowEdge,
   deleteEdgeBackend,
