@@ -53,7 +53,7 @@ const createFlowEdge = async (
               connect: {
                 where: {
                   node: {
-                    emailId: "anitha@agilenautics.com",
+                    emailId: email,
                   },
                 },
               },
