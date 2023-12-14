@@ -38,10 +38,10 @@ async function getEdges(
 //methode for creating edge
 const createFlowEdge = async (
   newEdge: any,
-  id: string,
   email: string,
   updateEdges: any
 ) => {
+  console.log("newEdge",newEdge)
   var edges: Array<Edge> = [];
   await client
     .mutate({
@@ -53,7 +53,7 @@ const createFlowEdge = async (
               connect: {
                 where: {
                   node: {
-                    emailId: "anitha@agilenautics.com",
+                    emailId: email,
                   },
                 },
               },
@@ -63,29 +63,29 @@ const createFlowEdge = async (
                 {
                   where: {
                     node: {
-                      id: "1af76172-3095-4c7e-9304-4a0451e3c14f",
+                      id: newEdge.source,
                     },
                   },
                   edge: {
-                    handle: "",
+                    handle: newEdge.sourceHandle,
                   },
                 },
                 {
                   where: {
                     node: {
-                      id: "1325439e-053c-4029-b5fd-333bcfb085bf",
+                      id: newEdge.target,
                     },
                   },
                   edge: {
-                    handle: "",
+                    handle: newEdge.targetHandle,
                   },
                 },
               ],
             },
-            bidirectional: false,
-            boxCSS: "",
-            label: "",
-            pathCSS: "",
+            bidirectional: newEdge.data.bidirectional,
+            boxCSS: newEdge.data.boxCSS,
+            label: newEdge.data.label,
+            pathCSS: newEdge.data.pathCSS,
             selected: false,
           },
         ],
