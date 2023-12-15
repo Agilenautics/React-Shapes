@@ -32,7 +32,7 @@ async function getNodes(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
-  var nodes: Array<Node> = [];
+  var nodes: Array<any> = [];
   var edges: Array<Edge> = [];
   await client
     .query({
@@ -45,8 +45,8 @@ async function getNodes(
     })
     .then((result) => {
       nodes = result.data.files[0].hasNodes;
-      edges = result.data.files[0].hasNodes[0].flowEdge;
-      console.log(edges,"edge")
+      const allFlowEdgesSet = new Set(nodes.flatMap((node) => node.flowEdge));
+      edges = Array.from(allFlowEdgesSet)
     });
   return { nodes, edges };
 }

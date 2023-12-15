@@ -180,13 +180,15 @@ export const TreeNode = ({
       handlers.select(e);
       if (data.children == null) {
         setIsLoading(true);
-        getNodes(allNodes, data.id)
-          .then((result) => {
-            updateNodes(result.nodes);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
+        // here we need to get nodes and edges from the getProect by query
+        // getNodes(allNodes, data.id)
+        //   .then((result) => {
+        //     updateNodes(result.nodes);
+        //     updateEdges(result.edges)
+        //   })
+        //   .finally(() => {
+        //     setIsLoading(false);
+        //   });
         // getEdges(allEdges, data.id)
         //   .then((result) => {
         //     updateEdges(result);

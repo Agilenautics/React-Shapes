@@ -37,6 +37,5 @@ export const File_Fragment = gql`
     hasNodes {
       ...NodeFragment
     }
-    
   }
 `;

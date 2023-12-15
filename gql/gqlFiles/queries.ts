@@ -14,7 +14,6 @@ export const getProjectByUser = gql`
       description
       isOpen
       id
-
       hasContainsFile {
         ...FileFragment
       }

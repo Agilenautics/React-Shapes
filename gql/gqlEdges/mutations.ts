@@ -12,17 +12,12 @@ export const createEdgeMutation = gql`
       }
     }
   }
-
 `;
 
 export const deleteEdgeMutation = gql`
-  mutation deleteFlowEdges(
-    $where: FlowEdgeWhere
-    $delete: FlowEdgeDeleteInput
-  ) {
-    deleteFlowEdges(where: $where, delete: $delete) {
+  mutation DeleteFlowEdges($where: FlowEdgeWhere) {
+    deleteFlowEdges(where: $where) {
       nodesDeleted
-      relationshipsDeleted
     }
   }
 `;

@@ -23,7 +23,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const toggleDraggable = nodeStore((state) => state.toggleDraggable);
   const updateNodes = nodeStore((state) => state.updateNodes);
   const findFile = fileStore((state) => state.find_file);
-  const updateEdges = edgeStore((state) => state.updateEdges);
   const updateDescription = nodeStore((state) => state.updateDescription);
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
 
@@ -41,9 +40,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     // @ts-ignore
     const nodes = x.hasNodes;
     console.log(nodes);
-    const nodeData =  nodes.map((items:any)=>{
-      const {x,y,label,shape,...rest} =items
-      return {...rest,data:{label,shape},position:{x,y}}
+    const nodeData = nodes.map((items: any) => {
+      const { x, y, label, shape, ...rest } = items;
+      return { ...rest, data: { label, shape }, position: { x, y } };
     });
     // const edges = x.hasEdges;
     // const edgeData = JSON.stringify(edges).replaceAll(
@@ -122,9 +121,9 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
           <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>
             {editing ? (
               <div
-                // className={`relative h-auto flex-row text-center ${
-                //   data.hasLinkedTo.flag && "mt-7"
-                // }`}
+              // className={`relative h-auto flex-row text-center ${
+              //   data.hasLinkedTo.flag && "mt-7"
+              // }`}
               >
                 <Editing
                   isEdge={false}
@@ -156,10 +155,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               </div>
             ) : (
               <div>
-                 {/* {flag ? null : ( */}
-                  <p className="py-1 text-center text-[0.6rem]">{label}</p>
+                {/* {flag ? null : ( */}
+                <p className="py-1 text-center text-[0.6rem]">{label}</p>
                 {/* )} */}
-               { /*{data.hasLinkedTo.flag ? (
+                {/*{data.hasLinkedTo.flag ? (
                   <div
                     className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
                     onClick={linkedTo}
@@ -224,7 +223,7 @@ function BrightblueNode({ data, id }) {
   // );
 }
 //@ts-ignore
-function blueNode({data,id}) {
+function blueNode({ data, id }) {
   return PrototypicalNode(
     "border-node-blue-100 bg-node-blue-50 text-node-blue-200",
     data,
