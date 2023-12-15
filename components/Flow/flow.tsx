@@ -34,6 +34,7 @@ import {
   updateEdgeMutation,
   getProjectByUser,
   createEdgeMutation,
+  deleteEdgeMutation,
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
 import { FetchResult } from "@apollo/client";
@@ -61,7 +62,12 @@ function Flow() {
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
-  const { nodes: defaultNodes, updateNodes, deleteNode,updateNodePosition } = nodeStore();
+  const {
+    nodes: defaultNodes,
+    updateNodes,
+    deleteNode,
+    updateNodePosition,
+  } = nodeStore();
   const { edges: defaultEdges, updateEdges, deleteEdge } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
@@ -76,8 +82,9 @@ function Flow() {
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map(async (curEle: any) => {
-      await deleteEdgeBackend(curEle.id, curEle.data.label);
+      // await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
+      deleteEdgeBackend(curEle.id, deleteEdgeMutation, allNodes, fileId);
     });
   };
   const handleConfirm = useCallback(() => {
@@ -141,13 +148,18 @@ function Flow() {
   );
 
   const onConnect = useCallback(
-    (newEdge: Connection) =>
+    async (newEdge: Connection) => {
+      const edgeResponse = await createFlowEdge(
+        newEdge,
+        userEmail,
+        updateEdges
+      );
       setEdges((eds) => {
-        createFlowEdge(newEdge,userEmail, updateEdges);
-        updateEdges(getEdges());
+        console.log(eds);
         return addEdge(newEdge, eds);
-      }),
-    [setEdges, getEdges, updateEdges, currentFlowchart]
+      });
+    },
+    [setEdges, getEdges]
   );
 
   useEffect(() => {
@@ -231,7 +243,7 @@ function Flow() {
       try {
         if (dragged.current) {
           await updatePosition(node, updatePositionMutation, allNodes, fileId);
-          updateNodePosition(node)
+          updateNodePosition(node);
         }
         dragged.current = false;
       } catch (error) {

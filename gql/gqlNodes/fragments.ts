@@ -22,9 +22,9 @@ export const Node_Fragment = gql`
     uid
     label
     shape
-       x
+    x
     y
-    flowEdge{
+    flowEdge {
       ...EdgeFragment
     }
     isLinkedConnection {
@@ -34,7 +34,7 @@ export const Node_Fragment = gql`
         isLeft
       }
     }
-    hasInfo{
+    hasInfo {
       ...InfoFragment
     }
     hasComments {

@@ -6,6 +6,8 @@ import {
 import client from "../../apollo-client";
 import { Edge } from "reactflow";
 import { createEdgeMutation, deleteEdgeMutation } from "./mutations";
+import getEdgesMiddleWare from "../../components/Flow/getEdgesMiddleware";
+//import { allEdges } from "./queries";
 
 async function getEdges(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -41,7 +43,7 @@ const createFlowEdge = async (
   email: string,
   updateEdges: any
 ) => {
-  console.log("newEdge",newEdge)
+  console.log("newEdge", newEdge);
   var edges: Array<Edge> = [];
   await client
     .mutate({
@@ -205,54 +207,43 @@ const updateEdgeBackend = async (
 // delete Edge
 
 // delete edge method
-const deleteEdgeBackend = async (edgeId: string, label: string) => {
+const deleteEdgeBackend = async (
+  edgeId: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  cacheQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  cacheQueryId: string
+) => {
   await client.mutate({
-    mutation: deleteEdgeMutation,
+    mutation,
     variables: {
       where: {
         id: edgeId,
       },
-      delete: {
-        where: {
-          node: {
-            label,
+    },
+    update: (cache) => {
+      const { files } = cache.readQuery({
+        query: cacheQuery,
+        variables: {
+          where: {
+            id: cacheQueryId,
           },
         },
-      },
-      // update: (cache, { data: { deleteFlowEdges } }) => {
-      //   const { flowcharts } = cache.readQuery({
-      //     query: cahchQuery,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //   });
-      //   const { hasEdges, ...flowchartsData } = flowcharts[0];
-      //   const deleted_edge = hasEdges.filter(
-      //     (edge: Edge) => edge.id !== edgeId
-      //   );
-      //   const updatedFlowchart = { ...flowchartsData, hasEdges: deleted_edge };
-      //   cache.writeQuery({
-      //     query: cahchQuery,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //     data: {
-      //       flowcharts: [updatedFlowchart],
-      //     },
-      //   });
-       },
-    });
-  // } catch (error) {
-  //   console.log(error, "while deletin the edge");
- // }
+      });
+      // remove the deleted edge from the list
+      const { hasNodes, ...fileData } = files[0];
+      const allEdges = getEdgesMiddleWare(hasNodes);
+
+      const updatedNodes = hasNodes.map(node => ({
+        ...node,
+        flowEdge: allEdges,
+      }));
+      // i want to store edge with respective node data
+      console.log(updatedNodes)
+      
+    },
+  });
+
+  //await client.resetStore()
 };
 
 export {
