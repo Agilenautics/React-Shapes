@@ -3,9 +3,21 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { remoteConfig, fetchAndActivate, getValue } from "../../auth";
 
+interface RemoteConfigValue {
+  [key: string]: any; // Adjust the type of _value based on the actual type returned by remoteConfig
+}
+
+interface Translations {
+  translation: Record<string, any>; // Adjust the inner type based on your actual translation structure
+}
+
+interface UseTranslationOptions {
+  [locale: string]: Translations;
+}
+
 // Function to dynamically import locales
 async function importLocales() {
-  let parsedRemoteStrings;
+  let parsedRemoteStrings: any;
 
   // Example usage with remoteConfig (remember to handle the case where remoteConfig is undefined)
   if (remoteConfig) {
@@ -16,11 +28,11 @@ async function importLocales() {
 
       // Fetch the remote configuration and activate it
       await fetchAndActivate(remoteConfig);
-
-      console.log("Remote config activated!");
-      const greeting = getValue(remoteConfig, "flow_chart_language");
+      const greeting: RemoteConfigValue = getValue(
+        remoteConfig,
+        "flow_chart_language"
+      );
       parsedRemoteStrings = JSON.parse(greeting._value);
-      console.log(parsedRemoteStrings);
     } catch (error) {
       console.error("Error fetching and activating remote config:", error);
     }
@@ -29,7 +41,7 @@ async function importLocales() {
   }
 
   const locales = Object.keys(parsedRemoteStrings || {}); // Get locales dynamically
-  return locales.reduce((acc, locale) => {
+  return locales.reduce((acc: UseTranslationOptions, locale: string) => {
     acc[locale] = {
       translation: parsedRemoteStrings[locale] || {}, // Use remote config value or empty object
     };

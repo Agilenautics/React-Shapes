@@ -327,9 +327,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                 <span
                   ref={tooltipRef}
                   className="invisible absolute top-full z-20 mt-2 whitespace-nowrap rounded bg-black p-1 text-[0.8rem] text-white opacity-0 transition group-hover:visible group-hover:opacity-100"
-                >
-                  
-                </span>
+                ></span>
               </div>
               <div
                 onClick={() => setProjectsFlag(!projectsFlag)}
@@ -390,30 +388,12 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               )}
             </div>
           </div>
-
-          <div className=" p-1 px-3 duration-100">
-            <Link href="/projects">
-              <a className="flex w-full items-center gap-2">
-                <AiTwotoneHome />
-                <span> {t("home")} </span>
-              </a>
-            </Link>
-          </div>
-          <div className="p-1 px-3 duration-100">
-            <Link href={`/projects/${projectId}`}>
-              <a className="flex w-full items-center gap-2">
-                <GrOverview className="text-slate-600  dark:bg-slate-200 " />
-                <span> {t("overview")}</span>
-              </a>
-            </Link>
-          </div>
-
           <div
             onClick={() => (projectId ? setInsightsOpen(!insightsOpen) : null)}
             className="flex cursor-pointer select-none items-center justify-between p-1 px-3 duration-100"
           >
             <span>
-              <CgInsights className="inline" />  {t("insights")}
+              <CgInsights className="inline" /> {t("insights")}
             </span>
             <FaChevronDown
               className={`transition-transform ${

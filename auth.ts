@@ -31,7 +31,7 @@ const app = initializeApp(firebaseConfig);
 // export const facebookProvider = new FacebookAuthProvider();
 
 export const auth = getAuth(app);
-let remoteConfig;
+let remoteConfig:any;
 if (typeof window !== 'undefined') {
   remoteConfig = getRemoteConfig();
   remoteConfig.settings.minimumFetchIntervalMillis = 1000;
