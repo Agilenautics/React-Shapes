@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 
 interface MembersTableProps {
   details: {
@@ -21,6 +23,8 @@ const getInitials = (name: string) => {
 };
 
 export default function MembersTable({ details }: MembersTableProps) {
+  const { t } = useTranslation(); // useTranslation hook
+
   return (
     <div className="relative">
       <div className="relative mr-4 mt-8 shadow-md sm:rounded-lg">
@@ -28,13 +32,13 @@ export default function MembersTable({ details }: MembersTableProps) {
           <thead className="text-md bg-gray-200 dark:bg-bgdarkcolor">
             <tr>
               <th scope="col" className="w-56 px-4 py-3 md:w-64 ">
-                <div className="flex cursor-pointer items-center">Name</div>
+                <div className="flex cursor-pointer items-center">{t("name")}</div>
               </th>
               <th scope="col" className="hidden px-4 py-3 md:table-cell">
-                Email
+                {t("email")}
               </th>
               <th scope="col" className="w-44 px-4 py-3">
-                UserType
+                {t("usertype")}
               </th>
             </tr>
           </thead>

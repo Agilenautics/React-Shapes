@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Signout from "../Authentication/Signout/Signout";
 //import { auth } from "../../auth";
 import Link from "next/link";
@@ -8,9 +8,9 @@ import { IoIosArrowDropleftCircle } from "react-icons/io";
 import DarkModeToggleButton from "../Sidebar/DarkModeToggleButton";
 import { getInitials } from "./Users/Users";
 import userStore from "./Users/userStore";
+import { useTranslation } from "react-i18next";
 
 const auth = getAuth();
-
 
 interface Flag {
   toggleSideBar: () => void;
@@ -18,35 +18,49 @@ interface Flag {
 }
 
 function TopBar({ toggleSideBar, flag }: Flag) {
+  const { t, i18n } = useTranslation(); // useTranslation hook
   const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
+  const { userEmail } = userStore();
+  const [locale, setLocale] = useState<string>(i18n.language); // Set initial locale
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-  const {userEmail} = userStore()
 
-  
+  const handleLanguageChange = (newLocale: string) => {
+    setLocale(newLocale); // Update local state
+    i18n.changeLanguage(newLocale); // Change language using i18n
+  };
 
   return (
     <div className=" sticky left-0  right-0 top-0 z-10    flex  justify-between bg-white p-2  px-6 font-sans shadow-bottom  dark:bg-bgdarkcolor">
       {/* logo  */}
       <div className="flex gap-6">
-      <button onClick={toggleSideBar} className="duration-200"> {!flag && <FaBars className="text-2xl dark:text-white text-slate-600" />} </button>
-        <span className=" text-2xl font-bold text-gray-400" data-testId="test-TextElement">
+        <button onClick={toggleSideBar} className="duration-200">
+          {" "}
+          {!flag && (
+            <FaBars className="text-2xl text-slate-600 dark:text-white" />
+          )}{" "}
+        </button>
+        <span
+          className=" text-2xl font-bold text-gray-400"
+          data-testId="test-TextElement"
+        >
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>
       </div>
       {/* links */}
       <div className="flex items-center justify-around gap-8 text-[1rem]  font-normal dark:text-white ">
         <div className=" rounded  px-2 py-1 transition duration-300 hover:bg-slate-100 hover:text-slate-500">
-          <Link href="/projects">projects</Link>
+          <Link href="/projects">{t("project")}</Link>
         </div>
         <div className="rounded  px-2 py-1 transition duration-300 hover:bg-slate-100 hover:text-slate-500">
-          <Link href="/users">users</Link>
+          <Link href="/users">{t("user")}</Link>
         </div>
         <div className="rounded  px-2 py-1 transition duration-300 hover:bg-slate-100 hover:text-slate-500">
-          <Link href="/Policies">policies</Link>
+          <Link href="/Policies">{t("policies")}</Link>
         </div>
+
         <div>
           <DarkModeToggleButton />
         </div>
@@ -66,6 +80,14 @@ function TopBar({ toggleSideBar, flag }: Flag) {
             </div>
           )}
         </div>
+        <select
+          value={locale}
+          onChange={(e) => handleLanguageChange(e.target.value)}
+        >
+          <option value="en">{t("English")}</option>
+          <option value="fr">{t("French")}</option>
+          <option value="ar">{t("Arabic")}</option>
+        </select>
       </div>
       {/* user details  */}
     </div>

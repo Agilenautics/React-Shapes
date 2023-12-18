@@ -20,9 +20,16 @@ import {
 } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
+
+
 
 function ProjectBoards() {
   const router = useRouter();
+
+
+
+  const { t } = useTranslation(); // useTranslation hook
   const allStatus = backlogStore((state) => state.allStatus);
   const [selectedTypeFilters, setSelectedTypeFilters] = useState<string[]>([]);
   const [statuses, setStatuses] = useState([]);
@@ -142,15 +149,15 @@ function ProjectBoards() {
     <DndProvider backend={HTML5Backend}>
       <div className="w-full p-4">
         <h1 className="mb-4 rounded-lg bg-pink-300 p-2 text-2xl font-bold shadow-lg dark:bg-bgdarkcolor dark:text-white">
-          Kanban Board
+          {t("kanban_board")}
         </h1>
         <div className="relative inline-block text-left">
           <div className="m-2 rounded bg-slate-100 p-2 hover:shadow-lg dark:bg-bgdarkcolor">
             <button
               className="flex"
               onClick={() => setShowTypeDropdown(!showTypeDropdown)}
-            >
-              Select type
+            >{t("select_type")}
+              
               {showTypeDropdown ? (
                 <svg
                   className="ml-2 mr-4 h-5 w-5 rotate-180 transform"
@@ -263,14 +270,15 @@ function ProjectBoards() {
           ref={tooltipRef}
           className="invisible absolute top-full z-10 mt-2 whitespace-nowrap rounded-md  border-black  bg-slate-500 p-1.5 text-[0.8rem]  text-white opacity-0 transition group-hover:visible group-hover:opacity-100"
         >
-          ADD COLUMN
+          {t("add_column")}
+          
         </span>
       </div>
 
       {showForm && (
         <div className="fixed left-0 top-0 flex h-full w-full items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="rounded-lg bg-white p-4 shadow-lg dark:bg-bgdarkcolor dark:text-white">
-            <h2 className="mb-4 text-xl font-semibold ">Enter Column Name</h2>
+            <h2 className="mb-4 text-xl font-semibold ">{t("enter_column_name")}</h2>
             <input
               type="text"
               className="w-full rounded border p-2 dark:text-bgdarkcolor"
@@ -282,13 +290,13 @@ function ProjectBoards() {
               className="mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
               onClick={() => addBoard(newBoardName)}
             >
-              Add Column
+             {t("add_column")}
             </button>
             <button
               className="ml-2 mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
               onClick={() => setShowForm(!showForm)}
             >
-              Cancel
+              {t("cancel")}
             </button>
           </div>
         </div>
