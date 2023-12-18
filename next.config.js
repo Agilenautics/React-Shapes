@@ -5,15 +5,18 @@
 
 const { withTranslation } = require('next-i18next');
 
-withTranslation({
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en", "ar", "fr"]
-  }
-});
+
 
 module.exports = {
-  withTranslation,
+  ...withTranslation({
+    i18n: {
+      i18n: {
+        defaultLocale: "en",
+        defaultLocale: "en",
+        locales: ["en", "ar", "fr"]
+      }
+    }
+  }),
   // ...nextConfig,
   env: {
 
