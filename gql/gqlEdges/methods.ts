@@ -6,7 +6,7 @@ import {
 import client from "../../apollo-client";
 import { Edge } from "reactflow";
 import { createEdgeMutation, deleteEdgeMutation } from "./mutations";
-import getEdgesMiddleWare from "../../components/Flow/getEdgesMiddleware";
+import getEdgesMiddleWare from "../../components/Flow/middleWares/getEdgesMiddleware";
 //import { allEdges } from "./queries";
 
 async function getEdges(
@@ -41,13 +41,11 @@ async function getEdges(
 const createFlowEdge = async (
   newEdge: any,
   email: string,
-  updateEdges: any
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) => {
-  console.log("newEdge", newEdge);
-  var edges: Array<Edge> = [];
-  await client
-    .mutate({
-      mutation: createEdgeMutation,
+  try {
+    return await client.mutate({
+      mutation,
       variables: {
         input: [
           {
@@ -92,20 +90,10 @@ const createFlowEdge = async (
           },
         ],
       },
-    })
-    .then((result) => {
-      // const edges1 = JSON.stringify(
-      //   result.data.updateFiles.files[0].hasEdges
-      // );
-      // //@ts-ignore
-      // edges = JSON.parse(
-      //   edges1.replaceAll('"hasedgedataEdgedata":', '"data":')
-      // );
-      // return updateEdges(edges);
-    })
-    .catch((error) => {
-      console.error(error);
     });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 //update Edge mutation
@@ -132,73 +120,20 @@ const updateEdgeBackend = async (
           pathCSS: edgeData.data.pathCSS,
         },
       },
-      update: (
-        cache,
+
+      refetchQueries: [
         {
-          data: {
-            updateFlowEdges: { flowEdges },
+          query: cahchQuery,
+          variables: {
+            where: {
+              hasFile: {
+                id: selectedFileId,
+              },
+            },
           },
-        }
-      ) => {
-        // const existanceData = cache.readQuery({
-        //   query: cahchQuery,
-        //   variables: {
-        //     where: {
-        //       hasFile: {
-        //         id: selectedFileId,
-        //       },
-        //     },
-        //   },
-        // });
-        // console.log(existanceData)
-        // const {flowcharts} = existanceData
-        // const { hasEdges, ...flowchartData } = flowcharts[0];
-        // // const responseData = { ...flowEdges[0].hasedgedataEdgedata };
-        // const updatedEdge = hasEdges.map((edge: Edge) => {
-        //   if (edge.id === edgeData.id) {
-        //     return {
-        //       ...edge,
-        //       hasedgedataEdgedata: {
-        //         label: data.label,
-        //         bidirectional: data.bidirectional,
-        //         boxCSS: data.boxCSS,
-        //       },
-        //     };
-        //   }
-        //   return {
-        //     ...edge,
-        //   };
-        // });
-        // const updatedFlowChart = { ...flowchartData, hasEdges: updatedEdge };
-        // console.log(updatedFlowChart);
-        
-        // cache.writeQuery({
-        //   query: cahchQuery,
-        //   variables: {
-        //     where: {
-        //       hasFile: {
-        //         id: selectedFileId,
-        //       },
-        //     },
-        //   },
-        //   data: {
-        //     flowcharts: [updatedFlowChart],
-        //   },
-        // });
-      },
-      refetchQueries:[{
-        query:cahchQuery,
-        variables:{
-          where:{
-            hasFile:{
-              id:selectedFileId
-            }
-          }
-        }
-      }]
-      
+        },
+      ],
     });
-    
   } catch (error) {
     console.log(error, "while updating edge");
   }
@@ -219,27 +154,6 @@ const deleteEdgeBackend = async (
       where: {
         id: edgeId,
       },
-    },
-    update: (cache) => {
-      const { files } = cache.readQuery({
-        query: cacheQuery,
-        variables: {
-          where: {
-            id: cacheQueryId,
-          },
-        },
-      });
-      // remove the deleted edge from the list
-      const { hasNodes, ...fileData } = files[0];
-      const allEdges = getEdgesMiddleWare(hasNodes);
-
-      const updatedNodes = hasNodes.map(node => ({
-        ...node,
-        flowEdge: allEdges,
-      }));
-      // i want to store edge with respective node data
-      console.log(updatedNodes)
-      
     },
   });
 

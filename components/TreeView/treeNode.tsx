@@ -1,4 +1,4 @@
- import React, { useState, useEffect, SyntheticEvent } from "react";
+import React, { useState, useEffect, SyntheticEvent } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
 import { MyData } from "./backend";
@@ -25,6 +25,8 @@ import { FaAngleRight } from "react-icons/fa6";
 
 // LoadingIcon component
 import classNames from "classnames";
+import getNodeAndEdges from "../Flow/middleWares/getNodesAndEdges";
+import { ApolloQueryResult } from "@apollo/client";
 
 // LoadingIcon component
 
@@ -190,21 +192,18 @@ export const TreeNode = ({
       if (data.children == null) {
         setIsLoading(true);
         // here we need to get nodes and edges from the getProect by query
-        // getNodes(allNodes, data.id)
-        //   .then((result) => {
-        //     updateNodes(result.nodes);
-        //     updateEdges(result.edges)
-        //   })
-        //   .finally(() => {
-        //     setIsLoading(false);
-        //   });
-        // getEdges(allEdges, data.id)
-        //   .then((result) => {
-        //     updateEdges(result);
-        //   })
-        //   .finally(() => {
-        //     setIsLoading(false);
-        //   });
+        getNodes(allNodes, data.id)
+          .then((result: any) => {
+            const {
+              data:{files},
+            } = result;
+            const {nodes,edges} = getNodeAndEdges(files[0]);
+            updateNodes(nodes);
+            updateEdges(edges);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       }
     };
   }
@@ -261,9 +260,9 @@ export const TreeNode = ({
                   </button>
                   <button
                     onClick={() => toDetailPage(id)}
-                    className="ml-5 cursor-pointer hover:text-black hover:scale-110"
+                    className="ml-5 cursor-pointer hover:scale-110 hover:text-black"
                   >
-                   <FaAngleRight />
+                    <FaAngleRight />
                   </button>
                 </div>
               )}

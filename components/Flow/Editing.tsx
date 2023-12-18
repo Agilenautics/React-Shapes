@@ -7,13 +7,15 @@ import { LinkTree } from "../TreeView/fileRenderer";
 import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
 import {
- // getNode,
+  // getNode,
   findNode,
   getFile,
- // getFileByNode,
+  // getFileByNode,
   updateEdgeBackend,
   updateEdgeMutation,
   allNodes,
+  linkNodeAnotherNodeMethod,
+  linkNodeToAnotherNodeMutation,
 } from "../../gql";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter
@@ -112,16 +114,22 @@ function Editing({
   // const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
   const linkNodeId = fileStore((state) => state.linkNodeId);
   // const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
-  const addLinkMethod = async (key: string) => {
+  const addLinkMethod = async (
+    currentNodeId: string,
+    anotherNodeId: string
+  ) => {
+    await linkNodeAnotherNodeMethod(
+      currentNodeId,
+      linkNodeToAnotherNodeMutation,
+      anotherNodeId
+    );
     //id of the current node
-    const id = linkNodes.nodes[key].id;
-    console.log(key, id);
 
     // finding the node to collect the label of the node
     //let nodeData = await findNode(getNode, linkNodeId);
 
     // getting the current file data
-   //const { data } = await getFileByNode(linkNodeId, getFile);
+    //const { data } = await getFileByNode(linkNodeId, getFile);
 
     // updateLinkedTo(linkNodeId, {
     //   label: linkNodes.nodes[key].data.label,
@@ -289,7 +297,7 @@ function Editing({
                     type="button"
                     className="absolute -top-[19px] right-2 flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5 "
                     onClick={() => {
-                      updateLinkNodes({}, linkNodes.fileID);
+                      updateLinkNodes([], linkNodes.fileID);
                     }}
                   >
                     <BsArrowLeft className="h-4 w-4 pt-0" />
@@ -305,7 +313,9 @@ function Editing({
                             key={key}
                             id={key}
                             type="button"
-                            onClick={(e) => addLinkMethod(key)}
+                            onClick={(e) =>
+                              addLinkMethod(id, linkNodes.nodes[key].id)
+                            }
                             className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600

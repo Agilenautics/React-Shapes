@@ -5,10 +5,10 @@ import { File_Fragment } from "./fragments";
 import { Node_Fragment,Info_Fragment } from "../gqlNodes";
 
 //Get root using unique userName(UID)
-export const getProjectByUser = gql`
+export const getProjectById = gql`
   ${File_Fragment}
   ${Info_Fragment}
-  query getprojectByUser($where: ProjectWhere) {
+  query getprojectById($where: ProjectWhere) {
     projects(where: $where) {
       name
       description

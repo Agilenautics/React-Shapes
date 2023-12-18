@@ -143,7 +143,7 @@ const typeDefs = gql`
 
   interface LINKED @relationshipProperties {
     label: String
-    flag: Boolean!
+    flag: Boolean
     isLeft: Boolean!
   }
 

@@ -9,7 +9,7 @@ import {
   deleteFileBackend,
   deleteFolderBackend,
   Folder,
-  getProjectByUser,
+  getProjectById,
   updateFoldersMutation,
   updateFilesMutation,
   deleteFoldersMutation,
@@ -73,7 +73,7 @@ export function useBackend() {
   const projectId = (router.query.projectId as string) || "";
 
   const getProjectId = async (id: string) => {
-    const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
+    const initData = await getTreeNodeByUser(getProjectById, id, setLoading);
     const data: MyData | any = initData[0];
     setData(data);
     //@ts-ignore
@@ -180,7 +180,7 @@ export function useBackend() {
         await updateFolderBackend(
           editedData,
           updateFoldersMutation,
-          getProjectByUser
+          getProjectById
         );
         // updateNodes(nodeData);
       }
@@ -188,7 +188,7 @@ export function useBackend() {
         await updateFileBackend(
           editedData,
           updateFilesMutation,
-          getProjectByUser
+          getProjectById
         );
         updateFile(id, initData);
         // updateNodes(nodeData);
@@ -216,14 +216,14 @@ export function useBackend() {
         await deleteFolderBackend(
           deleteIds,
           deleteFoldersMutation,
-          getProjectByUser
+          getProjectById
         );
         delete_item(id);
       } else {
         await deleteFileBackend(
           deleteIds,
           deleteFilesMutation,
-          getProjectByUser
+          getProjectById
         );
         delete_item(id);
       }

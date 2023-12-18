@@ -77,12 +77,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   //   updateBreadCrumbs(x, x.id, "new");
   // };
 
-  const toDetails = (nodeId: string) => {
-    router.push({
-      pathname: `/projects/${projectId}/backlogs/edit/`,
-      query: { id: nodeId },
-    });
-  };
   return (
     <div>
       <div

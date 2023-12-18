@@ -10,7 +10,7 @@ export interface EdgeState {
   updateArrows: (id: string, bidirectional: boolean) => void;
   updateLabel: (id: string, newLabel: string) => void;
   deleteEdge: (edge: Edge) => void;
-  addNewEdge: (edge: Edge) => void;
+  addNewEdge: (edge: Array<Edge>) => void;
 }
 
 const edgeStore = create<EdgeState>((set) => ({
@@ -57,7 +57,7 @@ const edgeStore = create<EdgeState>((set) => ({
           },
         };
       });
-      return { edges: updatededge };
+      return { edges: edges };
     }),
   deleteEdge: (edge: any) =>
     set((state) => {
@@ -88,19 +88,34 @@ const edgeStore = create<EdgeState>((set) => ({
     set((state) => {
       const edge = state.edges.filter((item) => item.id === id)[0];
       const to_be_updated = state.edges.filter((item) => item.id !== id);
-      const updated_node = { ...edge, data: { ...edge.data, label: newLabel, tempLabel: newLabel.length <= 0 ? edge.data.label : ""  } };
+      const updated_node = {
+        ...edge,
+        data: {
+          ...edge.data,
+          label: newLabel,
+          tempLabel: newLabel.length <= 0 ? edge.data.label : "",
+        },
+      };
       // console.log(updated_node);
       return { edges: [...to_be_updated, updated_node] };
     }),
-  addNewEdge: (newEdge: Edge) => {
+  addNewEdge: (newEdge: Array<Edge>) => {
     set((state) => {
-      const edgedData = JSON.stringify(newEdge).replaceAll(
-        '"hasedgedataEdgedata":',
-        '"data":'
-      );
-      const updatedToData = JSON.parse(edgedData);
-      const to_be_updated = [...state.edges, updatedToData];
-      return { edges: to_be_updated };
+      const restructuredEdgeData = newEdge.map((edge: Edge | any) => {
+        const {
+          id,
+          label,
+          bidirectional,
+          boxCSS,
+          pathCSS,
+          selected,
+          createdBy,
+          flowNodeConnection,
+          ...EdgeData
+        } = edge;
+        
+      });
+      return { edges: [] };
     });
   },
 }));

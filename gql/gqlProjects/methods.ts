@@ -138,11 +138,7 @@ const update_recentProject = async (
             },
           },
         });
-        console.log(existanceData, "hii");
       },
-      // refetchQueries(result) {
-      //   return [GET_USER]
-      // },
     });
   } catch (error) {
     console.log(error, "while deleting the project..");
@@ -196,7 +192,7 @@ const restoreFromRecycleBin = async (
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com",
+              emailId: email,
             },
           },
           data: {
@@ -217,7 +213,8 @@ const restoreFromRecycleBin = async (
 const parmenantDelete = async (
   id: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  email: string
 ) => {
   try {
     await client.mutate({
@@ -232,7 +229,7 @@ const parmenantDelete = async (
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com",
+              emailId: email,
             },
           },
         });
@@ -245,7 +242,7 @@ const parmenantDelete = async (
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com",
+              emailId: email,
             },
           },
           data: {
@@ -271,110 +268,95 @@ const clearRecycleBin = async (
         where: {
           recycleBin: true,
         },
-        delete: {
-          hasContainsFile: [
-            {
-              delete: {
-                    hasEdges: [
-                      {
-                        delete: {
-                          },
-                        },
-                     
-                    ],
-                    hasNodes: [
-                      {
-                        delete: {
-                          },
-                        },
-                      
-                    ],
-                  
-                },
-              
-            },
-          ],
-          hasContainsFolder: [
-            {
-              delete: {
-                hasFile: [
-                  {
-                    delete: {
-                      
-                          hasEdges: [
-                            {
-                              delete: {
-                              },
-                            },
-                          ],
-                          hasNodes: [
-                            {
-                              delete: {
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    
-                  
-                ],
-                hasFolder: [
-                  {
-                    delete: {
-                      hasFile: [
-                        {
-                          delete: {
-                                hasNodes: [
-                                  {
-                                    delete: {
-                                    },
-                                  },
-                                ],
-                                hasEdges: [
-                                  {
-                                    delete: {
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          
-                        
-                      ],
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
+        // delete: {
+        //   hasContainsFile: [
+        //     {
+        //       delete: {
+        //         hasEdges: [
+        //           {
+        //             delete: {},
+        //           },
+        //         ],
+        //         hasNodes: [
+        //           {
+        //             delete: {},
+        //           },
+        //         ],
+        //       },
+        //     },
+        //   ],
+        //   hasContainsFolder: [
+        //     {
+        //       delete: {
+        //         hasFile: [
+        //           {
+        //             delete: {
+        //               hasEdges: [
+        //                 {
+        //                   delete: {},
+        //                 },
+        //               ],
+        //               hasNodes: [
+        //                 {
+        //                   delete: {},
+        //                 },
+        //               ],
+        //             },
+        //           },
+        //         ],
+        //         hasFolder: [
+        //           {
+        //             delete: {
+        //               hasFile: [
+        //                 {
+        //                   delete: {
+        //                     hasNodes: [
+        //                       {
+        //                         delete: {},
+        //                       },
+        //                     ],
+        //                     hasEdges: [
+        //                       {
+        //                         delete: {},
+        //                       },
+        //                     ],
+        //                   },
+        //                 },
+        //               ],
+        //             },
+        //           },
+        //         ],
+        //       },
+        //     },
+        //   ],
+        // },
       },
-      // update: (cache, { data }) => {
-      //   const existingData = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         emailId: email,
-      //       },
-      //     },
-      //   });
-      //   const { hasProjects, ...userData } = existingData.users[0];
-      //   const to_be_updated = hasProjects.filter(
-      //     (values: Project) => values.recycleBin !== true
-      //   );
-      //   const updated_user = { ...userData, hasProjects: to_be_updated };
-      //   cache.writeQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         emailId: "irfan123@gmail.com",
-      //       },
-      //     },
-      //     data: {
-      //       users: [updated_user],
-      //     },
-      //   });
-      // },
+      update: (cache, { data }) => {
+        const existingData = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
+            },
+          },
+        });
+        const { hasProjects, ...userData } = existingData.users[0];
+        const to_be_updated = hasProjects.filter(
+          (values: Project) => values.recycleBin !== true
+        );
+        const updated_user = { ...userData, hasProjects: to_be_updated };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              emailId:email,
+            },
+          },
+          data: {
+            users: [updated_user],
+          },
+        });
+      },
     });
   } catch (error) {
     console.log(error, "error while clearing recycleBin projects");
@@ -388,81 +370,79 @@ const addProject_Backend = async (
   addProject: any,
   query: any
 ) => {
-  console.log("addProject",email,project);
   let data = [];
- // try {
-    await client
-      .mutate({
-        mutation,
-        variables: {
-          input: [
-            {
-              deletedAT: "",
-              description: project.description,
-              isOpen: true,
-              name: project.name,
-              recentProject: false,
-              recycleBin: false,
-              "createdBy": {
-                "connect": {
-                  "where": {
-                    "node": {
-                      "emailId": email,
-                    }
-                  }
-                }
-              },
-              usersInProjects: {
-                connect: [
-                  {
-                    where: {
-                      node: {
-                        emailId: email,
-                      },
-                    },
+  // try {
+  await client
+    .mutate({
+      mutation,
+      variables: {
+        input: [
+          {
+            deletedAT: "",
+            description: project.description,
+            isOpen: true,
+            name: project.name,
+            recentProject: false,
+            recycleBin: false,
+            createdBy: {
+              connect: {
+                where: {
+                  node: {
+                    emailId: email,
                   },
-                ],
+                },
               },
             },
-          ],
+            usersInProjects: {
+              connect: [
+                {
+                  where: {
+                    node: {
+                      emailId: email,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+        update: (
+          cache,
+          {
+            data: {
+              createProjects: { projects },
+            },
+          }
+        ) => {
+          // @ts-ignore
+          const { users } = cache.readQuery({
+            query,
+            variables: {
+              where: {
+                emailId: email,
+              },
+            },
+          });
+          const { hasProjects, ...user } = users[0];
+          const updated_projects = [...projects, ...hasProjects];
+          const updated_user = { ...user, hasProjects: updated_projects };
+          cache.writeQuery({
+            query,
+            variables: {
+              where: {
+                emailId: email,
+              },
+            },
+            data: {
+              users: [updated_user],
+            },
+          });
         },
-      //   update: (
-      //     cache,
-      //     {
-      //       data: {
-      //         createProjects: { projects },
-      //       },
-      //     }
-      //   ) => {
-      //     // @ts-ignore
-      //     const { users } = cache.readQuery({
-      //       query,
-      //       variables: {
-      //         where: {
-      //           emailId: email,
-      //         },
-      //       },
-      //     });
-      //     const { hasProjects, ...user } = users[0];
-      //     const updated_projects = [...projects, ...hasProjects];
-      //     const updated_user = { ...user, hasProjects: updated_projects };
-      //     cache.writeQuery({
-      //       query,
-      //       variables: {
-      //         where: {
-      //           emailId: email,
-      //         },
-      //       },
-      //       data: {
-      //         users: [updated_user],
-      //       },
-      //     });
-      //   },
-       })
-      .then((response) => {
-        console.log(response);
-        addProject(response.data.createProjects.projects[0]);
-      });
+    })
+    .then((response) => {
+      addProject(response.data.createProjects.projects[0]);
+    });
   // } catch (error) {
   //   console.log(error, "While adding the project");
   // }

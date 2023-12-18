@@ -15,9 +15,10 @@ import {
   getSprintByProjectId,
   GET_SPRINTS,
   createFileMutation,
-  getProjectByUser,
+  getProjectById,
   updateFolderBackend,
   updateFoldersMutation,
+  allNodes,
 } from "../../gql";
 import { useRouter } from "next/router";
 import validationSchema from "../AdminPage/Projects/staticData/validationSchema";
@@ -38,7 +39,7 @@ export default function AddBacklogs({
   typeDropdown,
 }: any) {
   const { addRow, updateRow, allStories, parents } = backlogStore();
-  const { uid, idofUid, updateUid } = fileStore();
+  const { uid, idofUid, updateUid,Id:fileId } = fileStore();
   const userEmail = userStore((state)=>state.userEmail);
 
 
@@ -81,7 +82,7 @@ export default function AddBacklogs({
           await updateFolderBackend(
             updatedvalues,
             updateFoldersMutation,
-            getProjectByUser
+            getProjectById
           );
           backToThePage()
           break;
@@ -111,7 +112,7 @@ export default function AddBacklogs({
               userEmail,
               createFileMutation,
               values,
-              getProjectByUser
+              getProjectById
             );
             values.parent = values.epic;
             // values.id = createFileResponse.id;
@@ -135,7 +136,7 @@ export default function AddBacklogs({
             values.epic,
             userEmail,
             createFileMutation,
-            getProjectByUser,
+            getProjectById,
             values
           ).then(async (res) => {
             values.parent = values.epic;
@@ -148,7 +149,7 @@ export default function AddBacklogs({
           });
       } else {
         try {
-          await createNode(newNode, updateNode, values,userEmail,addRow);
+          await createNode(newNode, values,userEmail,allNodes,fileId);
           const updateUidRespon = (await updateUidMethode(
             idofUid,
             updateUidMutation

@@ -32,7 +32,7 @@ import {
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
-  getProjectByUser,
+  getProjectById,
   createEdgeMutation,
   deleteEdgeMutation,
 } from "../../gql";
@@ -68,12 +68,19 @@ function Flow() {
     deleteNode,
     updateNodePosition,
   } = nodeStore();
-  const { edges: defaultEdges, updateEdges, deleteEdge } = edgeStore();
+  const {
+    edges: defaultEdges,
+    updateEdges,
+    deleteEdge,
+    addNewEdge,
+  } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
   const [nodeId, setNodeId] = useState([]);
-  const userEmail = userStore((state) => state.userEmail);
+  const { userEmail } = userStore();
+
+  
 
   const dragged = useRef(false);
 
@@ -149,17 +156,19 @@ function Flow() {
 
   const onConnect = useCallback(
     async (newEdge: Connection) => {
+      console.log(newEdge)
       const edgeResponse = await createFlowEdge(
         newEdge,
         userEmail,
-        updateEdges
+        createEdgeMutation
       );
+      // console.log(userEmail);
+      // addNewEdge(edgeResponse?.data.createFlowEdges.flowEdges)
       setEdges((eds) => {
-        console.log(eds);
         return addEdge(newEdge, eds);
       });
     },
-    [setEdges, getEdges]
+    [setEdges, getEdges,userEmail]
   );
 
   useEffect(() => {
@@ -195,26 +204,26 @@ function Flow() {
               selectedItems: selectedNodes,
             });
           }
-        //} 
-        //else if (selectedEdges.length > 0) {
+          //}
+          //else if (selectedEdges.length > 0) {
           setShowConfirmation({
             type: "edge",
             show: true,
             selectedItems: selectedEdges,
           });
-       // } 
-       // else {
+          // }
+          // else {
           setShowConfirmation(defaultShowConfirmation);
         }
       }
-   // };
+      // };
 
-    document.addEventListener("keydown", handleBackspace);
-    return () => {
-      document.removeEventListener("keydown", handleBackspace);
+      document.addEventListener("keydown", handleBackspace);
+      return () => {
+        document.removeEventListener("keydown", handleBackspace);
+      };
     };
-      }    
-  }, [getNodes,getEdges ]);
+  }, [getNodes, getEdges]);
   async function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
       const element = nodes[index];
@@ -225,7 +234,7 @@ function Flow() {
           allNodes,
           fileId,
           projectId,
-          getProjectByUser
+          getProjectById
         );
         deleteNode(element);
       } catch (error) {
@@ -311,7 +320,7 @@ function Flow() {
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
           onEdgeClick={onEdgeClick}
           onNodeClick={onNodeClick}
-          deleteKeyCode={[]}
+          // deleteKeyCode={[]}
         >
           <MiniMap
             //nodeComponent={MiniMapNode}
