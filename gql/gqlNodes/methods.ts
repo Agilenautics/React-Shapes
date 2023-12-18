@@ -11,6 +11,8 @@ import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import { allNodes } from "./queries";
 import TreeModel from "tree-model-improved";
 import { findById } from "../../components/TreeView/backend";
+import getUpdatedCacheData from "../../components/Flow/middleWares/updatingNodeCache";
+import { File, Project } from "../../lib/appInterfaces";
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -32,23 +34,18 @@ async function getNodes(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
-  var nodes: Array<any> = [];
-  var edges: Array<Edge> = [];
-  await client
-    .query({
+  try {
+    return await client.query({
       query: customQuery,
       variables: {
         where: {
           id: id,
         },
       },
-    })
-    .then((result) => {
-      nodes = result.data.files[0].hasNodes;
-      const allFlowEdgesSet = new Set(nodes.flatMap((node) => node.flowEdge));
-      edges = Array.from(allFlowEdgesSet)
     });
-  return { nodes, edges };
+  } catch (error) {
+    console.log(error, "while getting all edges");
+  }
 }
 
 const checkUserDidComment = (message: string) => {
@@ -78,12 +75,11 @@ const checkUserDidComment = (message: string) => {
 };
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  updateNode: any,
   data: any,
   email: string,
-  addRow: any
+  cacheQuey: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  fileId: string
 ) {
-  // const addRow = backlogStore(state=> state.addRow)
   try {
     return await client.mutate({
       mutation,
@@ -169,30 +165,31 @@ async function createNode(
         }
       ) => {
         const { files } = cache.readQuery({
-          query: allNodes,
+          query: cacheQuey,
           variables: {
             where: {
-              id: data.story,
+              id: fileId,
             },
-          },
-        }) as any;
-        const { hasNodes } = files[0];
-        const updaedFlowchart = {
-          ...files[0],
-          hasNodes: [...hasNodes, ...flowNodes],
-        };
-        console.log(updaedFlowchart);
-        cache.writeQuery({
-          query: allNodes,
-          variables: {
-            where: {
-              id: data.story,
-            },
-          },
-          data: {
-            files: [updaedFlowchart],
           },
         });
+        if (files && files.length) {
+          const { hasNodes } = files[0];
+          const updaedFlowchart = {
+            ...files[0],
+            hasNodes: [...hasNodes, ...flowNodes],
+          };
+          cache.writeQuery({
+            query: allNodes,
+            variables: {
+              where: {
+                id: data.story,
+              },
+            },
+            data: {
+              files: [updaedFlowchart],
+            },
+          });
+        }
       },
     });
   } catch (error) {
@@ -569,7 +566,36 @@ const updateTaskMethod = async (
 
   return response;
 };
-
+const linkNodeAnotherNodeMethod = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  anotherNodId:string
+) => {
+  try {
+    return await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id,
+        },
+        connect: {
+          isLinked: {
+            edge: {
+              isLeft: false,
+            },
+            where: {
+              node: {
+                id: anotherNodId,
+              },
+            },
+          },
+        },
+      },
+    });
+  } catch (error) {
+    console.log("while linking a node",error)
+  }
+};
 export {
   createNode,
   getNodes,
@@ -580,4 +606,5 @@ export {
   //updateLinkedByMethod,
   updateNodeData,
   updateTaskMethod,
+  linkNodeAnotherNodeMethod
 };

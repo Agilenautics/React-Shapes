@@ -27,13 +27,16 @@ export const Node_Fragment = gql`
     flowEdge {
       ...EdgeFragment
     }
+    isLinked {
+      id
+      label
+    }
     isLinkedConnection {
       edges {
-        label
-        flag
         isLeft
       }
     }
+
     hasInfo {
       ...InfoFragment
     }

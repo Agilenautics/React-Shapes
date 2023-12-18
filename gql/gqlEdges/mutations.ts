@@ -22,13 +22,15 @@ export const deleteEdgeMutation = gql`
   }
 `;
 export const updateEdgeMutation = gql`
-  mutation updateEdge($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
-    updateFlowEdges(where: $where, update: $update) {
-      flowEdges {
-        label
-        bidirectional
-        boxCSS
-      }
+  mutation UpdateFlowEdges($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
+  updateFlowEdges(where: $where, update: $update) {
+    flowEdges {
+      id
+      bidirectional
+      boxCSS
+      label
+      pathCSS
     }
   }
+}
 `;

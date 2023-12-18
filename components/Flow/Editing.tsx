@@ -8,13 +8,15 @@ import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
 import useStore from "../Sidebar/SidebarContext";
 import {
- // getNode,
+  // getNode,
   findNode,
   getFile,
- // getFileByNode,
+  // getFileByNode,
   updateEdgeBackend,
   updateEdgeMutation,
   allNodes,
+  linkNodeAnotherNodeMethod,
+  linkNodeToAnotherNodeMutation,
 } from "../../gql";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter
@@ -118,14 +120,12 @@ function Editing({
 
   const addLinkMethod = async (key: string) => {
     //id of the current node
-    const id = linkNodes.nodes[key].id;
-    console.log(key, id);
 
     // finding the node to collect the label of the node
     //let nodeData = await findNode(getNode, linkNodeId);
 
     // getting the current file data
-   //const { data } = await getFileByNode(linkNodeId, getFile);
+    //const { data } = await getFileByNode(linkNodeId, getFile);
 
     // updateLinkedTo(linkNodeId, {
     //   label: linkNodes.nodes[key].data.label,
@@ -322,7 +322,7 @@ function Editing({
                     type="button"
                     className="absolute -top-[19px] right-2 flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5 "
                     onClick={() => {
-                      updateLinkNodes({}, linkNodes.fileID);
+                      updateLinkNodes([], linkNodes.fileID);
                     }}
                   >
                     <BsArrowLeft className="h-4 w-4 pt-0" />

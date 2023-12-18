@@ -22,6 +22,21 @@ export const delNodeMutation = gql`
     }
   }
 `;
+export const linkNodeToAnotherNodeMutation = gql`
+ mutation UpdateFlowNodes($where: FlowNodeWhere, $connect: FlowNodeConnectInput) {
+  updateFlowNodes(where: $where, connect: $connect) {
+    flowNodes {
+      id
+      label
+      isLinked {
+        id
+        label
+      }
+    }
+    
+  }
+}
+`;
 // export const updateLinkedBy = gql`
 //   mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
 //     updateLinkedBies(where: $where, update: $update) {
@@ -64,17 +79,17 @@ export const updateNodesMutation = gql`
 
 //updete position mutation
 
- export const updatePositionMutation = gql`
-   mutation Mutation($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
-  updateFlowNodes(where: $where, update: $update) {
-    flowNodes {
-      id
-      x
-      y
+export const updatePositionMutation = gql`
+  mutation Mutation($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
+    updateFlowNodes(where: $where, update: $update) {
+      flowNodes {
+        id
+        x
+        y
+      }
     }
   }
-}
- `;
+`;
 export const updateTasksMutation = gql`
   mutation updateTasks($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {

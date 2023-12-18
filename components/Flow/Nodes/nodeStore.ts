@@ -5,7 +5,6 @@ import {
   //updateLinkedByMethod,
   updateNodeData,
   updateNodeBackend,
-  getNodes,
   // updateLinkedBy,
   //updateLinkedToMutation,
   //getFileByNode,
@@ -90,6 +89,7 @@ const nodeStore = create<NodeState>((set) => ({
     }),
   updateNodes: (nodes) =>
     set((state) => {
+      console.log(nodes,"nodestore")
       // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
       const newData = nodes.map((item: any) => {
         const description = item.hasInfo.description;

@@ -1,4 +1,4 @@
- import React, { useState, useEffect, SyntheticEvent } from "react";
+import React, { useState, useEffect, SyntheticEvent } from "react";
 import { ChevronDown, ChevronRight } from "react-feather";
 import { NodeHandlers, NodeRendererProps } from "react-arborist";
 import { MyData } from "./backend";
@@ -28,6 +28,8 @@ import classNames from "classnames";
 import RenameFormForTreeStructur from "./renameForm";
 import MaybeToggleButton from "./toggleArrowbuttons";
 import Icon from "./IconsForFolderAndFile";
+import getNodeAndEdges from "../Flow/middleWares/getNodesAndEdges";
+import { ApolloQueryResult } from "@apollo/client";
 
 // LoadingIcon component
 
@@ -181,21 +183,18 @@ export const TreeNode = ({
       if (data.children == null) {
         setIsLoading(true);
         // here we need to get nodes and edges from the getProect by query
-        // getNodes(allNodes, data.id)
-        //   .then((result) => {
-        //     updateNodes(result.nodes);
-        //     updateEdges(result.edges)
-        //   })
-        //   .finally(() => {
-        //     setIsLoading(false);
-        //   });
-        // getEdges(allEdges, data.id)
-        //   .then((result) => {
-        //     updateEdges(result);
-        //   })
-        //   .finally(() => {
-        //     setIsLoading(false);
-        //   });
+        getNodes(allNodes, data.id)
+          .then((result: any) => {
+            const {
+              data:{files},
+            } = result;
+            const {nodes,edges} = getNodeAndEdges(files[0]);
+            updateNodes(nodes);
+            updateEdges(edges);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       }
     };
   }

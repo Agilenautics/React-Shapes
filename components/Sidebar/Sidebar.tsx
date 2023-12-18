@@ -24,7 +24,7 @@ import {
   createFolderInMain,
   createUidMethode,
   createUidMutation,
-  getProjectByUser,
+  getProjectById,
   getTreeNodeByUser,
   getUidMethode,
   getUidQuery,
@@ -85,7 +85,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
   // console.log(router.asPath===`/projects/${projectId}/business-process/edit?id=${router.query.id}`)
 
   const getProjectId = async (id: string) => {
-    const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
+    const initData = await getTreeNodeByUser(getProjectById, id, setLoading);
     const data = initData[0];
     //@ts-ignore
     updateInitData(data);
@@ -186,7 +186,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
         projectId,
         userEmail,
         newFolder,
-        getProjectByUser
+        getProjectById
       );
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
@@ -217,7 +217,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                 userEmail,
                 createFileMutation,
                 data,
-                getProjectByUser
+                getProjectById
               );
             add_file(fileInFolderResponse?.data.createFiles.files[0]);
             handleUidUpdates();
@@ -231,7 +231,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                 userEmail,
                 createFileMutation,
                 data,
-                getProjectByUser
+                getProjectById
               );
             add_file(fileInMainResponse?.data.createFiles.files[0]);
             handleUidUpdates();
@@ -247,7 +247,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               userEmail,
               createFileMutation,
               data,
-              getProjectByUser
+              getProjectById
             );
           add_file(fileInFolderResponse?.data.createFiles.files[0]);
           handleUidUpdates();
@@ -263,7 +263,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               userEmail,
               createFileMutation,
               data,
-              getProjectByUser
+              getProjectById
             );
           add_file(fileInMainResponse?.data.createFiles.files[0]);
           handleUidUpdates();

@@ -8,7 +8,7 @@ import {
   deleteFileBackend,
   deleteFolderBackend,
   Folder,
-  getProjectByUser,
+  getProjectById,
   updateFoldersMutation,
   updateFilesMutation,
   deleteFoldersMutation,
@@ -141,7 +141,7 @@ const useBackend = () => {
         await updateFolderBackend(
           editedData,
           updateFoldersMutation,
-          getProjectByUser
+          getProjectById
         );
         // updateNodes(nodeData);
       }
@@ -149,7 +149,7 @@ const useBackend = () => {
         await updateFileBackend(
           editedData,
           updateFilesMutation,
-          getProjectByUser
+          getProjectById
         );
         updateFile(id, initData);
         // updateNodes(nodeData);
@@ -177,14 +177,14 @@ const useBackend = () => {
         await deleteFolderBackend(
           deleteIds,
           deleteFoldersMutation,
-          getProjectByUser
+          getProjectById
         );
         delete_item(id);
       } else {
         await deleteFileBackend(
           deleteIds,
           deleteFilesMutation,
-          getProjectByUser
+          getProjectById
         );
         delete_item(id);
       }

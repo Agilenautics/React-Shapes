@@ -83,8 +83,12 @@ function Projects() {
   };
 
   const handleParmenantDelete = async (projectId: string) => {
-    await parmenantDelete(projectId, PARMENANT_DELETE, GET_USER);
-    removeFromRecycleBin(projectId);
+    try {
+      await parmenantDelete(projectId, PARMENANT_DELETE, GET_USER,userEmail);
+      removeFromRecycleBin(projectId);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleRestoreFromRecycleBin = async (id: string) => {
@@ -99,7 +103,6 @@ function Projects() {
   const handleClearRecycleBin = async () => {
     try {
       await clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER, userEmail);
-      console.log("jii")
       clearRecycle_Bin();
     } catch (error) {
       console.log("Error in clearing the recycle bin", error);
