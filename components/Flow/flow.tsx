@@ -161,7 +161,10 @@ function Flow() {
         focusedElement instanceof HTMLInputElement ||
         focusedElement instanceof HTMLTextAreaElement;
 
-      if (!isTextFieldFocused && event.key === "Backspace") {
+      if (
+        !isTextFieldFocused &&
+        (event.key === "Backspace" || event.key === "Delete")
+      ) {
         const selectedNodes = getNodes().filter((node) => node.selected);
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
@@ -192,6 +195,16 @@ function Flow() {
           setShowConfirmation(defaultShowConfirmation);
         }
       }
+      // if (event.key === "Delete") {
+      //   const selectedEdges = getEdges().filter((edge) => edge.selected);
+      //   if (selectedEdges.length > 0) {
+      //     setShowConfirmation({
+      //       type: "edge" || "node",
+      //       show: true,
+      //       selectedItems: selectedEdges,
+      //     });
+      //   }
+      // }
     };
 
     document.addEventListener("keydown", handleBackspace);
