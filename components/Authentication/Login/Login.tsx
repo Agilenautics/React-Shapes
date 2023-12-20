@@ -14,6 +14,7 @@ import { BiSolidLockAlt, BiLogoFacebook, BiLogoGoogle } from "react-icons/bi";
 import { TbBrandGithubFilled } from "react-icons/tb";
 
 import Link from "next/link";
+import logger from "../../../pages/api/logger";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -37,14 +38,13 @@ const Login: React.FC = () => {
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
+        logger?.info("user verified..")
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
-        console.log("user", user);
-        //router.push("/projects")
         router.push(`/projects`);
-
-        // ...
       } else {
+        logger?.warn('unuthenticated')
+        //here we need to perform if user is unuthenticate
       }
     });
   };
@@ -55,24 +55,19 @@ const Login: React.FC = () => {
       .then((userCredential) => {
         // Signed in
         const { user } = userCredential;
-
         setLoginError({
           error: false,
           msg: "",
         });
-
         // Access the user's authentication tokens
         user.getIdTokenResult().then((idTokenResult) => {
           // Retrieve the access token and refresh token
           const accessToken = idTokenResult.token;
           const refreshToken = user.refreshToken;
-
           //  check if active == true
-
           // Store the tokens in cookies
           document.cookie = `accessToken=${accessToken}; Secure; SameSite=Strict; HttpOnly`;
           document.cookie = `refreshToken=${refreshToken}; Secure; SameSite=Strict; HttpOnly`;
-          //router.push("/projects");
           router.push(`/projects/`);
         });
         // User logged in

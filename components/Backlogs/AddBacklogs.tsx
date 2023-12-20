@@ -56,7 +56,6 @@ export default function AddBacklogs({
 
   const handleSubmit = async (values: any) => {
     const backToThePage = () => router.back();
-    console.log(values);
     if (selectedElement != null) {
       values.uid = selectedElement.uid;
       values.id = selectedElement.id;

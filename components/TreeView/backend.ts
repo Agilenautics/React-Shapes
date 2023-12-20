@@ -125,9 +125,7 @@ const useBackend = () => {
 
     onEdit: async (id: string, name: string) => {
       const node = find(id);
-      console.log(node);
       const getParent = node?.parent.model as Folder;
-      console.log(getParent);
       let editedData = {
         id,
         name,
@@ -165,7 +163,6 @@ const useBackend = () => {
       //   );
       //   initData.hasContainsFolder.children[indexForHasContainsFile] = updatedData;
       // }
-      console.log(initData.children);
 
       // updating state in real time
 
@@ -175,7 +172,6 @@ const useBackend = () => {
 
       setData(initData);
       update();
-      console.log(initData, "initdata");
 
       const { type } = node?.model;
       if (type === "folder") {
