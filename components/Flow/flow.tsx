@@ -40,7 +40,7 @@ import { FetchResult } from "@apollo/client";
 const defaultEdgeOptions = {
   type: "customEdge",
   data: {
-    label: "New Edge",
+    label: "",
     pathCSS: "!stroke-node-green-200 fill-node-green-200",
     boxCSS: "border-node-green-100 bg-node-green-50 text-node-green-200",
     bidirectional: false,
