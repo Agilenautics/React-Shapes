@@ -136,7 +136,6 @@ const fileStore = create<files>((set) => ({
 
       //if we select the folder
       if (node?.model.type === "folder") {
-        console.log("folder")
         //then we are getting that particular folder
         const getFolder = node?.model;
         //and returning or updating data by using checkingParent is File Or Folder Or Project
@@ -144,7 +143,6 @@ const fileStore = create<files>((set) => ({
         return { data: checkingParentisFileOrFolderOrProject(getFolder) };
          // if i select the file in folder or in project
       } else if (node?.model.type === "file") {
-        console.log("file")
         //then iam getting parent of that file
         let getParent = node?.parent.model;
         //finding that parent exist or not inside the parent 
@@ -161,7 +159,6 @@ const fileStore = create<files>((set) => ({
           children: updated_data,
           hasContainsFile: [...state.data.hasContainsFile, newFile],
         };
-        console.log(updated_main,"filestore")
         return { data: updated_main };
       }
     });
