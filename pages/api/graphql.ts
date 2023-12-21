@@ -74,7 +74,7 @@ const apolloServer = new ApolloServer({
   plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
 
   formatError: (err) => {
-    return err;
+    return errorHandling(err);
   },
 });
 

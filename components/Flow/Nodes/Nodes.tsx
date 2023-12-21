@@ -8,6 +8,7 @@ import edgeStore from "../Edges/edgeStore";
 import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import { useRouter } from "next/router";
+import getNodeAndEdges from "../middleWares/getNodesAndEdges";
 
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
@@ -25,9 +26,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const findFile = fileStore((state) => state.find_file);
   const updateDescription = nodeStore((state) => state.updateDescription);
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
-
-  const router = useRouter();
-  const projectId = router.query.projectId as string;
+  const {updateEdges} = edgeStore();
 
   const label = data.label;
   const shapeCSS = nodeShapeMap[data.shape];
@@ -35,24 +34,12 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   // let getBpmn = shapeCSS[1]?.split("-")[0];
   // console.log(shapeCSS[1],getBpmn)
   // const flag = getBpmn === "bpmn";
-  const linkedTo = () => {
-    const x = findFile(data.isLinked.hasFile.id);
-    // @ts-ignore
-    const nodes = x.hasNodes;
-    console.log(nodes);
-    const nodeData = nodes.map((items: any) => {
-      const { x, y, label, shape, ...rest } = items;
-      return { ...rest, data: { label, shape }, position: { x, y } };
-    });
-    // const edges = x.hasEdges;
-    // const edgeData = JSON.stringify(edges).replaceAll(
-    //   '"hasedgedataEdgedata":',
-    //   '"data":'
-    // );
+  const linkedTo = (fileId: string) => {
+    const x = findFile(fileId);
+    const { edges, nodes } = getNodeAndEdges(x);
     if (x.children == null) {
-      // @ts-ignore
-      //updateEdges(JSON.parse(edgeData));
-      updateNodes(nodeData);
+      updateNodes(nodes);
+      updateEdges(edges);
     }
     updateBreadCrumbs(x, x.id, "push");
   };
@@ -149,39 +136,32 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
               </div>
             ) : (
               <div>
-                {/* {flag ? null : ( */}
                 <p className="py-1 text-center text-[0.6rem]">{label}</p>
-                {/* )} */}
-                {/*{data.hasLinkedTo.flag ? (
-                  <div
-                    className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-                    onClick={linkedTo}
-                  >
-                    <div className="text-xs"> {data.hasLinkedTo.label} </div>
-                    <div>
-                      <BiArrowToRight className="h-4 w-4" />
-                    </div>
-                  </div>
-               ) : null} */}
+                {
+                // data ? (
+                //   <div
+                //     className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                //     onClick={() => linkedTo(data.isLinked.hasFile.id)}
+                //   >
+                //     <div className="text-xs"> {data.isLinked.label} </div>
+                //     <div>
+                //       <BiArrowToRight className="h-4 w-4" />
+                //     </div>
+                //   </div>
+                // ) : (
+                //   <div
+                //     className="absolute right-24 top-16 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
+                //     // onClick={linkedBy}
+                //   >
+                //     <div className="text-xs"> llll </div>
+                //     <div>
+                //       <BiArrowBack className="h-4 w-4" />
+                //     </div>
+                //   </div>
+                // )
+                }
               </div>
             )}
-            {/* LinkedTo */}
-
-            {/* linked by node  */}
-            {
-              // @ts-ignore
-              // data.hasLinkedBy.flag ? (
-              //   <div
-              //     className="absolute right-24 top-16 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-              //     onClick={linkedBy}
-              //   >
-              //     <div className="text-xs"> {data.hasLinkedBy.label} </div>
-              //     <div>
-              //       <BiArrowBack className="h-4 w-4" />{" "}
-              //     </div>
-              //   </div>
-              // ) : null
-            }
           </div>
         </div>
       </div>

@@ -37,7 +37,6 @@ import {
   deleteEdgeMutation,
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
-import { FetchResult } from "@apollo/client";
 import userStore from "../AdminPage/Users/userStore";
 import { ApolloQueryResult } from "@apollo/client";
 
@@ -119,9 +118,9 @@ function Flow() {
         const nodeData = defaultNodes.filter(
           (value) => value.id === changes[0].id
         );
-        nodeData.map((curEle: any) => {
-          setNodeId(curEle);
-        });
+        // nodeData.map((curEle: any) => {
+        //   setNodeId(curEle);
+        // });
         return applyNodeChanges(changes, nds);
       }),
     [defaultNodes, setNodes, updateNodes, currentFlowchart]
@@ -156,14 +155,13 @@ function Flow() {
 
   const onConnect = useCallback(
     async (newEdge: Connection) => {
-      console.log(newEdge)
       const edgeResponse = await createFlowEdge(
         newEdge,
         userEmail,
         createEdgeMutation
       );
       // console.log(userEmail);
-      // addNewEdge(edgeResponse?.data.createFlowEdges.flowEdges)
+      addNewEdge(edgeResponse?.data.createFlowEdges.flowEdges)
       setEdges((eds) => {
         return addEdge(newEdge, eds);
       });

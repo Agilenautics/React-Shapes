@@ -17,46 +17,6 @@ const edgeStore = create<EdgeState>((set) => ({
   edges: [],
   updateEdges: (edges) =>
     set((state): any => {
-      const updatededge = edges.map((edge: any) => {
-        const {
-          id,
-          label,
-          bidirectional,
-          boxCSS,
-          pathCSS,
-          selected,
-          createdBy,
-          flowNodeConnection,
-          ...EdgeData
-        } = edge;
-        const getHandlesAndNodeId: Array<Edge> =
-          flowNodeConnection?.edges.reduce(
-            (result: Edge, item: any, index: number) => {
-              if (index === 0) {
-                result.source = item.node.id;
-                result.sourceHandle = item.handle;
-              } else if (index === 1) {
-                result.target = item.node.id;
-                result.targetHandle = item.handle;
-              }
-              return result;
-            },
-            {}
-          );
-        return {
-          ...EdgeData,
-          id,
-          createdBy: createdBy?.emailId,
-          ...getHandlesAndNodeId,
-          selected,
-          data: {
-            label,
-            bidirectional,
-            pathCSS,
-            boxCSS,
-          },
-        };
-      });
       return { edges: edges };
     }),
   deleteEdge: (edge: any) =>
@@ -109,13 +69,39 @@ const edgeStore = create<EdgeState>((set) => ({
           boxCSS,
           pathCSS,
           selected,
-          createdBy,
-          flowNodeConnection,
+          createdBy: { emailId },
+          flowNodeConnection: { edges },
           ...EdgeData
         } = edge;
-        
+        const gethandleProperty = edges.reduce(
+          (result: Edge, items: any, index: number) => {
+            if (index === 0) {
+              result.target = items.node.id;
+              result.targetHandle = items.handle;
+            } else {
+              result.source = items.node.id;
+              result.sourceHandle = items.handle;
+            }
+            return result;
+          },
+          {}
+        );
+        return {
+          ...EdgeData,
+          id,
+          createdBy: emailId,
+          data: {
+            label,
+            bidirectional,
+            pathCSS,
+            boxCSS,
+          },
+          ...gethandleProperty,
+        };
       });
-      return { edges: [] };
+      const updatedEdge = [...state.edges, ...restructuredEdgeData];
+
+      return { edges: updatedEdge };
     });
   },
 }));

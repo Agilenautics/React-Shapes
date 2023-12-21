@@ -150,15 +150,6 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     localStorage.setItem("recentPid", id);
     // update_recentProject(id,recentProject_mutation);
   };
-  // const handleProjectDown = () => {
-  //   if(projectId.length>0){
-  //     setProjectsFlag(true);
-  //   }
-  //   else
-  //   {
-  //     setProjectsFlag(!projectsFlag);
-
-  // }}
   useEffect(() => {
     if (
       projectId &&

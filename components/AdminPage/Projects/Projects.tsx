@@ -21,8 +21,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 import { getNameFromEmail } from "../Users/Users";
 import { useRouter } from "next/router";
-import { ApolloQueryResult, useQuery } from "@apollo/client";
-import { onAuthStateChanged } from "firebase/auth";
+import { ApolloQueryResult } from "@apollo/client";
 import { Project, User } from "../../../lib/appInterfaces";
 
 function Projects() {
