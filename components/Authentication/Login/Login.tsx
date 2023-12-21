@@ -12,10 +12,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { AiOutlineUser } from "react-icons/ai";
 import { BiSolidLockAlt, BiLogoFacebook, BiLogoGoogle } from "react-icons/bi";
 import { TbBrandGithubFilled } from "react-icons/tb";
-
 import Link from "next/link";
-import logger from "../../../pages/api/logger";
-
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,12 +35,10 @@ const Login: React.FC = () => {
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
-        logger?.info("user verified..")
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
         router.push(`/projects`);
       } else {
-        logger?.warn('unuthenticated')
         //here we need to perform if user is unuthenticate
       }
     });
