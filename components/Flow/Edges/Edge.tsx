@@ -65,15 +65,7 @@ export default function CustomEdge({
   const markerSize = 6; // Adjust the size of the markers here
 
   const onhandleEdgeLine = () => {
-    console.log(data.tempLabel)
-    if (
-      id &&
-      data.label.length === 0 &&
-      "tempLabel" in data &&
-      data.tempLabel.length > 0
-    ) {
-      updateLabel(id, data.tempLabel);
-    }
+    setEditing(true);
   };
 
   return (
@@ -161,36 +153,37 @@ export default function CustomEdge({
         y={labelY - 145 / 2}
         requiredExtensions="http://www.w3.org/1999/xhtml"
       >
-        <div className="flex h-full items-center justify-center " onDoubleClick={onhandleEdgeLine}>
-          {data.label.length !== 0 ? (
-            <div
-              className={`rounded-lg !bg-slate px-1 text-[0.5rem] dark:!bg-neutral-900 ${data.boxCSS}`}
-              onDoubleClick={() => {
-                setEditing(true);
-              }}
-            >
-              {editing ? (
-                <div className="text-xs">
-                  <Editing
-                    key={id}
-                    isEdge={true}
-                    toggleDraggable={() => {}}
-                    id={id}
-                    updateNodeType={updateEdgeType}
-                    setEditing={setEditing}
-                    updateLabel={updateLabel}
-                    updateDescription={updateDescription}
-                    label={data.label}
-                    CSSMap={edgeCSSMap}
-                    description=""
-                    bidirectionalArrows={data.bidirectional}
-                  />
-                </div>
-              ) : (
-                <p>{data.label}</p>
-              )}
-            </div>
-          ) : null}
+        <div
+          className="flex h-full items-center justify-center "
+          onDoubleClick={onhandleEdgeLine}
+        >
+          <div
+            className={`!bg-slate rounded-lg px-1 text-[0.5rem] dark:!bg-neutral-900 ${data.boxCSS}`}
+            onDoubleClick={() => {
+              setEditing(true);
+            }}
+          >
+            {editing ? (
+              <div className="text-xs">
+                <Editing
+                  key={id}
+                  isEdge={true}
+                  toggleDraggable={() => {}}
+                  id={id}
+                  updateNodeType={updateEdgeType}
+                  setEditing={setEditing}
+                  updateLabel={updateLabel}
+                  updateDescription={updateDescription}
+                  label={data.label}
+                  CSSMap={edgeCSSMap}
+                  description=""
+                  bidirectionalArrows={data.bidirectional}
+                />
+              </div>
+            ) : (
+              <p>{data.label}</p>
+            )}
+          </div>
         </div>
       </foreignObject>
     </>

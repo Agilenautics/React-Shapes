@@ -55,8 +55,7 @@ export default function AddBacklogs({
   const projectId = router.query.projectId as string;
 
   const handleSubmit = async (values: any) => {
-    const  backToThePage = ()=>  router.back()
-    console.log(values)
+    const backToThePage = () => router.back();
     if (selectedElement != null) {
       values.uid = selectedElement.uid;
       values.id = selectedElement.id;
@@ -70,17 +69,17 @@ export default function AddBacklogs({
           ).then((res) => {
             values.hasSprint = res.data.updateFiles.files[0].hasSprint;
             updateRow(values);
-            backToThePage()
+            backToThePage();
           });
           break;
         case "folder":
-          const updatedvalues = {...values,projectId}
+          const updatedvalues = { ...values, projectId };
           await updateFolderBackend(
             updatedvalues,
             updateFoldersMutation,
             getProjectByUser
           );
-          backToThePage()
+          backToThePage();
           break;
         default:
           updateTaskMethod(
@@ -94,7 +93,7 @@ export default function AddBacklogs({
             );
             values.hasSprint = res.data.updateFlowNodes.flowNodes[0]?.hasSprint;
             updateRow(values);
-            backToThePage()
+            backToThePage();
           });
       }
     } else {
@@ -154,7 +153,6 @@ export default function AddBacklogs({
         }
       }
     }
-   
   };
 
   const handleCancel = () => {
@@ -257,76 +255,106 @@ export default function AddBacklogs({
                 </button>
               </div>
             </div>
-            <div className="h-fit w-full border-b bg-gray-100 p-1">
-              <div className="mb-2 flex space-x-4">
-                <div className="flex w-fit">
-                  <label
-                    htmlFor="type"
-                    className="block w-fit rounded p-1 text-sm hover:text-sky-600"
-                  >
-                    Type :
-                  </label>
-                  <Field
-                    as="select"
-                    name="type"
-                    className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
-                  >
-                    {typeDropdown ? (
-                      <>
-                        <option value="">Select Type</option>
-                        {types.map((type: Types) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="flex w-fit">
+                <label
+                  htmlFor="type"
+                  className="block w-fit rounded p-1 text-sm hover:text-sky-600"
+                >
+                  Type :
+                </label>
+                <Field
+                  as="select"
+                  name="type"
+                  className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
+                >
+                  {typeDropdown ? (
+                    <>
+                      <option value="">Select Type</option>
+                      {types.map((type: Types) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </>
+                  ) : (
+                    <option value={selectedElement.type}>
+                      {getTypeLabel(selectedElement.type).type}
+                    </option>
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="type"
+                  component="div"
+                  className="mt-1 text-red-500"
+                />
+              </div>
+              <div className="flex w-fit">
+                <label
+                  htmlFor="status"
+                  className="block w-fit rounded p-1 text-sm hover:text-sky-600"
+                >
+                  Status :
+                </label>
+                <Field
+                  as="select"
+                  initialValue="To-do"
+                  name="status"
+                  className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
+                >
+                  {selectedElement == null && (
+                    <option key={"To-Do"} value={"To-Do"}>
+                      To-Do
+                    </option>
+                  )}
+                  {selectedElement !== null &&
+                    statuses.map(
+                      (status: any) =>
+                        status.label !== "All" && (
+                          <option key={status} value={status}>
+                            {status}
                           </option>
-                        ))}
-                      </>
-                    ) : (
-                      <option value={selectedElement.type}>
-                        {getTypeLabel(selectedElement.type).type}
-                      </option>
+                        )
                     )}
-                  </Field>
-                  <ErrorMessage
-                    name="type"
-                    component="div"
-                    className="mt-1 text-red-500"
-                  />
-                </div>
-
-                <div className="flex w-fit">
-                  <label
-                    htmlFor="status"
-                    className="block w-fit rounded p-1 text-sm hover:text-sky-600"
-                  >
-                    Status :
-                  </label>
-                  <Field
-                    as="select"
-                    initialValue="To-do"
-                    name="status"
-                    className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
-                  >
-                    {selectedElement == null && (
-                      <option key={"To-Do"} value={"To-Do"}>
-                        To-Do
-                      </option>
-                    )}
-                    {selectedElement !== null &&
-                      statuses.map(
-                        (status: any) =>
-                          status.label !== "All" && (
-                            <option key={status} value={status}>
-                              {status}
-                            </option>
-                          )
-                      )}
-                  </Field>
-                  <ErrorMessage
-                    name="status"
-                    component="div"
-                    className="mt-1 text-red-500"
-                  />
-                </div>
+                </Field>
+                <ErrorMessage
+                  name="status"
+                  component="div"
+                  className="mt-1 text-red-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="EstimatedTime">Estimated Time:</label>
+                <Field
+                  as="input"
+                  name="EstimatedTime"
+                  className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
+                ></Field>
+              </div>
+              <div className="flex w-fit">
+                <label
+                  htmlFor="sprint"
+                  className="block w-fit rounded p-1 text-sm hover:text-sky-600"
+                >
+                  Add to Sprint :
+                </label>
+                <Field
+                  as="select"
+                  name="sprint"
+                  className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
+                >
+                  <option value="">Select Sprint</option>
+                  {sprints.map((sprint: any) => (
+                    <option key={sprint.id} value={sprint.id}>
+                      {sprint.name}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage
+                  name="sprint"
+                  component="div"
+                  className="mt-1 text-red-500"
+                />
               </div>
               <div className="mb-2 flex space-x-4">
                 {values.type !== "folder" && (
@@ -385,32 +413,14 @@ export default function AddBacklogs({
                     )}
                   </>
                 )}
-
-                <div className="flex w-fit">
-                  <label
-                    htmlFor="sprint"
-                    className="block w-fit rounded p-1 text-sm hover:text-sky-600"
-                  >
-                    Add to Sprint :
-                  </label>
-                  <Field
-                    as="select"
-                    name="sprint"
-                    className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
-                  >
-                    <option value="">Select Sprint</option>
-                    {sprints.map((sprint: any) => (
-                      <option key={sprint.id} value={sprint.id}>
-                        {sprint.name}
-                      </option>
-                    ))}
-                  </Field>
-                  <ErrorMessage
-                    name="sprint"
-                    component="div"
-                    className="mt-1 text-red-500"
-                  />
-                </div>
+              </div>
+              <div>
+                <label htmlFor="EstimatedCost">Estimated Cost:</label>
+                <Field
+                  as="input"
+                  name="EstimatedCost"
+                  className="h-fit w-40 rounded-lg px-2 py-1 hover:bg-gray-200 focus:outline-none"
+                ></Field>
               </div>
             </div>
 

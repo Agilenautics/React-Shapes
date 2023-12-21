@@ -113,6 +113,7 @@ function Editing({
   const linkNodeId = fileStore((state) => state.linkNodeId);
   const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
   const fileId = fileStore((state) => state.Id);
+
   const addLinkMethod = async (key: string) => {
     //id of the current node
     const id = linkNodes.nodes[key].id;
@@ -307,20 +308,29 @@ function Editing({
                     <div className="h-32 overflow-y-scroll">
                       {
                         // ? Loop to generate tiles for the nodes
-                        Object.keys(linkNodes.nodes).map((key, _) => (
-                          <button
-                            key={key}
-                            id={key}
-                            type="button"
-                            onClick={(e) => addLinkMethod(key)}
-                            className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
+                        Object.keys(linkNodes.nodes).map((key, _) => {
+                          const flag = "message" in linkNodes.nodes[key];
+                          return (
+                            <>
+                              {flag ? (
+                                <div className="flex p-1 justify-center items-center h-full text-red-500 ">{linkNodes.nodes[key].message}</div>
+                              ) : (
+                                <button
+                                  key={key}
+                                  id={key}
+                                  type="button"
+                                  onClick={(e) => addLinkMethod(key)}
+                                  className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600
                                dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-gray-500"
-                          >
-                            {linkNodes.nodes[key].data.label}
-                          </button>
-                        ))
+                                >
+                                  {linkNodes.nodes[key].data.label}
+                                </button>
+                              )}
+                            </>
+                          );
+                        })
                       }
                     </div>
                   ) : (

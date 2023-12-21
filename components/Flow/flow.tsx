@@ -40,7 +40,7 @@ import { FetchResult } from "@apollo/client";
 const defaultEdgeOptions = {
   type: "customEdge",
   data: {
-    label: "New Edge",
+    label: "",
     pathCSS: "!stroke-node-green-200 fill-node-green-200",
     boxCSS: "border-node-green-100 bg-node-green-50 text-node-green-200",
     bidirectional: false,
@@ -161,7 +161,10 @@ function Flow() {
         focusedElement instanceof HTMLInputElement ||
         focusedElement instanceof HTMLTextAreaElement;
 
-      if (!isTextFieldFocused && event.key === "Backspace") {
+      if (
+        !isTextFieldFocused &&
+        (event.key === "Backspace" || event.key === "Delete")
+      ) {
         const selectedNodes = getNodes().filter((node) => node.selected);
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
@@ -192,6 +195,16 @@ function Flow() {
           setShowConfirmation(defaultShowConfirmation);
         }
       }
+      // if (event.key === "Delete") {
+      //   const selectedEdges = getEdges().filter((edge) => edge.selected);
+      //   if (selectedEdges.length > 0) {
+      //     setShowConfirmation({
+      //       type: "edge" || "node",
+      //       show: true,
+      //       selectedItems: selectedEdges,
+      //     });
+      //   }
+      // }
     };
 
     document.addEventListener("keydown", handleBackspace);

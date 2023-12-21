@@ -44,7 +44,7 @@ function TopBar({ toggleSideBar, flag }: Flag) {
         </button>
         <span
           className=" text-2xl font-bold text-gray-400"
-          data-testId="test-TextElement"
+          data-test-id="test-TextElement"
         >
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>

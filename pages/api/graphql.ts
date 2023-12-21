@@ -22,7 +22,6 @@ const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
 const apolloServer = new ApolloServer({
   schema: await neoSchema.getSchema(),
   formatError: (error) => {
-    console.log(error instanceof ApolloError)
     return errorHandling(error);
   },
   introspection: true,

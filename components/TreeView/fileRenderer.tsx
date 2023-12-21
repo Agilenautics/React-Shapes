@@ -1,10 +1,11 @@
 import AutoSize from "react-virtualized-auto-sizer";
 import { Tree, TreeApi } from "react-arborist";
-import {  TreeNode, TreeNode2 } from "./treeNode";
-import { useBackend } from "./backend";
+import {  TreeNode } from "./treeNode";
+import useBackend from "./backend";
 import LoadingIcon from "../LoadingIcon";
 import React, { useState, useEffect } from "react";
 import fileStore from "./fileStore";
+import LinkTreeNode from "./LinkTreeNode";
 
 
 export function FileTree() {
@@ -94,7 +95,7 @@ export function LinkTree() {
           width={props.width}
           height={props.height}
         >
-          {TreeNode2}
+          {LinkTreeNode}
         </Tree>
       )}
     </AutoSize>

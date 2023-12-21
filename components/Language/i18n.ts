@@ -12,7 +12,9 @@ interface Translations {
 }
 
 interface UseTranslationOptions {
-  [locale: string]: Translations;
+  [locale: string]: {
+    translation: Record<string, any>;
+  };
 }
 
 // Function to dynamically import locales
