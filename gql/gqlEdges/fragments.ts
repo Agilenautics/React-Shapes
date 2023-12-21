@@ -14,12 +14,14 @@ export const Edge_Fragment = gql`
     }
 
     flowNodeConnection {
-      totalCount
       edges {
-        cursor
         handle
+        isLeft
         node {
-          id
+          label
+          hasFile {
+            id
+          }
         }
       }
     }

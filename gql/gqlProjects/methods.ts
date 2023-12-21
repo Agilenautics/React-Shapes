@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { GET_USER } from "./queries";
-import { Project } from "../..//lib/appInterfaces";
+import { Project, User } from "../..//lib/appInterfaces";
 const getUserByEmail = async (
   email: String,
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -349,7 +349,7 @@ const clearRecycleBin = async (
           query,
           variables: {
             where: {
-              emailId:email,
+              emailId: email,
             },
           },
           data: {
@@ -407,38 +407,38 @@ const addProject_Backend = async (
           },
         ],
       },
-        update: (
-          cache,
-          {
-            data: {
-              createProjects: { projects },
+      update: (
+        cache,
+        {
+          data: {
+            createProjects: { projects },
+          },
+        }
+      ) => {
+        // @ts-ignore
+        const { users } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
             },
-          }
-        ) => {
-          // @ts-ignore
-          const { users } = cache.readQuery({
-            query,
-            variables: {
-              where: {
-                emailId: email,
-              },
+          },
+        });
+        const { hasProjects, ...user } = users[0];
+        const updated_projects = [...projects, ...hasProjects];
+        const updated_user = { ...user, hasProjects: updated_projects };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
             },
-          });
-          const { hasProjects, ...user } = users[0];
-          const updated_projects = [...projects, ...hasProjects];
-          const updated_user = { ...user, hasProjects: updated_projects };
-          cache.writeQuery({
-            query,
-            variables: {
-              where: {
-                emailId: email,
-              },
-            },
-            data: {
-              users: [updated_user],
-            },
-          });
-        },
+          },
+          data: {
+            users: [updated_user],
+          },
+        });
+      },
     })
     .then((response) => {
       addProject(response.data.createProjects.projects[0]);

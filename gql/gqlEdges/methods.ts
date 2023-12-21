@@ -105,19 +105,19 @@ const updateEdgeBackend = async (
   cahchQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   selectedFileId: string
 ) => {
-  const { data } = edgeData;
+  const { data,id } = edgeData;
   try {
     return await client.mutate({
       mutation: mutation,
       variables: {
         where: {
-          id: edgeData.id,
+          id
         },
         update: {
-          label: edgeData.data.label,
-          bidirectional: edgeData.data.bidirectional,
-          boxCSS: edgeData.data.boxCSS,
-          pathCSS: edgeData.data.pathCSS,
+          label:data.label,
+          bidirectional: data.bidirectional,
+          boxCSS: data.boxCSS,
+          pathCSS:data.pathCSS,
         },
       },
 
@@ -126,9 +126,7 @@ const updateEdgeBackend = async (
           query: cahchQuery,
           variables: {
             where: {
-              hasFile: {
-                id: selectedFileId,
-              },
+             id:selectedFileId
             },
           },
         },

@@ -51,10 +51,7 @@ export default function AddBacklogs({
   );
   const updateSprints = sprintStore((state) => state.updateSprints);
   const sprints = sprintStore((state) => state.sprints);
-
-  const updateNode = nodeStore((state) => state.updateNodes);
   const router = useRouter();
-
   const projectId = router.query.projectId as string;
   
 

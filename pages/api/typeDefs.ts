@@ -138,7 +138,7 @@ const typeDefs = gql`
     hasFile: File @relationship(type: "HAS_FLOWNODES", direction: OUT)
 
     isLinked: FlowNode
-      @relationship(type: "HAS_LINKED", properties: "LINKED", direction: OUT)
+      @relationship(type: "HAS_LINKED", properties: "LINKED", direction: OUT,queryDirection: DEFAULT_DIRECTED)
   }
 
   interface LINKED @relationshipProperties {
@@ -159,11 +159,11 @@ const typeDefs = gql`
     # )
     id: ID! @id
     timeStamp: DateTime! @timestamp
-    selected: Boolean!
+    selected: Boolean
     label: String
-    pathCSS: String!
-    boxCSS: String!
-    bidirectional: Boolean!
+    pathCSS: String
+    boxCSS: String
+    bidirectional: Boolean
     # * Connections below
     createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     flowNode: [FlowNode!]!
@@ -176,7 +176,7 @@ const typeDefs = gql`
   }
   interface NODE_CONNECTED @relationshipProperties {
     isLeft: Boolean
-    handle: String!
+    handle: String
   }
 
   type Info {

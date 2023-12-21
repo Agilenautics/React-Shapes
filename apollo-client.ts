@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
 import fetch from "cross-fetch";
+import { getCookie } from "./components/Authentication/helpers";
 const API_URL = process.env.BASE_URL
 
 
