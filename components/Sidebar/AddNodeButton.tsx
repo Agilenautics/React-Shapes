@@ -75,7 +75,13 @@ function AddNodeButton() {
       uid,
     };
     try {
-      await createNode(newNode, updateNode, data, addRow);
+      const createBpmnResponse = await createNode(
+        newNode,
+        updateNode,
+        data,
+        addRow
+      );
+      addNode(createBpmnResponse?.data.createFlowNodes.flowNodes);
       const updateUidResponse = updateUidMethode(
         idofUid,
         updateUidMutation
@@ -83,9 +89,6 @@ function AddNodeButton() {
       if (!updateUidResponse?.errors && !updateUidResponse?.data) {
         return null;
       }
-      //       else{return <div>Error</div>}
-      //      console.log("Update Uid Response : ", JSON.stringify({...updateUidResponse}))
-      // updateUid(updateUidResponse.data.updateUids.uids)
     } catch (err) {
       console.log(err, "while creating bpmn symbole");
     } finally {
