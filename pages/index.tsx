@@ -14,7 +14,7 @@ const DynamicHeader: ComponentType<LayoutProps> = dynamic(() => import('../compo
 const Home: NextPage = () => {
   return (
     <>
-      <DynamicHeader />
+     
     </>
   );
 };
