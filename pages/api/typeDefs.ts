@@ -137,8 +137,8 @@ const typeDefs = gql`
     # uidHas: Uid @relationship(type: "HAS_UID", direction: OUT)
     hasFile: File @relationship(type: "HAS_FLOWNODES", direction: OUT)
 
-    isLinked: FlowNode
-      @relationship(type: "HAS_LINKED", properties: "LINKED", direction: OUT,queryDirection: DEFAULT_DIRECTED)
+    isLinked: [FlowNode!]!
+      @relationship(type: "HAS_LINKED", properties: "LINKED", direction: OUT )
   }
 
   interface LINKED @relationshipProperties {
