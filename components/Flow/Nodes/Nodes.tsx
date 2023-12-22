@@ -5,9 +5,7 @@ import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
 import fileStore from "../../TreeView/fileStore";
 import edgeStore from "../Edges/edgeStore";
-import { BiArrowToRight, BiArrowBack } from "react-icons/bi";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-import { useRouter } from "next/router";
 import getNodeAndEdges from "../middleWares/getNodesAndEdges";
 
 /* This is the custom node component that is used */

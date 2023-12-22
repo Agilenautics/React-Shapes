@@ -7,6 +7,7 @@ import {
 import client from "../../apollo-client";
 import { GET_USER } from "./queries";
 import { Project, User } from "../..//lib/appInterfaces";
+import { Project_Fragment } from "./fragments";
 const getUserByEmail = async (
   email: String,
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>

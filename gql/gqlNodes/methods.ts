@@ -438,52 +438,7 @@ const updateNodeData = async (
           },
         },
       },
-      // update: (cache, { data: { updateNodeData } }) => {
-      //   const { flowcharts } = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //   });
-      //   const { hasNodes, ...flowchartData } = flowcharts[0];
-      //   const getNode = hasNodes.find((node: Node) => node.id === nodeData.id);
-      //   const { hasdataNodedata } = getNode;
-      //   const { hasLinkedBy } = hasdataNodedata;
-      //   const { hasLinkedTo, ...hasNodeData } = updateNodeData.nodeData[0];
-      //   const updatedHasNodeData = { ...hasNodeData, hasLinkedBy, hasLinkedTo };
-
-      //   const updatedNode = hasNodes.map((node: Node) => {
-      //     if (node.id === nodeData.id) {
-      //       return {
-      //         ...node,
-      //         hasdataNodedata: {
-      //           ...updatedHasNodeData,
-      //         },
-      //       };
-      //     }
-      //     return {
-      //       ...node,
-      //     };
-      //   });
-      //   const updatedFlowChart = { ...flowchartData, hasNodes: updatedNode };
-      //   cache.writeQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         hasFile: {
-      //           id: fileId,
-      //         },
-      //       },
-      //     },
-      //     data: {
-      //       flowcharts: [updatedFlowChart],
-      //     },
-      //   });
-      // },
+      
     });
   } catch (error) {
     console.log(error, "updating node data");
