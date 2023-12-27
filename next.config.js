@@ -30,10 +30,10 @@ module.exports = {
     //data base instance
     USER_NAME: 'neo4j',
     GRAPHQL_API_KEY: "user:fp.bf3c20e1-856e-4104-bae4-3095c7bb791d:pexWqkFMreZeDucahp4RFw",
-    DB_URL: "neo4j+s://8416c941.databases.neo4j.io",
-    DB_PASSWORD: "cY6q4ZLzKF0IFA-6_pLI-9UYib4cv2Ahbv7b4Mx6Dnk",
+    DB_URL: "neo4j+s://df53dad9.databases.neo4j.io",
+    DB_PASSWORD: "PxWzvlOWBvDHaqDwnpk1S_3YEX-Ut1uwbaJI-j7gY4U",
     BASE_URL: "http://localhost:3000/api/graphql",
-    API_URL: "https://react-flow-agile-livid.vercel.app/api/graphql"
+    API_URL: "https://react-flow-agile-omega.vercel.app/api/graphql"
   },
   webpack: (config) => {
     config.experiments = { topLevelAwait: true, layers: true }
