@@ -88,7 +88,7 @@ export default async function handler(
 ) {
   await startServer;
   //logger info level
-  logger?.info("server started successfully...")
+  // logger?.info("server started successfully...")
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(

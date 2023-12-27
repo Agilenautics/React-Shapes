@@ -30,16 +30,15 @@ export const Node_Fragment = gql`
     isLinked {
       id
       label
+      isLinkedConnection {
+        edges {
+          from
+        }
+      }
       hasFile {
         id
       }
     }
-    isLinkedConnection {
-      edges {
-        isLeft
-      }
-    }
-
     hasInfo {
       ...InfoFragment
     }

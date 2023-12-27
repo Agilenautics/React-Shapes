@@ -7,6 +7,7 @@ import client from "../../apollo-client";
 import { Edge } from "reactflow";
 import { createEdgeMutation, deleteEdgeMutation } from "./mutations";
 import getEdgesMiddleWare from "../../components/Flow/middleWares/getEdgesMiddleware";
+import { gql } from "apollo-server-core";
 //import { allEdges } from "./queries";
 
 async function getEdges(
@@ -41,7 +42,9 @@ async function getEdges(
 const createFlowEdge = async (
   newEdge: any,
   email: string,
-  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  cacheQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  fileId: string
 ) => {
   try {
     return await client.mutate({
@@ -90,6 +93,27 @@ const createFlowEdge = async (
           },
         ],
       },
+      // update: (
+      //   cache,
+      //   {
+      //     data: {
+      //       createFlowEdges: { flowEdges },
+      //     },
+      //   }
+      // ) => {
+      //   const cacheId = cache.identify(flowEdges[0]);
+      //   console.log(cacheId);
+      // },
+      refetchQueries: [
+        {
+          query: cacheQuery,
+          variables: {
+            where: {
+              id: fileId,
+            },
+          },
+        },
+      ],
     });
   } catch (error) {
     console.log(error);
@@ -105,32 +129,51 @@ const updateEdgeBackend = async (
   cahchQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   selectedFileId: string
 ) => {
-  const { data,id } = edgeData;
+  const { data, id } = edgeData;
   try {
     return await client.mutate({
       mutation: mutation,
       variables: {
         where: {
-          id
+          id,
         },
         update: {
-          label:data.label,
+          label: data.label,
           bidirectional: data.bidirectional,
           boxCSS: data.boxCSS,
-          pathCSS:data.pathCSS,
+          pathCSS: data.pathCSS,
         },
       },
+      // update: (
+      //   cache,
+      //   {
+      //     data: {
+      //       updateFlowEdges: { flowEdges },
+      //     },
+      //   }
+      // ) => {
+      //   const updatedFlowedgeData = flowEdges[0];
+      //   cache.modify({
+      //     id: cache.identify(flowEdges[0]),
+      //     fields: {
+      //       label: () => updatedFlowedgeData.label,
+      //       bidirectional: () => updatedFlowedgeData.bidirectional,
+      //       boxCSS: () => updatedFlowedgeData.boxCSS,
+      //       pathCSS: () => updatedFlowedgeData.pathCSS,
+      //     },
+      //   });
+      // },
 
-      refetchQueries: [
-        {
-          query: cahchQuery,
-          variables: {
-            where: {
-             id:selectedFileId
-            },
-          },
-        },
-      ],
+      // refetchQueries: [
+      //   {
+      //     query: cahchQuery,
+      //     variables: {
+      //       where: {
+      //         id: selectedFileId,
+      //       },
+      //     },
+      //   },
+      // ],
     });
   } catch (error) {
     console.log(error, "while updating edge");
@@ -150,9 +193,24 @@ const deleteEdgeBackend = async (
     mutation,
     variables: {
       where: {
-        id: edgeId,
+        id: '',
       },
     },
+    // update: (cache, { data }) => {
+    //   console.log(cache.identify())
+    
+    // },
+    
+     refetchQueries:[
+      {
+        query:cacheQuery,
+        variables:{
+          where:{
+            id:cacheQueryId
+          }
+        }
+      }
+     ]
   });
 
   //await client.resetStore()

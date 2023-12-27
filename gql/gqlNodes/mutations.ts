@@ -23,19 +23,21 @@ export const delNodeMutation = gql`
   }
 `;
 export const linkNodeToAnotherNodeMutation = gql`
- mutation UpdateFlowNodes($where: FlowNodeWhere, $connect: FlowNodeConnectInput) {
-  updateFlowNodes(where: $where, connect: $connect) {
-    flowNodes {
-      id
-      label
-      isLinked {
+  mutation UpdateFlowNodes(
+    $where: FlowNodeWhere
+    $connect: FlowNodeConnectInput
+  ) {
+    updateFlowNodes(where: $where, connect: $connect) {
+      flowNodes {
         id
         label
+        isLinked {
+          id
+          label
+        }
       }
     }
-    
   }
-}
 `;
 // export const updateLinkedBy = gql`
 //   mutation UpdateLinkedBy($where: LinkedByWhere, $update: LinkedByUpdateInput) {
@@ -86,6 +88,22 @@ export const updatePositionMutation = gql`
         id
         x
         y
+      }
+    }
+  }
+`;
+export const deleteIsLinkedNodeMutation = gql`
+  mutation UpdateFlowNodes(
+    $where: FlowNodeWhere
+    $disconnect: FlowNodeDisconnectInput
+  ) {
+    updateFlowNodes(where: $where, disconnect: $disconnect) {
+      flowNodes {
+        id
+        label
+        isLinked {
+          label
+        }
       }
     }
   }

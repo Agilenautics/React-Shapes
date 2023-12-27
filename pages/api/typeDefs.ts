@@ -138,13 +138,16 @@ const typeDefs = gql`
     hasFile: File @relationship(type: "HAS_FLOWNODES", direction: OUT)
 
     isLinked: [FlowNode!]!
-      @relationship(type: "HAS_LINKED", properties: "LINKED", direction: OUT )
+      @relationship(
+        type: "HAS_LINKED"
+        properties: "LINKED"
+        direction: OUT
+        queryDirection: DEFAULT_UNDIRECTED
+      )
   }
 
   interface LINKED @relationshipProperties {
-    label: String
-    flag: Boolean
-    isLeft: Boolean!
+    from: String!
   }
 
   type FlowEdge {
@@ -175,7 +178,6 @@ const typeDefs = gql`
     # surafel suggested to remove has file connection
   }
   interface NODE_CONNECTED @relationshipProperties {
-    isLeft: Boolean
     handle: String
   }
 

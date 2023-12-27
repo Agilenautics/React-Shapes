@@ -111,9 +111,7 @@ function Editing({
   const updateArrows = edgeStore((state) => state.updateArrows);
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
-  // const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
-  const linkNodeId = fileStore((state) => state.linkNodeId);
-  // const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
+  const Id = fileStore((state)=>state.Id)
   const addLinkMethod = async (
     currentNodeId: string,
     anotherNodeId: string
@@ -121,33 +119,10 @@ function Editing({
     await linkNodeAnotherNodeMethod(
       currentNodeId,
       linkNodeToAnotherNodeMutation,
-      anotherNodeId
+      anotherNodeId,
+      allNodes,
+      Id
     );
-    //id of the current node
-
-    // finding the node to collect the label of the node
-    //let nodeData = await findNode(getNode, linkNodeId);
-
-    // getting the current file data
-    //const { data } = await getFileByNode(linkNodeId, getFile);
-
-    // updateLinkedTo(linkNodeId, {
-    //   label: linkNodes.nodes[key].data.label,
-    //   flag: true,
-    //   id,
-    //   fileId: linkNodes.fileID,
-    // });
-
-    // updateLinkedBy(
-    //   id,
-    //   {
-    //     label: nodeData[0].data.label,
-    //     id: linkNodeId,
-    //     fileId: data.files[0].id,
-    //     flag: true,
-    //   },
-    //   getFile
-    // );
     setEditing(false);
   };
 

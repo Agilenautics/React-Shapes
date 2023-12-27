@@ -16,12 +16,8 @@ export const Edge_Fragment = gql`
     flowNodeConnection {
       edges {
         handle
-        isLeft
         node {
-          label
-          hasFile {
-            id
-          }
+          id
         }
       }
     }
