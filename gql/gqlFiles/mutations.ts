@@ -82,30 +82,44 @@ export const updateFoldersMutation = gql`
     }
   }
 `;
-export const connectToFolderOnMove = gql`
-  mutation Mutation($where: FolderWhere, $connect: FolderConnectInput) {
-    updateFolders(where: $where, connect: $connect) {
-      folders {
-        name
-        hasFile {
-          name
-        }
-      }
-    }
+// export const connectToFolderOnMove = gql`
+//   mutation Mutation($where: FolderWhere, $connect: FolderConnectInput) {
+//     updateFolders(where: $where, connect: $connect) {
+//       folders {
+//         name
+//         hasFile {
+//           name
+//         }
+//       }
+//     }
+//   }
+// `;
+// export const disconnectFromFolderOnMove = gql`
+//   mutation Mutation($where: FolderWhere, $disconnect: FolderDisconnectInput) {
+//     updateFolders(where: $where, disconnect: $disconnect) {
+//       folders {
+//         name
+//         hasFile {
+//           name
+//         }
+//       }
+//     }
+//   }
+// `;
+export const moveFileMutation = gql`
+mutation Mutation($where: FileWhere, $disconnect: FileDisconnectInput, $connect: FileConnectInput) {
+  updateFiles(where: $where, disconnect: $disconnect, connect: $connect) {
+   files {
+     name
+     folderHas {
+       name
+           }
+     projectHas {
+       name
+     }
+   } 
   }
-`;
-export const disconnectFromFolderOnMove = gql`
-  mutation Mutation($where: FolderWhere, $disconnect: FolderDisconnectInput) {
-    updateFolders(where: $where, disconnect: $disconnect) {
-      folders {
-        name
-        hasFile {
-          name
-        }
-      }
-    }
-  }
-`;
+}`
 export const updateFilesMutation = gql`
   mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {

@@ -2,8 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
 import {
-  connectToFolderBackendOnMove,
-  disconnectFromFolderBackendOnMove,
+  moveFileBackend,
   updateFileBackend,
   updateFolderBackend,
   deleteFileBackend,
@@ -85,9 +84,9 @@ const useBackend = () => {
         if (!src || !dstParent) return;
         const newItem = new TreeModel().parse(src.model);
         dstParent.addChildAtIndex(newItem, dstIndex);
-        // console.log("fileid", srcId, "folderid", dstParentId, "index", dstIndex);
-        disconnectFromFolderBackendOnMove(srcId);
-        connectToFolderBackendOnMove(dstParentId, srcId);
+        console.log("fileid", srcId, "folderid", dstParentId, "index", dstIndex);
+       
+        moveFileBackend(dstParentId, srcId);
         src.drop();
       }
       update();

@@ -3,7 +3,7 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import { connectToFolderOnMove, disconnectFromFolderOnMove } from "./mutations";
+import { moveFileMutation } from "./mutations";
 import { Project, transformObject } from "./interfaces";
 import client from "../../apollo-client";
 import { File, Folder } from "../../lib/appInterfaces";
@@ -275,50 +275,107 @@ async function deleteFileBackend(
     console.error("Error deleting the file", error);
   }
 }
-const connectToFolderBackendOnMove = async (folderId: any, fileId: string) => {
+// const connectToFolderBackendOnMove = async (folderId: any, fileId: string) => {
+//   await client.mutate({
+//     mutation: connectToFolderOnMove,
+//     variables: {
+//       where: {
+//         id: folderId,
+//       },
+//       connect: {
+//         hasFile: [
+//           {
+//             where: {
+//               node: {
+//                 id: fileId,
+//               },
+//             },
+//           },
+//         ],
+//       },
+//     },
+//   });
+// };
+// const disconnectFromFolderBackendOnMove = async (fileId: string) => {
+//   await client.mutate({
+//     mutation: disconnectFromFolderOnMove,
+//     variables: {
+//       where: {
+//         hasFile_SINGLE: {
+//           id: fileId,
+//         },
+//       },
+//       disconnect: {
+//         hasFile: [
+//           {
+//             where: {
+//               node: {
+//                 id: fileId,
+//               },
+//             },
+//           },
+//         ],
+//       },
+//     },
+//   });
+// };
+const moveFileBackend = async (targetId:any,fileId:string)=> {
   await client.mutate({
-    mutation: connectToFolderOnMove,
-    variables: {
-      where: {
-        id: folderId,
-      },
-      connect: {
-        hasFile: [
-          {
-            where: {
-              node: {
-                id: fileId,
-              },
-            },
-          },
-        ],
-      },
-    },
-  });
-};
-const disconnectFromFolderBackendOnMove = async (fileId: string) => {
-  await client.mutate({
-    mutation: disconnectFromFolderOnMove,
-    variables: {
-      where: {
-        hasFile_SINGLE: {
-          id: fileId,
+    mutation:moveFileMutation,
+    variables:{
+      
+        "where": {
+          "id": fileId
         },
-      },
-      disconnect: {
-        hasFile: [
-          {
-            where: {
-              node: {
-                id: fileId,
-              },
-            },
+        "disconnect": {
+          "folderHas": {
+            "disconnect": {
+              "hasFile": [
+                {
+                  "where": {
+                    "node": {
+                      "id": fileId
+                    }
+                  }
+                }
+              ]
+            }
           },
-        ],
-      },
-    },
-  });
-};
+          "projectHas": {
+            "disconnect": {
+              "hasContainsFile": [
+                {
+                  "where": {
+                    "node": {
+                      "id": fileId
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "connect": {
+          "folderHas": {
+            "where": {
+              "node": {
+                "id": targetId
+              }
+            }
+          },
+          "projectHas": {
+            "where": {
+              "node": {
+                "id":targetId
+              }
+            }
+          }
+        }
+      }
+      
+      });
+      await client.clearStore();
+}
 const updateFileBackend = async (
   fileData: any,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -473,8 +530,7 @@ const updateStoryMethod = async (
 export {
   deleteFileBackend,
   updateFileBackend,
-  disconnectFromFolderBackendOnMove,
-  connectToFolderBackendOnMove,
+  moveFileBackend,
   getFileByNode,
   getTreeNodeByUser,
   updateStoryMethod,

@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import fetch from "cross-fetch";
-const API_URL = process.env.API_URL
+const API_URL = process.env.BASE_URL
 const link = createHttpLink({
   uri: API_URL,
   fetch,
