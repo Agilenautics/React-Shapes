@@ -438,7 +438,6 @@ const updateNodeData = async (
           },
         },
       },
-      
     });
   } catch (error) {
     console.log(error, "updating node data");
@@ -524,7 +523,9 @@ const updateTaskMethod = async (
 const linkNodeAnotherNodeMethod = async (
   id: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  anotherNodId:string
+  anotherNodId: string,
+  cacheQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  fileId: string
 ) => {
   try {
     return await client.mutate({
@@ -536,7 +537,7 @@ const linkNodeAnotherNodeMethod = async (
         connect: {
           isLinked: {
             edge: {
-              isLeft: false,
+              from: id,
             },
             where: {
               node: {
@@ -546,11 +547,112 @@ const linkNodeAnotherNodeMethod = async (
           },
         },
       },
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        cache.updateQuery(
+          {
+            query: cacheQuery,
+            variables: {
+              where: {
+                id: fileId,
+              },
+            },
+          },
+          ({ files }) => {
+            const { hasNodes, ...fileData } = files[0];
+            const getNode = hasNodes.find((node: Node) => node.id === id);
+            console.log(getNode)
+            if (
+              getNode.isLinked.some((value: Node) => value.id === anotherNodId)
+            ) {
+              return {
+                files
+              };
+            }
+            // const updatedLinkNode = [...getNode.isLinked,...flowNodes];
+            // console.log(updatedLinkNode,getNode)
+          }
+        );
+        // const getId: string | undefined = cache.identify(flowNodes[0]);
+        // cache.modify({
+        //   id: getId,
+        //   fields: {
+        //     FlowNode(existingData, { readField }) {
+        //       const existanceNode = existingData.isLinked.some((value: Node) =>
+        //         readField("id", value)
+        //       );
+        //       if (existanceNode) {
+        //         return existingData;
+        //       }
+
+        //       return [...existingData.isLinked, ...flowNodes];
+        //     },
+        //   },
+        // });
+        // console.log('Modified Data:', modifiedData); // Add this line
+      },
     });
   } catch (error) {
-    console.log("while linking a node",error)
+    console.log("while linking a node", error);
   }
 };
+
+const deleteLinkedNodeMethod = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  nodeId: string
+) => {
+  try {
+    await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id,
+        },
+        disconnect: {
+          isLinked: [
+            {
+              where: {
+                node: {
+                  id: nodeId,
+                },
+              },
+            },
+          ],
+        },
+      },
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        const cacheId: string | undefined = cache.identify(flowNodes[0]);
+        cache.modify({
+          id: cacheId,
+          fields: {
+            FlowNode: (existanceData, { readField }) => {
+              return existanceData.isLinked.filter(
+                (values: any) => nodeId !== readField("id", values)
+              );
+            },
+          },
+        });
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   createNode,
   getNodes,
@@ -561,5 +663,6 @@ export {
   //updateLinkedByMethod,
   updateNodeData,
   updateTaskMethod,
-  linkNodeAnotherNodeMethod
+  linkNodeAnotherNodeMethod,
+  deleteLinkedNodeMethod,
 };

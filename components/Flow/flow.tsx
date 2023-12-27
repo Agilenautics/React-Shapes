@@ -156,7 +156,7 @@ function Flow() {
       const edgeResponse = await createFlowEdge(
         newEdge,
         userEmail,
-        createEdgeMutation
+        createEdgeMutation,allNodes,fileId
       );
       // console.log(userEmail);
       addNewEdge(edgeResponse?.data.createFlowEdges.flowEdges)

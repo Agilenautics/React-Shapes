@@ -7,6 +7,12 @@ import fileStore from "../../TreeView/fileStore";
 import edgeStore from "../Edges/edgeStore";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import getNodeAndEdges from "../middleWares/getNodesAndEdges";
+import { BiArrowToRight } from "react-icons/bi";
+import { RxCross2 } from "react-icons/rx";
+import {
+  deleteIsLinkedNodeMutation,
+  deleteLinkedNodeMethod,
+} from "../../../gql";
 
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
@@ -24,7 +30,10 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const findFile = fileStore((state) => state.find_file);
   const updateDescription = nodeStore((state) => state.updateDescription);
   const updateBreadCrumbs = nodeStore((state) => state.updateBreadCrumbs);
-  const {updateEdges} = edgeStore();
+  const { updateEdges } = edgeStore();
+  const { deleteLinkeNode } = nodeStore();
+
+  const [isLinkFlag, setIsLinkFlag] = useState<Boolean>(false);
 
   const label = data.label;
   const shapeCSS = nodeShapeMap[data.shape];
@@ -42,25 +51,13 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     updateBreadCrumbs(x, x.id, "push");
   };
 
-  // const linkedBy = () => {
-  //   const x = findFile(data.hasLinkedBy.fileId);
-  //   // @ts-ignore
-  //   const nodes = x.hasNodes;
-  //   const nodeData = JSON.stringify(nodes)
-  //     .replaceAll('"hasdataNodedata":', '"data":')
-  //     .replaceAll('"haspositionPosition":', '"position":');
-  //   // @ts-ignore
-  //   const edges = x.hasEdges;
-  //   const edgeData = JSON.stringify(edges).replaceAll(
-  //     '"hasedgedataEdgedata":',
-  //     '"data":'
-  //   );
-  //   if (x.children == null) {
-  //     updateEdges(JSON.parse(edgeData));
-  //     updateNodes(JSON.parse(nodeData));
-  //   }
-  //   updateBreadCrumbs(x, x.id, "new");
-  // };
+  const delete_link_node = async (id: string, nodeId: string) => {
+    await deleteLinkedNodeMethod(id, deleteIsLinkedNodeMutation, nodeId);
+    deleteLinkeNode(id, nodeId);
+    setIsLinkFlag(false);
+  };
+
+  
 
   return (
     <div>
@@ -117,57 +114,75 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                   updateDescription={updateDescription}
                   bidirectionalArrows={false}
                 />
-                {/* {data.isLinkedConnection.edges.flag ? (
-                  <div
-                    className="flex h-auto h-auto cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-                    onClick={linkedTo}
-                  >
-                    <div className="h-auto text-xs ">
-                      {" "}
-                      {data.hasLinkedTo.label}{" "}
-                    </div>
-                    <div>
-                      <BiArrowToRight className="h-4 w-4" />{" "}
-                    </div>
-                  </div>
-                ) : null} */}
               </div>
             ) : (
-              <div>
-                <p className="py-1 text-center text-[0.6rem]">{label}</p>
-                {
-                // data ? (
-                //   <div
-                //     className="absolute left-36 top-12 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-                //     onClick={() => linkedTo(data.isLinked.hasFile.id)}
-                //   >
-                //     <div className="text-xs"> {data.isLinked.label} </div>
-                //     <div>
-                //       <BiArrowToRight className="h-4 w-4" />
-                //     </div>
-                //   </div>
-                // ) : (
-                //   <div
-                //     className="absolute right-24 top-16 flex min-w-max cursor-pointer rounded border bg-white p-1 text-xs text-gray-800 hover:bg-slate-100 dark:text-black "
-                //     // onClick={linkedBy}
-                //   >
-                //     <div className="text-xs"> llll </div>
-                //     <div>
-                //       <BiArrowBack className="h-4 w-4" />
-                //     </div>
-                //   </div>
-                // )
-                }
-              </div>
+              <p className="py-1 text-center text-[0.6rem]">{label}</p>
             )}
           </div>
         </div>
       </div>
       {/* <Tags /> */}
       {/* <Progress progress={11} /> */}
+      {data.isLinked && data.isLinked.length !== 0 && (
+        <div className="flex justify-end">
+          <div className="w-auto rounded border px-1  text-[0.5rem]">
+            <span
+              className="cursor-pointer"
+              onClick={() => setIsLinkFlag(!isLinkFlag)}
+            >
+              Links <BiArrowToRight className="inline" />
+            </span>
+            {isLinkFlag && (
+              <>
+                {data.isLinked.map((value: any) => {
+                  const {
+                    label,
+                    id: nodeId,
+                    hasFile: { id: fileId },
+                  } = value;
+                  return (
+                    <div
+                      key={nodeId}
+                      className="flex cursor-pointer justify-between gap-1"
+                    >
+                      <div
+                        className="hover:underline"
+                        onClick={() => linkedTo(fileId)}
+                      >
+                        {label}
+                      </div>
+                      <div
+                        className="flex cursor-pointer items-center justify-center"
+                        onClick={() => delete_link_node(id, nodeId)}
+                      >
+                        <RxCross2 />
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+const getHandlePositionStyle = (position:Position,staticWidth:number) => {
+  switch (position) {
+    case Position.Top:
+      return { top: "-5px", left: "50%", transform: "translateX(-50%)" };
+    case Position.Right:
+      return { right: "-5px", top: "50%", transform: "translateY(-50%)" };
+    case Position.Bottom:
+      return { bottom: "-5px", left: "50%", transform: "translateX(-50%)" };
+    case Position.Left:
+      return { left: "-5px", top: "50%", transform: "translateY(-50%)" };
+    default:
+      return {};
+  }
+};
 
 // ! These functions have basically become outdated since you can change
 // ! the CSS directly, so need to phase this out by changing how the nodes

@@ -30,6 +30,7 @@ export interface NodeState {
   updateBreadCrumbs: (breadCrumbs: Object, id: string, action: string) => void;
   updateDescription: (id: string, description: string) => void;
   updateNodePosition: (node: Node) => void;
+  deleteLinkeNode: (id: string, nodeId: string) => void;
   fileId: string;
 }
 
@@ -89,71 +90,16 @@ const nodeStore = create<NodeState>((set) => ({
     }),
   updateNodes: (nodes) =>
     set((state) => {
-      // console.log(state.fileId)
-      // const filteredData = nodes.flatMap((value: any) =>
-      //   value.flowEdge
-      //     .filter((edge: Edge) => edge.label == null)
-      //     .flatMap((edge: any) =>
-      //       edge.flowNodeConnection ? edge.flowNodeConnection.edges : []
-      //     )
-      // );
-      // function swapProperties(obj1:any, obj2:any) {
-      //   // Create new objects with swapped properties
-      //   const newObj1 = { ...obj1, label: obj2.node.label, hasFile: obj2.node.hasFile };
-      //   const newObj2 = { ...obj2, label: obj1.node.label, hasFile: obj1.node.hasFile };
-      
-      //   return [newObj1, newObj2];
-      // }
-      // Usage: Swap properties between the first and second objects in the array
-      // const [newObject1, newObject2] = swapProperties(filteredData[0], filteredData[1]);
-      // // Replace the original objects in the array with the new ones
-      // filteredData[0] = newObject1;
-      // filteredData[1] = newObject2;
-      
-      // // Now the first and second objects in the array have their label and hasFile properties swapped
-
-      // // Now the first and second objects in the array have their label and hasFile properties swapped
-      // console.log(filteredData.filter((value)=>value.hasFile.id!==state.fileId));
-
-      const getEdges = nodes
-        .flatMap((value: any) => value.flowEdge)
-        .filter((edge) => edge.label === null);
-      // const getLinkNodes = getEdges.flatMap(item);
-      // const updated_nodes = state.nodes.map(obj => [node].find(o => o.id === obj.id) || obj); // ? This code is basically magic, but very cool
       const newData = nodes.map((item: any) => {
         const description = item.hasInfo.description;
-        const {
-          x,
-          y,
-          label,
-          shape,
-          isLinked,
-          flowEdge,
-          isLinkedConnection: { edges },
-          ...rest
-        } = item;
-        const getIsleft = edges.reduce(
-          (result: any, item: any, index: number) => {
-            const { __typename, ...itemData } = item;
-            if (Object.keys(itemData).length !== 0) {
-              return {
-                ...result, // Use spread operator to merge the new properties into the accumulator
-                ...itemData,
-              };
-            }
-
-            return result; // Include this statement to accumulate the results
-          },
-          {}
-        );
-
+        const { x, y, label, shape, isLinked, flowEdge, ...rest } = item;
         return {
           ...rest,
           data: {
             label,
             shape,
             description,
-            isLinked: { ...isLinked, isLeft: getIsleft["isLeft"] },
+            isLinked,
           },
           position: { x, y },
         };
@@ -309,6 +255,28 @@ const nodeStore = create<NodeState>((set) => ({
       //@ts-ignore
       const updated_node = { ...old_node, draggable: draggable };
       return { nodes: [...to_be_updated, updated_node] };
+    }),
+  deleteLinkeNode: (id: string, nodeId: string) =>
+    set((state) => {
+      const getNode = state.nodes.find((node: Node) => node.id === id);
+      const removeLinkedNode = getNode.data.isLinked.filter(
+        (node: Node) => node.id !== nodeId
+      );
+      const updatedNodes = state.nodes.map((node) => {
+        if (node.id === id) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              isLinked: removeLinkedNode,
+            },
+          };
+        }
+        return {
+          ...node,
+        };
+      });
+      return { nodes: updatedNodes };
     }),
 }));
 
