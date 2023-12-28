@@ -57,8 +57,6 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     setIsLinkFlag(false);
   };
 
-  
-
   return (
     <div>
       <div
@@ -169,7 +167,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   );
 }
 
-const getHandlePositionStyle = (position:Position,staticWidth:number) => {
+const getHandlePositionStyle = (position: Position, staticWidth: number) => {
   switch (position) {
     case Position.Top:
       return { top: "-5px", left: "50%", transform: "translateX(-50%)" };

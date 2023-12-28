@@ -181,11 +181,7 @@ const useBackend = () => {
         );
         delete_item(id);
       } else {
-        await deleteFileBackend(
-          deleteIds,
-          deleteFilesMutation,
-          getProjectById
-        );
+        await deleteFileBackend(deleteIds, deleteFilesMutation, getProjectById);
         delete_item(id);
       }
     },

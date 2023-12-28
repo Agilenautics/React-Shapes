@@ -91,7 +91,6 @@ const fileStore = create<files>((set) => ({
       const children = root.model?.children;
       //updating the main
       function getUpdatedMain(selectedFolder: Folder) {
-        console.log("iam in child funtion");
         //after getting folder data iam updating children of the main on that particular folder
         const updated_children = children.map((folder: Folder) => {
           if (folder.id === selectedFolder.id) {
@@ -126,7 +125,6 @@ const fileStore = create<files>((set) => ({
       }
 
       function checkingParentisFileOrFolderOrProject(parentFolder: Folder) {
-        console.log("iam in parent function");
         //checkeng passing data type if its folder
         if (parentFolder.type === "folder") {
           //here if its folder iam passing selected folder
