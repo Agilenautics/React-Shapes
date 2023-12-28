@@ -54,14 +54,14 @@ const nodeCSSMap = Object.fromEntries(
 );
 
 const nodeShapeMap:any = {
-  rectangle: ["w-36 h-10", "h-7 rounded-md", ""],
+  rectangle: ["w-36 ", "h-7 rounded-md", ""],
   diamond: [
     "!h-24 w-24",
     "!h-[78%] !w-[69%] rotate-45 translate-x-[10px] translate-y-[9px] rounded-md -rotate-45",
     "-rotate-45",
   ],
   circle: ["h-30 w-30", "!h-20 w-20 rounded-full", "rotate-0"],
-  parallelogram: ["h-30 w-30", "h-30 w-30", "rotate-0 h-14 w-20 flex items-center justify-center"],
+  parallelogram: ["h-30 w-30", "h-30 w-30", "rotate-0  w-20 flex items-center justify-center"],
   screw: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-screw-wrench", "rotate-0"],
   trash: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-trash", "rotate-0"],
   gatewayParallel: ["h-30 w-34", "bpmn-icon-sizing bpmn-icon-gateway-parallel", "rotate-0"],
