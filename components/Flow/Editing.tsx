@@ -1,4 +1,4 @@
-import React, { HTMLInputTypeAttribute, memo, useState } from "react";
+import React, { HTMLInputTypeAttribute, memo, useState,useEffect } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { nodeShapeMap } from "./Nodes/nodeTypes";
 import nodeStore from "./Nodes/nodeStore";
@@ -6,6 +6,7 @@ import edgeStore from "./Edges/edgeStore";
 import { LinkTree } from "../TreeView/fileRenderer";
 import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
+import useStore from "../Sidebar/SidebarContext";
 import {
   getNode,
   findNode,
@@ -113,6 +114,7 @@ function Editing({
   const linkNodeId = fileStore((state) => state.linkNodeId);
   const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
   const fileId = fileStore((state) => state.Id);
+  const { isSideBarOpen, setIsSideBarOpen } = useStore();
 
   const addLinkMethod = async (key: string) => {
     //id of the current node
@@ -166,6 +168,29 @@ function Editing({
     // console.log(e.target.value)
     setEditing(false);
   };
+  useEffect(() => {
+    const unsubscribe = fileStore.subscribe((state) => {
+      if (state.Id !== fileId) {
+        setEditing(false);
+        setIsSideBarOpen(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [fileId, isSideBarOpen]);
+
+  useEffect(() => {
+    const unsubscribe = nodeStore.subscribe((state) => {
+      if (state.fileId !== id) {
+        setEditing(false);
+        setIsSideBarOpen(false);
+      }
+    });
+
+    if (id) {
+      return () => unsubscribe();
+    }
+  }, [id,fileId,isSideBarOpen]);
 
   return (
     <div>

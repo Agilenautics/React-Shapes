@@ -16,6 +16,7 @@ import i18n from "../components/Language/i18n"
 function MyApp({ Component, pageProps }: AppProps) {
   const { updateUserEmail } = userStore();
   const router = useRouter();
+  
 
   useEffect(() => {
     // registerServiceWorker();
@@ -50,7 +51,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <title>Flowchart</title>
           <meta
             name="viewport"
-            content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+            content="width=device-width,initial-scale=0.5,minimum-scale=0.5,maximum-scale=1,user-scalable=yes"
           />
           <link rel="preconnect" href="https://fonts.gstatic.com/" />
         </Head>
@@ -62,6 +63,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </ApolloProvider>
       </div>
     </I18nextProvider>
+    
   );
 }
 

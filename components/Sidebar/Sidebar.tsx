@@ -152,15 +152,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     localStorage.setItem("recentPid", id);
     // update_recentProject(id,recentProject_mutation);
   };
-  // const handleProjectDown = () => {
-  //   if(projectId.length>0){
-  //     setProjectsFlag(true);
-  //   }
-  //   else
-  //   {
-  //     setProjectsFlag(!projectsFlag);
-
-  // }}
+ 
   useEffect(() => {
     if (
       projectId &&
@@ -172,7 +164,6 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     verificationToken();
   }, [allProjects]);
 
-  // }, [projectId, allProjects]);   Irfan
 
   const handleUidUpdates = async () => {
     const uidResponse = (await updateUidMethode(
@@ -200,7 +191,6 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     handleUidUpdates();
   };
 
-  // console.log(router.asPath===`/projects/${projectId}/business-process/edit`)
 
   const handleAddFile = async () => {
     let data = {

@@ -2,8 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import TreeModel from "tree-model-improved";
 import fileStore from "./fileStore";
 import {
-  connectToFolderBackendOnMove,
-  disconnectFromFolderBackendOnMove,
+  moveFileBackend,
   updateFileBackend,
   updateFolderBackend,
   deleteFileBackend,
@@ -67,28 +66,6 @@ const useBackend = () => {
   const root = useMemo(() => new TreeModel().parse(data), [data]);
   const find = useCallback((id: any) => findById(root, id), [root]);
   const update = () => setData({ ...root.model });
-
-  // console.log(data);
-
-  // projectId
-  const router = useRouter();
-  const projectId = (router.query.projectId as string) || "";
-
-  const getProjectId = async (id: string) => {
-    const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
-    const data: MyData | any = initData[0];
-    setData(data);
-    //@ts-ignore
-    // updateInitData(data);
-    return initData;
-  };
-
-  // useEffect(() => {
-  //   if (projectId) {
-  //     getProjectId(projectId);
-  //   }
-  // }, [projectId]);
-
   useEffect(() => {
     setData(initData);
     update;
@@ -107,9 +84,9 @@ const useBackend = () => {
         if (!src || !dstParent) return;
         const newItem = new TreeModel().parse(src.model);
         dstParent.addChildAtIndex(newItem, dstIndex);
-        // console.log("fileid", srcId, "folderid", dstParentId, "index", dstIndex);
-        disconnectFromFolderBackendOnMove(srcId);
-        connectToFolderBackendOnMove(dstParentId, srcId);
+        console.log("fileid", srcId, "folderid", dstParentId, "index", dstIndex);
+       
+        moveFileBackend(dstParentId, srcId);
         src.drop();
       }
       update();
@@ -150,29 +127,17 @@ const useBackend = () => {
 
       // making writable copy
       const updatedData = { ...node?.model, name };
-
       // getting element index
-      const ind = initData.children?.findIndex((element) => element.id == id);
-      let indexForHasContainsFile = initData.hasContainsFile?.findIndex(
-        (element: File) => element.id === id
-      );
-      // console.log(indexForHasContainsFile)
-      // if (indexForHasContainsFile < 0) {
-      //   indexForHasContainsFile = initData.hasContainsFolder.children.findIndex(
-      //     (value: File) => value.id === id
-      //   );
-      //   initData.hasContainsFolder.children[indexForHasContainsFile] = updatedData;
-      // }
-
-      // updating state in real time
-
-      // @ts-ignore
-      initData.children[ind] = updatedData;
-      // initData.hasContainsFile[indexForHasContainsFile] = updatedData
-
+      let ind = initData.children?.findIndex((element) => element.id == id);
+      if (ind !== undefined && ind < 0) {
+        ind = getParent.children?.findIndex((file) => file.id === id);
+        getParent.children[ind] = updatedData;
+      } else {
+        //@ts-ignore
+        initData.children[ind] = updatedData;
+      }
       setData(initData);
       update();
-
       const { type } = node?.model;
       if (type === "folder") {
         await updateFolderBackend(
