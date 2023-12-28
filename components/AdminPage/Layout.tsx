@@ -5,13 +5,14 @@ import TopBar from "./TopBar";
 import { auth } from "../../auth";
 import { useRouter } from "next/router";
 import "react-toastify/dist/ReactToastify.css";
+import useStore from "../Sidebar/SidebarContext";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 function Layout({ children }: any) {
-  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
+  const { isSideBarOpen, setIsSideBarOpen } = useStore();
   const [email, setEmail] = useState("");
 
   const router = useRouter();

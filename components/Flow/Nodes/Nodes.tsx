@@ -117,7 +117,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             }
           }}
         >
-          <div className={shapeCSS[2]}>
+          <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>
             {editing ? (
               <div
                 className={`relative h-auto flex-row text-center ${
