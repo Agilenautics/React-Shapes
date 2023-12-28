@@ -224,6 +224,79 @@ const parmenantDelete = async (
         where: {
           id,
         },
+        delete: {
+          hasContainsFile: [
+            {
+              delete: {
+                hasNodes: [
+                  {
+                    delete: {
+                      flowEdge: [
+                        {
+                          delete: {},
+                        },
+                      ],
+                      hasInfo: {},
+                    },
+                  },
+                ],
+                hasInfo: {},
+              },
+            },
+          ],
+          hasContainsFolder: [
+            {
+              delete: {
+                hasFolder: [
+                  {
+                    delete: {
+                      hasFile: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            hasNodes: [
+                              {
+                                delete: {
+                                  hasInfo: {},
+                                  flowEdge: [
+                                    {
+                                      delete: {},
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                      hasInfo: {},
+                    },
+                  },
+                ],
+                hasFile: [
+                  {
+                    delete: {
+                      hasInfo: {},
+                      hasNodes: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            flowEdge: [
+                              {
+                                delete: {},
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+                hasInfo: {},
+              },
+            },
+          ],
+        },
       },
       update: (cache, { data }) => {
         const existingUser = cache.readQuery({
@@ -269,68 +342,79 @@ const clearRecycleBin = async (
         where: {
           recycleBin: true,
         },
-        // delete: {
-        //   hasContainsFile: [
-        //     {
-        //       delete: {
-        //         hasEdges: [
-        //           {
-        //             delete: {},
-        //           },
-        //         ],
-        //         hasNodes: [
-        //           {
-        //             delete: {},
-        //           },
-        //         ],
-        //       },
-        //     },
-        //   ],
-        //   hasContainsFolder: [
-        //     {
-        //       delete: {
-        //         hasFile: [
-        //           {
-        //             delete: {
-        //               hasEdges: [
-        //                 {
-        //                   delete: {},
-        //                 },
-        //               ],
-        //               hasNodes: [
-        //                 {
-        //                   delete: {},
-        //                 },
-        //               ],
-        //             },
-        //           },
-        //         ],
-        //         hasFolder: [
-        //           {
-        //             delete: {
-        //               hasFile: [
-        //                 {
-        //                   delete: {
-        //                     hasNodes: [
-        //                       {
-        //                         delete: {},
-        //                       },
-        //                     ],
-        //                     hasEdges: [
-        //                       {
-        //                         delete: {},
-        //                       },
-        //                     ],
-        //                   },
-        //                 },
-        //               ],
-        //             },
-        //           },
-        //         ],
-        //       },
-        //     },
-        //   ],
-        // },
+        delete: {
+          hasContainsFile: [
+            {
+              delete: {
+                hasNodes: [
+                  {
+                    delete: {
+                      flowEdge: [
+                        {
+                          delete: {},
+                        },
+                      ],
+                      hasInfo: {},
+                    },
+                  },
+                ],
+                hasInfo: {},
+              },
+            },
+          ],
+          hasContainsFolder: [
+            {
+              delete: {
+                hasFolder: [
+                  {
+                    delete: {
+                      hasFile: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            hasNodes: [
+                              {
+                                delete: {
+                                  hasInfo: {},
+                                  flowEdge: [
+                                    {
+                                      delete: {},
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                      hasInfo: {},
+                    },
+                  },
+                ],
+                hasFile: [
+                  {
+                    delete: {
+                      hasInfo: {},
+                      hasNodes: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            flowEdge: [
+                              {
+                                delete: {},
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+                hasInfo: {},
+              },
+            },
+          ],
+        },
       },
       update: (cache, { data }) => {
         const existingData = cache.readQuery({

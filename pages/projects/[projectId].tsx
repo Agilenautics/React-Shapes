@@ -33,7 +33,6 @@ function SideBar() {
         projectId.toString(),
         setLoading
       );
-      console.log("initdata",initData)
       setTotal(initData[0].usersInProjects.length);
       setProjectName(initData[0].name);
       setProjectDesc(initData[0].description);

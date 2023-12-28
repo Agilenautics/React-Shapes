@@ -123,9 +123,9 @@ export function useBackend() {
 
     onEdit: async (id: string, name: string) => {
       const node = find(id);
-      console.log(node)
-      const getParent  = node?.parent.model as Folder
-      console.log(getParent)
+      console.log(node);
+      const getParent = node?.parent.model as Folder;
+      console.log(getParent);
       let editedData = {
         id,
         name,
@@ -163,7 +163,7 @@ export function useBackend() {
       //   );
       //   initData.hasContainsFolder.children[indexForHasContainsFile] = updatedData;
       // }
-      console.log(initData.children)
+      console.log(initData.children);
 
       // updating state in real time
 
@@ -173,7 +173,7 @@ export function useBackend() {
 
       setData(initData);
       update();
-      console.log(initData,'initdata')
+      console.log(initData, "initdata");
 
       const { type } = node?.model;
       if (type === "folder") {
@@ -220,11 +220,7 @@ export function useBackend() {
         );
         delete_item(id);
       } else {
-        await deleteFileBackend(
-          deleteIds,
-          deleteFilesMutation,
-          getProjectById
-        );
+        await deleteFileBackend(deleteIds, deleteFilesMutation, getProjectById);
         delete_item(id);
       }
     },

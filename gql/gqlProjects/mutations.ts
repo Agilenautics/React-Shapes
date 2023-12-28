@@ -49,8 +49,8 @@ export const recentProject_mutation = gql`
 
 //parmenant delete mutation
 export const PARMENANT_DELETE = gql`
-  mutation DeleteProjects($where: ProjectWhere) {
-    deleteProjects(where: $where) {
+  mutation DeleteProjects($where: ProjectWhere, $delete: ProjectDeleteInput) {
+    deleteProjects(where: $where, delete: $delete) {
       nodesDeleted
     }
   }

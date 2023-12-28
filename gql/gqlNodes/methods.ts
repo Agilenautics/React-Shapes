@@ -219,6 +219,14 @@ async function deleteNodeBackend(
             where: {
               id: fileId,
             },
+            delete: {
+              flowEdge: [
+                {
+                  delete: {},
+                },
+              ],
+              hasInfo: {},
+            },
           },
         });
         const { hasNodes, ...filedata } = files[0];
@@ -382,32 +390,7 @@ const updateNodeBackend = async (
   }
 };
 
-// const updateLinkedByMethod = async (
-//   nodeData: any,
-//   mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
-// ) => {
-//   await client.mutate({
-//     mutation: mutations,
-//     variables: {
-//       where: {
-//         hasLinkedBy: {
-//           flownodeHasdata: {
-//             id: nodeData.id,
-//           },
-//         },
-//       },
-//       update: {
-//         fileId: nodeData.data.hasLinkedBy.fileId,
-//         flag: nodeData.data.hasLinkedBy.flag,
-//         id: nodeData.data.hasLinkedBy.id,
-//         label: nodeData.data.hasLinkedBy.label,
-//       },
-//     },
-//   });
-// };
-
 //updateNodes links and data
-
 const updateNodeData = async (
   nodeData: any,
   mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -567,12 +550,12 @@ const linkNodeAnotherNodeMethod = async (
           ({ files }) => {
             const { hasNodes, ...fileData } = files[0];
             const getNode = hasNodes.find((node: Node) => node.id === id);
-            console.log(getNode)
+            console.log(getNode);
             if (
               getNode.isLinked.some((value: Node) => value.id === anotherNodId)
             ) {
               return {
-                files
+                files,
               };
             }
             // const updatedLinkNode = [...getNode.isLinked,...flowNodes];

@@ -32,7 +32,7 @@ function TopBar({ toggleSideBar, flag }: Flag) {
       {/* logo  */}
       <div className="flex gap-6">
       <button onClick={toggleSideBar} className="duration-200"> {!flag && <FaBars className="text-2xl dark:text-white text-slate-600" />} </button>
-        <span className=" text-2xl font-bold text-gray-400" data-testId="test-TextElement">
+        <span className=" text-2xl font-bold text-gray-400" data-test-id="test-TextElement">
           <Link href={`/projects`}>FLOWCHART</Link>
         </span>
       </div>

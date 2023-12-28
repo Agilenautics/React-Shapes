@@ -98,40 +98,40 @@ async function createFolderInMain(
           },
         ],
       },
-      // update: (
-      //   cache,
-      //   {
-      //     data: {
-      //       createFolders: { folders },
-      //     },
-      //   }
-      // ) => {
-      //   const { projects } = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         id: parentId,
-      //       },
-      //     },
-      //   });
-      //   const { hasContainsFolder, ...projectData } = projects[0];
-      //   const updatedProjects = [...hasContainsFolder, ...folders];
-      //   const updatedProject = {
-      //     ...projectData,
-      //     hasContainsFolder: updatedProjects,
-      //   };
-      //   cache.writeQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         id: parentId,
-      //       },
-      //     },
-      //     data: {
-      //       projects: [updatedProject],
-      //     },
-      //   });
-      // },
+      update: (
+        cache,
+        {
+          data: {
+            createFolders: { folders },
+          },
+        }
+      ) => {
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: parentId,
+            },
+          },
+        });
+        const { hasContainsFolder, ...projectData } = projects[0];
+        const updatedProjects = [...hasContainsFolder, ...folders];
+        const updatedProject = {
+          ...projectData,
+          hasContainsFolder: updatedProjects,
+        };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              id: parentId,
+            },
+          },
+          data: {
+            projects: [updatedProject],
+          },
+        });
+      },
     });
   } catch (error) {
     console.log(error, "error while creating folder");
@@ -153,46 +153,74 @@ async function deleteFolderBackend(
           hasFile: [
             {
               delete: {
+                hasInfo: {},
                 hasNodes: [
                   {
                     delete: {
-                      
+                      hasInfo: {},
+                      flowEdge: [
+                        {
+                          delete: {},
+                        },
+                      ],
                     },
-                  },
-                ],
-                hasEdges: [
-                  {
-                    delete: {},
                   },
                 ],
               },
             },
           ],
+          hasInfo: {},
+          hasFolder: [
+            {
+              delete: {
+                hasFile: [
+                  {
+                    delete: {
+                      hasInfo: {},
+                      hasNodes: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            flowEdge: [
+                              {
+                                delete: {},
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+                hasInfo: {},
+              },
+            },
+          ],
         },
       },
-      // update: (cache, { data }) => {
-      //   const { projects } = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         id: deleteIds.projectId,
-      //       },
-      //     },
-      //   });
-      //   const { hasContainsFolder, ...projectData } = projects[0];
-      //   const to_be_updated = hasContainsFolder.filter(
-      //     (folder: Folder) => folder.id !== deleteIds.id
-      //   );
-      //   const updatedProject = {
-      //     ...projectData,
-      //     hasContainsFolder: to_be_updated,
-      //   };
-      //   cache.writeQuery({
-      //     query,
-      //     variables: { where: { id: deleteIds.projectId } },
-      //     data: { projects: [{ ...updatedProject }] },
-      //   });
-      // },
+      update: (cache, { data }) => {
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: deleteIds.projectId,
+            },
+          },
+        });
+        const { hasContainsFolder, ...projectData } = projects[0];
+        const to_be_updated = hasContainsFolder.filter(
+          (folder: Folder) => folder.id !== deleteIds.id
+        );
+        const updatedProject = {
+          ...projectData,
+          hasContainsFolder: to_be_updated,
+        };
+        cache.writeQuery({
+          query,
+          variables: { where: { id: deleteIds.projectId } },
+          data: { projects: [{ ...updatedProject }] },
+        });
+      },
     });
   } catch (error) {
     console.log("error while deleting folder", error);
@@ -214,41 +242,41 @@ const updateFolderBackend = async (
           name: folderData.name,
         },
       },
-      // update: (cache, { data }) => {
-      //   const { projects } = cache.readQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         id: folderData.projectId,
-      //       },
-      //     },
-      //   });
-      //   const { hasContainsFolder, ...projectData } = projects[0];
-      //   const updatedFolder = hasContainsFolder.map((folder: Folder) => {
-      //     if (folder.id === folderData.id) {
-      //       return {
-      //         ...folder,
-      //         name: folderData.name,
-      //       };
-      //     }
-      //     return folder;
-      //   });
-      //   const updatedProject = {
-      //     ...projectData,
-      //     hasContainsFolder: updatedFolder,
-      //   };
-      //   cache.writeQuery({
-      //     query,
-      //     variables: {
-      //       where: {
-      //         id: folderData.projectId,
-      //       },
-      //     },
-      //     data: {
-      //       projects: [updatedProject],
-      //     },
-      //   });
-      // },
+      update: (cache, { data }) => {
+        const { projects } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: folderData.projectId,
+            },
+          },
+        });
+        const { hasContainsFolder, ...projectData } = projects[0];
+        const updatedFolder = hasContainsFolder.map((folder: Folder) => {
+          if (folder.id === folderData.id) {
+            return {
+              ...folder,
+              name: folderData.name,
+            };
+          }
+          return folder;
+        });
+        const updatedProject = {
+          ...projectData,
+          hasContainsFolder: updatedFolder,
+        };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              id: folderData.projectId,
+            },
+          },
+          data: {
+            projects: [updatedProject],
+          },
+        });
+      },
     });
   } catch (error) {
     console.log(error, "while updating the folder");

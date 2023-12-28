@@ -172,7 +172,7 @@ function Users() {
 
   if (loading || isLoading)
     return (
-      <div className="flex h-screen items-center justify-center" data-testId="Icontest1">
+      <div className="flex h-screen items-center justify-center" data-test-id="Icontest1">
         <LoadingIcon />
       </div>
     );
@@ -186,7 +186,7 @@ function Users() {
   };
 
   return (
-    <div className=" p-6" data-testid="testUser">
+    <div className=" p-6" data-test-id="testUser">
       {/* heading of the table */}
       <div className="flex h-full items-center">
         <button className="text-md   rounded bg-sky-500/75 p-2 font-semibold text-white" >
@@ -244,7 +244,7 @@ function Users() {
             }${isNewUserDisabled ? "opacity-50" : ""}`}
             disabled={isButtonDisabled || isNewUserDisabled}
             onClick={() => setShowAddUserPopup(true)}
-            data-testId="addtestuser"
+            data-test-id="addtestuser"
           >
             Add User
           </button>
@@ -309,7 +309,7 @@ function Users() {
                           className="text-red-700 "
                           onClick={() => handleConfirmDelete(user.id)}
                           disabled={isButtonDisabled}
-                          data-testId="delTestIcon"
+                          data-test-id="delTestIcon"
                                                 >
                           <MdDelete />
                         </button>
@@ -346,7 +346,7 @@ function Users() {
                           className="ml-2 rounded-full p-1 duration-300 hover:bg-slate-200"
                           onClick={() => handleDeleteClick(user.id)}
                           disabled={isButtonDisabled}
-                          data-testId="testDelIcon"
+                          data-test-id="testDelIcon"
                         >
                           <MdDeleteOutline
                             className={isButtonDisabled ? "opacity-50" : ""}

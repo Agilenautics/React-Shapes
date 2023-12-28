@@ -58,7 +58,7 @@ function DarkModeToggleButton() {
 
     <div onClick={(e) => toggleDarkModeButton(!isDark)} className="border border-orange-600 flex items-center p-[3px] dark:bg-slate-700 dark:border-none dark:p-1 rounded-full">
       <button className="duration-300 ease-in">
-        {isDark ? <BsMoonStars className="text-lg "  data-testId="DarkIcon"/> : <BsSun className="text-lg  text-orange-600 " data-testId="LightIcon" />}
+        {isDark ? <BsMoonStars className="text-lg "  data-test-id="DarkIcon"/> : <BsSun className="text-lg  text-orange-600 " data-test-id="LightIcon" />}
       </button>
     </div>
   );
