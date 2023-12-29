@@ -186,9 +186,9 @@ export const TreeNode = ({
         getNodes(allNodes, data.id)
           .then((result: any) => {
             const {
-              data:{files},
+              data: { files },
             } = result;
-            const {nodes,edges} = getNodeAndEdges(files[0]);
+            const { nodes, edges } = getNodeAndEdges(files[0]);
             updateNodes(nodes);
             updateEdges(edges);
           })
