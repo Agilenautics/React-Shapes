@@ -68,7 +68,7 @@ const fileStore = create<files>((set) => ({
   updateLinkNodes: (nodes: Array<Node>, id: string) =>
     set((state) => {
       const newData = nodes.map((item: any) => {
-        const description = item.hasInfo.description;
+        const description = item.hasInfo?.description;
         const { x, y, label, shape, ...rest } = item;
         return {
           ...rest,

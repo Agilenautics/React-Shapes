@@ -46,8 +46,8 @@ module.exports = {
     //data base instance
     USER_NAME: 'neo4j',
     GRAPHQL_API_KEY: "user:fp.bf3c20e1-856e-4104-bae4-3095c7bb791d:pexWqkFMreZeDucahp4RFw",
-    DB_URL: "neo4j+s://df53dad9.databases.neo4j.io",
-    DB_PASSWORD: "PxWzvlOWBvDHaqDwnpk1S_3YEX-Ut1uwbaJI-j7gY4U",
+    DB_URL: "neo4j+s://fcbd3ebe.databases.neo4j.io",
+    DB_PASSWORD: "A3Be4-BMR5dy4DInLZlBlpSze7Vsh_2VMYh5ZdDmkMo",
     BASE_URL: "http://localhost:3000/api/graphql",
     API_URL: "https://react-flow-agile-omega.vercel.app/api/graphql"
   },

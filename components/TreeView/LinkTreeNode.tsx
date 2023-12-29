@@ -17,7 +17,7 @@ const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
   }
 
   const { fileId } = nodeStore();
-  const currentFileId = fileId; //'b04c5b0e-e3da-45ad-af2c-31ada8dff3dd'; // Replace with the actual current file's ID
+  const currentFileId = fileId;  // Replace with the actual current file's ID
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
 
@@ -28,12 +28,18 @@ const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
         return; // Disable click for the current file's node
       }
       handlers.select(e);
-      if (data.hasFlowchart.hasNodes && data.hasFlowchart.hasNodes.length) {
-        return updateLinkNodes(data.hasFlowchart.hasNodes, data.id);
+      if (data.hasNodes && data.hasNodes.length) {
+        return updateLinkNodes(data.hasNodes, data.id);
       } else {
-        return updateLinkNodes([{
-            message:"There is no data available in this file please add new data and add the link"
-        }], data.id);;
+        return updateLinkNodes(
+          [
+            {
+              message:
+                "There is no data available in this file please add new data and add the link",
+            },
+          ],
+          data.id
+        );
       }
     };
   }

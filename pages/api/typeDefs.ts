@@ -96,7 +96,7 @@ const typeDefs = gql`
     createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
     hasComments: [Comment!]! @relationship(type: "HAS_FILE", direction: IN)
-    hasInfo: Info! @relationship(type: "HAS_INFO", direction: OUT)
+    hasInfo: Info @relationship(type: "HAS_INFO", direction: OUT)
     folderHas: Folder @relationship(type: "HAS_FILE", direction: IN)
     projectHas: Project @relationship(type: "HAS_FILE", direction: IN)
     hasNodes: [FlowNode!]! @relationship(type: "HAS_FLOWNODES", direction: IN)
