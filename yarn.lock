@@ -10,6 +10,7 @@
 "@adobe/css-tools@^4.0.1":
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "4.3.2"
   resolved "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.3.2.tgz"
   integrity sha512-DA5a1C0gD/pLOvhv33YMrbf2FK3oUzwNl9oOJqE4XVjuEtt6XIakRcsd7eLiOSPkp1kTRQGICTA8cKra/vFbjw==
@@ -23,6 +24,11 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.3.1.tgz#abfccb8ca78075a2b6187345c26243c1a0842f28"
   integrity sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.3.1.tgz#abfccb8ca78075a2b6187345c26243c1a0842f28"
+  integrity sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@alloc/quick-lru@^5.2.0":
   version "5.2.0"
@@ -45,6 +51,7 @@
 "@apollo/client@^3.8.6", "@apollo/client@latest":
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "3.8.8"
   resolved "https://registry.npmjs.org/@apollo/client/-/client-3.8.8.tgz"
   integrity sha512-omjd9ryGDkadZrKW6l5ktUAdS4SNaFOccYQ4ZST0HLW83y8kQaSZOCTNlpkoBUK8cv6qP8+AxOKwLm2ho8qQ+Q==
@@ -58,6 +65,11 @@
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.7.tgz#090b1518f513503b9a6a690ee3eaec49529822e1"
   integrity sha512-DnQtFkQrCyxHTSa9gR84YRLmU/al6HeXcLZazVe+VxKBmx/Hj4rV8xWtzfWYX5ijartsqDR7SJgV037MATEecA==
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+  version "3.8.7"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.7.tgz#090b1518f513503b9a6a690ee3eaec49529822e1"
+  integrity sha512-DnQtFkQrCyxHTSa9gR84YRLmU/al6HeXcLZazVe+VxKBmx/Hj4rV8xWtzfWYX5ijartsqDR7SJgV037MATEecA==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
     "@wry/context" "^0.7.3"
@@ -73,6 +85,7 @@
     tslib "^2.3.0"
     zen-observable-ts "^1.2.5"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -100,10 +113,13 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@apollo/federation-internals@2.5.7":
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/@apollo/federation-internals/-/federation-internals-2.5.7.tgz#82dabc55765b76475141b6b4d69de5b325b59c3b"
   integrity sha512-+c7m2c4FG4lMURZhtjFP59mm4/0zM49w6C/9uxryXriZKG3l3n5Ay12V/w9LNm7laoQkZjIBECBU39yT40mdBw==
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
@@ -114,6 +130,8 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@types/uuid" "^9.0.0"
     chalk "^4.1.0"
@@ -216,6 +234,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "2.6.1"
   resolved "https://registry.npmjs.org/@apollo/subgraph/-/subgraph-2.6.1.tgz"
   integrity sha512-ldpmWKxNNWsAy6p8Wl5IxCKk4PXiQ7ketNHmcbxzRgKlpUDfc0k3oYS0pJstT9QSAdI3hbDnBr7oaj0S+8Cp9A==
@@ -244,6 +263,14 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/@apollo/subgraph/-/subgraph-2.5.7.tgz#f0a3379359cb146f3552c560997ec4d4a076aae8"
+  integrity sha512-XEpawcRL7JEmUbJsFOgFYsUDbsA+392kexch9EIlZWfc1afZmhLjzPOIAgn+KO9ohwOLkkmRjczehDwzQgYFkA==
+  dependencies:
+    "@apollo/cache-control-types" "^1.0.2"
+    "@apollo/federation-internals" "2.5.7"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@apollo/usage-reporting-protobuf@^4.0.0", "@apollo/usage-reporting-protobuf@^4.1.0", "@apollo/usage-reporting-protobuf@^4.1.1":
   version "4.1.1"
@@ -429,6 +456,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.22.13", "@babel/code-frame@^7.23.5":
   version "7.23.5"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.23.5.tgz"
@@ -436,18 +464,24 @@
 =======
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.22.13", "@babel/code-frame@^7.23.4":
   version "7.23.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.23.4.tgz#03ae5af150be94392cb5c7ccd97db5a19a5da6aa"
   integrity sha512-r1IONyb6Ia+jYR2vvIDhdWdlTGhqbBoFqLTQidzZ4kepUFH15ejXvFHxCVbtl7BOXIudsIubf4E81xeA3h3IXA==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@babel/highlight" "^7.23.4"
     chalk "^2.4.2"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 "@babel/compat-data@^7.20.5", "@babel/compat-data@^7.22.6", "@babel/compat-data@^7.23.3", "@babel/compat-data@^7.23.5":
@@ -457,10 +491,13 @@
 =======
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@babel/compat-data@^7.20.5", "@babel/compat-data@^7.22.6", "@babel/compat-data@^7.22.9", "@babel/compat-data@^7.23.3":
   version "7.23.3"
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.23.3.tgz#3febd552541e62b5e883a25eb3effd7c7379db11"
   integrity sha512-BmR4bWbDIoFJmJ9z2cZ8Gmm2MXgEDgjdWgpKmKWUt54UGFJdlj31ECtbaDvCG/qVdG3AQ1SfpZEs01lUFbzLOQ==
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 
@@ -497,6 +534,15 @@
   integrity sha512-Jg+msLuNuCJDyBvFv5+OKOUjWMZgd85bKjbICd3zWrKAo+bJ49HJufi7CQE0q0uR8NGyO6xkCACScNqyjHSZew==
   dependencies:
     "@ampproject/remapping" "^2.2.0"
+=======
+
+"@babel/core@^7.11.6", "@babel/core@^7.12.3", "@babel/core@^7.14.0":
+  version "7.23.3"
+  resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.23.3.tgz#5ec09c8803b91f51cc887dedc2654a35852849c9"
+  integrity sha512-Jg+msLuNuCJDyBvFv5+OKOUjWMZgd85bKjbICd3zWrKAo+bJ49HJufi7CQE0q0uR8NGyO6xkCACScNqyjHSZew==
+  dependencies:
+    "@ampproject/remapping" "^2.2.0"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/code-frame" "^7.22.13"
     "@babel/generator" "^7.23.3"
     "@babel/helper-compilation-targets" "^7.22.15"
@@ -507,15 +553,19 @@
     "@babel/traverse" "^7.23.3"
     "@babel/types" "^7.23.3"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     convert-source-map "^2.0.0"
     debug "^4.1.0"
     gensync "^1.0.0-beta.2"
     json5 "^2.2.3"
     semver "^6.3.1"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -583,6 +633,14 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+"@babel/generator@^7.14.0", "@babel/generator@^7.23.3", "@babel/generator@^7.23.4", "@babel/generator@^7.7.2":
+  version "7.23.4"
+  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.23.4.tgz#4a41377d8566ec18f807f42962a7f3551de83d1c"
+  integrity sha512-esuS49Cga3HcThFNebGhlgsrVLkvhqvYDTzgjfFFlHJcIfLe5jFmRRfCQ1KuBfc4Jrtn3ndLgKWAKjBE+IraYQ==
+  dependencies:
+    "@babel/types" "^7.23.4"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@jridgewell/gen-mapping" "^0.3.2"
     "@jridgewell/trace-mapping" "^0.3.17"
     jsesc "^2.5.1"
@@ -673,6 +731,7 @@
     semver "^6.3.1"
 
 "@babel/helper-create-class-features-plugin@^7.18.6", "@babel/helper-create-class-features-plugin@^7.22.15":
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
   version "7.22.15"
   resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.22.15.tgz#97a61b385e57fe458496fad19f8e63b63c867de4"
@@ -695,14 +754,23 @@
   version "7.23.6"
   resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.23.6.tgz#b04d915ce92ce363666f816a884cdcfc9be04953"
   integrity sha512-cBXU1vZni/CpGF29iTu4YRbOZt3Wat6zCoMDxRF1MayiEc4URxOj31tT65HUM0CRpMowA3HCJaAOVOUnMf96cw==
+=======
+  version "7.22.15"
+  resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.22.15.tgz#97a61b385e57fe458496fad19f8e63b63c867de4"
+  integrity sha512-jKkwA59IXcvSaiK2UN45kKwSC9o+KuoXsBDvHvU/7BecYIp8GQ2UwrVvFgJASUT+hBnwJx6MhvMCuMzwZZ7jlg==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@babel/helper-annotate-as-pure" "^7.22.5"
-    "@babel/helper-environment-visitor" "^7.22.20"
-    "@babel/helper-function-name" "^7.23.0"
-    "@babel/helper-member-expression-to-functions" "^7.23.0"
+    "@babel/helper-environment-visitor" "^7.22.5"
+    "@babel/helper-function-name" "^7.22.5"
+    "@babel/helper-member-expression-to-functions" "^7.22.15"
     "@babel/helper-optimise-call-expression" "^7.22.5"
+<<<<<<< HEAD
     "@babel/helper-replace-supers" "^7.22.20"
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+    "@babel/helper-replace-supers" "^7.22.9"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/helper-skip-transparent-expression-wrappers" "^7.22.5"
     "@babel/helper-split-export-declaration" "^7.22.6"
     semver "^6.3.1"
@@ -721,10 +789,10 @@
     regexpu-core "^5.3.1"
     semver "^6.3.1"
 
-"@babel/helper-define-polyfill-provider@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@babel/helper-define-polyfill-provider/-/helper-define-polyfill-provider-0.4.3.tgz#a71c10f7146d809f4a256c373f462d9bba8cf6ba"
-  integrity sha512-WBrLmuPP47n7PNwsZ57pqam6G/RGo1vw/87b0Blc53tZNGZ4x7YvZ6HgQe2vo1W/FR20OgjeZuGXzudPiXHFug==
+"@babel/helper-define-polyfill-provider@^0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@babel/helper-define-polyfill-provider/-/helper-define-polyfill-provider-0.4.4.tgz#64df615451cb30e94b59a9696022cffac9a10088"
+  integrity sha512-QcJMILQCu2jm5TFPGA3lCpJJTeEP+mqeXooG/NZbg/h5FTFi6V0+99ahlRsW8/kRLyb24LZVCCiclDedhLKcBA==
   dependencies:
     "@babel/helper-compilation-targets" "^7.22.6"
     "@babel/helper-plugin-utils" "^7.22.5"
@@ -733,7 +801,10 @@
     resolve "^1.14.2"
 
 "@babel/helper-environment-visitor@^7.22.20", "@babel/helper-environment-visitor@^7.22.5":
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.22.20"
   resolved "https://registry.yarnpkg.com/@babel/helper-environment-visitor/-/helper-environment-visitor-7.22.20.tgz#96159db61d34a29dba454c959f5ae4a649ba9167"
   integrity sha512-zfedSIzFhat/gFhWfHtgWvlec0nqB9YEIVrpuwjruLlXfUSnA8cJB0miHKwqDnQ7d32aKo2xt88/xZptwxbfhA==
@@ -855,6 +926,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/helper-member-expression-to-functions@^7.22.15", "@babel/helper-member-expression-to-functions@^7.23.0":
 =======
 "@babel/helper-member-expression-to-functions@^7.22.15":
@@ -863,6 +935,8 @@
   resolved "https://registry.npmjs.org/@babel/helper-member-expression-to-functions/-/helper-member-expression-to-functions-7.23.0.tgz"
   integrity sha512-6gfrPwh7OuT6gZyJZvd6WbTfrqAo7vm4xCzAXOusKqq/vWdKXphTpj5klHKNmRUU6/QRGlBsyU9mAIPaWHlqJA==
 =======
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@babel/helper-member-expression-to-functions@^7.22.15":
   version "7.23.0"
   resolved "https://registry.yarnpkg.com/@babel/helper-member-expression-to-functions/-/helper-member-expression-to-functions-7.23.0.tgz#9263e88cc5e41d39ec18c9a3e0eced59a3e7d366"
@@ -955,7 +1029,11 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/helper-replace-supers@^7.22.20":
+=======
+"@babel/helper-replace-supers@^7.22.20", "@babel/helper-replace-supers@^7.22.9":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.22.20"
   resolved "https://registry.npmjs.org/@babel/helper-replace-supers/-/helper-replace-supers-7.22.20.tgz"
   integrity sha512-qsW0In3dbwQUbK8kejJ4R7IHVGwHJlV6lpG6UA7a9hSa2YEiAib+N1T2kr6PEeUT+Fl7najmSOS6SmAwCHK6Tw==
@@ -1064,6 +1142,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/helpers@^7.23.5":
   version "7.23.5"
   resolved "https://registry.npmjs.org/@babel/helpers/-/helpers-7.23.5.tgz"
@@ -1104,6 +1183,14 @@
   integrity sha512-HfcMizYz10cr3h29VqyfGL6ZWIjTwWfvYBMsBVGwpcbhNGe3wQ1ZXZRPzZoAHhd9OqHadHqjQ89iVKINXnbzuw==
   dependencies:
     "@babel/template" "^7.22.15"
+=======
+"@babel/helpers@^7.23.2":
+  version "7.23.4"
+  resolved "https://registry.yarnpkg.com/@babel/helpers/-/helpers-7.23.4.tgz#7d2cfb969aa43222032193accd7329851facf3c1"
+  integrity sha512-HfcMizYz10cr3h29VqyfGL6ZWIjTwWfvYBMsBVGwpcbhNGe3wQ1ZXZRPzZoAHhd9OqHadHqjQ89iVKINXnbzuw==
+  dependencies:
+    "@babel/template" "^7.22.15"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/traverse" "^7.23.4"
     "@babel/types" "^7.23.4"
 
@@ -1117,6 +1204,7 @@
     chalk "^2.4.2"
     js-tokens "^4.0.0"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1171,6 +1259,8 @@
 =======
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@babel/parser@^7.1.0", "@babel/parser@^7.1.6", "@babel/parser@^7.14.0", "@babel/parser@^7.14.7", "@babel/parser@^7.20.15", "@babel/parser@^7.20.7", "@babel/parser@^7.22.15", "@babel/parser@^7.23.3", "@babel/parser@^7.23.4":
   version "7.23.4"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.23.4.tgz#409fbe690c333bb70187e2de4021e1e47a026661"
@@ -1438,7 +1528,11 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/plugin-transform-async-generator-functions@^7.23.4":
+=======
+"@babel/plugin-transform-async-generator-functions@^7.23.3":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.23.4"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-async-generator-functions/-/plugin-transform-async-generator-functions-7.23.4.tgz"
 =======
@@ -1481,7 +1575,11 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/plugin-transform-block-scoping@^7.0.0", "@babel/plugin-transform-block-scoping@^7.23.4":
+=======
+"@babel/plugin-transform-block-scoping@^7.0.0", "@babel/plugin-transform-block-scoping@^7.23.3":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.23.4"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-block-scoping/-/plugin-transform-block-scoping-7.23.4.tgz"
 =======
@@ -1509,7 +1607,11 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/plugin-transform-class-static-block@^7.23.4":
+=======
+"@babel/plugin-transform-class-static-block@^7.23.3":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.23.4"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-class-static-block/-/plugin-transform-class-static-block-7.23.4.tgz"
 =======
@@ -1527,6 +1629,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/plugin-transform-classes@^7.0.0", "@babel/plugin-transform-classes@^7.23.5":
   version "7.23.5"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-classes/-/plugin-transform-classes-7.23.5.tgz"
@@ -1534,14 +1637,19 @@
 =======
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@babel/plugin-transform-classes@^7.0.0", "@babel/plugin-transform-classes@^7.23.3":
   version "7.23.3"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-classes/-/plugin-transform-classes-7.23.3.tgz#73380c632c095b03e8503c24fd38f95ad41ffacb"
   integrity sha512-FGEQmugvAEu2QtgtU0uTASXevfLMFfBeVCIIdcQhn/uBQsMTjBajdnAtanQlOcuihWh10PZ7+HWvc7NtBwP74w==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@babel/helper-annotate-as-pure" "^7.22.5"
     "@babel/helper-compilation-targets" "^7.22.15"
@@ -1601,7 +1709,11 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/plugin-transform-dynamic-import@^7.23.4":
+=======
+"@babel/plugin-transform-dynamic-import@^7.23.3":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.23.4"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-dynamic-import/-/plugin-transform-dynamic-import-7.23.4.tgz"
 =======
@@ -1630,7 +1742,11 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/plugin-transform-export-namespace-from@^7.23.4":
+=======
+"@babel/plugin-transform-export-namespace-from@^7.23.3":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.23.4"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-export-namespace-from/-/plugin-transform-export-namespace-from-7.23.4.tgz"
 =======
@@ -1858,6 +1974,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@babel/plugin-transform-parameters@^7.0.0", "@babel/plugin-transform-parameters@^7.20.7":
   version "7.22.5"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-parameters/-/plugin-transform-parameters-7.22.5.tgz"
@@ -1905,6 +2022,8 @@
 =======
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@babel/plugin-transform-optional-catch-binding@^7.23.3":
   version "7.23.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-optional-catch-binding/-/plugin-transform-optional-catch-binding-7.23.4.tgz#318066de6dacce7d92fa244ae475aa8d91778017"
@@ -2379,9 +2498,12 @@
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-typescript/-/plugin-transform-typescript-7.23.4.tgz#da12914d17b3c4b307f32c5fd91fbfdf17d56f86"
   integrity sha512-39hCCOl+YUAyMOu6B9SmUTiHUU0t/CxJNUmY3qRdJujbqi+lrQcL11ysYUsAvFWPBdhihrv1z0oRG84Yr3dODQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@babel/helper-annotate-as-pure" "^7.22.5"
     "@babel/helper-create-class-features-plugin" "^7.22.15"
@@ -2452,6 +2574,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "7.23.5"
   resolved "https://registry.npmjs.org/@babel/preset-env/-/preset-env-7.23.5.tgz"
   integrity sha512-0d/uxVD6tFGWXGDSfyMD1p2otoaKmu6+GD+NfAx0tMaH+dxORnp7T9TaVQ6mKyya7iBtCIVxHjWT7MuzzM9z+A==
@@ -2484,6 +2607,16 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+  version "7.23.3"
+  resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.23.3.tgz#d299e0140a7650684b95c62be2db0ef8c975143e"
+  integrity sha512-ovzGc2uuyNfNAs/jyjIGxS8arOHS5FENZaNn4rtE7UdKMMkqHCvboHfcuhWLZNX5cB44QfcGNWjaevxMzzMf+Q==
+  dependencies:
+    "@babel/compat-data" "^7.23.3"
+    "@babel/helper-compilation-targets" "^7.22.15"
+    "@babel/helper-plugin-utils" "^7.22.5"
+    "@babel/helper-validator-option" "^7.22.15"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression" "^7.23.3"
     "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining" "^7.23.3"
     "@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly" "^7.23.3"
@@ -2515,9 +2648,12 @@
     "@babel/plugin-transform-class-static-block" "^7.23.3"
     "@babel/plugin-transform-classes" "^7.23.3"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/plugin-transform-computed-properties" "^7.23.3"
     "@babel/plugin-transform-destructuring" "^7.23.3"
     "@babel/plugin-transform-dotall-regex" "^7.23.3"
@@ -2531,9 +2667,12 @@
     "@babel/plugin-transform-literals" "^7.23.3"
     "@babel/plugin-transform-logical-assignment-operators" "^7.23.3"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/plugin-transform-member-expression-literals" "^7.23.3"
     "@babel/plugin-transform-modules-amd" "^7.23.3"
     "@babel/plugin-transform-modules-commonjs" "^7.23.3"
@@ -2551,9 +2690,12 @@
     "@babel/plugin-transform-private-methods" "^7.23.3"
     "@babel/plugin-transform-private-property-in-object" "^7.23.3"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/plugin-transform-property-literals" "^7.23.3"
     "@babel/plugin-transform-regenerator" "^7.23.3"
     "@babel/plugin-transform-reserved-words" "^7.23.3"
@@ -2656,6 +2798,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 =======
@@ -2732,11 +2875,16 @@
   integrity sha512-2Yv65nlWnWlSpe3fXEyX5i7fx5kIKo4Qbcj+hMO0odwaneFjfXw5fdum+4yL20O0QiaHpia0cYQ9xpNMqrBwHg==
 >>>>>>> ed821dd (yarn.lock updated)
 =======
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@babel/runtime@^7.0.0", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.18.3", "@babel/runtime@^7.23.2", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.23.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.4.tgz#36fa1d2b36db873d25ec631dcc4923fdc1cf2e2e"
   integrity sha512-2Yv65nlWnWlSpe3fXEyX5i7fx5kIKo4Qbcj+hMO0odwaneFjfXw5fdum+4yL20O0QiaHpia0cYQ9xpNMqrBwHg==
+<<<<<<< HEAD
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -2749,6 +2897,7 @@
     "@babel/parser" "^7.22.15"
     "@babel/types" "^7.22.15"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2785,10 +2934,20 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+"@babel/traverse@^7.1.6", "@babel/traverse@^7.14.0", "@babel/traverse@^7.23.3", "@babel/traverse@^7.23.4":
+  version "7.23.4"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.23.4.tgz#c2790f7edf106d059a0098770fe70801417f3f85"
+  integrity sha512-IYM8wSUwunWTB6tFC2dkKZhxbIjHoWemdK+3f8/wq8aKhbUscxD5MX72ubd90fxvFknaLPeGw5ycU84V1obHJg==
+  dependencies:
+    "@babel/code-frame" "^7.23.4"
+    "@babel/generator" "^7.23.4"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@babel/helper-environment-visitor" "^7.22.20"
     "@babel/helper-function-name" "^7.23.0"
     "@babel/helper-hoist-variables" "^7.22.5"
     "@babel/helper-split-export-declaration" "^7.22.6"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     "@babel/parser" "^7.23.6"
@@ -2823,6 +2982,17 @@
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.23.6.tgz#be33fdb151e1f5a56877d704492c240fc71c7ccd"
   integrity sha512-+uarb83brBzPKN38NX1MkB6vb6+mwvR6amUulqAE7ccQw1pEl+bCia9TbdG1lsnFP7lZySvUn37CHyXQdfTwzg==
 >>>>>>> 4117e6b (Authentication using firebase and directives)
+=======
+    "@babel/parser" "^7.23.4"
+    "@babel/types" "^7.23.4"
+    debug "^4.1.0"
+    globals "^11.1.0"
+
+"@babel/types@^7.0.0", "@babel/types@^7.1.6", "@babel/types@^7.20.7", "@babel/types@^7.22.15", "@babel/types@^7.22.19", "@babel/types@^7.22.5", "@babel/types@^7.23.0", "@babel/types@^7.23.3", "@babel/types@^7.23.4", "@babel/types@^7.3.3", "@babel/types@^7.4.4":
+  version "7.23.4"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.23.4.tgz#7206a1810fc512a7f7f7d4dace4cb4c1c9dbfb8e"
+  integrity sha512-7uIFwVYpoplT5jp/kVv6EF93VaJ8H+Yn5IczYiaAi98ajzjfoZfslet/e0sLh+wVBjb2qqIut1b0S26VSafsSQ==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@babel/helper-string-parser" "^7.23.4"
     "@babel/helper-validator-identifier" "^7.22.20"
@@ -2948,6 +3118,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@emoji-mart/data@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@emoji-mart/data/-/data-1.1.2.tgz"
@@ -2962,6 +3133,8 @@
 >>>>>>> f97d174 (updating the node its working fine)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@emotion/babel-plugin@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.11.0.tgz#c2d872b6a7767a9d176d007f5b31f7d504bb5d6c"
@@ -3063,6 +3236,7 @@
   resolved "https://registry.npmjs.org/@eslint-community/regexpp/-/regexpp-4.10.0.tgz"
   integrity sha512-Cu96Sd2By9mCNTx2iyKOmq10v22jUVQv0lQnlGNy16oE9589yE+QADPbrMGCkA51cKZSg3Pu/aTJVTGfL/qjUA==
 
+<<<<<<< HEAD
 "@eslint/eslintrc@^2.1.4":
   version "2.1.4"
   resolved "https://registry.npmjs.org/@eslint/eslintrc/-/eslintrc-2.1.4.tgz"
@@ -3071,14 +3245,19 @@
   resolved "https://registry.yarnpkg.com/@eslint-community/regexpp/-/regexpp-4.10.0.tgz#548f6de556857c8bb73bbee70c35dc82a2e74d63"
   integrity sha512-Cu96Sd2By9mCNTx2iyKOmq10v22jUVQv0lQnlGNy16oE9589yE+QADPbrMGCkA51cKZSg3Pu/aTJVTGfL/qjUA==
 
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@eslint/eslintrc@^2.1.3":
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-2.1.3.tgz#797470a75fe0fbd5a53350ee715e85e87baff22d"
   integrity sha512-yZzuIG+jnVu6hNSzFEN07e8BxF3uAzYtQb6uDkaYZLo6oYZDCq454c5kB8zxnzfCYyP4MIuyBn10L0DqwujTmA==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     ajv "^6.12.4"
     debug "^4.3.2"
@@ -3092,10 +3271,24 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@eslint/js@8.55.0":
   version "8.55.0"
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.55.0.tgz"
   integrity sha512-qQfo2mxH5yVom1kacMtZZJFVdW+E70mqHMJvVg6WTLo+VBuQJ4TojZlfWBjK0ve5BdEeNAVxOsl/nvNMpJOaJA==
+=======
+"@eslint/js@8.54.0":
+  version "8.54.0"
+  resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.54.0.tgz#4fab9a2ff7860082c304f750e94acd644cf984cf"
+  integrity sha512-ut5V+D+fOoWPgGGNj83GGjnntO39xDy6DWxO0wb7Jp3DcMX0TfIqdzHF85VTQkerdyGmuuMD9AKAo5KiNlf/AQ==
+
+"@fastify/busboy@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-1.2.1.tgz#9c6db24a55f8b803b5222753b24fe3aea2ba9ca3"
+  integrity sha512-7PQA7EH43S0CxcOa9OeAnaeA0oQ+e/DHNPZwSQM9CQHW76jle5+OvLdibRp/Aafs9KXbLhxyjOTkRjWUbQEd3Q==
+  dependencies:
+    text-decoding "^1.0.0"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@fastify/busboy@^1.2.1":
   version "1.2.1"
@@ -3454,10 +3647,13 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@firebase/remote-config@0.4.4", "@firebase/remote-config@^0.4.4":
 =======
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@firebase/remote-config@0.4.4":
 >>>>>>> fc807d0 (yarn.lock updated)
   version "0.4.4"
@@ -3511,6 +3707,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 "@firebase/webchannel-wrapper@0.3.0":
@@ -3525,6 +3722,8 @@
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@floating-ui/core@^1.4.2":
   version "1.5.1"
   resolved "https://registry.npmjs.org/@floating-ui/core/-/core-1.5.1.tgz"
@@ -3679,6 +3878,58 @@
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+
+"@google-cloud/firestore@^6.6.0":
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-6.8.0.tgz#d8c852844c381afaf62592796606c10e178400b5"
+  integrity sha512-JRpk06SmZXLGz0pNx1x7yU3YhkUXheKgH5hbDZ4kMsdhtfV5qPLJLRI4wv69K0cZorIk+zTMOwptue7hizo0eA==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    functional-red-black-tree "^1.0.1"
+    google-gax "^3.5.7"
+    protobufjs "^7.2.5"
+
+"@google-cloud/paginator@^3.0.7":
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@google-cloud/paginator/-/paginator-3.0.7.tgz#fb6f8e24ec841f99defaebf62c75c2e744dd419b"
+  integrity sha512-jJNutk0arIQhmpUUQJPJErsojqo834KcyB6X7a1mxuic8i1tKXxde8E69IZxNZawRIlZdIK2QY4WALvlK5MzYQ==
+  dependencies:
+    arrify "^2.0.0"
+    extend "^3.0.2"
+
+"@google-cloud/projectify@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/projectify/-/projectify-3.0.0.tgz#302b25f55f674854dce65c2532d98919b118a408"
+  integrity sha512-HRkZsNmjScY6Li8/kb70wjGlDDyLkVk3KvoEo9uIoxSjYLJasGiCch9+PqRVDOCGUFvEIqyogl+BeqILL4OJHA==
+
+"@google-cloud/promisify@^3.0.0":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@google-cloud/promisify/-/promisify-3.0.1.tgz#8d724fb280f47d1ff99953aee0c1669b25238c2e"
+  integrity sha512-z1CjRjtQyBOYL+5Qr9DdYIfrdLBe746jRTYfaYU6MeXkqp7UfYs/jX16lFFVzZ7PGEJvqZNqYUEtb1mvDww4pA==
+
+"@google-cloud/storage@^6.9.5":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/storage/-/storage-6.12.0.tgz#a5d3093cc075252dca5bd19a3cfda406ad3a9de1"
+  integrity sha512-78nNAY7iiZ4O/BouWMWTD/oSF2YtYgYB3GZirn0To6eBOugjXVoK+GXgUXOl+HlqbAOyHxAVXOlsj3snfbQ1dw==
+  dependencies:
+    "@google-cloud/paginator" "^3.0.7"
+    "@google-cloud/projectify" "^3.0.0"
+    "@google-cloud/promisify" "^3.0.0"
+    abort-controller "^3.0.0"
+    async-retry "^1.3.3"
+    compressible "^2.0.12"
+    duplexify "^4.0.0"
+    ent "^2.2.0"
+    extend "^3.0.2"
+    fast-xml-parser "^4.2.2"
+    gaxios "^5.0.0"
+    google-auth-library "^8.0.1"
+    mime "^3.0.0"
+    mime-types "^2.0.8"
+    p-limit "^3.0.1"
+    retry-request "^5.0.0"
+    teeny-request "^8.0.0"
+    uuid "^8.0.0"
 
 "@graphql-codegen/core@^4.0.0":
   version "4.0.0"
@@ -3953,7 +4204,21 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@graphql-tools/utils@^10.0.0", "@graphql-tools/utils@^10.0.10":
+=======
+"@graphql-tools/utils@^10.0.0":
+  version "10.0.8"
+  resolved "https://registry.yarnpkg.com/@graphql-tools/utils/-/utils-10.0.8.tgz#c7b84275ec83dc42ad9f3d4ffc424ff682075759"
+  integrity sha512-yjyA8ycSa1WRlJqyX/aLqXeE5DvF/H02+zXMUFnCzIDrj0UvLMUrxhmVFnMK0Q2n3bh4uuTeY3621m5za9ovXw==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    cross-inspect "1.0.0"
+    dset "^3.1.2"
+    tslib "^2.4.0"
+
+"@graphql-tools/utils@^10.0.10":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "10.0.11"
   resolved "https://registry.npmjs.org/@graphql-tools/utils/-/utils-10.0.11.tgz"
   integrity sha512-vVjXgKn6zjXIlYBd7yJxCVMYGb5j18gE3hx3Qw3mNsSEsYQXbJbPdlwb7Fc9FogsJei5AaqiQerqH4kAosp1nQ==
@@ -4001,6 +4266,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> fc807d0 (yarn.lock updated)
@@ -4022,6 +4288,8 @@
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@grpc/grpc-js@~1.7.0":
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.7.3.tgz#f2ea79f65e31622d7f86d4b4c9ae38f13ccab99a"
@@ -4034,13 +4302,17 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@grpc/grpc-js@~1.8.0":
   version "1.8.21"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.8.21.tgz#d282b122c71227859bf6c5866f4c40f4a2696513"
   integrity sha512-KeyQeZpxeEBSqFVTi3q2K7PiPXmgBfECc4updA1ejCLjYmoAlvvM3ZMp5ztTDUCUQmoY3CpDxvchjO1+rFkoHg==
+<<<<<<< HEAD
   dependencies:
     "@grpc/proto-loader" "^0.7.0"
     "@types/node" ">=12.12.47"
@@ -4075,6 +4347,11 @@
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+  dependencies:
+    "@grpc/proto-loader" "^0.7.0"
+    "@types/node" ">=12.12.47"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 >>>>>>> 4117e6b (Authentication using firebase and directives)
@@ -4099,6 +4376,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@grpc/proto-loader@^0.7.0":
 <<<<<<< HEAD
 =======
@@ -4113,6 +4391,9 @@
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+"@grpc/proto-loader@^0.7.0":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "0.7.10"
   resolved "https://registry.yarnpkg.com/@grpc/proto-loader/-/proto-loader-0.7.10.tgz#6bf26742b1b54d0a473067743da5d3189d06d720"
   integrity sha512-CAqDfoaQ8ykFd9zqBDn4k6iWT9loLAlc2ETmDFS9JCD70gDcnA4L3AFEo2iV7KyAtAAHFW9ftq1Fz+Vsgq80RQ==
@@ -4461,6 +4742,7 @@
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 
+<<<<<<< HEAD
 "@neo4j/cypher-builder@^1.7.1":
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/@neo4j/cypher-builder/-/cypher-builder-1.7.3.tgz#87dfd02489c406dd65f8d473a464806a383d48ce"
@@ -4497,11 +4779,21 @@
   dependencies:
     lodash "^4.17.21"
 
+=======
+"@jsdoc/salty@^0.2.1":
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/@jsdoc/salty/-/salty-0.2.6.tgz#90ab8050ef4accf8d19269d0ca2ddff2174fe199"
+  integrity sha512-aA+awb5yoml8TQ3CzI5Ue7sM3VMRC4l1zJJW4fgZ8OCL1wshJZhNzaf0PL85DSnOUw6QuFgeHGD/eq/xwwAF2g==
+  dependencies:
+    lodash "^4.17.21"
+
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@neo4j/cypher-builder@^1.7.1":
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/@neo4j/cypher-builder/-/cypher-builder-1.7.3.tgz#87dfd02489c406dd65f8d473a464806a383d48ce"
   integrity sha512-8H9c9ZsxWLheubWATSGk/IwNWlf20W8vh5mkHa078vJeswKF2aMZfOh/nW+iKA3L4017oOcN4PbxGu/ebsHhPQ==
 
+<<<<<<< HEAD
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
 "@neo4j/graphql-ogm@^4.4.1":
 <<<<<<< HEAD
@@ -4520,11 +4812,18 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+"@neo4j/graphql-ogm@^4.4.1":
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/@neo4j/graphql-ogm/-/graphql-ogm-4.4.3.tgz#1b40ae91c8985f5db08e1a37ba8ea0507048cd41"
+  integrity sha512-bFZ7q5Ys3EvWhV42t3Pi/V7UZE5zpSOwZtLQEyz8g64Mtqs0madsi94B/Y4kDrDff9Yh9SgcPJiJqt5ovuv4yQ==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@graphql-codegen/core" "^4.0.0"
     "@graphql-codegen/plugin-helpers" "^5.0.0"
     "@graphql-codegen/typescript" "^4.0.0"
     "@graphql-tools/merge" "^9.0.0"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4550,6 +4849,11 @@
 =======
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+    "@neo4j/graphql" "^4.4.3"
+    prettier "^2.7.1"
+
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@neo4j/graphql-plugin-auth@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@neo4j/graphql-plugin-auth/-/graphql-plugin-auth-2.2.0.tgz#4b8cc9f5d9f69f830a93d5e34586b59a0407c815"
@@ -4559,6 +4863,7 @@
     jsonwebtoken "^9.0.0"
     jwks-rsa "^3.0.0"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4617,10 +4922,13 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@neo4j/graphql@^4.4.1", "@neo4j/graphql@^4.4.3":
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/@neo4j/graphql/-/graphql-4.4.3.tgz#ea4e2cff0b1bf371db471219960ed8ed2d92111e"
   integrity sha512-Vcki99V1CU8M7/8Gr2AQTpI2uXXw/pXi6/hUTNNSxIkppOCfs8NB23tATjytW3SIh6apPmv966dLw0wEYKJfGg==
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
@@ -4630,11 +4938,14 @@
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@apollo/subgraph" "^2.2.3"
     "@graphql-tools/merge" "^9.0.0"
     "@graphql-tools/resolvers-composition" "^7.0.0"
     "@graphql-tools/schema" "10.0.0"
+<<<<<<< HEAD
     "@graphql-tools/utils" "^10.0.0"
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -4675,6 +4986,8 @@
     "@graphql-tools/merge" "^9.0.0"
     "@graphql-tools/resolvers-composition" "^7.0.0"
     "@graphql-tools/schema" "10.0.0"
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@graphql-tools/utils" "^10.0.0"
     "@neo4j/cypher-builder" "^1.7.1"
     camelcase "^6.3.0"
@@ -4794,6 +5107,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 "@popperjs/core@^2.9.0":
   version "2.11.8"
@@ -4803,6 +5117,8 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
@@ -4956,6 +5272,7 @@
     classcat "^5.0.3"
     zustand "^4.4.1"
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 "@rushstack/eslint-patch@^1.1.3":
 <<<<<<< HEAD
@@ -4974,6 +5291,13 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.5.1.tgz#5f1b518ec5fa54437c0b7c4a821546c64fed6922"
   integrity sha512-6i/8UoL0P5y4leBIGzvkZdS85RDMG9y1ihZzmTZQ5LdHUYmZ7pKFoj8X0236s3lusPs1Fa5HTQUpwI+UfTcmeA==
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+
+"@rushstack/eslint-patch@^1.1.3":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.5.1.tgz#5f1b518ec5fa54437c0b7c4a821546c64fed6922"
+  integrity sha512-6i/8UoL0P5y4leBIGzvkZdS85RDMG9y1ihZzmTZQ5LdHUYmZ7pKFoj8X0236s3lusPs1Fa5HTQUpwI+UfTcmeA==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
@@ -5001,6 +5325,7 @@
   dependencies:
     tslib "^2.4.0"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -5118,6 +5443,8 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@testing-library/dom@^9.0.0", "@testing-library/dom@^9.3.3":
   version "9.3.3"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-9.3.3.tgz#108c23a5b0ef51121c26ae92eb3179416b0434f5"
@@ -5161,6 +5488,7 @@
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.5.1.tgz#27337d72046d5236b32fd977edee3f74c71d332f"
   integrity sha512-UCcUKrUYGj7ClomOo2SpNVvx4/fkd/2BbIHDCle8A0ax+P3bU7yJwDBDrS6ZwdTMARWTGODX1hEsCcO+7beJjg==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -5756,6 +6084,8 @@
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@tootallnate/once@2":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
@@ -5949,9 +6279,12 @@
   resolved "https://registry.yarnpkg.com/@types/d3-quadtree/-/d3-quadtree-3.0.5.tgz#2bc3884742e8b53dbc41175b0720373f3aae04a2"
   integrity sha512-Cb1f3jyNBnvMMkf4KBZ7IgAQVWd9yzBwYcrxGqg3aPCUgWELAS+nyeB7r76aqu1e3+CGDjhk4BrWaFBekMwigg==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@types/d3-random@*":
   version "3.0.3"
@@ -6142,6 +6475,14 @@
     "@types/minimatch" "^5.1.2"
     "@types/node" "*"
 
+"@types/glob@*":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-8.1.0.tgz#b63e70155391b0584dce44e7ea25190bbc38f2fc"
+  integrity sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==
+  dependencies:
+    "@types/minimatch" "^5.1.2"
+    "@types/node" "*"
+
 "@types/graceful-fs@^4.1.3":
   version "4.1.9"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.9.tgz#2a06bc0f68a20ab37b3e36aa238be6abdf49e8b4"
@@ -6149,6 +6490,7 @@
   dependencies:
     "@types/node" "*"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -6166,6 +6508,8 @@
 
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@types/hoist-non-react-statics@^3.3.0", "@types/hoist-non-react-statics@^3.3.1":
 >>>>>>> ed821dd (yarn.lock updated)
   version "3.3.5"
@@ -6204,9 +6548,12 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.5.9.tgz#eb997ab4a201b7504662ac9ebb84a748e17f95ab"
   integrity sha512-zJeWhqBwVoPm83sP8h1/SVntwWTu5lZbKQGCvBjxQOyEWnKnsaomt2y7SlV4KfwlrHAHHAn00Sh4IAWaIsGOgQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     expect "^29.0.0"
     pretty-format "^29.0.0"
@@ -6216,9 +6563,12 @@
   resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.28.tgz#ce70ef8360ece723e7a40b887d1c373cdc979530"
   integrity sha512-2o/vlzaDXiGWFrHz/PhX88cy68UDc8NBBT9i1nU+EtRkKgRxMWLTlUkEJb+MRfhIw6wKK8RDmfoEXClH2PsIyA==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@types/sizzle" "*"
 
@@ -6240,6 +6590,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "9.0.5"
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-9.0.5.tgz#0bd9b841c9e6c5a937c17656e2368f65da025588"
   integrity sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==
@@ -6258,6 +6609,11 @@
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-9.0.5.tgz#0bd9b841c9e6c5a937c17656e2368f65da025588"
   integrity sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+  version "9.0.5"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-9.0.5.tgz#0bd9b841c9e6c5a937c17656e2368f65da025588"
+  integrity sha512-VRLSGzik+Unrup6BsouBeHsf4d1hOEgYWTm/7Nmw1sXoN1+tRly/Gy/po3yeahnP4jfnQWWAhQAqcNfH7ngOkA==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@types/node" "*"
 
@@ -6265,6 +6621,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-3.0.5.tgz#1e78a3ac2428e6d7e6c05c1665c242023a4601d8"
   integrity sha512-yg6E+u0/+Zjva+buc3EIb+29XEg4wltq7cSmd4Uc2EE/1nUVmxyzpX6gUXD0V8jIrG0r7YeOGVIbYRkxeooCtw==
@@ -6283,6 +6640,11 @@
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-3.0.5.tgz#1e78a3ac2428e6d7e6c05c1665c242023a4601d8"
   integrity sha512-yg6E+u0/+Zjva+buc3EIb+29XEg4wltq7cSmd4Uc2EE/1nUVmxyzpX6gUXD0V8jIrG0r7YeOGVIbYRkxeooCtw==
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-3.0.5.tgz#1e78a3ac2428e6d7e6c05c1665c242023a4601d8"
+  integrity sha512-yg6E+u0/+Zjva+buc3EIb+29XEg4wltq7cSmd4Uc2EE/1nUVmxyzpX6gUXD0V8jIrG0r7YeOGVIbYRkxeooCtw==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@types/long@^4.0.0", "@types/long@^4.0.1":
   version "4.0.2"
@@ -6301,6 +6663,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@types/mdurl/-/mdurl-1.0.5.tgz#3e0d2db570e9fb6ccb2dc8fde0be1d79ac810d39"
   integrity sha512-6L6VymKTzYSrEf4Nev4Xa1LCHKrlTlYCBMTlQKFuddo1CvQcE52I0mwfOJayueUC7MJuXOeHTcIU683lzd0cUA==
@@ -6319,6 +6682,11 @@
   resolved "https://registry.yarnpkg.com/@types/mdurl/-/mdurl-1.0.5.tgz#3e0d2db570e9fb6ccb2dc8fde0be1d79ac810d39"
   integrity sha512-6L6VymKTzYSrEf4Nev4Xa1LCHKrlTlYCBMTlQKFuddo1CvQcE52I0mwfOJayueUC7MJuXOeHTcIU683lzd0cUA==
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/mdurl/-/mdurl-1.0.5.tgz#3e0d2db570e9fb6ccb2dc8fde0be1d79ac810d39"
+  integrity sha512-6L6VymKTzYSrEf4Nev4Xa1LCHKrlTlYCBMTlQKFuddo1CvQcE52I0mwfOJayueUC7MJuXOeHTcIU683lzd0cUA==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@types/micro-cors@^0.1.3":
   version "0.1.5"
@@ -6362,6 +6730,11 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-5.1.2.tgz#07508b45797cb81ec3f273011b054cd0755eddca"
   integrity sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==
 
+"@types/minimatch@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-5.1.2.tgz#07508b45797cb81ec3f273011b054cd0755eddca"
+  integrity sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==
+
 "@types/node-fetch@^2.6.1":
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.6.9.tgz#15f529d247f1ede1824f7e7acdaa192d5f28071e"
@@ -6375,9 +6748,12 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.9.3.tgz#e089e1634436f676ff299596c9531bd2b59fffc6"
   integrity sha512-nk5wXLAXGBKfrhLB0cyHGbSqopS+nz0BUgZkUQqSHSSgdee0kssp1IAqlQOu333bW+gMNs2QREx7iynm19Abxw==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     undici-types "~5.26.4"
 
@@ -6389,6 +6765,7 @@
 "@types/node@^18.0.4":
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "18.19.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.3.tgz#e4723c4cb385641d61b983f6fe0b716abd5f8fc0"
   integrity sha512-k5fggr14DwAytoA/t8rPrIz++lXK7/DqckthCmoZOKNsEbJkId4Z//BqgApXBUGrGddrigYa1oqheo/7YmW4rg==
@@ -6397,12 +6774,15 @@
 =======
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "18.18.11"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.18.11.tgz#d43f6b92671eacfdd1fedb7a897388fb8880323f"
   integrity sha512-c1vku6qnTeujJneYH94/4aq73XrVcsJe35UPyAsSok1ijiKrkRzK+AxQPSpNMUnC03roWBBwJx/9I8V7lQoxmA==
   dependencies:
     undici-types "~5.26.4"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 "@types/object.omit@^3.0.0":
   version "3.0.3"
@@ -6417,6 +6797,8 @@
 
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@types/parse-json@^4.0.0":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.2.tgz#5950e50960793055845e956c427fc2b0d70c5239"
@@ -6441,6 +6823,7 @@
   version "18.2.16"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.16.tgz#028f44b08f8cc3401c37dde4c2a5e36ddf9cb5b0"
   integrity sha512-766c37araZ9vxtYs25gvY2wNdFWsT2ZiUvOd0zMhTaoGj6B911N8CKQWgXXJoPMLF3J82thpRqQA7Rf3rBwyJw==
+<<<<<<< HEAD
   dependencies:
     "@types/react" "*"
 
@@ -6450,6 +6833,8 @@
   resolved "https://registry.yarnpkg.com/@types/react-mentions/-/react-mentions-4.1.12.tgz#d0145098093f2b5d2f0e1f95c9b0a033a1c98db3"
   integrity sha512-r1jQ/juhUFmMoZPbWRqxUHDWuqVntuz+CaKc52i45ghvpP83KBtVr9bydQo+hH+t9IFb703VjQ0RSCF3mxoe/Q==
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@types/react" "*"
 
@@ -6460,9 +6845,12 @@
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.31.tgz#ff914f80401488bb31d064b1d84ae525dad41b23"
   integrity sha512-merF9AH72krBUekQY6uObXnMsEo1xTeZy9NONNRnqSwvwVe3HtLeRvNIPaKmPDIOWPsSFE51rc2WGpPMqmuCWg==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.0"
     "@types/react" "*"
@@ -6474,9 +6862,12 @@
   resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.9.tgz#12a1a1b5b8791067198149867b0823fbace31579"
   integrity sha512-ZVNmWumUIh5NhH8aMD9CR2hdW0fNuYInlocZHaZ+dgk/1K49j1w/HoAuK1ki+pgscQrOFRTlXeoURtuzEkV3dg==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@types/react" "*"
 
@@ -6496,9 +6887,12 @@
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.38.tgz#3605ca41d3daff2c434e0b98d79a2469d4c2dd52"
   integrity sha512-cBBXHzuPtQK6wNthuVMV6IjHAFkdl/FOPFIlkd81/Cd1+IqkHu/A+w4g43kaQQoYHik/ruaQBDL72HyCy1vuMw==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -6517,9 +6911,12 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.7.tgz#d62f1bd54724c84089f51f9218393930ba4abcf4"
   integrity sha512-8g25Nl3AuB1KulTlSUsUhUo/oBgBU6XIXQ+XURpeioEbEJvkO7qI4vDfREv3vJYHHzqXjcAHvoJy4pTtSQNZtA==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@types/semver@^7.5.0":
   version "7.5.6"
@@ -6548,9 +6945,12 @@
   resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.7.tgz#ab5744eceb30daea3e0c6a9c2d9e1a3817ef7656"
   integrity sha512-sU5MNKvSFdbT97qLSabU6jxceY9BfYQe9uF+b8E1rdTecpq9ROkkKoiHlblUlhgfaz9bdCByWjAI40Y3mHf1iQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 "@types/stack-utils@^2.0.0":
   version "2.0.3"
@@ -6573,6 +6973,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 "@types/throttle-debounce@^2.1.0":
   version "2.1.0"
@@ -6582,6 +6983,8 @@
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@types/tough-cookie@*":
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.5.tgz#cb6e2a691b70cb177c6e3ae9c1d2e8b2ea8cd304"
@@ -6605,6 +7008,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> ed821dd (yarn.lock updated)
@@ -6623,6 +7027,8 @@
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "@types/uuid@^9.0.0":
   version "9.0.7"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.7.tgz#b14cebc75455eeeb160d5fe23c2fcc0c64f724d8"
@@ -6700,6 +7106,7 @@
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@wry/caches@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@wry/caches/-/caches-1.0.1.tgz#8641fd3b6e09230b86ce8b93558d44cf1ece7e52"
@@ -6718,6 +7125,9 @@
 =======
 "@wry/context@^0.7.0", "@wry/context@^0.7.3":
 >>>>>>> a8d7566 (deleting edges and getting edges working fine)
+=======
+"@wry/context@^0.7.0", "@wry/context@^0.7.3":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.7.4.tgz#e32d750fa075955c4ab2cfb8c48095e1d42d5990"
   integrity sha512-jmT7Sb4ZQWI5iyu3lobQxICu2nC/vbUhP0vIdd6tHC9PTfenmRmuIFqktc6GH9cgi+ZHnsLWPvfSvc4DrYmKiQ==
@@ -6774,6 +7184,7 @@ acorn-jsx@^5.3.2:
 acorn-walk@^8.0.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "8.3.1"
   resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.3.1.tgz#2f10f5b69329d90ae18c58bf1fa8fccd8b959a43"
   integrity sha512-TgUZgYvqZprrl7YldZNoa9OciCAyZR+Ejm9eXzKCmjsF5IKp/wgQ7Z/ZpjpGTIUPwrHQIcYeI8qDh4PsEwxMbw==
@@ -6791,6 +7202,11 @@ acorn@^3.1.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-3.3.0.tgz#45e37fb39e8da3f25baee3ff5369e2bb5f22017a"
   integrity sha512-OLUyIIZ7mF5oaAUT1w0TFqQS81q3saT46x8t7ukpPjMNk+nbs4ZHhs7ToV8EWnLYLepjETXd4XaCE4uxkMeqUw==
+=======
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.3.0.tgz#2097665af50fd0cf7a2dfccd2b9368964e66540f"
+  integrity sha512-FS7hV565M5l1R08MXqo8odwMTB02C2UqzB17RVgu9EyuYFBqJZ3/ZY97sQD5FewVu1UyDFc1yztUDrAwT0EypA==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 >>>>>>> 190d740 (authenticated new project)
 =======
@@ -6846,6 +7262,7 @@ agent-base@6:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ajv@^6.12.4:
 =======
 =======
@@ -6893,6 +7310,9 @@ ajv@^6.10.0, ajv@^6.12.4:
 =======
 ajv@^6.12.4:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+ajv@^6.12.4:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "6.12.6"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
   integrity sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==
@@ -7023,6 +7443,9 @@ apollo-server-micro@^3.12.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "3.13.0"
   resolved "https://registry.yarnpkg.com/apollo-server-micro/-/apollo-server-micro-3.13.0.tgz#9aaa8acebb8ea2c1148e31394f69124bfe4425bf"
   integrity sha512-EdhhowM1nPsOhcJGpnzlcuTody/Wf7xjj+NYV5Y3qelUC5xaCYPv5S/W6CRgPfsNwoYWwdKdaAgDpDjucrwbbg==
@@ -7211,11 +7634,17 @@ arrify@^2.0.0:
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-2.0.1.tgz#c9655e9331e0abcd588d2a7cad7e9956f66701fa"
   integrity sha512-3duEwti880xqi4eAMN8AyR4a0ByT90zoYdLlevfrvU43vb0YZwZVfxOgxWrLXXXpyugL0hNZc9G6BiB5B3nUug==
 
+arrify@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/arrify/-/arrify-2.0.1.tgz#c9655e9331e0abcd588d2a7cad7e9956f66701fa"
+  integrity sha512-3duEwti880xqi4eAMN8AyR4a0ByT90zoYdLlevfrvU43vb0YZwZVfxOgxWrLXXXpyugL0hNZc9G6BiB5B3nUug==
+
 asap@~2.0.3:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -7256,6 +7685,8 @@ assert-plus@^0.2.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 ast-types-flow@^0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/ast-types-flow/-/ast-types-flow-0.0.8.tgz#0a85e1c92695769ac13a428bb653e7538bea27d6"
@@ -7329,6 +7760,7 @@ available-typed-arrays@^1.0.5:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -7366,6 +7798,8 @@ aws4@^1.2.1, aws4@^1.8.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 190d740 (authenticated new project)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 axe-core@=4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
@@ -7385,6 +7819,7 @@ axe-core@^4.6.2:
   integrity sha512-zIURGIS1E1Q4pcrMjp+nnEh+16G56eG/MUllJH8yEvw7asDo7Ac9uhC9KIH5jzpITueEZolfYglnCGIuSBz39g==
 >>>>>>> 69fbf29 (authenticated new project)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -7424,6 +7859,8 @@ axios@^1.3.5, axios@^1.6.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 axobject-query@^3.2.1:
 =======
 axios@^1.6.0:
@@ -7640,6 +8077,7 @@ binary-extensions@^2.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
@@ -7697,10 +8135,13 @@ bl@^4.0.3:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 bluebird@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -7728,6 +8169,8 @@ bluebird@~2.9.2:
   version "2.9.34"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.9.34.tgz#2f7b4ec80216328a9fddebdf69c8d4942feff7d8"
   integrity sha512-ZDzCb87X7/IP1uzQ5eJZB+WoQRGTnKL5DHWvPw6kkMbQseouiQIrEi3P1UGE0D1k0N5/+aP/5GMCyHZ1xYJyHQ==
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -7847,9 +8290,12 @@ browserslist@^4.21.10, browserslist@^4.21.9, browserslist@^4.22.1:
     electron-to-chromium "^1.4.535"
     node-releases "^2.0.13"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     update-browserslist-db "^1.0.13"
 
 bs-logger@0.x:
@@ -7936,9 +8382,12 @@ caniuse-lite@^1.0.30001406, caniuse-lite@^1.0.30001538, caniuse-lite@^1.0.300015
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001563.tgz#aa68a64188903e98f36eb9c56e48fba0c1fe2a32"
   integrity sha512-na2WUmOxnwIZtwnFI2CZ/3er0wdNzU7hN+cPYz/z2ajHThnkWjNBOpEPP4n+4r2WPM847JaMotaJE3bnfzjyKw==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 capital-case@^1.0.4:
   version "1.0.4"
@@ -7949,6 +8398,7 @@ capital-case@^1.0.4:
     tslib "^2.0.3"
     upper-case-first "^2.0.2"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -7973,6 +8423,14 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==
+=======
+catharsis@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/catharsis/-/catharsis-0.9.0.tgz#40382a168be0e6da308c277d3a2b3eb40c7d2121"
+  integrity sha512-prMTQVpcns/tzFgFVkVp6ak6RykZyWb3gu8ckUpd6YkTlacOd3DXGJjIpD4Q6zJirizvaiAjSSHlOsA+6sNh2A==
+  dependencies:
+    lodash "^4.17.15"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -8174,6 +8632,7 @@ cliui@^8.0.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -8188,6 +8647,8 @@ clone@~0.2.0:
 >>>>>>> 190d740 (authenticated new project)
 =======
 >>>>>>> 54d2a15 (structure change branch rebased with main)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 clsx@^1.1.1:
 =======
 =======
@@ -8272,6 +8733,7 @@ colorspace@1.1.x:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
 combined-stream@^1.0.8:
@@ -8325,6 +8787,9 @@ combined-stream@^1.0.8:
 =======
 combined-stream@^1.0.8:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+combined-stream@^1.0.8:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
@@ -8412,6 +8877,7 @@ cookie@0.5.0:
 core-js-compat@^3.31.0, core-js-compat@^3.33.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   version "3.34.0"
   resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.34.0.tgz#61a4931a13c52f8f08d924522bba65f8c94a5f17"
   integrity sha512-4ZIyeNbW/Cn1wkMMDy+mvrRUxrwFNjKwbhCfQpDd+eLgYipDqp8oGFGtLmhh18EDPKA0g3VUBYOxQGGwvWLVpA==
@@ -8448,6 +8914,13 @@ core-util-is@1.0.2:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==
 >>>>>>> fc807d0 (yarn.lock updated)
+=======
+  version "3.33.3"
+  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.33.3.tgz#ec678b772c5a2d8a7c60a91c3a81869aa704ae01"
+  integrity sha512-cNzGqFsh3Ot+529GIXacjTJ7kegdt5fPXxCBVS1G0iaZpuo/tBz399ymceLJveQhFFZ8qThHiP3fzuoQjKN2ow==
+  dependencies:
+    browserslist "^4.22.1"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 =======
 >>>>>>> 9a75d88 (authenticated new project)
@@ -8509,6 +8982,7 @@ create-jest@^29.7.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 crelt@^1.0.0:
   version "1.0.6"
@@ -8518,6 +8992,8 @@ crelt@^1.0.0:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 cross-fetch@^3.1.5:
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.8.tgz#0327eba65fd68a7d119f8fb2bf9334a1a7956f82"
@@ -8550,6 +9026,7 @@ css-box-model@^1.2.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 css-what@^6.1.0:
   version "6.1.0"
@@ -8559,6 +9036,8 @@ css-what@^6.1.0:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 css.escape@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/css.escape/-/css.escape-1.5.1.tgz#42e27d4fa04ae32f931a4b4d4191fa9cddee97cb"
@@ -8670,6 +9149,7 @@ damerau-levenshtein@^1.0.8:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 dante3@^1.0.8:
   version "1.3.1"
@@ -8713,6 +9193,8 @@ dash-get@^1.0.2:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 data-uri-to-buffer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-4.0.1.tgz#d8feb2b2881e6a4f58c2e08acfd0e2834e26222e"
@@ -8789,6 +9271,7 @@ deep-equal@^2.0.5:
 <<<<<<< HEAD
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 deep-is@^0.1.3, deep-is@~0.1.3:
 =======
 <<<<<<< HEAD
@@ -8809,6 +9292,9 @@ deep-is@^0.1.3, deep-is@~0.1.3:
 
 deep-is@^0.1.3, deep-is@~0.1.3:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+deep-is@^0.1.3, deep-is@~0.1.3:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.4.tgz#a6f2dce612fadd2ef1f519b73551f17e85199831"
   integrity sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==
@@ -8833,6 +9319,7 @@ define-data-property@^1.0.1, define-data-property@^1.1.1:
     has-property-descriptors "^1.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 define-properties@^1.1.3, define-properties@^1.2.0, define-properties@^1.2.1:
 <<<<<<< HEAD
 =======
@@ -8843,6 +9330,9 @@ define-properties@^1.1.3, define-properties@^1.1.4, define-properties@^1.2.0, de
 =======
 define-properties@^1.1.3, define-properties@^1.1.4, define-properties@^1.2.0, define-properties@^1.2.1:
 >>>>>>> a8d7566 (deleting edges and getting edges working fine)
+=======
+define-properties@^1.1.3, define-properties@^1.1.4, define-properties@^1.2.0, define-properties@^1.2.1:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/define-properties/-/define-properties-1.2.1.tgz#10781cc616eb951a80a034bafcaa7377f6af2b6c"
   integrity sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==
@@ -8903,9 +9393,12 @@ diagram-js@^12.2.0:
   resolved "https://registry.yarnpkg.com/diagram-js/-/diagram-js-12.8.0.tgz#77d57a22bf8bf9a604a88d9999aaa4055b16c557"
   integrity sha512-DlXqr9q2OgRL9vFHq4c8IdzzFm+xAkG/rIpQW5qIJF0+49pHMo9sx+qxjwOjn6ZZd9h3LfIt29fjQF/XjC0uqQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@bpmn-io/diagram-js-ui" "^0.2.2"
     clsx "^2.0.0"
@@ -9032,12 +9525,16 @@ dset@^3.1.2:
   integrity sha512-20TuZZHCEZ2O71q9/+8BwKwZ0QtD9D8ObhrihJPr+vLLYlSuAU3/zL4cSlgbfeoGHTjCSJBa7NGcrF9/Bx/WJQ==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ecdsa-sig-formatter@1.0.11:
 =======
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 duplexify@^4.0.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-4.1.2.tgz#18b4f8d28289132fa0b9573c898d9f903f81c7b0"
   integrity sha512-fz3OjcNCHmRP12MJoZMPglx8m4rrFP8rovnk4vT8Fs+aonZoCwGg10dSsQsfP/E62eZcPTMSMP6686fu9Qlqtw==
+<<<<<<< HEAD
   dependencies:
     end-of-stream "^1.4.1"
     inherits "^2.0.3"
@@ -9069,12 +9566,15 @@ ecc-jsbn@~0.1.1:
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"
   integrity sha512-eh9O+hwRHNbG4BLTjEl3nw044CkGm5X6LoaCf7LPp7UU8Qrt47JYNi6nPX8xjW97TKGKm1ouctg0QSpZe9qrnw==
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     end-of-stream "^1.4.1"
     inherits "^2.0.3"
     readable-stream "^3.1.1"
     stream-shift "^1.0.0"
 
+<<<<<<< HEAD
 =======
 >>>>>>> 9a75d88 (authenticated new project)
 ecdsa-sig-formatter@1.0.11, ecdsa-sig-formatter@^1.0.11:
@@ -9082,6 +9582,9 @@ ecdsa-sig-formatter@1.0.11, ecdsa-sig-formatter@^1.0.11:
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+ecdsa-sig-formatter@1.0.11, ecdsa-sig-formatter@^1.0.11:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz#ae0f0fa2d85045ef14a817daa3ce9acd0489e5bf"
   integrity sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==
@@ -9093,6 +9596,7 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 electron-to-chromium@^1.4.601:
@@ -9113,10 +9617,13 @@ electron-to-chromium@^1.4.601:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 electron-to-chromium@^1.4.535:
   version "1.4.590"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.590.tgz#85a428fbabb77265a4804040837ed4f2538e3300"
   integrity sha512-hohItzsQcG7/FBsviCYMtQwUSWvVF7NVqPOnJCErWsAshsP/CR2LAXdmq276RbESNdhxiAq5/vRo1g2pxGXVww==
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
@@ -9127,6 +9634,8 @@ electron-to-chromium@^1.4.535:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 emittery@^0.13.1:
   version "0.13.1"
@@ -9156,6 +9665,7 @@ encodeurl@~1.0.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 encoding@^0.1.11:
   version "0.1.13"
@@ -9164,16 +9674,28 @@ encoding@^0.1.11:
 =======
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 end-of-stream@^1.4.1:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/end-of-stream/-/end-of-stream-1.4.4.tgz#5ae64a5f45057baf3626ec14da0ca5e4b2431eb0"
   integrity sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> fc807d0 (yarn.lock updated)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
   dependencies:
     once "^1.4.0"
+=======
+  dependencies:
+    once "^1.4.0"
+
+ent@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/ent/-/ent-2.2.0.tgz#e964219325a21d05f44466a2f686ed6ce5f5dd1d"
+  integrity sha512-GHrMyVZQWvTIdDtpiEXdHZnFQKzeO09apj8Cbl4pKWy4i0Oprcq17usfDt5aO63swf0JOeMWjWQE/LzgSRuWpA==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 ent@^2.2.0:
   version "2.2.0"
@@ -9195,15 +9717,19 @@ entities@^4.4.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 entities@~2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.1.0.tgz#992d3129cf7df6870b96c57858c249a120f8b8b5"
   integrity sha512-hCx1oky9PFrJ611mf0ifBLBRW8lUUVRlFolb5gWRfIELabBlbp9xZvrqZLZAs+NxFnbfQoeGd8wDkygjg7U85w==
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -9219,6 +9745,8 @@ entities@~3.0.1:
   resolved "https://registry.yarnpkg.com/entities/-/entities-3.0.1.tgz#2b887ca62585e96db3903482d336c1006c3001d4"
   integrity sha512-WiyBqoomrwMdFG1e0kqvASYfnlb0lp8M5o5Fw2OFq1hNZxxcNk8Ik0Xm7LxzBhuidnZB/UtBqVCgUz3kBOP51Q==
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 >>>>>>> 4117e6b (Authentication using firebase and directives)
@@ -9527,9 +10055,12 @@ eslint@^8.19.0:
     "@eslint/eslintrc" "^2.1.3"
     "@eslint/js" "8.54.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@humanwhocodes/config-array" "^0.11.13"
     "@humanwhocodes/module-importer" "^1.0.1"
     "@nodelib/fs.walk" "^1.2.8"
@@ -9568,6 +10099,7 @@ eslint@^8.19.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 espree@^9.0.0, espree@^9.6.0, espree@^9.6.1:
   version "9.6.1"
   resolved "https://registry.yarnpkg.com/espree/-/espree-9.6.1.tgz#a2a17b8e434690a5432f2f8018ce71d331a48c6f"
@@ -9579,6 +10111,9 @@ espree@^9.0.0:
 =======
 espree@^9.0.0, espree@^9.6.0, espree@^9.6.1:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+espree@^9.0.0, espree@^9.6.0, espree@^9.6.1:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "9.6.1"
   resolved "https://registry.yarnpkg.com/espree/-/espree-9.6.1.tgz#a2a17b8e434690a5432f2f8018ce71d331a48c6f"
   integrity sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==
@@ -9728,6 +10263,7 @@ express@^4.17.1, express@^4.18.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
@@ -9771,10 +10307,14 @@ extend@^3.0.2:
 =======
 extend@^3.0.2:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+extend@^3.0.2:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -9795,6 +10335,8 @@ extsprintf@^1.2.0:
 >>>>>>> 69fbf29 (authenticated new project)
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
@@ -9824,11 +10366,14 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 fast-text-encoding@^1.0.0, fast-text-encoding@^1.0.3:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/fast-text-encoding/-/fast-text-encoding-1.0.6.tgz#0aa25f7f638222e3396d72bf936afcf1d42d6867"
@@ -9840,6 +10385,7 @@ fast-xml-parser@^4.2.2:
   integrity sha512-rmrXUXwbJedoXkStenj1kkljNF7ugn5ZjR9FJcwmCfcCbtOMDghPajbc+Tck6vE6F5XsDmx+Pr2le9fw8+pXBg==
   dependencies:
     strnum "^1.0.5"
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -9863,6 +10409,8 @@ fast.js@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/fast.js/-/fast.js-0.1.1.tgz#7c024d55ae144882fbcee44b79005fe2dcabd9fe"
   integrity sha512-DIVG0bJTAgVg6iUiAvmVBzE+8ZAPZ3cmuzTjkC9PxLM2/6TqUtfgr+1P3bCHUdlDAstZYLqOQTLKU4+srK6Y0w==
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 >>>>>>> 4117e6b (Authentication using firebase and directives)
 =======
@@ -9887,6 +10435,7 @@ fastq@^1.6.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 fault@^2.0.0:
   version "2.0.1"
@@ -9903,6 +10452,8 @@ fault@^2.0.0:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 faye-websocket@0.11.4:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/faye-websocket/-/faye-websocket-0.11.4.tgz#7f0d9275cfdd86a1c963dc8b65fcc451edcbb1da"
@@ -10006,16 +10557,20 @@ find-up@^5.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 firebase-admin@^11.11.0:
   version "11.11.1"
   resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-11.11.1.tgz#6712923de70d218c9f514d73005d976d03339605"
   integrity sha512-UyEbq+3u6jWzCYbUntv/HuJiTixwh36G1R9j0v71mSvGAx/YZEWEW7uSGLYxBYE6ckVRQoKMr40PYUEzrm/4dg==
 =======
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 firebase-admin@^11.11.0:
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-11.11.0.tgz#3d6df5dfbcf85dc1c6c4302f8aee4f7c82171725"
   integrity sha512-lp784gXFAJgUEtjSdYNZGTWZqltqjBkoaPSQhDKnmWXJP/MCbWdiDY1hsdkl/6O4O4KFovTjUDLu26sojwdQvw==
+<<<<<<< HEAD
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
   dependencies:
     "@fastify/busboy" "^1.2.1"
@@ -10066,6 +10621,9 @@ firebase-admin@^11.11.0:
   resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-11.11.0.tgz#3d6df5dfbcf85dc1c6c4302f8aee4f7c82171725"
   integrity sha512-lp784gXFAJgUEtjSdYNZGTWZqltqjBkoaPSQhDKnmWXJP/MCbWdiDY1hsdkl/6O4O4KFovTjUDLu26sojwdQvw==
   dependencies:
+=======
+  dependencies:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
     "@fastify/busboy" "^1.2.1"
     "@firebase/database-compat" "^0.3.4"
     "@firebase/database-types" "^0.10.4"
@@ -10079,9 +10637,12 @@ firebase-admin@^11.11.0:
     "@google-cloud/storage" "^6.9.5"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 >>>>>>> 4117e6b (Authentication using firebase and directives)
@@ -10152,6 +10713,7 @@ fn.name@1.x.x:
   resolved "https://registry.yarnpkg.com/fn.name/-/fn.name-1.1.0.tgz#26cad8017967aea8731bc42961d04a3d5988accc"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 follow-redirects@^1.15.0:
   version "1.15.3"
@@ -10163,6 +10725,9 @@ follow-redirects@^1.15.0:
 
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 for-each@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.3.tgz#69b447e88a0a5d32c3e7084f3f1710034b21376e"
@@ -10170,6 +10735,7 @@ for-each@^0.3.3:
   dependencies:
     is-callable "^1.1.3"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -10214,6 +10780,8 @@ form-data@^3.0.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 form-data@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
@@ -10223,6 +10791,7 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -10288,6 +10857,8 @@ format@^0.2.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 formdata-polyfill@^4.0.10:
   version "4.0.10"
   resolved "https://registry.yarnpkg.com/formdata-polyfill/-/formdata-polyfill-4.0.10.tgz#24807c31c9d402e002ab3d8c720144ceb8848423"
@@ -10357,6 +10928,9 @@ functional-red-black-tree@^1.0.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 functions-have-names@^1.2.3:
 =======
 =======
@@ -10433,6 +11007,7 @@ get-symbol-description@^1.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -10471,6 +11046,8 @@ github-from-package@0.0.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -10692,6 +11269,7 @@ gtoken@^6.1.0:
     google-p12-pem "^4.0.0"
     jws "^4.0.0"
 
+<<<<<<< HEAD
 gtoken@^6.1.0:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/gtoken/-/gtoken-6.1.2.tgz#aeb7bdb019ff4c3ba3ac100bbe7b6e74dce0e8bc"
@@ -10716,11 +11294,14 @@ gtoken@^6.1.0:
     google-p12-pem "^4.0.0"
     jws "^4.0.0"
 
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 hammerjs@^2.0.1:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
   integrity sha512-tSQXBXS/MWQOn/RKckawJ61vvsDpCom87JgxiYdGwHdOa0ht0vzUWDlfioofFCRU0L+6NGDt6XzbgoJvZkMeRQ==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -10784,6 +11365,8 @@ har-validator@~5.1.3:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/has-bigints/-/has-bigints-1.0.2.tgz#0871bd3e3d51626f6ca0966668ba35d5602d6eaa"
@@ -10849,6 +11432,7 @@ hasown@^2.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> fc807d0 (yarn.lock updated)
@@ -10884,6 +11468,8 @@ hawk@~3.1.3:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 header-case@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/header-case/-/header-case-2.0.4.tgz#5a42e63b55177349cf405beb8d775acabb92c063"
@@ -10892,6 +11478,7 @@ header-case@^2.0.4:
     capital-case "^1.0.4"
     tslib "^2.0.3"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -10912,6 +11499,8 @@ highlight.js@~11.8.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
@@ -10987,6 +11576,7 @@ http-proxy-agent@^5.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 https-proxy-agent@^5.0.1:
 =======
 =======
@@ -11052,6 +11642,9 @@ https-proxy-agent@^5.0.0, https-proxy-agent@^5.0.1:
 =======
 https-proxy-agent@^5.0.0, https-proxy-agent@^5.0.1:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+https-proxy-agent@^5.0.0, https-proxy-agent@^5.0.1:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz#c59ef224a04fe8b754f3db0063a25ea30d0005d6"
   integrity sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==
@@ -11210,6 +11803,7 @@ is-absolute@^1.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -11235,6 +11829,8 @@ is-accessor-descriptor@^1.0.1:
 >>>>>>> 69fbf29 (authenticated new project)
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 is-arguments@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/is-arguments/-/is-arguments-1.1.1.tgz#15b3f88fda01f2a97fec84ca761a560f123efa9b"
@@ -11329,6 +11925,7 @@ is-core-module@^2.13.0, is-core-module@^2.13.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> fc807d0 (yarn.lock updated)
@@ -11361,6 +11958,8 @@ is-data-descriptor@^1.0.1:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 is-date-object@^1.0.1, is-date-object@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/is-date-object/-/is-date-object-1.0.5.tgz#0841d5536e724c25597bf6ea62e1bd38298df31f"
@@ -11368,6 +11967,7 @@ is-date-object@^1.0.1, is-date-object@^1.0.5:
   dependencies:
     has-tostringtag "^1.0.0"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -11414,6 +12014,8 @@ is-extendable@^1.0.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 is-extglob@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/is-extglob/-/is-extglob-2.1.1.tgz#a88c02535791f02ed37c76a1b9ea9773c833f8c2"
@@ -11491,6 +12093,7 @@ is-path-inside@^3.0.3:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 is-plain-object@^2.0.4:
   version "2.0.4"
@@ -11502,6 +12105,8 @@ is-plain-object@^2.0.4:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 is-potential-custom-element-name@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-potential-custom-element-name/-/is-potential-custom-element-name-1.0.1.tgz#171ed6f19e3ac554394edf78caa05784a45bebb5"
@@ -11538,13 +12143,17 @@ is-shared-array-buffer@^1.0.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 is-stream-ended@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/is-stream-ended/-/is-stream-ended-0.1.4.tgz#f50224e95e06bce0e356d440a4827cd35b267eda"
   integrity sha512-xj0XPvmr7bQFTvirqnFr50o0hQIh6ZItDqloxt5aJrR4NQsYeSsyFQERYGCAzfindAcnKjINnwEEgLx4IqVzQw==
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -11570,6 +12179,8 @@ is-stream-ended@^0.1.4:
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 >>>>>>> 4117e6b (Authentication using firebase and directives)
@@ -11608,6 +12219,7 @@ is-typed-array@^1.1.10, is-typed-array@^1.1.12, is-typed-array@^1.1.9:
 <<<<<<< HEAD
 <<<<<<< HEAD
     which-typed-array "^1.1.11"
+<<<<<<< HEAD
 =======
     available-typed-arrays "^1.0.5"
     call-bind "^1.0.2"
@@ -11621,6 +12233,8 @@ is-typed-array@^1.1.10, is-typed-array@^1.1.12, is-typed-array@^1.1.9:
 =======
     which-typed-array "^1.1.11"
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 is-unc-path@^1.0.0:
   version "1.0.0"
@@ -11671,6 +12285,7 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -11733,6 +12348,8 @@ isstream@~0.1.2:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.2.tgz#2d166c4b0644d43a39f04bf6c2edd1e585f31756"
@@ -12182,6 +12799,7 @@ jiti@^1.19.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 69fbf29 (authenticated new project)
 jose@^4.13.1:
@@ -12203,6 +12821,9 @@ jose@^4.14.6:
 =======
 jose@^4.14.6:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
+=======
+jose@^4.14.6:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "4.15.4"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.4.tgz#02a9a763803e3872cf55f29ecef0dfdcc218cc03"
   integrity sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==
@@ -12212,9 +12833,12 @@ jose@^5.0.0:
   resolved "https://registry.yarnpkg.com/jose/-/jose-5.1.1.tgz#d61b923baa6bdeb01040afae8295a084c4b9eb58"
   integrity sha512-bfB+lNxowY49LfrBO0ITUn93JbUhxUN8I11K6oI5hJu/G6PO6fEUddVLjqdD0cQ9SXIHWXuWh7eJYwZF7Z0N/g==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 jquery@^3.7.1:
   version "3.7.1"
@@ -12261,17 +12885,21 @@ js-yaml@^4.1.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 js2xmlparser@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/js2xmlparser/-/js2xmlparser-4.0.2.tgz#2a1fdf01e90585ef2ae872a01bc169c6a8d5e60a"
   integrity sha512-6n4D8gLlLf1n5mNLQPRfViYzu9RATblzPEtm1SthMX1Pjao0r9YI9nw7ZIfRxQMERS87mcswrg+r/OYrPRX6jA==
   dependencies:
     xmlcreate "^2.0.4"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -12286,6 +12914,29 @@ jsbn@~0.1.0:
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha512-UVU9dibq2JcFWxQPA6KCqj5O42VOmAY3zQUfEKxU0KpTGXwNoCjkX1e13eHNvw/xPynt6pU0rZ1htjWTNTSXsg==
 >>>>>>> de65a67 (Authentication using firebase and directives)
+=======
+
+jsdoc@^4.0.0:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/jsdoc/-/jsdoc-4.0.2.tgz#a1273beba964cf433ddf7a70c23fd02c3c60296e"
+  integrity sha512-e8cIg2z62InH7azBBi3EsSEqrKx+nUtAS5bBcYTSpZFA+vhNPyhv8PTFZ0WsjOPDj04/dOLlm08EDcQJDqaGQg==
+  dependencies:
+    "@babel/parser" "^7.20.15"
+    "@jsdoc/salty" "^0.2.1"
+    "@types/markdown-it" "^12.2.3"
+    bluebird "^3.7.2"
+    catharsis "^0.9.0"
+    escape-string-regexp "^2.0.0"
+    js2xmlparser "^4.0.2"
+    klaw "^3.0.0"
+    markdown-it "^12.3.2"
+    markdown-it-anchor "^8.4.1"
+    marked "^4.0.10"
+    mkdirp "^1.0.4"
+    requizzle "^0.2.3"
+    strip-json-comments "^3.1.0"
+    underscore "~1.13.2"
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 =======
@@ -12378,6 +13029,13 @@ json-bigint@^1.0.0:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 
+json-bigint@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-bigint/-/json-bigint-1.0.0.tgz#ae547823ac0cad8398667f8cd9ef4730f5b01ff1"
+  integrity sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==
+  dependencies:
+    bignumber.js "^9.0.0"
+
 json-buffer@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.1.tgz#9338802a30d3b6605fbe0613e094008ca8c05a13"
@@ -12421,6 +13079,7 @@ json-stable-stringify-without-jsonify@^1.0.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -12454,6 +13113,8 @@ json-stringify-safe@~5.0.1:
 >>>>>>> 69fbf29 (authenticated new project)
 =======
 >>>>>>> 9a75d88 (authenticated new project)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 json5@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json5/-/json5-1.0.2.tgz#63d98d60f21b313b77c4d6da18bfa69d80e1d593"
@@ -12482,6 +13143,7 @@ jsonwebtoken@^9.0.0:
     ms "^2.1.1"
     semver "^7.5.4"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -12549,6 +13211,8 @@ jsprim@^1.2.2:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "jsx-ast-utils@^2.4.1 || ^3.0.0", jsx-ast-utils@^3.3.5:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-3.3.5.tgz#4766bd05a8e2a11af222becd19e15575e52a853a"
@@ -12614,13 +13278,17 @@ jws@^4.0.0:
   integrity sha512-KDncfTmOZoOMTFG4mBlG0qUIOlc03fmzH+ru6RgYVZhPkyiy/92Owlt/8UEN+a4TXR1FQetfIpJE8ApdvdVxTg==
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -12638,6 +13306,8 @@ kind-of@^3.0.2:
 
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 keyv@^4.5.3:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"
@@ -12645,6 +13315,7 @@ keyv@^4.5.3:
   dependencies:
     json-buffer "3.0.1"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 klaw@^3.0.0:
   version "3.0.0"
@@ -12666,6 +13337,8 @@ klaw@^3.0.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 klaw@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/klaw/-/klaw-3.0.0.tgz#b11bec9cf2492f06756d6e809ab73a2910259146"
@@ -12724,6 +13397,9 @@ levn@~0.3.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 lilconfig@^2.1.0:
 =======
 =======
@@ -12748,12 +13424,15 @@ lilconfig@^3.0.0:
   integrity sha512-K2U4W2Ff5ibV7j7ydLr+zLAkIg5JJ4lPn1Ltsdt+Tz/IjQ8buJ55pZAxoP34lqIiwtF9iAvtLv3JGv7CAyAg+g==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 limiter@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/limiter/-/limiter-1.1.5.tgz#8f92a25b3b16c6131293a0cc834b4a838a2aa7c2"
@@ -12767,15 +13446,19 @@ lines-and-columns@^1.1.6:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 linkify-it@^3.0.1:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-3.0.3.tgz#a98baf44ce45a550efb4d49c769d07524cc2fa2e"
   integrity sha512-ynTsyrFSdE5oZ/O9GEf00kPngmOfVwazR5GKDq6EYfhlpFug3J2zybX56a2PRRpc9P+FuSoGNAwjlbDs9jJBPQ==
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -12838,6 +13521,11 @@ linkifyjs@^4.1.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+  dependencies:
+    uc.micro "^1.0.1"
+
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 locate-path@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-5.0.0.tgz#1afba396afd676a6d42504d0a67a3a7eb9f62aa0"
@@ -12865,6 +13553,7 @@ lodash.camelcase@^4.3.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
@@ -12882,6 +13571,8 @@ lodash.debounce@^4.0.8:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
@@ -12990,6 +13681,7 @@ lodash@4.17.21, lodash@^4.17.15, lodash@^4.17.21, lodash@~4.17.0, lodash@~4.17.1
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -13004,6 +13696,8 @@ lodash@^3.10.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 logform@^2.3.2, logform@^2.4.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/logform/-/logform-2.6.0.tgz#8c82a983f05d6eaeb2d75e3decae7a768b2bf9b5"
@@ -13061,6 +13755,7 @@ lower-case@^2.0.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 lowlight@^2.8.1:
   version "2.9.0"
@@ -13074,6 +13769,8 @@ lowlight@^2.8.1:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "lru-cache@7.10.1 - 7.13.1":
   version "7.13.1"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.13.1.tgz#267a81fbd0881327c46a81c5922606a2cfe336c4"
@@ -13084,9 +13781,12 @@ lru-cache@^10.0.0:
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.0.3.tgz#b40014d7d2d16d94130b87297a04a1f24874ae7c"
   integrity sha512-B7gr+F6MkqB3uzINHXNctGieGsRTMwIBgxkp0yq/5BwcuDzD4A8wQpHQW6vDAm1uKSLQghmRdD9sKqf2vJ1cEg==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -13155,11 +13855,14 @@ map-cache@^0.2.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 markdown-it-anchor@^8.4.1:
   version "8.6.7"
   resolved "https://registry.yarnpkg.com/markdown-it-anchor/-/markdown-it-anchor-8.6.7.tgz#ee6926daf3ad1ed5e4e3968b1740eef1c6399634"
@@ -13169,6 +13872,7 @@ markdown-it@^12.3.2:
   version "12.3.2"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-12.3.2.tgz#bf92ac92283fe983fe4de8ff8abfb5ad72cd0c90"
   integrity sha512-TchMembfxfNVpHkbtriWltGWc+m3xszaRD0CZup7GFFhzIgQqxIfn3eGj1yZpfuflzPvfkt611B2Q/Bsk1YnGg==
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -13193,6 +13897,8 @@ markdown-it@^13.0.1:
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-13.0.2.tgz#1bc22e23379a6952e5d56217fbed881e0c94d536"
   integrity sha512-FtwnEuuK+2yVU7goGn/MJ0WBZMM9ZPgU9spqlFs7/A/pDIUNSOQZhUgOqYCficIuR2QaFnrt8LHqBWsbTAoI5w==
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     argparse "^2.0.1"
     entities "~2.1.0"
@@ -13200,8 +13906,11 @@ markdown-it@^13.0.1:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 marked@^4.0.10:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/marked/-/marked-4.3.0.tgz#796362821b019f734054582038b116481b456cf3"
@@ -13228,6 +13937,7 @@ media-typer@0.3.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 medium-zoom@^1.0.8:
   version "1.1.0"
@@ -13237,6 +13947,8 @@ medium-zoom@^1.0.8:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 "memoize-one@>=3.1.1 <6", memoize-one@^5.1.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.2.1.tgz#8337aa3c4335581839ec01c3d594090cebe8f00e"
@@ -13299,6 +14011,7 @@ mime-db@1.52.0, "mime-db@>= 1.43.0 < 2":
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
   integrity sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -13377,6 +14090,9 @@ mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34:
 =======
 mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+mime-types@^2.0.8, mime-types@^2.1.12, mime-types@~2.1.24, mime-types@~2.1.34:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "2.1.35"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
@@ -13427,17 +14143,21 @@ minimatch@^3.0.4, minimatch@^3.0.5, minimatch@^3.1.1, minimatch@^3.1.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 minimatch@^5.0.1:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-5.1.6.tgz#1cfcb8cf5522ea69952cd2af95ae09477f122a96"
   integrity sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==
   dependencies:
     brace-expansion "^2.0.1"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -13455,6 +14175,8 @@ minimist@^0.1.0:
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 >>>>>>> 4117e6b (Authentication using firebase and directives)
 minimist@^1.2.0, minimist@^1.2.6:
@@ -13472,6 +14194,7 @@ minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.6:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -13486,11 +14209,14 @@ mkdirp-classic@^0.5.2, mkdirp-classic@^0.5.3:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -13501,6 +14227,8 @@ mkdirp@^1.0.4:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 moddle-xml@^10.0.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/moddle-xml/-/moddle-xml-10.1.0.tgz#8c2a1b73c73cc8915182d5374857c43ba482c7a5"
@@ -13553,6 +14281,7 @@ mz@^2.7.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -13571,6 +14300,9 @@ nanoid@^3.3.4, nanoid@^3.3.7:
 =======
 nanoid@^3.3.4, nanoid@^3.3.6:
 >>>>>>> a8d7566 (deleting edges and getting edges working fine)
+=======
+nanoid@^3.3.4, nanoid@^3.3.6:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
@@ -13742,6 +14474,7 @@ node-abort-controller@^3.0.1, node-abort-controller@^3.1.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -13791,6 +14524,8 @@ node-addon-api@^5.0.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 node-domexception@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
@@ -13803,6 +14538,7 @@ node-fetch@2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -13832,6 +14568,9 @@ node-fetch@^2.6.1, node-fetch@^2.6.9:
 =======
 node-fetch@^2.6.1, node-fetch@^2.6.12, node-fetch@^2.6.7, node-fetch@^2.6.9:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+node-fetch@^2.6.1, node-fetch@^2.6.12, node-fetch@^2.6.7, node-fetch@^2.6.9:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
   integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
@@ -13884,9 +14623,12 @@ node-releases@^2.0.13:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.13.tgz#d5ed1627c23e3461e819b02e57b75e4899b1c81d"
   integrity sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
@@ -13915,6 +14657,7 @@ nwsapi@^2.2.2:
   resolved "https://registry.yarnpkg.com/nwsapi/-/nwsapi-2.2.7.tgz#738e0707d3128cb750dddcfe90e4610482df0f30"
   integrity sha512-ub5E4+FBPKwAZx0UwIQOjYWGHTEq5sPqHQNRN8Z9e4A7u3Tj1weLJsL59yH9vmvqEtBHaOmT6cYQKIZOxp35FQ==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -13962,6 +14705,8 @@ oauth-sign@~0.9.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -14000,9 +14745,12 @@ object.assign@^4.1.4:
   resolved "https://registry.yarnpkg.com/object.assign/-/object.assign-4.1.4.tgz#9673c7c7c351ab8c4d0b516f4343ebf4dfb7799f"
   integrity sha512-1mxKf0e58bvyjSCtKYY4sRe9itRk3PJpquJOjeIkz885CczcI4IvJJDLPS72oowuSh+pBxUFROpX+TU++hxhZQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     call-bind "^1.0.2"
     define-properties "^1.1.4"
@@ -14047,6 +14795,7 @@ object.hasown@^1.1.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 object.omit@^3.0.0:
   version "3.0.0"
@@ -14065,6 +14814,8 @@ object.pick@^1.3.0:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 object.values@^1.1.6, object.values@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/object.values/-/object.values-1.1.7.tgz#617ed13272e7e1071b43973aa1655d9291b8442a"
@@ -14075,6 +14826,7 @@ object.values@^1.1.6, object.values@^1.1.7:
 <<<<<<< HEAD
     define-properties "^1.2.0"
     es-abstract "^1.22.1"
+<<<<<<< HEAD
 =======
     define-properties "^1.1.4"
     es-abstract "^1.20.4"
@@ -14086,6 +14838,8 @@ object.values@^1.1.6, object.values@^1.1.7:
     define-properties "^1.2.0"
     es-abstract "^1.22.1"
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 on-finished@2.4.1:
   version "2.4.1"
@@ -14139,6 +14893,9 @@ optionator@^0.8.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 optionator@^0.9.3:
 =======
 =======
@@ -14162,6 +14919,7 @@ optionator@^0.9.3:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 orderedmap@^2.0.0:
   version "2.1.1"
@@ -14179,6 +14937,8 @@ orderedmap@^2.0.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 p-limit@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-2.3.0.tgz#3dd33c647a214fdfffd835933eb086da0dc21db1"
@@ -14328,6 +15088,7 @@ path-type@^4.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -14368,6 +15129,8 @@ performance-now@^2.1.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
@@ -14402,6 +15165,7 @@ pluralize@^8.0.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 polished@^4.2.2:
   version "4.2.2"
@@ -14413,6 +15177,8 @@ polished@^4.2.2:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 postcss-import@^15.1.0:
   version "15.1.0"
   resolved "https://registry.yarnpkg.com/postcss-import/-/postcss-import-15.1.0.tgz#41c64ed8cc0e23735a9698b3249ffdbf704adc70"
@@ -14471,9 +15237,12 @@ postcss@^8.4.14, postcss@^8.4.23:
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.31.tgz#92b451050a9f914da6755af352bdc0192508656d"
   integrity sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     nanoid "^3.3.6"
     picocolors "^1.0.0"
@@ -14559,6 +15328,7 @@ property-expr@^2.0.5:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 protobufjs@^6.11.3:
 =======
 =======
@@ -14567,25 +15337,50 @@ prosemirror-changeset@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/prosemirror-changeset/-/prosemirror-changeset-2.2.1.tgz#dae94b63aec618fac7bb9061648e6e2a79988383"
   integrity sha512-J7msc6wbxB4ekDFj+n9gTW/jav/p53kdlivvuppHsrZXCaQdVgRghoZbSS3kwrRyAstRVQ4/+u5k7YfLgkkQvQ==
+=======
+proto3-json-serializer@^1.0.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/proto3-json-serializer/-/proto3-json-serializer-1.1.1.tgz#1b5703152b6ce811c5cdcc6468032caf53521331"
+  integrity sha512-AwAuY4g9nxx0u52DnSMkqqgyLHaW/XaPLtaAo3y/ZCfeaQB/g4YDH4kb8Wc/mWzWvu0YjOznVnfn373MVZZrgw==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
-    prosemirror-transform "^1.0.0"
+    protobufjs "^7.0.0"
 
-prosemirror-collab@^1.3.0:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/prosemirror-collab/-/prosemirror-collab-1.3.1.tgz#0e8c91e76e009b53457eb3b3051fb68dad029a33"
-  integrity sha512-4SnynYR9TTYaQVXd/ieUvsVV4PDMBzrq2xPUWutHivDuOshZXqQ5rGbZM84HEaXKbLdItse7weMGOUdDVcLKEQ==
+protobufjs-cli@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/protobufjs-cli/-/protobufjs-cli-1.1.1.tgz#f531201b1c8c7772066aa822bf9a08318b24a704"
+  integrity sha512-VPWMgIcRNyQwWUv8OLPyGQ/0lQY/QTQAVN5fh+XzfDwsVw1FZ2L3DM/bcBf8WPiRz2tNpaov9lPZfNcmNo6LXA==
   dependencies:
-    prosemirror-state "^1.0.0"
+    chalk "^4.0.0"
+    escodegen "^1.13.0"
+    espree "^9.0.0"
+    estraverse "^5.1.0"
+    glob "^8.0.0"
+    jsdoc "^4.0.0"
+    minimist "^1.2.0"
+    semver "^7.1.2"
+    tmp "^0.2.1"
+    uglify-js "^3.7.7"
 
-prosemirror-commands@^1.0.0, prosemirror-commands@^1.3.1:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/prosemirror-commands/-/prosemirror-commands-1.5.2.tgz#e94aeea52286f658cd984270de9b4c3fff580852"
-  integrity sha512-hgLcPaakxH8tu6YvVAaILV2tXYsW3rAdDR8WNkeKGcgeMVQg3/TMhPdVoh7iAmfgVjZGtcOSjKiQaoeKjzd2mQ==
+protobufjs@7.2.4:
+  version "7.2.4"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.4.tgz#3fc1ec0cdc89dd91aef9ba6037ba07408485c3ae"
+  integrity sha512-AT+RJgD2sH8phPmCf7OUZR8xGdcJRga4+1cOaXJ64hvcSkVhNcRHOwIxUatPH15+nj59WAGTDv3LSGZPEQbJaQ==
   dependencies:
-    prosemirror-model "^1.0.0"
-    prosemirror-state "^1.0.0"
-    prosemirror-transform "^1.0.0"
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/node" ">=13.7.0"
+    long "^5.0.0"
 
+<<<<<<< HEAD
 prosemirror-dropcursor@^1.5.0:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/prosemirror-dropcursor/-/prosemirror-dropcursor-1.8.1.tgz#49b9fb2f583e0d0f4021ff87db825faa2be2832d"
@@ -14859,6 +15654,9 @@ protobufjs@^6.8.6:
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+protobufjs@^6.11.3:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "6.11.4"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.11.4.tgz#29a412c38bf70d89e537b6d02d904a6f448173aa"
   integrity sha512-5kQWPaJHi1WoCpjTGszzQ32PG2F4+wRY6BmAT4Vfw56Q2FZ4YZzK20xUYQH4YkfehY1e6QSICrJquM6xXZNcrw==
@@ -14880,6 +15678,7 @@ protobufjs@^6.8.6:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 protobufjs@^7.0.0, protobufjs@^7.2.4, protobufjs@^7.2.5:
 =======
 protobufjs@^7.0.0:
@@ -14890,6 +15689,9 @@ protobufjs@^7.0.0:
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 protobufjs@^7.2.5:
+=======
+protobufjs@^7.0.0, protobufjs@^7.2.4, protobufjs@^7.2.5:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.2.5"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.5.tgz#45d5c57387a6d29a17aab6846dcc283f9b8e7f2d"
   integrity sha512-gGXRSXvxQ7UiPgfw8gevrfRWcTlSbOFg+p/N+JVJEK5VhueL2miT6qTymqAmjr1Q5WbOCyJbyrk6JfWKwlFn6A==
@@ -14944,6 +15746,7 @@ proxy-addr@~2.0.7:
     forwarded "0.2.0"
     ipaddr.js "1.9.1"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -15003,10 +15806,19 @@ psl@^1.1.33:
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+pseudomap@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
+  integrity sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==
+
+psl@^1.1.33:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.9.0.tgz#d0df2a137f00794565fcaf3b2c00cd09f8d5a5a7"
   integrity sha512-E/ZsdU4HLs/68gYzgGTkMicWTLPdAftJLfJFlLUAAKZGkStNU72sZjT66SnMDVOfOWY/YAoiD7Jxa9iHvngcag==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -15061,6 +15873,8 @@ pump@^3.0.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 punycode@^2.1.0, punycode@^2.1.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
@@ -15078,6 +15892,7 @@ qs@6.11.0:
   dependencies:
     side-channel "^1.0.4"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -15125,6 +15940,8 @@ qs@~6.5.2:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 querystringify@^2.1.1:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
@@ -15200,6 +16017,7 @@ react-beautiful-dnd@^13.1.1:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 react-colorful@^5.6.1:
   version "5.6.1"
@@ -15209,6 +16027,8 @@ react-colorful@^5.6.1:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 react-dnd-html5-backend@^14.0.1:
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-14.1.0.tgz#b35a3a0c16dd3a2bfb5eb7ec62cf0c2cace8b62f"
@@ -15373,9 +16193,12 @@ react-tooltip@^5.22.0:
   resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-5.24.0.tgz#c134e4c00d49a111986711696bcd9abf672caff6"
   integrity sha512-HjstgpOrUwP4eN6mHU4EThpbxVuKO5SvqumRt1aAcPq0ya+pIVVxlwltndtdIIMBJ7w3jnN05vNfcfh2sxE2mQ==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@floating-ui/dom" "^1.0.0"
     classnames "^2.3.0"
@@ -15400,9 +16223,12 @@ react-window@^1.8.6:
   resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.9.tgz#24bc346be73d0468cdf91998aac94e32bc7fa6a8"
   integrity sha512-+Eqx/fj1Aa5WnhRfj9dJg4VYATGwIUP2ItwItiJ6zboKWA6EX3lYDAXfGF2hyNqplEprhbtjbipiADEcwQ823Q==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
@@ -15435,11 +16261,14 @@ read-cache@^1.0.0:
 
 readable-stream@^3.1.1, readable-stream@^3.4.0, readable-stream@^3.6.0:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 readable-stream@^3.1.1:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.2.tgz#56a9b36ea965c00c5a93ef31eb111a0f11056967"
   integrity sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==
@@ -15496,6 +16325,7 @@ regenerate@^1.4.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 regenerator-runtime@^0.13.2:
   version "0.13.11"
@@ -15505,6 +16335,8 @@ regenerator-runtime@^0.13.2:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 regenerator-runtime@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.14.0.tgz#5e19d68eb12d486f797e15a3c6a918f7cec5eb45"
@@ -15554,6 +16386,7 @@ relay-runtime@12.0.0:
     fbjs "^3.0.0"
     invariant "^2.2.4"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -15645,6 +16478,8 @@ request@~2.81.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -15739,6 +16574,7 @@ rimraf@^3.0.0, rimraf@^3.0.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 rope-sequence@^1.3.0:
   version "1.3.4"
@@ -15748,6 +16584,8 @@ rope-sequence@^1.3.0:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 run-parallel@^1.1.9:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.2.0.tgz#66d1368da7bdf921eb9d95bd1a9229e7f21a43ee"
@@ -15778,9 +16616,12 @@ safe-array-concat@^1.0.1:
     isarray "^2.0.5"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> fc807d0 (yarn.lock updated)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 safe-buffer@5.2.1, safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@~5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
@@ -15808,6 +16649,7 @@ safe-stable-stringify@^2.3.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
 "safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
@@ -15832,6 +16674,9 @@ safe-stable-stringify@^2.3.1:
 =======
 "safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
 >>>>>>> 9a75d88 (authenticated new project)
+=======
+"safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
@@ -15863,6 +16708,7 @@ semver@^6.3.0, semver@^6.3.1:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 semver@^7.1.2, semver@^7.3.7, semver@^7.5.3, semver@^7.5.4:
 =======
 <<<<<<< HEAD
@@ -15890,6 +16736,9 @@ semver@^7.1.2, semver@^7.5.4:
 =======
 semver@^7.1.2, semver@^7.3.7, semver@^7.5.3, semver@^7.5.4:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+semver@^7.1.2, semver@^7.3.7, semver@^7.5.3, semver@^7.5.4:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
@@ -16078,6 +16927,7 @@ sprintf-js@~1.0.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -16102,6 +16952,8 @@ sshpk@^1.7.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 stack-trace@0.0.x:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
@@ -16252,6 +17104,7 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -16266,6 +17119,8 @@ strip-json-comments@~2.0.1:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 strnum@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/strnum/-/strnum-1.0.5.tgz#5c4e829fe15ad4ff0d20c3db5ac97b73c9b072db"
@@ -16279,6 +17134,7 @@ stubs@^3.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 >>>>>>> de65a67 (Authentication using firebase and directives)
@@ -16286,6 +17142,8 @@ stubs@^3.0.0:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 styled-jsx@5.0.7:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/styled-jsx/-/styled-jsx-5.0.7.tgz#be44afc53771b983769ac654d355ca8d019dff48"
@@ -16357,9 +17215,12 @@ tailwindcss@^3.1.6:
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-3.3.5.tgz#22a59e2fbe0ecb6660809d9cc5f3976b077be3b8"
   integrity sha512-5SEZU4J7pxZgSkv7FP1zY8i2TIAOooNZ1e/OGtxIEv6GltpoiXUqWvLy89+a10qYTB1N5Ifkuw9lqQkN9sscvA==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@alloc/quick-lru" "^5.2.0"
     arg "^5.0.2"
@@ -16384,6 +17245,7 @@ tailwindcss@^3.1.6:
     resolve "^1.22.2"
     sucrase "^3.32.0"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -16416,6 +17278,8 @@ tar-stream@^2.1.4:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 teeny-request@^8.0.0:
   version "8.0.3"
   resolved "https://registry.yarnpkg.com/teeny-request/-/teeny-request-8.0.3.tgz#5cb9c471ef5e59f2fca8280dc3c5909595e6ca24"
@@ -16430,6 +17294,7 @@ teeny-request@^8.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 >>>>>>> de65a67 (Authentication using firebase and directives)
@@ -16437,6 +17302,8 @@ teeny-request@^8.0.0:
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 test-exclude@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-6.0.0.tgz#04a8698661d805ea6fa293b6cb9e63ac044ef15e"
@@ -16454,8 +17321,11 @@ text-decoding@^1.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 text-hex@1.0.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/text-hex/-/text-hex-1.0.0.tgz#69dc9c1b17446ee79a92bf5b884bb4b9127506f5"
@@ -16489,6 +17359,7 @@ thenify-all@^1.0.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 throttle-debounce@^3.0.1:
   version "3.0.1"
@@ -16498,6 +17369,8 @@ throttle-debounce@^3.0.1:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 tiny-case@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-case/-/tiny-case-1.0.3.tgz#d980d66bc72b5d5a9ca86fb7c9ffdb9c898ddd03"
@@ -16520,6 +17393,7 @@ tiny-warning@^1.0.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 tippy.js@^6.3.7:
   version "6.3.7"
@@ -16531,6 +17405,8 @@ tippy.js@^6.3.7:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 title-case@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/title-case/-/title-case-3.0.3.tgz#bc689b46f02e411f1d1e1d081f7c3deca0489982"
@@ -16594,6 +17470,7 @@ tough-cookie@^4.1.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c7642a4 (authenticated new project)
@@ -16639,6 +17516,8 @@ tough-cookie@~2.5.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 tr46@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-3.0.0.tgz#555c4e297a950617e8eeddef633c87d4d9d6cbf9"
@@ -16707,6 +17586,7 @@ tsconfig-paths@^3.14.1, tsconfig-paths@^3.14.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 tslib@^1.8.1:
 =======
 =======
@@ -16749,6 +17629,9 @@ tslib@^1.8.1:
 =======
 tslib@^1.8.1:
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+tslib@^1.8.1:
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
@@ -16770,6 +17653,7 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -16800,6 +17684,8 @@ tunnel-agent@^0.6.0:
 >>>>>>> 9a75d88 (authenticated new project)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.4.0.tgz#07b8203bfa7056c0657050e3ccd2c37730bab8f1"
@@ -16910,11 +17796,14 @@ uglify-js@^3.7.7:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 4117e6b (Authentication using firebase and directives)
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 unbox-primitive@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/unbox-primitive/-/unbox-primitive-1.0.2.tgz#29032021057d5e6cdbd08c5129c226dff8ed6f9e"
@@ -16933,10 +17822,13 @@ unc-path-regex@^0.1.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 underscore@~1.13.2:
   version "1.13.6"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.6.tgz#04786a1f589dc6c09f761fc5f45b89e935136441"
@@ -16944,8 +17836,11 @@ underscore@~1.13.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 undici-types@~5.26.4:
   version "5.26.5"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"
@@ -17040,6 +17935,7 @@ url-parse@^1.5.3:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 use-countdown-timer@^1.3.2:
   version "1.3.2"
@@ -17049,6 +17945,8 @@ use-countdown-timer@^1.3.2:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 use-isomorphic-layout-effect@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz#497cefb13d863d687b08477d9e5a164ad8c1a6fb"
@@ -17082,6 +17980,7 @@ utils-merge@1.0.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 190d740 (authenticated new project)
@@ -17095,6 +17994,12 @@ uuid@^3.0.0, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+=======
+uuid@^8.0.0:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -17144,9 +18049,12 @@ v8-to-istanbul@^9.0.1:
   resolved "https://registry.yarnpkg.com/v8-to-istanbul/-/v8-to-istanbul-9.1.3.tgz#ea456604101cd18005ac2cae3cdd1aa058a6306b"
   integrity sha512-9lDD+EVI2fjFsMWXc6dy5JJzBsVTcQ2fVkfBvncZ6xJWG9wtBhOldG+mHkSL0+V1K/xgZz0JDO5UT5hFwHUghg==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.12"
     "@types/istanbul-lib-coverage" "^2.0.1"
@@ -17172,6 +18080,7 @@ vary@^1, vary@~1.1.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 void-elements@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-3.1.0.tgz#614f7fbf8d801f0bb5f0661f5b2f5785750e4f09"
@@ -17191,6 +18100,8 @@ w3c-keyname@^2.2.0:
 >>>>>>> f97d174 (updating the node its working fine)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 w3c-xmlserializer@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/w3c-xmlserializer/-/w3c-xmlserializer-4.0.0.tgz#aebdc84920d806222936e3cdce408e32488a3073"
@@ -17257,6 +18168,7 @@ whatwg-encoding@^2.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> fc807d0 (yarn.lock updated)
@@ -17280,6 +18192,8 @@ whatwg-fetch@>=0.10.0:
 >>>>>>> 54d2a15 (structure change branch rebased with main)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 whatwg-mimetype@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-mimetype/-/whatwg-mimetype-3.0.0.tgz#5fa1a7623867ff1af6ca3dc72ad6b8a4208beba7"
@@ -17395,12 +18309,15 @@ winston@*, winston@^3.11.0:
     winston-transport "^4.5.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 word-wrap@~1.2.3:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.5.tgz#d2c45c6dd4fbce621a66f136cbe328afd0410b34"
@@ -17456,13 +18373,17 @@ xmlchars@^2.2.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> c0c04e8 (Authentication using firebase and directives)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 xmlcreate@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/xmlcreate/-/xmlcreate-2.0.4.tgz#0c5ab0f99cdd02a81065fa9cd8f8ae87624889be"
   integrity sha512-nquOebG4sngPmGPICTS5EnxqhKbCmz5Ox5hsszI2T6U5qdrJizBc+0ilYSEjTSzU0yZcmvppztXe/5Al5fUwdg==
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -17488,6 +18409,8 @@ xmlcreate@^2.0.4:
 >>>>>>> de65a67 (Authentication using firebase and directives)
 =======
 >>>>>>> ed821dd (yarn.lock updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 
 <<<<<<< HEAD
 >>>>>>> 4117e6b (Authentication using firebase and directives)
@@ -17625,6 +18548,7 @@ yup@^1.2.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 zeed-dom@^0.9.19:
   version "0.9.26"
@@ -17636,6 +18560,8 @@ zeed-dom@^0.9.19:
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> 5baf264 (updating the node its working fine)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
 zen-observable-ts@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-1.2.5.tgz#6c6d9ea3d3a842812c6e9519209365a122ba8b58"
@@ -17653,8 +18579,11 @@ zustand@^4.3.7, zustand@^4.4.1:
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.4.6.tgz#03c78e3e2686c47095c93714c0c600b72a6512bd"
   integrity sha512-Rb16eW55gqL4W2XZpJh0fnrATxYEG3Apl2gfHTyDSE965x/zxslTikpNch0JgNjJA9zK6gEFW8Fl6d1rTZaqgg==
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> ed821dd (yarn.lock updated)
 =======
 >>>>>>> f196100 (apollo client cookie issue and lock file updated)
+=======
+>>>>>>> f9f5e814b9f1a4818103072ff682f0222037b629
   dependencies:
     use-sync-external-store "1.2.0"

@@ -79,6 +79,7 @@ const apolloServer = new ApolloServer({
   plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
 });
 
+
 // neoSchema.
 const startServer = apolloServer.start();
 //creatin server using handler function (nextsJs syntax)

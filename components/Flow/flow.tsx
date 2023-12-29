@@ -225,10 +225,10 @@ function Flow() {
     };
     // };
 
-    document.addEventListener("keydown", handleBackspace);
-    return () => {
-      document.removeEventListener("keydown", handleBackspace);
-    };
+      document.addEventListener("keydown", handleBackspace);
+      return () => {
+        document.removeEventListener("keydown", handleBackspace);
+      };
   }, [getNodes, getEdges]);
   async function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {

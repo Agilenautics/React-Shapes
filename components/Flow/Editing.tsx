@@ -150,14 +150,8 @@ function Editing({
       setEditing(false);
     }
   };
-  const handleArrows = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    // const edgeData = {
-    //   label,
-    //   bidirectional: e.target.value === "bidirectional",
-    // };
-    // await updateEdgeBackend(updateEdgeMutation, edgeData, allNodes, fileId);
+  const handleArrows = (e: React.ChangeEvent<HTMLFormElement>) => {
     updateArrows(id, e.target.value === "bidirectional");
-    // console.log(e.target.value)
     setEditing(false);
   };
   useEffect(() => {
@@ -316,6 +310,7 @@ function Editing({
                     onClick={() => {
                       updateLinkNodes([], linkNodes.fileID);
                     }}
+                    
                   >
                     <BsArrowLeft className="h-4 w-4 pt-0" />
                     Back
