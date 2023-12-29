@@ -60,7 +60,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   return (
     <div>
       <div
-        className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]}  group relative`}
+        className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
       >
         {Object.keys(handlePositions).map((key) => (
           <Handle
@@ -82,7 +82,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
         <div
           className={`${css_props} h-auto font-sans ${
             shapeCSS[1]
-          } mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
+          }   mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
             editing ? "cursor-default" : ""
           }`}
           onDoubleClick={() => {
@@ -92,7 +92,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             }
           }}
         >
-          <div className={shapeCSS[2]}>
+          <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>
             {editing ? (
               <div
               // className={`relative h-auto flex-row text-center ${
@@ -138,6 +138,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                     id: nodeId,
                     hasFile: { id: fileId },
                   } = value;
+                  
                   return (
                     <div
                       key={nodeId}

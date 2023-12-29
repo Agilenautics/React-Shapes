@@ -195,9 +195,9 @@ export const TreeNode = ({
         getNodes(allNodes, data.id)
           .then((result: any) => {
             const {
-              data:{files},
+              data: { files },
             } = result;
-            const {nodes,edges} = getNodeAndEdges(files[0]);
+            const { nodes, edges } = getNodeAndEdges(files[0]);
             updateNodes(nodes);
             updateEdges(edges);
           })
@@ -285,6 +285,7 @@ export const TreeNode2 = ({
   const open = state.isOpen;
   const name = data.name;
   const id = data.id;
+  const [loading, setLoading] = useState<Boolean | undefined>(true);
   var selectedNodeId: string;
   if (state.isSelected) {
     selectedNodeId = data.id!;
@@ -296,14 +297,18 @@ export const TreeNode2 = ({
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
 
   function loadFlowNodes(handlers: any, data: any) {
-    return (e: SyntheticEvent) => {
+    return async (e: SyntheticEvent) => {
       if (data.id === currentFileId) {
         e.stopPropagation(); // Prevent event propagation for the current file's node
         return; // Disable click for the current file's node
       }
       handlers.select(e);
       if (data.children == null) {
-        return updateLinkNodes(data.hasNodes, data.id);
+        const nodeResponse: ApolloQueryResult<any> | undefined = await getNodes(
+          allNodes,
+          id
+        );
+        return updateLinkNodes(nodeResponse?.data.files[0].hasNodes, id);
       }
     };
   }

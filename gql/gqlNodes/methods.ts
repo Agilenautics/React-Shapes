@@ -13,6 +13,7 @@ import TreeModel from "tree-model-improved";
 import { findById } from "../../components/TreeView/backend";
 import getUpdatedCacheData from "../../components/Flow/middleWares/updatingNodeCache";
 import { File, Project } from "../../lib/appInterfaces";
+import { Node_Fragment } from "./fragments";
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -538,30 +539,24 @@ const linkNodeAnotherNodeMethod = async (
           },
         }
       ) => {
-        cache.updateQuery(
-          {
-            query: cacheQuery,
-            variables: {
-              where: {
-                id: fileId,
-              },
-            },
-          },
-          ({ files }) => {
-            const { hasNodes, ...fileData } = files[0];
-            const getNode = hasNodes.find((node: Node) => node.id === id);
-            console.log(getNode);
-            if (
-              getNode.isLinked.some((value: Node) => value.id === anotherNodId)
-            ) {
-              return {
-                files,
-              };
-            }
-            // const updatedLinkNode = [...getNode.isLinked,...flowNodes];
-            // console.log(updatedLinkNode,getNode)
-          }
-        );
+        // const { files } = cache.readQuery({
+        //   query: cacheQuery,
+        //   variables: {
+        //     where: {
+        //       id: fileId,
+        //     },
+        //   },
+        // });
+        // const { hasNodes, ...fileData } = files[0];
+        // const updatedNodes = hasNodes.map((node:Node)=>{
+        //   console.log(node)
+        //   if(node.id === id){
+        //     return{
+        //       ...node,
+              
+        //     }
+        //   }
+        // }) 
         // const getId: string | undefined = cache.identify(flowNodes[0]);
         // cache.modify({
         //   id: getId,

@@ -36,7 +36,6 @@ function AddNodeButton() {
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
     setIsLoading(true);
-    console.log("email", userEmail);
     const data = {
       story: currentId,
       symbol,

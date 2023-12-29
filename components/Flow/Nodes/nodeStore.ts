@@ -23,15 +23,14 @@ export interface NodeState {
   updateLabel: (id: string, newLabel: string) => void;
   updateShape: (id: string, newShape: string) => void;
   updateNodeType: (id: string, newType: string) => void;
-  // updateLinkedTo: (id: string, newLink: Object) => void;
   toggleDraggable: (id: string, draggable: boolean) => void;
-  // updateLinkedBy: (id: string, LinkedBy: Object, getNodeQuery: any) => void;
   breadCrumbs: Array<Node>;
   updateBreadCrumbs: (breadCrumbs: Object, id: string, action: string) => void;
   updateDescription: (id: string, description: string) => void;
   updateNodePosition: (node: Node) => void;
   deleteLinkeNode: (id: string, nodeId: string) => void;
   fileId: string;
+  addLinkNode: (id: string, nodeData: Node) => void;
 }
 
 const nodeStore = create<NodeState>((set) => ({
@@ -194,60 +193,6 @@ const nodeStore = create<NodeState>((set) => ({
       updateNodeData(updated_node, updateNodesMutation, allNodes, state.fileId);
       return { nodes: [...to_be_updated, updated_node] };
     }),
-  // updateLinkedTo: async (
-  //   id,
-  //   newLink // add flowchart variable
-  // ) => {
-  //   //find data of new node
-  //   const node_to_be = await findNode(getFlowNode, id);
-  //   //save data of new node
-  //   const new_node = node_to_be[0];
-  //   //add the saved data to the node to be replaced
-  //   set((state): any => {
-  //     const to_be_updated = state.nodes.filter((item) => item.id !== id);
-  //     const updated_node = {
-  //       ...new_node,
-  //       data: { ...new_node.data, hasLinkedTo: newLink, id },
-  //     };
-  //     // updateNodeData(
-  //     //   updated_node,
-  //     //   updateLinkedToMutation,
-  //     //   allNodes,
-  //     //   state.fileId
-  //     // );
-  //     return { nodes: [...to_be_updated, updated_node] };
-  //   });
-  // },
-  // updateLinkedBy: async (id: string, linkedBy: any, getNodeQuery: any) => {
-  //   const node_to_be = await findNode(getFlowNode, id);
-  //   //save data of new node
-
-  //   const { data } = await getFileByNode(id, getNodeQuery);
-  //   const nodes = JSON.stringify(data.files[0].hasNodes)
-  //     .replaceAll('"hasdataNodedata":', '"data":')
-  //     .replaceAll('"haspositionPosition":', '"position":');
-  //   const nodesData = JSON.parse(nodes);
-  //   const new_node = node_to_be[0];
-  //   //add the saved data to the node to be replaced
-
-  //   const to_be_updated = nodesData.filter((item: any) => item.id !== id);
-
-  //   const updated_node = {
-  //     ...new_node,
-  //     data: { ...new_node.data, hasLinkedBy: linkedBy },
-  //   };
-  //   // await updateLinkedByMethod(updated_node, updateLinkedBy);
-  //   set((state): any => {
-  //     // const to_be_updated = nodesData.filter((item: any) => item.id !== id);
-
-  //     // const updated_node = {
-  //     //   ...new_node,
-  //     //   data: { ...new_node.data, linkedBy: linkedBy },
-  //     // };
-  //     return Object.entries({ nodes: [...to_be_updated, updated_node] });
-  //     // return { nodes: [...to_be_updated, updated_node] }
-  //   });
-  // },
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
@@ -255,6 +200,24 @@ const nodeStore = create<NodeState>((set) => ({
       //@ts-ignore
       const updated_node = { ...old_node, draggable: draggable };
       return { nodes: [...to_be_updated, updated_node] };
+    }),
+  addLinkNode: (nodeId: string, node: Node) =>
+    set((state) => {
+      const updatedNodes = state.nodes.map((item: Node) => {
+        if (item.id === nodeId) {
+          return {
+            ...item,
+            data: {
+              ...item.data,
+              isLinked: [...item.data.isLinked, node],
+            },
+          };
+        }
+        return {
+          ...item
+        }
+      });
+      return { nodes: updatedNodes };
     }),
   deleteLinkeNode: (id: string, nodeId: string) =>
     set((state) => {

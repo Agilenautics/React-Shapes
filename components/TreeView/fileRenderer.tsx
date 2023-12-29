@@ -1,19 +1,18 @@
 import AutoSize from "react-virtualized-auto-sizer";
 import { Tree, TreeApi } from "react-arborist";
-import {  TreeNode, TreeNode2 } from "./treeNode";
+import { TreeNode, TreeNode2 } from "./treeNode";
 import { useBackend } from "./backend";
 import LoadingIcon from "../LoadingIcon";
 import React, { useState, useEffect } from "react";
 import fileStore from "./fileStore";
 
-
 export function FileTree() {
   const backend = useBackend();
-  const loading = fileStore((state) => state.loading)
+  const loading = fileStore((state) => state.loading);
 
   if (loading) {
     return (
-      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+      <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
         <LoadingIcon color="black" />
       </div>
     );
@@ -23,10 +22,8 @@ export function FileTree() {
     <AutoSize>
       {(props: any) => (
         <Tree
-
           //@ts-ignore
           ref={(tree: TreeApi) => {
-
             // @ts-ignore
             global.tree = tree;
           }}
@@ -50,45 +47,33 @@ export function FileTree() {
 
 export function LinkTree() {
   const backend = useBackend();
-  const [isLoading, setIsLoading] = useState(true);
-
-
+  const linkNodes = fileStore((state)=>state.linkNodes)
   
-
-  useEffect(() => {
-    // Simulate an asynchronous operation
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
-        <LoadingIcon color="black" />
-      </div>
-    );
-  }
+  
+  // if (linkNodes.nodes && linkNodes.nodes.length==0) {
+  //   return (
+  //     <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+  //       <LoadingIcon color="black" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <AutoSize>
       {(props: any) => (
         <Tree
-
           //@ts-ignore
           ref={(tree: TreeApi) => {
-
             //@ts-ignore
             global.tree = tree;
           }}
-          
           data={backend.data}
           getChildren="children"
           isOpen="isOpen"
           hideRoot
           indent={24}
-
           // onMove={backend.onMove}
           onToggle={backend.onToggle}
-
           // onEdit={backend.onEdit}
           rowHeight={22}
           width={props.width}
@@ -100,6 +85,3 @@ export function LinkTree() {
     </AutoSize>
   );
 }
-
-
-

@@ -111,18 +111,24 @@ function Editing({
   const updateArrows = edgeStore((state) => state.updateArrows);
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
-  const Id = fileStore((state)=>state.Id)
+  const Id = fileStore((state) => state.Id);
   const addLinkMethod = async (
     currentNodeId: string,
     anotherNodeId: string
   ) => {
-    await linkNodeAnotherNodeMethod(
+    const response = await linkNodeAnotherNodeMethod(
       currentNodeId,
       linkNodeToAnotherNodeMutation,
       anotherNodeId,
       allNodes,
       Id
     );
+    // const {
+    //   data: {
+    //     updateFlowNodes: { flowNodes },
+    //   },
+    // } = response;
+    // console.log(response);
     setEditing(false);
   };
 
@@ -274,6 +280,7 @@ function Editing({
                     onClick={() => {
                       updateLinkNodes([], linkNodes.fileID);
                     }}
+                    
                   >
                     <BsArrowLeft className="h-4 w-4 pt-0" />
                     Back
