@@ -24,7 +24,7 @@ import {
   createFolderInMain,
   createUidMethode,
   createUidMutation,
-  getProjectByUser,
+  getProjectById,
   getTreeNodeByUser,
   getUidMethode,
   getUidQuery,
@@ -85,7 +85,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
   // console.log(router.asPath===`/projects/${projectId}/business-process/edit?id=${router.query.id}`)
 
   const getProjectId = async (id: string) => {
-    const initData = await getTreeNodeByUser(getProjectByUser, id, setLoading);
+    const initData = await getTreeNodeByUser(getProjectById, id, setLoading);
     const data = initData[0];
     //@ts-ignore
     updateInitData(data);
@@ -101,7 +101,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     }
   };
 
-  const verificationToken = async () => {
+ const verificationToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         setUserEmail(user.email);
@@ -184,8 +184,9 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
       await createFolderInMain(
         newFolderInMain,
         projectId,
+        userEmail,
         newFolder,
-        getProjectByUser
+        getProjectById
       );
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
@@ -213,9 +214,10 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               await createFile(
                 "",
                 getParent.id,
+                userEmail,
                 createFileMutation,
                 data,
-                getProjectByUser
+                getProjectById
               );
             add_file(fileInFolderResponse?.data.createFiles.files[0]);
             handleUidUpdates();
@@ -226,9 +228,10 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
               await createFile(
                 getParent.id,
                 "",
+                userEmail,
                 createFileMutation,
                 data,
-                getProjectByUser
+                getProjectById
               );
             add_file(fileInMainResponse?.data.createFiles.files[0]);
             handleUidUpdates();
@@ -241,9 +244,10 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             await createFile(
               "", //passing empty string (no project id)
               id, //id of the folder
+              userEmail,
               createFileMutation,
               data,
-              getProjectByUser
+              getProjectById
             );
           add_file(fileInFolderResponse?.data.createFiles.files[0]);
           handleUidUpdates();
@@ -256,9 +260,10 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
             await createFile(
               projectId,
               "",
+              userEmail,
               createFileMutation,
               data,
-              getProjectByUser
+              getProjectById
             );
           add_file(fileInMainResponse?.data.createFiles.files[0]);
           handleUidUpdates();

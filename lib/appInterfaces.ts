@@ -23,10 +23,11 @@ interface Project {
   recentProject: string;
   deletedAT: string;
   isOpen: boolean;
+  createdBy:User;
  hasContainsFolder: Folder[]|any;
   hasContainsFile: File[] | any;
   children?: (Folder | File)[] | any;
-  userHas: Array<User>;
+  usersInProjects: Array<User>;
 }
 
 // info type interface
@@ -34,8 +35,7 @@ interface Info {
   __typename: string;
   status: string;
   description: string;
-  sprint: string;
-  dueDate: string;
+    dueDate: string;
   assignedTo: string;
 }
 
@@ -43,7 +43,7 @@ interface Info {
 interface Comment {
   id: string;
   message: string;
-  user: User;
+  createdBy:User;
   timeStamp: string;
   __typename: string;
 }
@@ -58,9 +58,11 @@ interface File {
   uid: number;
   timeStamp: string;
   hasInfo: Info;
+  createdBy:User;
   projectHas: Project;
   comments: Array<Comment>;
-  hasFlowchart: Flowchart;
+  hasNodes: Array<Node>;
+  hasEdges: Array<Edge>;
   folderHas: Folder;
   hasSprint: Array<Sprints>;
 }
@@ -74,6 +76,7 @@ interface Folder {
   timeStamp: string;
   uid: number;
   hasInfo: Info;
+  createdBy:User;
   hasFile: Array<File>;
   hasFolder: Array<Folder>;
   hasSprint: Array<Sprints>;
@@ -82,13 +85,13 @@ interface Folder {
 }
 
 // flowchart interface
-interface Flowchart {
-  __typename: string;
-  id: string;
-  name: string;
-  nodes: Array<Node>;
-  edges: Array<Edge>;
-}
+// interface Flowchart {
+//   __typename: string;
+//   id: string;
+//   name: string;
+//   nodes: Array<Node>;
+//   edges: Array<Edge>;
+// }
 
 // sprints interface
 interface Sprints {
@@ -97,6 +100,7 @@ interface Sprints {
   name: string;
   startDate: string;
   endDate: string;
+  createdBy:User;
   timeStamp: string;
   description: string;
   folderHas: Array<Folder>;
@@ -123,7 +127,8 @@ interface Backlog {
   status: string;
   dueDate: string;
   hasInfo: Info;
-  hasFlowchart: Flowchart;
+  hasNodes:Array<Node>;
+  hasEdges:Array<Edge>;
   hasSprint: Array<Sprints>;
   comments: Array<Comment>;
   folderHas: Array<Folder>;
@@ -149,7 +154,6 @@ export type {
   Comment,
   Parent,
   Sprints,
-  Flowchart,
   User,
   Data,
   RootObject,

@@ -1,7 +1,7 @@
 import React,{ useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
-  getProjectByUser,
+  getProjectById,
   getTreeNodeByUser,
 } from "../../gql";
 // import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
@@ -29,15 +29,15 @@ function SideBar() {
   async function fetchData() {
     if (projectId) {
       const initData = await getTreeNodeByUser(
-        getProjectByUser,
+        getProjectById,
         projectId.toString(),
         setLoading
       );
-      setTotal(initData[0].userHas.length);
+      setTotal(initData[0].usersInProjects.length);
       setProjectName(initData[0].name);
       setProjectDesc(initData[0].description);
-      const userHas = initData[0].userHas;
-      const userDetails = userHas.map((user: any) => ({
+      const usersInProjects = initData[0].usersInProjects;
+      const userDetails = usersInProjects.map((user: any) => ({
         email: user.emailId,
         userType: user.userType,
       }));

@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { Edge_Fragment } from "../gqlEdges";
 
 export const Info_Fragment = gql`
   fragment InfoFragment on Info {
@@ -6,12 +7,12 @@ export const Info_Fragment = gql`
     assignedTo
     status
     dueDate
-    sprint
   }
 `;
 
 export const Node_Fragment = gql`
   ${Info_Fragment}
+  ${Edge_Fragment}
   fragment NodeFragment on FlowNode {
     id
     draggable
@@ -19,9 +20,31 @@ export const Node_Fragment = gql`
     type
     timeStamp
     uid
+    label
+    shape
+    x
+    y
+    flowEdge {
+      ...EdgeFragment
+    }
+    isLinked {
+      id
+      label
+      isLinkedConnection {
+        edges {
+          from
+        }
+      }
+      hasFile {
+        id
+      }
+    }
+    hasInfo {
+      ...InfoFragment
+    }
     hasComments {
       message
-      userHas {
+      createdBy {
         emailId
       }
     }
@@ -29,32 +52,7 @@ export const Node_Fragment = gql`
       id
       name
     }
-    hasInfo {
-      ...InfoFragment
-    }
-    data {
-      label
-      shape
-      description
-      hasLinkedTo {
-        label
-        id
-        flag
-        fileId
-      }
-      hasLinkedBy {
-        label
-        id
-        fileId
-        flag
-      }
-    }
-    position {
-      name
-      x
-      y
-    }
-    flowNodeHas {
+    hasFile {
       id
       name
       folderHas {

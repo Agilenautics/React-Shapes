@@ -15,9 +15,10 @@ import {
   getSprintByProjectId,
   GET_SPRINTS,
   createFileMutation,
-  getProjectByUser,
+  getProjectById,
   updateFolderBackend,
   updateFoldersMutation,
+  allNodes,
 } from "../../gql";
 import { useRouter } from "next/router";
 import validationSchema from "../AdminPage/Projects/staticData/validationSchema";
@@ -28,6 +29,7 @@ import fileStore from "../TreeView/fileStore";
 import Discussion from "./Discussion";
 import { getTypeLabel } from "../AdminPage/Projects/staticData/basicFunctions";
 import { RiArrowDropDownLine } from "react-icons/ri";
+import userStore from "../AdminPage/Users/userStore";
 
 export default function AddBacklogs({
   types,
@@ -37,8 +39,9 @@ export default function AddBacklogs({
   typeDropdown,
 }: any) {
   const { addRow, updateRow, allStories, parents } = backlogStore();
-  const { uid, idofUid, updateUid } = fileStore();
-  // const [type, setType] = useState<string>("");
+  const { uid, idofUid, updateUid,Id:fileId } = fileStore();
+  const userEmail = userStore((state)=>state.userEmail);
+
 
   // const {data,error,loading} = useQuery(getUidQuery);
 
@@ -48,11 +51,9 @@ export default function AddBacklogs({
   );
   const updateSprints = sprintStore((state) => state.updateSprints);
   const sprints = sprintStore((state) => state.sprints);
-
-  const updateNode = nodeStore((state) => state.updateNodes);
   const router = useRouter();
-
   const projectId = router.query.projectId as string;
+  
 
   const handleSubmit = async (values: any) => {
     const backToThePage = () => router.back();
@@ -77,7 +78,7 @@ export default function AddBacklogs({
           await updateFolderBackend(
             updatedvalues,
             updateFoldersMutation,
-            getProjectByUser
+            getProjectById
           );
           backToThePage();
           break;
@@ -104,9 +105,10 @@ export default function AddBacklogs({
             const createFileResponse = await createFile(
               projectId,
               values.epic,
+              userEmail,
               createFileMutation,
               values,
-              getProjectByUser
+              getProjectById
             );
             values.parent = values.epic;
             // values.id = createFileResponse.id;
@@ -128,8 +130,9 @@ export default function AddBacklogs({
           createFile(
             "",
             values.epic,
+            userEmail,
             createFileMutation,
-            getProjectByUser,
+            getProjectById,
             values
           ).then(async (res) => {
             values.parent = values.epic;
@@ -142,7 +145,7 @@ export default function AddBacklogs({
           });
       } else {
         try {
-          await createNode(newNode, updateNode, values, addRow);
+          await createNode(newNode, values,userEmail,allNodes,fileId);
           const updateUidRespon = (await updateUidMethode(
             idofUid,
             updateUidMutation

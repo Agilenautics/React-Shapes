@@ -14,8 +14,10 @@ function BCTile(name: string, isFirst: boolean = false) {
       <div className="flex items-center">
         {isFirst ? null : <MdOutlineArrowForwardIos />}
         <div className="mx-1 flex items-center font-sans text-sm justify-center bg-purple-100 p-2 text-lg font-normal text-black-400 rounded-tl-lg rounded-tr-lg shadow-md dark:text-gray-400 dark:hover:text-white breadcrumb-trapezoid-purple dark:text-white">
-          {name}
-          <div className="breadcrumb-triangle" />
+          {
+            name.length >=10?name.slice(0,12).concat('...'):name 
+          }
+          {/* <div className="breadcrumb-triangle" /> */}
         </div>
       </div>
     </li>

@@ -38,14 +38,14 @@ export default function Edit() {
       // console.log(selectedData)
     }
   }, [elementId, data]);
+   
+useEffect(()=>{
+if(backend.usersInProjects && backend.usersInProjects.length){
+setUsers([{ emailId: "Select User", value: "" }, ...backend.usersInProjects])
+}
+},[backend.usersInProjects])
 
-  useEffect(() => {
-    if (backend.userHas && backend.userHas.length) {
-      setUsers([{ emailId: "Select User", value: "" }, ...backend.userHas]);
-    }
-    updateBacklogsData(backend.children as any);
-  }, [backend.userHas]);
-
+  
   if (loading) {
     return (
       <>

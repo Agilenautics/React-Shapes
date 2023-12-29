@@ -8,66 +8,45 @@ import client from "../../apollo-client";
 import { Node } from "reactflow";
 import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-import { updateNodesMutation } from "./mutations";
 import { allNodes } from "./queries";
 import TreeModel from "tree-model-improved";
 import { findById } from "../../components/TreeView/backend";
+import getUpdatedCacheData from "../../components/Flow/middleWares/updatingNodeCache";
+import { File, Project } from "../../lib/appInterfaces";
+import { Node_Fragment } from "./fragments";
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
-  var nodes: Array<Node> = [];
-
-  await client
-    .query({
+  try {
+    return await client.query({
       query: customQuery,
       variables: {
-        where: { id: id },
+        where: { id },
       },
-    })
-    .then((result) => {
-      const nodes1 = JSON.stringify(result.data.flowNodes);
-      const nodes2 = nodes1
-        // .replaceAll('"data":', '"data":')
-        // .replaceAll('"position":', '"position":');
-      // @ts-ignore
-      nodes = JSON.parse(nodes2);
     });
-
-  return nodes;
+  } catch (error) {
+    console.log(error, "whiele find node by id ");
+  }
 }
 
 async function getNodes(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   id: string
 ) {
-  var nodes: Array<Node> = [];
-  var edges: Array<Edge> = [];
-  await client
-    .query({
+  try {
+    return await client.query({
       query: customQuery,
       variables: {
         where: {
-          hasFile: {
-            id: id,
-          },
+          id: id,
         },
       },
-    })
-    .then((result) => {
-      const nodes1 = JSON.stringify(result.data.flowcharts[0].hasNodes);
-      const edge1 = JSON.stringify(result.data.flowcharts[0].hasEdges);
-      const edge2 = edge1.replaceAll('"hasedgedataEdgedata":', '"data":');
-      edges = JSON.parse(edge2);
-      const nodes2 = nodes1
-        .replaceAll('"data":', '"data":')
-        .replaceAll('"position":', '"position":');
-      //@ts-ignore
-      nodes = JSON.parse(nodes2);
     });
-
-  return { nodes, edges };
+  } catch (error) {
+    console.log(error, "while getting all edges");
+  }
 }
 
 const checkUserDidComment = (message: string) => {
@@ -78,7 +57,7 @@ const checkUserDidComment = (message: string) => {
         {
           node: {
             message: null,
-            userHas: {
+            createdBy: {
               connect: {
                 where: {
                   node: {
@@ -97,13 +76,11 @@ const checkUserDidComment = (message: string) => {
 };
 async function createNode(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  updateNode: any,
   data: any,
-  addRow: any
+  email: string,
+  cacheQuey: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  fileId: string
 ) {
-  // const addRow = backlogStore(state=> state.addRow)
-  var nodes: Array<Node> = [];
-
   try {
     return await client.mutate({
       mutation,
@@ -114,52 +91,25 @@ async function createNode(
             uid: data.uid,
             draggable: true,
             flowchart: "flowchart",
-            flowchartHas: {
+            label: "New Node",
+            shape: data.symbol,
+            x: 100,
+            y: 100,
+            createdBy: {
               connect: {
                 where: {
                   node: {
-                    hasFile: {
-                      id: data.story,
-                    },
+                    emailId: email,
                   },
                 },
               },
             },
-            data: {
-              create: {
-                node: {
-                  label: data.name || data.label,
-                  shape: data.symbol || "rectangle",
-                  description: data.description,
-                  hasLinkedTo: {
-                    create: {
-                      node: {
-                        label: "",
-                        id: "",
-                        flag: false,
-                        fileId: "",
-                      },
-                    },
+            hasFile: {
+              connect: {
+                where: {
+                  node: {
+                    id: data.story,
                   },
-                  hasLinkedBy: {
-                    create: {
-                      node: {
-                        label: "",
-                        id: "",
-                        fileId: "",
-                        flag: false,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-            position: {
-              create: {
-                node: {
-                  x: -50,
-                  y: 50,
-                  name: "Position",
                 },
               },
             },
@@ -173,6 +123,7 @@ async function createNode(
                 },
               },
             },
+
             hasSprint: {
               connect: [
                 {
@@ -185,24 +136,24 @@ async function createNode(
               ],
             },
             // todo conditionally creating
-            hasComments: {
-              create: [
-                {
-                  node: {
-                    message: null,
-                    userHas: {
-                      connect: {
-                        where: {
-                          node: {
-                            emailId: null,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
+            // hasComments: {
+            //   create: [
+            //     {
+            //       node: {
+            //         message: null,
+            //         createdBy: {
+            //           connect: {
+            //             where: {
+            //               node: {
+            //                 emailId: email,
+            //               },
+            //             },
+            //           },
+            //         },
+            //       },
+            //     },
+            //   ],
+            // },
           },
         ],
       },
@@ -214,34 +165,32 @@ async function createNode(
           },
         }
       ) => {
-        const { flowcharts } = cache.readQuery({
-          query: allNodes,
+        const { files } = cache.readQuery({
+          query: cacheQuey,
           variables: {
             where: {
-              hasFile: {
-                id: data.story,
-              },
+              id: fileId,
             },
-          },
-        }) as any;
-        const { hasNodes } = flowcharts[0];
-        const updaedFlowchart = {
-          ...flowcharts[0],
-          hasNodes: [...hasNodes, ...flowNodes],
-        };
-        cache.writeQuery({
-          query: allNodes,
-          variables: {
-            where: {
-              hasFile: {
-                id: data.story,
-              },
-            },
-          },
-          data: {
-            flowcharts: [updaedFlowchart],
           },
         });
+        if (files && files.length) {
+          const { hasNodes } = files[0];
+          const updaedFlowchart = {
+            ...files[0],
+            hasNodes: [...hasNodes, ...flowNodes],
+          };
+          cache.writeQuery({
+            query: allNodes,
+            variables: {
+              where: {
+                id: data.story,
+              },
+            },
+            data: {
+              files: [updaedFlowchart],
+            },
+          });
+        }
       },
     });
   } catch (error) {
@@ -263,69 +212,39 @@ async function deleteNodeBackend(
         where: {
           id: nodeID,
         },
-        delete: {
-          data: {
-            delete: {
-              hasLinkedTo: {},
-              hasLinkedBy: {},
-            },
-          },
-          position: {},
-          connectedbyFlowedge: {
-            delete: {
-              hasedgedataEdgedata: {},
-            },
-          },
-          flowedgeConnectedto: {
-            delete: {
-              hasedgedataEdgedata: {},
-            },
-          },
-        },
       },
       update: (cache, { data }) => {
-        const { flowcharts } = cache.readQuery({
+        const { files } = cache.readQuery({
           query,
           variables: {
             where: {
-              hasFile: {
-                id: fileId,
-              },
+              id: fileId,
+            },
+            delete: {
+              flowEdge: [
+                {
+                  delete: {},
+                },
+              ],
+              hasInfo: {},
             },
           },
         });
-
-        const { hasNodes } = flowcharts[0];
+        const { hasNodes, ...filedata } = files[0];
         const deleted_node = hasNodes.filter(
           (node: Node) => node.id !== nodeID
         );
-        const updatedFlowcharts = { ...flowcharts[0], hasNodes: deleted_node };
-
         cache.writeQuery({
           query,
           variables: {
             where: {
-              hasFile: {
-                id: fileId,
-              },
+              id: fileId,
             },
           },
           data: {
-            flowcharts: [updatedFlowcharts],
+            files: [{ ...filedata, hasNodes: deleted_node }],
           },
         });
-
-        const { projects } = cache.readQuery({
-          query: mainQuery,
-          variables: {
-            where: {
-              id: projectId,
-            },
-          },
-        });
-        const root = new TreeModel().parse(projects[0]);
-        const node =findById(root,fileId);
-        console.log(node,root,fileId)
       },
     });
   } catch (error) {
@@ -341,62 +260,60 @@ const updatePosition = async (
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileId: string
 ) => {
+  const { position } = node;
   try {
     await client.mutate({
       mutation,
       variables: {
         where: {
-          flownodeHasposition: {
-            id: node.id,
-          },
+          id: node.id,
         },
         update: {
-          x: node.position.x,
-          y: node.position.y,
+          x: position.x,
+          y: position.y,
         },
       },
       update: (
         cache,
         {
           data: {
-            updatePositions: { positions },
+            updateFlowNodes: { flowNodes },
           },
         }
       ) => {
-        const { flowcharts } = cache.readQuery({
+        const { files } = cache.readQuery({
           query,
           variables: {
             where: {
-              hasFile: {
-                id: fileId,
-              },
+              id: fileId,
             },
           },
         });
-        const { hasNodes, ...flowchartsData } = flowcharts[0];
-        const updatedNode = hasNodes.map((nodeData: Node) => {
-          if (nodeData.id === node.id) {
+
+        const { hasNodes, ...FileData } = files[0];
+        const { x, y, id } = flowNodes[0];
+        const updatedNode = hasNodes.map((node: Node) => {
+          if (node.id === id) {
             return {
-              ...nodeData,
-              position: positions[0],
+              ...node,
+              x,
+              y,
             };
           }
           return {
-            ...nodeData,
+            ...node,
           };
         });
-        const updatedFlowchart = { ...flowchartsData, hasNodes: updatedNode };
+        const updatedFile = { ...FileData, hasNodes: updatedNode };
         cache.writeQuery({
           query,
           variables: {
             where: {
-              hasFile: {
-                id: fileId,
-              },
+              id: fileId,
             },
           },
           data: {
-            flowcharts: [updatedFlowchart],
+            files: [updatedFile],
           },
         });
       },
@@ -424,158 +341,86 @@ const updateNodeBackend = async (
           draggable: true,
         },
       },
-      update: (
-        cache,
-        {
-          data: {
-            updateFlowNodes: { flowNodes },
-          },
-        }
-      ) => {
-        const { flowcharts } = cache.readQuery({
-          query,
-          variables: {
-            where: {
-              hasFile: {
-                id: fileId,
-              },
-            },
-          },
-        });
-        const { hasNodes, ...flowchartData } = flowcharts[0];
-        const updatedNode = hasNodes.map((node: Node) => {
-          if (node.id === nodeData.id) {
-            return {
-              ...flowNodes,
-            };
-          }
-          return {
-            ...node,
-          };
-        });
-        const updatedFlowchart = { ...flowchartData, hasNodes: updatedNode };
-        cache.writeQuery({
-          query,
-          variables: {
-            where: {
-              hasFile: {
-                id: fileId,
-              },
-            },
-          },
-          data: {
-            flowcharts: [updatedFlowchart],
-          },
-        });
-      },
+      // update: (
+      //   cache,
+      //   {
+      //     data: {
+      //       updateFlowNodes: { flowNodes },
+      //     },
+      //   }
+      // ) => {
+      //   const { flowcharts } = cache.readQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         hasFile: {
+      //           id: fileId,
+      //         },
+      //       },
+      //     },
+      //   });
+      //   const { hasNodes, ...flowchartData } = flowcharts[0];
+      //   const updatedNode = hasNodes.map((node: Node) => {
+      //     if (node.id === nodeData.id) {
+      //       return {
+      //         ...flowNodes,
+      //       };
+      //     }
+      //     return {
+      //       ...node,
+      //     };
+      //   });
+      //   const updatedFlowchart = { ...flowchartData, hasNodes: updatedNode };
+      //   cache.writeQuery({
+      //     query,
+      //     variables: {
+      //       where: {
+      //         hasFile: {
+      //           id: fileId,
+      //         },
+      //       },
+      //     },
+      //     data: {
+      //       flowcharts: [updatedFlowchart],
+      //     },
+      //   });
+      // },
     });
   } catch (error) {
     console.log("Error while updating node", error);
   }
 };
 
-const updateLinkedByMethod = async (
-  nodeData: any,
-  mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>
-) => {
-  await client.mutate({
-    mutation: mutations,
-    variables: {
-      where: {
-        hasLinkedBy: {
-          flownodeHasdata: {
-            id: nodeData.id,
-          },
-        },
-      },
-      update: {
-        fileId: nodeData.data.hasLinkedBy.fileId,
-        flag: nodeData.data.hasLinkedBy.flag,
-        id: nodeData.data.hasLinkedBy.id,
-        label: nodeData.data.hasLinkedBy.label,
-      },
-    },
-  });
-};
-
 //updateNodes links and data
-
 const updateNodeData = async (
   nodeData: any,
   mutations: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileId: string
 ) => {
+  const { id, data, type, hasInfo } = nodeData;
   try {
     return await client.mutate({
       mutation: mutations,
       variables: {
         where: {
-          flownodeHasdata: {
-            id: nodeData.id,
-          },
+          id,
         },
         update: {
-          description: nodeData.data.description,
-          shape: nodeData.data.shape,
-          label: nodeData.data.label,
-          hasLinkedTo: {
+          label: data.label,
+          shape: data.shape,
+          type: type,
+          hasInfo: {
             update: {
               node: {
-                fileId: nodeData.data.hasLinkedTo.fileId,
-                flag: nodeData.data.hasLinkedTo.flag,
-                id: nodeData.data.hasLinkedTo.id,
-                label: nodeData.data.hasLinkedTo.label,
+                assignedTo: hasInfo.assignedTo,
+                description: data.description,
+                dueDate: hasInfo.dueDate,
+                status: hasInfo.status,
               },
             },
           },
         },
-      },
-      update: (cache, { data: { updateNodeData } }) => {
-        const { flowcharts } = cache.readQuery({
-          query,
-          variables: {
-            where: {
-              hasFile: {
-                id: fileId,
-              },
-            },
-          },
-        });
-        const { hasNodes, ...flowchartData } = flowcharts[0];
-        const getNode = hasNodes.find((node: Node) => node.id === nodeData.id);
-        const { data } = getNode;
-        const { hasLinkedBy } = data;
-        const { hasLinkedTo, ...hasNodeData } = updateNodeData.nodeData[0];
-        const updatedHasNodeData = { ...hasNodeData, hasLinkedBy, hasLinkedTo };
-
-        const updatedNode = hasNodes.map((node: Node) => {
-          if (node.id === nodeData.id) {
-            return {
-              ...node,
-              data: {
-                ...updatedHasNodeData,
-              },
-            };
-          }
-          return {
-            ...node,
-          };
-        });
-        const updatedFlowChart = { ...flowchartData, hasNodes: updatedNode };
-        cache.writeQuery({
-          query,
-          variables: {
-            where: {
-              hasFile: {
-                id: fileId,
-              },
-            },
-          },
-          data: {
-            flowcharts: [updatedFlowChart],
-          },
-        });
       },
     });
   } catch (error) {
@@ -600,21 +445,15 @@ const updateTaskMethod = async (
           update: {
             node: {
               status: data.status,
-              sprint: data.sprint || null,
+              description: data.description,
+
               dueDate: data.dueDate || null,
               assignedTo: data.assignedTo || null,
             },
           },
         },
 
-        data: {
-          update: {
-            node: {
-              label: data.name,
-              description: data.description,
-            },
-          },
-        },
+        label: data.name,
         hasSprint: {
           connect: [
             {
@@ -632,7 +471,7 @@ const updateTaskMethod = async (
               {
                 node: {
                   message: data.discussion,
-                  userHas: {
+                  createdBy: {
                     connect: {
                       where: {
                         node: {
@@ -665,6 +504,132 @@ const updateTaskMethod = async (
 
   return response;
 };
+const linkNodeAnotherNodeMethod = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  anotherNodId: string,
+  cacheQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  fileId: string
+) => {
+  try {
+    return await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id,
+        },
+        connect: {
+          isLinked: {
+            edge: {
+              from: id,
+            },
+            where: {
+              node: {
+                id: anotherNodId,
+              },
+            },
+          },
+        },
+      },
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        // const { files } = cache.readQuery({
+        //   query: cacheQuery,
+        //   variables: {
+        //     where: {
+        //       id: fileId,
+        //     },
+        //   },
+        // });
+        // const { hasNodes, ...fileData } = files[0];
+        // const updatedNodes = hasNodes.map((node:Node)=>{
+        //   console.log(node)
+        //   if(node.id === id){
+        //     return{
+        //       ...node,
+              
+        //     }
+        //   }
+        // }) 
+        // const getId: string | undefined = cache.identify(flowNodes[0]);
+        // cache.modify({
+        //   id: getId,
+        //   fields: {
+        //     FlowNode(existingData, { readField }) {
+        //       const existanceNode = existingData.isLinked.some((value: Node) =>
+        //         readField("id", value)
+        //       );
+        //       if (existanceNode) {
+        //         return existingData;
+        //       }
+
+        //       return [...existingData.isLinked, ...flowNodes];
+        //     },
+        //   },
+        // });
+        // console.log('Modified Data:', modifiedData); // Add this line
+      },
+    });
+  } catch (error) {
+    console.log("while linking a node", error);
+  }
+};
+
+const deleteLinkedNodeMethod = async (
+  id: string,
+  mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  nodeId: string
+) => {
+  try {
+    await client.mutate({
+      mutation,
+      variables: {
+        where: {
+          id,
+        },
+        disconnect: {
+          isLinked: [
+            {
+              where: {
+                node: {
+                  id: nodeId,
+                },
+              },
+            },
+          ],
+        },
+      },
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        const cacheId: string | undefined = cache.identify(flowNodes[0]);
+        cache.modify({
+          id: cacheId,
+          fields: {
+            FlowNode: (existanceData, { readField }) => {
+              return existanceData.isLinked.filter(
+                (values: any) => nodeId !== readField("id", values)
+              );
+            },
+          },
+        });
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export {
   createNode,
@@ -673,7 +638,9 @@ export {
   deleteNodeBackend,
   updatePosition,
   updateNodeBackend,
-  updateLinkedByMethod,
+  //updateLinkedByMethod,
   updateNodeData,
   updateTaskMethod,
+  linkNodeAnotherNodeMethod,
+  deleteLinkedNodeMethod,
 };

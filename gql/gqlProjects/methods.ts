@@ -6,7 +6,8 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { GET_USER } from "./queries";
-import { Project } from "../..//lib/appInterfaces";
+import { Project, User } from "../..//lib/appInterfaces";
+import { Project_Fragment } from "./fragments";
 const getUserByEmail = async (
   email: String,
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -138,11 +139,7 @@ const update_recentProject = async (
             },
           },
         });
-        console.log(existanceData, "hii");
       },
-      // refetchQueries(result) {
-      //   return [GET_USER]
-      // },
     });
   } catch (error) {
     console.log(error, "while deleting the project..");
@@ -196,7 +193,7 @@ const restoreFromRecycleBin = async (
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com",
+              emailId: email,
             },
           },
           data: {
@@ -217,7 +214,8 @@ const restoreFromRecycleBin = async (
 const parmenantDelete = async (
   id: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
-  query: DocumentNode | TypedDocumentNode<any, OperationVariables>
+  query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
+  email: string
 ) => {
   try {
     await client.mutate({
@@ -226,13 +224,86 @@ const parmenantDelete = async (
         where: {
           id,
         },
+        delete: {
+          hasContainsFile: [
+            {
+              delete: {
+                hasNodes: [
+                  {
+                    delete: {
+                      flowEdge: [
+                        {
+                          delete: {},
+                        },
+                      ],
+                      hasInfo: {},
+                    },
+                  },
+                ],
+                hasInfo: {},
+              },
+            },
+          ],
+          hasContainsFolder: [
+            {
+              delete: {
+                hasFolder: [
+                  {
+                    delete: {
+                      hasFile: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            hasNodes: [
+                              {
+                                delete: {
+                                  hasInfo: {},
+                                  flowEdge: [
+                                    {
+                                      delete: {},
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                      hasInfo: {},
+                    },
+                  },
+                ],
+                hasFile: [
+                  {
+                    delete: {
+                      hasInfo: {},
+                      hasNodes: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            flowEdge: [
+                              {
+                                delete: {},
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+                hasInfo: {},
+              },
+            },
+          ],
+        },
       },
       update: (cache, { data }) => {
         const existingUser = cache.readQuery({
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com",
+              emailId: email,
             },
           },
         });
@@ -245,7 +316,7 @@ const parmenantDelete = async (
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com",
+              emailId: email,
             },
           },
           data: {
@@ -275,91 +346,71 @@ const clearRecycleBin = async (
           hasContainsFile: [
             {
               delete: {
-                hasFlowchart: {
-                  delete: {
-                    hasEdges: [
-                      {
-                        delete: {
-                          hasedgedataEdgedata: {
-                            delete: {},
-                          },
+                hasNodes: [
+                  {
+                    delete: {
+                      flowEdge: [
+                        {
+                          delete: {},
                         },
-                      },
-                    ],
-                    hasNodes: [
-                      {
-                        delete: {
-                          position: {
-                            delete: {},
-                          },
-                          data: {},
-                        },
-                      },
-                    ],
+                      ],
+                      hasInfo: {},
+                    },
                   },
-                },
+                ],
+                hasInfo: {},
               },
             },
           ],
           hasContainsFolder: [
             {
               delete: {
-                hasFile: [
-                  {
-                    delete: {
-                      hasFlowchart: {
-                        delete: {
-                          hasEdges: [
-                            {
-                              delete: {
-                                hasedgedataEdgedata: {},
-                              },
-                            },
-                          ],
-                          hasNodes: [
-                            {
-                              delete: {
-                                position: {},
-                                data: {},
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    },
-                  },
-                ],
                 hasFolder: [
                   {
                     delete: {
                       hasFile: [
                         {
                           delete: {
-                            hasFlowchart: {
-                              delete: {
-                                hasNodes: [
-                                  {
-                                    delete: {
-                                      data: {},
-                                      position: {},
+                            hasInfo: {},
+                            hasNodes: [
+                              {
+                                delete: {
+                                  hasInfo: {},
+                                  flowEdge: [
+                                    {
+                                      delete: {},
                                     },
-                                  },
-                                ],
-                                hasEdges: [
-                                  {
-                                    delete: {
-                                      hasedgedataEdgedata: {},
-                                    },
-                                  },
-                                ],
+                                  ],
+                                },
                               },
-                            },
+                            ],
+                          },
+                        },
+                      ],
+                      hasInfo: {},
+                    },
+                  },
+                ],
+                hasFile: [
+                  {
+                    delete: {
+                      hasInfo: {},
+                      hasNodes: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            flowEdge: [
+                              {
+                                delete: {},
+                              },
+                            ],
                           },
                         },
                       ],
                     },
                   },
                 ],
+                hasInfo: {},
               },
             },
           ],
@@ -383,7 +434,7 @@ const clearRecycleBin = async (
           query,
           variables: {
             where: {
-              emailId: "irfan123@gmail.com",
+              emailId: email,
             },
           },
           data: {
@@ -405,72 +456,81 @@ const addProject_Backend = async (
   query: any
 ) => {
   let data = [];
-  try {
-    await client
-      .mutate({
-        mutation,
-        variables: {
-          input: [
-            {
-              deletedAT: "",
-              description: project.description,
-              isOpen: true,
-              name: project.name,
-              recentProject: false,
-              recycleBin: false,
-              userHas: {
-                connect: [
-                  {
-                    where: {
-                      node: {
-                        emailId: email,
-                      },
+  // try {
+  await client
+    .mutate({
+      mutation,
+      variables: {
+        input: [
+          {
+            deletedAT: "",
+            description: project.description,
+            isOpen: true,
+            name: project.name,
+            recentProject: false,
+            recycleBin: false,
+            createdBy: {
+              connect: {
+                where: {
+                  node: {
+                    emailId: email,
+                  },
+                },
+              },
+            },
+            usersInProjects: {
+              connect: [
+                {
+                  where: {
+                    node: {
+                      emailId: email,
                     },
                   },
-                ],
-              },
+                },
+              ],
             },
-          ],
-        },
-        update: (
-          cache,
-          {
-            data: {
-              createProjects: { projects },
+          },
+        ],
+      },
+      update: (
+        cache,
+        {
+          data: {
+            createProjects: { projects },
+          },
+        }
+      ) => {
+        // @ts-ignore
+        const { users } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
             },
-          }
-        ) => {
-          // @ts-ignore
-          const { users } = cache.readQuery({
-            query,
-            variables: {
-              where: {
-                emailId: email,
-              },
+          },
+        });
+        const { hasProjects, ...user } = users[0];
+        const updated_projects = [...projects, ...hasProjects];
+        const updated_user = { ...user, hasProjects: updated_projects };
+        cache.writeQuery({
+          query,
+          variables: {
+            where: {
+              emailId: email,
             },
-          });
-          const { hasProjects, ...user } = users[0];
-          const updated_projects = [...projects, ...hasProjects];
-          const updated_user = { ...user, hasProjects: updated_projects };
-          cache.writeQuery({
-            query,
-            variables: {
-              where: {
-                emailId: email,
-              },
-            },
-            data: {
-              users: [updated_user],
-            },
-          });
-        },
-      })
-      .then((response) => {
-        addProject(response.data.createProjects.projects[0]);
-      });
-  } catch (error) {
-    console.log(error, "While adding the project");
-  }
+          },
+          data: {
+            users: [updated_user],
+          },
+        });
+      },
+    })
+    .then((response) => {
+      addProject(response.data.createProjects.projects[0]);
+    });
+  // } catch (error) {
+  //   console.log(error, "While adding the project");
+  // }
 };
 
 const edit_Project = async (

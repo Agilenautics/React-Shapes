@@ -5,16 +5,15 @@ import { File_Fragment } from "./fragments";
 import { Node_Fragment,Info_Fragment } from "../gqlNodes";
 
 //Get root using unique userName(UID)
-export const getProjectByUser = gql`
+export const getProjectById = gql`
   ${File_Fragment}
   ${Info_Fragment}
-  query getprojectByUser($where: ProjectWhere) {
+  query getprojectById($where: ProjectWhere) {
     projects(where: $where) {
       name
       description
       isOpen
       id
-      
       hasContainsFile {
         ...FileFragment
       }
@@ -35,7 +34,7 @@ export const getProjectByUser = gql`
           ...FileFragment
         }
       }
-      userHas {
+      usersInProjects {
         emailId
         userType
       }
@@ -49,21 +48,18 @@ export const getFile = gql`
       name
       id
       type
-      hasFlowchart {
-        name
-        hasNodes {
-          ...NodeFragment
-        }
+      hasNodes {
+        ...NodeFragment
       }
     }
   }
 `;
-//getting uid 
+//getting uid
 export const getUidQuery = gql`
   query Uids {
-  uids {
-    id
-    uid
+    uids {
+      id
+      uid
+    }
   }
-}
-`
+`;

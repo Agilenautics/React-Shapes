@@ -15,26 +15,22 @@ export const createEdgeMutation = gql`
 `;
 
 export const deleteEdgeMutation = gql`
-  mutation deleteFlowEdges(
-    $where: FlowEdgeWhere
-    $delete: FlowEdgeDeleteInput
-  ) {
-    deleteFlowEdges(where: $where, delete: $delete) {
+  mutation DeleteFlowEdges($where: FlowEdgeWhere) {
+    deleteFlowEdges(where: $where) {
       nodesDeleted
-      relationshipsDeleted
     }
   }
 `;
 export const updateEdgeMutation = gql`
-  mutation updateEdge($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
-    updateFlowEdges(where: $where, update: $update) {
-      flowEdges {
-        hasedgedataEdgedata {
-          label
-          bidirectional
-          boxCSS
-        }
-      }
+  mutation UpdateFlowEdges($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
+  updateFlowEdges(where: $where, update: $update) {
+    flowEdges {
+      id
+      bidirectional
+      boxCSS
+      label
+      pathCSS
     }
   }
+}
 `;

@@ -1,27 +1,25 @@
-import { gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const Edge_Fragment = gql`
   fragment EdgeFragment on FlowEdge {
     id
-    name
-    source
-    target
-    sourceHandle
-    targetHandle
+    label
+    bidirectional
+    boxCSS
+    pathCSS
     selected
-    hasedgedataEdgedata {
-      label
-      pathCSS
-      boxCSS
-      bidirectional
-    }
-    flownodeConnectedby {
+    createdBy {
       id
-      flowchart
+      emailId
     }
-    connectedtoFlownode {
-      id
-      flowchart
+
+    flowNodeConnection {
+      edges {
+        handle
+        node {
+          id
+        }
+      }
     }
   }
 `;

@@ -159,7 +159,10 @@ const Login: React.FC = () => {
       ></div>
       {/* login form section */}
       <div className="p-8">
-        <h2 className="text-center text-4xl" data-test-id="login-button-element">
+        <h2
+          className="text-center text-4xl"
+          data-test-id="login-button-element"
+        >
           WELCOME
         </h2>
         <div className=" ml-14 mr-14 flex flex-col gap-7  p-14 ">

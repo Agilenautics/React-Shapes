@@ -1,11 +1,21 @@
 import { gql } from "@apollo/client";
-
+// created by needs to be clarify in future
+//No of users in the project in the front end
 const typeDefs = gql`
   # ! Interfaces only work on relationships!
   type User {
     id: ID! @id
     timeStamp: DateTime! @timestamp
-    emailId: String!
+    emailId: String! @unique
+    # @authorization(
+    #   validate: [
+    #     {
+    #       when: [BEFORE]
+    #       operations: [UPDATE, DELETE]
+    #       where: { node: { emailId: "$jwt.email" } }
+    #     }
+    #   ]
+    # )
     active: Boolean!
     userName: String
     userType: String
@@ -15,6 +25,15 @@ const typeDefs = gql`
 
   #project scheme
   type Project {
+    # @authorization(
+    #   validate: [
+    #     {
+    #       when: [AFTER]
+    #       operations: [UPDATE, DELETE]
+    #       where: { node: { createdBy: { emailId: "$jwt.email" } } }
+    #     }
+    #   ]
+    # )
     id: ID! @id
     timeStamp: DateTime! @timestamp
     name: String!
@@ -23,7 +42,8 @@ const typeDefs = gql`
     recentProject: Boolean!
     deletedAT: String!
     description: String
-    userHas: [User!]! @relationship(type: "HAS_PROJECT", direction: IN)
+    createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
+    usersInProjects: [User!]! @relationship(type: "HAS_PROJECT", direction: IN)
     hasContainsFolder: [Folder!]!
       @relationship(type: "HAS_FOLDER", direction: OUT)
     hasContainsFile: [File!]! @relationship(type: "HAS_FILE", direction: OUT)
@@ -32,15 +52,25 @@ const typeDefs = gql`
 
   #epic scheme
   type Folder {
+    # @authorization(
+    #   validate: [
+    #     {
+    #       when: [AFTER]
+    #       operations: [UPDATE, DELETE]
+    #       where: { node: { createdBy: { emailId: "$jwt.email" } } }
+    #     }
+    #   ]
+    # )
     id: ID! @id
     type: String!
     isOpen: Boolean!
     timeStamp: DateTime @timestamp
     name: String!
     uid: Int!
+    createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     hasComments: [Comment!]! @relationship(type: "HAS_COMMENT", direction: IN)
     hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
-    hasInfo: Info @relationship(type: "HAS_INFO", direction: IN)
+    hasInfo: Info @relationship(type: "HAS_INFO", direction: OUT)
     projectHas: Project @relationship(type: "HAS_FOLDER", direction: IN)
     hasFolder: [Folder!]! @relationship(type: "HAS_FOLDER", direction: OUT)
     hasFile: [File!]! @relationship(type: "HAS_FILE", direction: OUT)
@@ -48,113 +78,107 @@ const typeDefs = gql`
 
   # story scheme
   type File {
+    # @authorization(
+    #   validate: [
+    #     {
+    #       when: [AFTER]
+    #       operations: [UPDATE, DELETE]
+    #       where: { node: { createdBy: { emailId: "$jwt.email" } } }
+    #     }
+    #   ]
+    # )
     id: ID! @id
-    #parentId: ID! @id 
+    #parentId: ID! @id
     timeStamp: DateTime! @timestamp
     type: String!
     name: String!
     uid: Int!
+    createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
     hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
     hasComments: [Comment!]! @relationship(type: "HAS_FILE", direction: IN)
-    hasInfo: Info! @relationship(type: "HAS_INFO", direction: IN)
-    hasFlowchart: Flowchart @relationship(type: "HAS_FLOWCHART", direction: OUT)
+    hasInfo: Info @relationship(type: "HAS_INFO", direction: OUT)
     folderHas: Folder @relationship(type: "HAS_FILE", direction: IN)
     projectHas: Project @relationship(type: "HAS_FILE", direction: IN)
-  }
-
-  type Flowchart {
-    name: String!
-    hasFile: File @relationship(type: "HAS_FLOWCHART", direction: IN)
-    hasNodes: [FlowNode!]! @relationship(type: "HAS_FLOWNODES", direction: OUT)
-    hasEdges: [FlowEdge!]! @relationship(type: "HAS_FLOWEDGES", direction: OUT)
+    hasNodes: [FlowNode!]! @relationship(type: "HAS_FLOWNODES", direction: IN)
   }
 
   #task scheme
   type FlowNode {
+    # @authorization(
+    #   validate: [
+    #     {
+    #       when: [AFTER]
+    #       operations: [UPDATE, DELETE]
+    #       where: { node: { createdBy: { emailId: "$jwt.email" } } }
+    #     }
+    #   ]
+    # )
     id: ID! @id
     timeStamp: DateTime! @timestamp
     draggable: Boolean!
     flowchart: String!
     type: String!
     uid: Int!
-    flowchartHas:Flowchart @relationship(type: "HAS_FLOWNODES", direction:IN)
-    uidHas:Uid @relationship (type:"HAS_UID",direction:OUT)
-    status: String
-    assignedTo: String
-    hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
-    hasInfo: Info @relationship(type: "HAS_INFO", direction: IN)
-    hasComments: [Comment!]!
-      @relationship(type: "HAS_FLOWNODES", direction: OUT)
-    data: NodeData @relationship(type: "HAS_NODE_DATA", direction: OUT)
-    position: Position
-      @relationship(type: "HAS_POSITION", direction: OUT)
-    connectedbyFlowedge: [FlowEdge!]!
-      @relationship(type: "NODE_CONNECTED_BY", direction: OUT)
-    flowNodeHas: File @relationship(type: "HAS_FILE", direction: IN)
-    hasTasks: Tasks @relationship(type: "HAS_TASKS", direction: OUT)
-    flowedgeConnectedto: [FlowEdge!]!
-      @relationship(type: "NODE_CONNECTED_TO", direction: IN)
-  }
-
-  type NodeData {
     label: String!
     shape: String!
-    description: String
-    hasLinkedTo: LinkedTo @relationship(type: "HAS_LINKED_TO", direction: OUT)
-    hasLinkedBy: LinkedBy @relationship(type: "HAS_LINKED_BY", direction: OUT)
-    flownodeHasdata: FlowNode @relationship(type: "HAS_NODE_DATA", direction: IN)
-  }
-
-  type LinkedTo {
-    label: String
-    id: ID
-    flag: Boolean!
-    fileId: String
-    hasLinkedTo: NodeData @relationship(type: "HAS_LINKED_TO", direction: IN)
-  }
-  type LinkedBy {
-    label: String
-    id: ID
-    flag: Boolean!
-    fileId: String
-    hasLinkedBy: NodeData @relationship(type: "HAS_LINKED_BY", direction: IN)
-  }
-
-  type Position {
-    name: String!
     x: Float!
     y: Float!
-    flownodeHasposition: FlowNode
-      @relationship(type: "HAS_POSITION", direction: IN)
+    hasSprint: [Sprint!]! @relationship(type: "HAS_SPRINT", direction: IN)
+    hasInfo: Info @relationship(type: "HAS_INFO", direction: OUT)
+    hasComments: [Comment!]!
+      @relationship(type: "HAS_FLOWNODES", direction: OUT)
+    flowEdge: [FlowEdge!]!
+      @relationship(
+        type: "NODE_CONNECTED"
+        properties: "NODE_CONNECTED"
+        direction: OUT
+      )
+    createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
+    # uidHas: Uid @relationship(type: "HAS_UID", direction: OUT)
+    hasFile: File @relationship(type: "HAS_FLOWNODES", direction: OUT)
+
+    isLinked: [FlowNode!]!
+      @relationship(
+        type: "HAS_LINKED"
+        properties: "LINKED"
+        direction: OUT
+        queryDirection: DEFAULT_UNDIRECTED
+      )
   }
 
-  type EdgeData {
-    id: ID! @id
-    label: String
-    pathCSS: String!
-    boxCSS: String!
-    bidirectional: Boolean!
-    flowedgeHasedgedata: FlowEdge
-      @relationship(type: "HAS_EDGE_DATA", direction: IN)
+  interface LINKED @relationshipProperties {
+    from: String!
   }
 
   type FlowEdge {
+    # @authorization(
+    #   validate: [
+    #     {
+    #       when: [AFTER]
+    #       operations: [UPDATE, DELETE]
+    #       where: { node: { createdBy: { emailId: "$jwt.email" } } }
+    #     }
+    #   ]
+    # )
     id: ID! @id
-    name: String!
     timeStamp: DateTime! @timestamp
-    source: String!
-    target: String!
-    sourceHandle: String!
-    targetHandle: String!
-    selected: Boolean!
+    selected: Boolean
+    label: String
+    pathCSS: String
+    boxCSS: String
+    bidirectional: Boolean
     # * Connections below
-    flowchartHas:Flowchart @relationship(type:"HAS_FLOWEDGES", direction:IN)
-    flownodeConnectedby: FlowNode
-      @relationship(type: "NODE_CONNECTED_BY", direction: IN)
-    connectedtoFlownode: FlowNode
-      @relationship(type: "NODE_CONNECTED_TO", direction: OUT)
-    hasedgedataEdgedata: EdgeData
-      @relationship(type: "HAS_EDGE_DATA", direction: OUT)
+    createdBy: User! @relationship(type: "CREATED_BY", direction: OUT)
+    flowNode: [FlowNode!]!
+      @relationship(
+        type: "NODE_CONNECTED"
+        properties: "NODE_CONNECTED"
+        direction: IN
+      )
+    # surafel suggested to remove has file connection
+  }
+  interface NODE_CONNECTED @relationshipProperties {
+    handle: String
   }
 
   type Info {
@@ -162,7 +186,6 @@ const typeDefs = gql`
     assignedTo: String
     status: String!
     dueDate: String
-    sprint: String
   }
 
   type Sprint {
@@ -183,29 +206,38 @@ const typeDefs = gql`
   }
 
   type Comment {
+    # @authorization(
+    #   validate: [
+    #     {
+    #       when: [AFTER]
+    #       operations: [UPDATE, DELETE]
+    #       where: { node: { createdBy: { emailId: "$jwt.email" } } }
+    #     }
+    #   ]
+    # )
     id: ID! @id
     message: String
     timeStamp: DateTime! @timestamp
-    userHas: User @relationship(type: "HAS_COMMENT", direction: OUT)
-    taskHas: FlowNode @relationship(type: "HAS_COMMENT", direction: OUT)
+    createdBy: User @relationship(type: "CREATED_BY", direction: OUT)
+    # taskHas: FlowNode @relationship(type: "HAS_COMMENT", direction: OUT)
     storyHas: File @relationship(type: "HAS_COMMENT", direction: OUT)
     epicHas: Folder @relationship(type: "HAS_COMMENT", direction: OUT)
     sprintHas: Sprint @relationship(type: "HAS_COMMENT", direction: OUT)
-   # createdAt:DateTime! @timestamp(operations: CREATE)
+    # createdAt:DateTime! @timestamp(operations: CREATE)
     #updatedAt:DateTime! @timestamp(operations: UPDATE)
   }
 
   type Uid {
     id: ID! @id
     uid: Int!
-    uidHas:FlowNode @relationship (type:"HAS_UID",direction:IN)
-      }
-
-  type Tasks {
-    id: ID! @id
-    timeStamp: DateTime! @timestamp
-    flownodeHastask: FlowNode @relationship(type: "HAS_TASKS", direction: IN)
+    uidHas: FlowNode @relationship(type: "HAS_UID", direction: IN)
   }
+
+  # type Tasks {
+  #   id: ID! @id
+  #   timeStamp: DateTime! @timestamp
+  #   flownodeHastask: FlowNode @relationship(type: "HAS_TASKS", direction: IN)
+  # }
 `;
 
 export default typeDefs;

@@ -8,7 +8,7 @@ import {
   deleteFileBackend,
   deleteFolderBackend,
   Folder,
-  getProjectByUser,
+  getProjectById,
   updateFoldersMutation,
   updateFilesMutation,
   deleteFoldersMutation,
@@ -42,14 +42,12 @@ export function findById(node: any, id: string): TreeModel.Node<any> | null {
  * @property children - An array of MyData objects.
  */
 export type MyData = {
-  userHas: any;
+  usersInProjects: any;
   id: string;
   isOpen: boolean;
   name: string;
   children?: Array<MyData>;
   type: string;
-  // hasContainsFile:Array<File>
-
   hasContainsFolder: Array<Folder>;
   hasContainsFile: Array<File>;
 };
@@ -117,7 +115,7 @@ const useBackend = () => {
               "Welcome!\nTo get started, use the sidebar button on the top left.",
             shape: "rectangle",
             description: "",
-            hasLinkedTo: {},
+            isLinked: {},
           },
           position: { x: 0, y: 0 },
           type: "WelcomeNode",
@@ -143,7 +141,7 @@ const useBackend = () => {
         await updateFolderBackend(
           editedData,
           updateFoldersMutation,
-          getProjectByUser
+          getProjectById
         );
         // updateNodes(nodeData);
       }
@@ -151,7 +149,7 @@ const useBackend = () => {
         await updateFileBackend(
           editedData,
           updateFilesMutation,
-          getProjectByUser
+          getProjectById
         );
         updateFile(id, initData);
         // updateNodes(nodeData);
@@ -179,15 +177,11 @@ const useBackend = () => {
         await deleteFolderBackend(
           deleteIds,
           deleteFoldersMutation,
-          getProjectByUser
+          getProjectById
         );
         delete_item(id);
       } else {
-        await deleteFileBackend(
-          deleteIds,
-          deleteFilesMutation,
-          getProjectByUser
-        );
+        await deleteFileBackend(deleteIds, deleteFilesMutation, getProjectById);
         delete_item(id);
       }
     },

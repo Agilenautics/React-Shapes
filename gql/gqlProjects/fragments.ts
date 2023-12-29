@@ -8,7 +8,7 @@ export const Project_Fragment = gql`
     recycleBin
     recentProject
     deletedAT
-    userHas {
+    usersInProjects {
       emailId
       userType
     }

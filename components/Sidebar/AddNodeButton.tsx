@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+import userStore from "../AdminPage/Users/userStore";
 import { MdOutlineAdd } from "react-icons/md";
 import {
+  allNodes,
   createNode,
+  getProjectById,
   newNode,
   updateUidMethode,
   updateUidMutation,
 } from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import fileStore from "../TreeView/fileStore";
+import { useRouter } from "next/router";
 
 /**
  * This is a FAB that is positioned over the minimap view.
@@ -21,14 +25,13 @@ import backlogStore from "../Backlogs/backlogStore";
 function AddNodeButton() {
   const currentId = fileStore((state) => state.Id);
   const { addNode } = nodeStore();
-  const updateNode = nodeStore((state) => state.updateNodes);
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExpandedAdd, setIsExpandedAdd] = useState(false);
-  const addRow = backlogStore((state) => state.addRow);
-  const uid = fileStore((state) => state.uid);
-  const idofUid = fileStore((state) => state.idofUid);
-  const updateUid = fileStore((state) => state.updateUid);
+  const {uid,idofUid,updateUid,Id:fileId} = fileStore()
+  const userEmail = userStore((state) => state.userEmail);
+  const router = useRouter()
+  const projectId = router.query.projectId as string
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
@@ -43,12 +46,7 @@ function AddNodeButton() {
       uid,
     };
     try {
-      const createNodeResponse = await createNode(
-        newNode,
-        updateNode,
-        data,
-        addRow
-      );
+      const createNodeResponse = await createNode(newNode, data, userEmail,allNodes,fileId);
       addNode(createNodeResponse?.data.createFlowNodes.flowNodes);
       const updateUidResponse = (await updateUidMethode(
         idofUid,
@@ -75,13 +73,7 @@ function AddNodeButton() {
       uid,
     };
     try {
-      const createBpmnResponse = await createNode(
-        newNode,
-        updateNode,
-        data,
-        addRow
-      );
-      addNode(createBpmnResponse?.data.createFlowNodes.flowNodes);
+      await createNode(newNode, data, userEmail,allNodes,fileId);
       const updateUidResponse = updateUidMethode(
         idofUid,
         updateUidMutation

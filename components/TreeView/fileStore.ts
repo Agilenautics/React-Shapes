@@ -31,12 +31,12 @@ interface files {
   currentFlowchart: string;
   updateCurrentFlowchart: (currentFlowchart: string, Id: string) => void;
   linkNodes: { nodes: any; fileID: string };
-  updateLinkNodes: (nodes: Object, fileID: string) => void;
+  updateLinkNodes: (nodes: Array<Node | any>, fileID: string) => void;
   add_file: (newFile: File) => void;
   add_folder: (newFolder: Folder) => void;
   delete_item: (id: string) => void;
   find_file: (id: string) => MyData;
-  update_file: (id: string, updatedFile: MyData)=>void
+  update_file: (id: string, updatedFile: MyData) => void;
   loading: boolean;
   setLoading: (load: boolean) => void;
   uid: number;
@@ -65,16 +65,25 @@ const fileStore = create<files>((set) => ({
       return { currentFlowchart, Id };
     }),
   linkNodes: { nodes: {}, fileID: "" },
-  updateLinkNodes: (nodes, id) =>
+  updateLinkNodes: (nodes: Array<Node>, id: string) =>
     set((state) => {
-      return { linkNodes: { nodes: nodes, fileID: id } };
+      const newData = nodes.map((item: any) => {
+        const description = item.hasInfo?.description;
+        const { x, y, label, shape, ...rest } = item;
+        return {
+          ...rest,
+          data: { label, shape, description },
+          position: { x, y },
+        };
+      });
+      return { linkNodes: { nodes: newData, fileID: id } };
     }),
   updateLinkNodeId(nodeId) {
     set((state) => {
       return { linkNodeId: nodeId };
     });
   },
-  add_file: (newFile:any) => {
+  add_file: (newFile: any) => {
     set((state) => {
       let parentId = state.Id;
       let root = new TreeModel().parse(state.data);
@@ -82,7 +91,6 @@ const fileStore = create<files>((set) => ({
       const children = root.model?.children;
       //updating the main
       function getUpdatedMain(selectedFolder: Folder) {
-        console.log("iam in child funtion")
         //after getting folder data iam updating children of the main on that particular folder
         const updated_children = children.map((folder: Folder) => {
           if (folder.id === selectedFolder.id) {
@@ -107,7 +115,7 @@ const fileStore = create<files>((set) => ({
           }
           return values;
         });
-        // finally updating the main or project 
+        // finally updating the main or project
         const updated_main = {
           ...state.data,
           children: updated_children,
@@ -117,7 +125,6 @@ const fileStore = create<files>((set) => ({
       }
 
       function checkingParentisFileOrFolderOrProject(parentFolder: Folder) {
-        console.log("iam in parent function")
         //checkeng passing data type if its folder
         if (parentFolder.type === "folder") {
           //here if its folder iam passing selected folder
@@ -141,16 +148,16 @@ const fileStore = create<files>((set) => ({
         //and returning or updating data by using checkingParent is File Or Folder Or Project
         // then iam passing selected folder as myData interface
         return { data: checkingParentisFileOrFolderOrProject(getFolder) };
-         // if i select the file in folder or in project
+        // if i select the file in folder or in project
       } else if (node?.model.type === "file") {
         //then iam getting parent of that file
         let getParent = node?.parent.model;
-        //finding that parent exist or not inside the parent 
+        //finding that parent exist or not inside the parent
         // if its not then iam passing project to add file inside the the project
         const findParent =
           children?.find((folder: Folder) => folder.id === getParent.id) ||
           getParent;
-        return { data: checkingParentisFileOrFolderOrProject(findParent)};
+        return { data: checkingParentisFileOrFolderOrProject(findParent) };
       } else {
         //file adding inside the main
         const updated_data = [...children, newFile];
@@ -264,8 +271,8 @@ const fileStore = create<files>((set) => ({
       if (node) {
         node.model = updatedFile;
       }
-     
-      return { data:updatedFile };
+
+      return { data: updatedFile };
     }),
 
   updateUid: (collectionofIds: Array<any>) =>

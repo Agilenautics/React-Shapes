@@ -44,6 +44,7 @@ async function createFolderInFolder(
 async function createFolderInMain(
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   parentId: string,
+  email: string,
   newFolderData: Folder | any,
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) {
@@ -64,7 +65,6 @@ async function createFolderInMain(
                   assignedTo: "",
                   dueDate: "",
                   description: "",
-                  sprint: "",
                 },
               },
             },
@@ -73,6 +73,15 @@ async function createFolderInMain(
                 where: {
                   node: {
                     id: parentId,
+                  },
+                },
+              },
+            },
+            createdBy: {
+              connect: {
+                where: {
+                  node: {
+                    emailId: email,
                   },
                 },
               },
@@ -144,30 +153,46 @@ async function deleteFolderBackend(
           hasFile: [
             {
               delete: {
-                hasFlowchart: {
-                  delete: {
-                    hasNodes: [
-                      {
-                        delete: {
-                          data: {
-                            delete: {
-                              hasLinkedTo: {},
-                              hasLinkedBy: {},
-                            },
-                          },
-                          position: {},
+                hasInfo: {},
+                hasNodes: [
+                  {
+                    delete: {
+                      hasInfo: {},
+                      flowEdge: [
+                        {
+                          delete: {},
                         },
-                      },
-                    ],
-                    hasEdges: [
-                      {
-                        delete: {
-                          hasedgedataEdgedata: {},
-                        },
-                      },
-                    ],
+                      ],
+                    },
                   },
-                },
+                ],
+              },
+            },
+          ],
+          hasInfo: {},
+          hasFolder: [
+            {
+              delete: {
+                hasFile: [
+                  {
+                    delete: {
+                      hasInfo: {},
+                      hasNodes: [
+                        {
+                          delete: {
+                            hasInfo: {},
+                            flowEdge: [
+                              {
+                                delete: {},
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+                hasInfo: {},
               },
             },
           ],

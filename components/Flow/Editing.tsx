@@ -1,4 +1,9 @@
-import React, { HTMLInputTypeAttribute, memo, useState,useEffect } from "react";
+import React, {
+  HTMLInputTypeAttribute,
+  memo,
+  useState,
+  useEffect,
+} from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { nodeShapeMap } from "./Nodes/nodeTypes";
 import nodeStore from "./Nodes/nodeStore";
@@ -8,13 +13,15 @@ import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
 import useStore from "../Sidebar/SidebarContext";
 import {
-  getNode,
+  // getNode,
   findNode,
   getFile,
-  getFileByNode,
+  // getFileByNode,
   updateEdgeBackend,
   updateEdgeMutation,
   allNodes,
+  linkNodeAnotherNodeMethod,
+  linkNodeToAnotherNodeMutation,
 } from "../../gql";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter
@@ -110,40 +117,25 @@ function Editing({
   const updateArrows = edgeStore((state) => state.updateArrows);
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
-  const updateLinkedTo = nodeStore((state) => state.updateLinkedTo);
-  const linkNodeId = fileStore((state) => state.linkNodeId);
-  const updateLinkedBy = nodeStore((state) => state.updateLinkedBy);
-  const fileId = fileStore((state) => state.Id);
+  const Id = fileStore((state) => state.Id);
   const { isSideBarOpen, setIsSideBarOpen } = useStore();
-
-  const addLinkMethod = async (key: string) => {
-    //id of the current node
-    const id = linkNodes.nodes[key].id;
-    console.log(key, id);
-
-    // finding the node to collect the label of the node
-    let nodeData = await findNode(getNode, linkNodeId);
-
-    // getting the current file data
-    const { data } = await getFileByNode(linkNodeId, getFile);
-
-    updateLinkedTo(linkNodeId, {
-      label: linkNodes.nodes[key].data.label,
-      flag: true,
-      id,
-      fileId: linkNodes.fileID,
-    });
-
-    updateLinkedBy(
-      id,
-      {
-        label: nodeData[0].data.label,
-        id: linkNodeId,
-        fileId: data.files[0].id,
-        flag: true,
-      },
-      getFile
+  const addLinkMethod = async (
+    currentNodeId: string,
+    anotherNodeId: string
+  ) => {
+    const response = await linkNodeAnotherNodeMethod(
+      currentNodeId,
+      linkNodeToAnotherNodeMutation,
+      anotherNodeId,
+      allNodes,
+      Id
     );
+    // const {
+    //   data: {
+    //     updateFlowNodes: { flowNodes },
+    //   },
+    // } = response;
+    // console.log(response);
     setEditing(false);
   };
 
@@ -158,26 +150,20 @@ function Editing({
       setEditing(false);
     }
   };
-  const handleArrows = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    // const edgeData = {
-    //   label,
-    //   bidirectional: e.target.value === "bidirectional",
-    // };
-    // await updateEdgeBackend(updateEdgeMutation, edgeData, allNodes, fileId);
+  const handleArrows = (e: React.ChangeEvent<HTMLFormElement>) => {
     updateArrows(id, e.target.value === "bidirectional");
-    // console.log(e.target.value)
     setEditing(false);
   };
   useEffect(() => {
     const unsubscribe = fileStore.subscribe((state) => {
-      if (state.Id !== fileId) {
+      if (state.Id !== Id) {
         setEditing(false);
         setIsSideBarOpen(false);
       }
     });
 
     return () => unsubscribe();
-  }, [fileId, isSideBarOpen]);
+  }, [Id, isSideBarOpen]);
 
   useEffect(() => {
     const unsubscribe = nodeStore.subscribe((state) => {
@@ -190,7 +176,7 @@ function Editing({
     if (id) {
       return () => unsubscribe();
     }
-  }, [id,fileId,isSideBarOpen]);
+  }, [id, Id, isSideBarOpen]);
 
   return (
     <div>
@@ -322,8 +308,9 @@ function Editing({
                     type="button"
                     className="absolute -top-[19px] right-2 flex whitespace-nowrap rounded-md bg-neutral-200 p-0.5 "
                     onClick={() => {
-                      updateLinkNodes({}, linkNodes.fileID);
+                      updateLinkNodes([], linkNodes.fileID);
                     }}
+                    
                   >
                     <BsArrowLeft className="h-4 w-4 pt-0" />
                     Back
@@ -338,13 +325,17 @@ function Editing({
                           return (
                             <>
                               {flag ? (
-                                <div className="flex p-1 justify-center items-center h-full text-red-500 ">{linkNodes.nodes[key].message}</div>
+                                <div className="flex h-full items-center justify-center p-1 text-red-500 ">
+                                  {linkNodes.nodes[key].message}
+                                </div>
                               ) : (
                                 <button
                                   key={key}
                                   id={key}
                                   type="button"
-                                  onClick={(e) => addLinkMethod(key)}
+                                  onClick={(e) =>
+                                    addLinkMethod(id, linkNodes.nodes[key].id)
+                                  }
                                   className="my-0.5 w-36 cursor-pointer rounded-md border-[1px] px-2 py-1 text-left
                               font-medium
                                hover:bg-gray-100 hover:text-blue-700 focus:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 dark:border-gray-600

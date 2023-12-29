@@ -24,18 +24,21 @@ import {
   delNodeMutation,
   deleteNodeBackend,
   findNode,
-  getNode,
+  getFlowNode,
+  //updateNodeBackend,
   updatePosition,
   updatePositionMutation,
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
   updateEdgeMutation,
-  getProjectByUser,
+  getProjectById,
   createEdgeMutation,
+  deleteEdgeMutation,
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
-import { FetchResult } from "@apollo/client";
+import userStore from "../AdminPage/Users/userStore";
+import { ApolloQueryResult } from "@apollo/client";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -58,12 +61,23 @@ function Flow() {
   const router = useRouter();
   const projectId = router.query.projectId as string;
   const { getNodes, getEdges } = useReactFlow();
-  const { nodes: defaultNodes, updateNodes, deleteNode } = nodeStore();
-  const { edges: defaultEdges, deleteEdge, addNewEdge } = edgeStore();
+  const {
+    nodes: defaultNodes,
+    updateNodes,
+    deleteNode,
+    updateNodePosition,
+  } = nodeStore();
+  const {
+    edges: defaultEdges,
+    updateEdges,
+    deleteEdge,
+    addNewEdge,
+  } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
   const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
   const [nodeId, setNodeId] = useState([]);
+  const { userEmail } = userStore();
 
   const dragged = useRef(false);
 
@@ -72,8 +86,9 @@ function Flow() {
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map(async (curEle: any) => {
-      await deleteEdgeBackend(curEle.id, curEle.data.label, allNodes, fileId);
+      // await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
+      deleteEdgeBackend(curEle.id, deleteEdgeMutation, allNodes, fileId);
     });
   };
   const handleConfirm = useCallback(() => {
@@ -101,9 +116,9 @@ function Flow() {
         const nodeData = defaultNodes.filter(
           (value) => value.id === changes[0].id
         );
-        nodeData.map((curEle: any) => {
-          setNodeId(curEle);
-        });
+        // nodeData.map((curEle: any) => {
+        //   setNodeId(curEle);
+        // });
         return applyNodeChanges(changes, nds);
       }),
     [defaultNodes, setNodes, updateNodes, currentFlowchart]
@@ -137,21 +152,19 @@ function Flow() {
   );
 
   const onConnect = useCallback(
-    async (newEdge: Edge | any) => {
-      const response: FetchResult<any | undefined> | any = await createFlowEdge(
-        createEdgeMutation,
+    async (newEdge: Connection) => {
+      const edgeResponse = await createFlowEdge(
         newEdge,
-        fileId,
-        allNodes
+        userEmail,
+        createEdgeMutation,allNodes,fileId
       );
-      const {
-        data: {
-          createFlowEdges: { flowEdges },
-        },
-      } = response;
-      addNewEdge(flowEdges[0]);
+      // console.log(userEmail);
+      addNewEdge(edgeResponse?.data.createFlowEdges.flowEdges)
+      setEdges((eds) => {
+        return addEdge(newEdge, eds);
+      });
     },
-    [defaultEdges]
+    [setEdges, getEdges, userEmail]
   );
 
   useEffect(() => {
@@ -166,10 +179,15 @@ function Flow() {
         (event.key === "Backspace" || event.key === "Delete")
       ) {
         const selectedNodes = getNodes().filter((node) => node.selected);
+        //@ts-ignore
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
-          const node = await findNode(getNode, selectedNodes[0].id);
+          const node = await findNode(getFlowNode, selectedNodes[0].id);
+          //@ts-ignore
+
           const linkA = node[0].data.hasLinkedBy.flag;
+          //@ts-ignore
+
           const linkB = node[0].data.hasLinkedTo.flag;
           //.flowNode.nodeData.linked
           if (linkA || linkB) {
@@ -185,32 +203,32 @@ function Flow() {
               selectedItems: selectedNodes,
             });
           }
-        } else if (selectedEdges.length > 0) {
+          //}
+          //else if (selectedEdges.length > 0) {
           setShowConfirmation({
-            type: "edge",
+            type: "node",
             show: true,
-            selectedItems: selectedEdges,
+            selectedItems: selectedNodes,
           });
-        } else {
-          setShowConfirmation(defaultShowConfirmation);
         }
+        //}
+        //else if (selectedEdges.length > 0) {
+        setShowConfirmation({
+          type: "edge",
+          show: true,
+          selectedItems: selectedEdges,
+        });
+        // }
+        // else {
+        setShowConfirmation(defaultShowConfirmation);
       }
-      // if (event.key === "Delete") {
-      //   const selectedEdges = getEdges().filter((edge) => edge.selected);
-      //   if (selectedEdges.length > 0) {
-      //     setShowConfirmation({
-      //       type: "edge" || "node",
-      //       show: true,
-      //       selectedItems: selectedEdges,
-      //     });
-      //   }
-      // }
     };
+    // };
 
-    document.addEventListener("keydown", handleBackspace);
-    return () => {
-      document.removeEventListener("keydown", handleBackspace);
-    };
+      document.addEventListener("keydown", handleBackspace);
+      return () => {
+        document.removeEventListener("keydown", handleBackspace);
+      };
   }, [getNodes, getEdges]);
   async function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
@@ -222,7 +240,7 @@ function Flow() {
           allNodes,
           fileId,
           projectId,
-          getProjectByUser
+          getProjectById
         );
         deleteNode(element);
       } catch (error) {
@@ -240,6 +258,7 @@ function Flow() {
       try {
         if (dragged.current) {
           await updatePosition(node, updatePositionMutation, allNodes, fileId);
+          updateNodePosition(node);
         }
         dragged.current = false;
       } catch (error) {
@@ -299,7 +318,7 @@ function Flow() {
           nodeTypes={nodeTypeMap}
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
-            updateNodes(getNodes());
+            // updateNodes(getNodes());
             onNodeDragStop(event, node);
           }}
           onNodeDrag={onNodeDrag} //this event we dont want
@@ -307,7 +326,7 @@ function Flow() {
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
           onEdgeClick={onEdgeClick}
           onNodeClick={onNodeClick}
-          deleteKeyCode={[]}
+          // deleteKeyCode={[]}
         >
           <MiniMap
             //nodeComponent={MiniMapNode}
@@ -347,3 +366,6 @@ function Flow() {
 }
 
 export default Flow;
+function setUserEmail(email: any) {
+  throw new Error("Function not implemented.");
+}

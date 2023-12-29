@@ -13,6 +13,7 @@ import { File, Folder } from "../../lib/appInterfaces";
 const createFile = async (
   mainId: string,
   folderId: string,
+  email: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileData: any,
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -32,7 +33,6 @@ const createFile = async (
                 assignedTo: "",
                 dueDate: "",
                 description: fileData.discription || "",
-                sprint: "",
               },
             },
           },
@@ -54,10 +54,12 @@ const createFile = async (
               },
             },
           },
-          hasFlowchart: {
-            create: {
-              node: {
-                name: "flowchart",
+          createdBy: {
+            connect: {
+              where: {
+                node: {
+                  emailId: email,
+                },
               },
             },
           },
@@ -176,32 +178,22 @@ async function deleteFileBackend(
           id: deleteIds.id,
         },
         delete: {
-          hasFlowchart: {
-            delete: {
-              hasNodes: [
-                {
-                  delete: {
-                    data: {
-                      delete: {
-                        hasLinkedTo: {},
-                        hasLinkedBy: {},
-                      },
-                    },
-                    position: {},
+          hasNodes: [
+            {
+              delete: {
+                flowEdge: [
+                  {
+                    delete: {},
                   },
-                },
-              ],
-              hasEdges: [
-                {
-                  delete: {
-                    hasedgedataEdgedata: {},
-                  },
-                },
-              ],
+                ],
+                hasInfo: {},
+              },
             },
-          },
+          ],
+          hasInfo: {},
         },
       },
+
       update: (cache, { data }) => {
         const { projects } = cache.readQuery({
           query,
@@ -391,75 +383,75 @@ const updateFileBackend = async (
         name: fileData.name,
       },
     },
-    update: (
-      cache,
-      {
-        data: {
-          updateFiles: { files },
-        },
-      }
-    ) => {
-      const { projects } = cache.readQuery({
-        query,
-        variables: {
-          where: {
-            id: fileData.projectId,
-          },
-        },
-      });
-      const { hasContainsFile, hasContainsFolder, ...projectsData } =
-        projects[0];
-      const updatedFile = hasContainsFile.map((file: File) => {
-        if (file.id === fileData.id) {
-          return {
-            ...file,
-            name: files[0].name,
-          };
-        }
-        return file;
-      });
-      const updatedProject = {
-        ...projectsData,
-        hasContainsFile: updatedFile,
-        hasContainsFolder,
-      };
-      cache.writeQuery({
-        query,
-        variables: {
-          where: {
-            id: fileData.projectId,
-          },
-        },
-        data: {
-          projects: [updatedProject],
-        },
-      });
-    },
+    // update: (
+    //   cache,
+    //   {
+    //     data: {
+    //       updateFiles: { files },
+    //     },
+    //   }
+    // ) => {
+    //   const { projects } = cache.readQuery({
+    //     query,
+    //     variables: {
+    //       where: {
+    //         id: fileData.projectId,
+    //       },
+    //     },
+    //   });
+    //   const { hasContainsFile, hasContainsFolder, ...projectsData } =
+    //     projects[0];
+    //   const updatedFile = hasContainsFile.map((file: File) => {
+    //     if (file.id === fileData.id) {
+    //       return {
+    //         ...file,
+    //         name: files[0].name,
+    //       };
+    //     }
+    //     return file;
+    //   });
+    //   const updatedProject = {
+    //     ...projectsData,
+    //     hasContainsFile: updatedFile,
+    //     hasContainsFolder,
+    //   };
+    //   cache.writeQuery({
+    //     query,
+    //     variables: {
+    //       where: {
+    //         id: fileData.projectId,
+    //       },
+    //     },
+    //     data: {
+    //       projects: [updatedProject],
+    //     },
+    //   });
+    // },
   });
 };
-const getFileByNode = async (
-  nodeId: string,
-  customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
-) => {
-  let file: any;
-  await client
-    .query({
-      query: customQuery,
-      variables: {
-        where: {
-          hasFlowchart: {
-            hasNodes_SINGLE: {
-              id: nodeId,
-            },
-          },
-        },
-      },
-    })
-    .then((result) => {
-      file = result;
-    });
-  return file;
-};
+// const getFileByNode = async (
+//   nodeId: string,
+//   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
+// ) => {
+//   let file: any;
+//   await client
+//     .query({
+//       query: customQuery,
+//       variables: {
+//         where: {
+//           hasFlowchart: {
+//             hasNodes_SINGLE: {
+//               id: nodeId,
+//             },
+//           },
+//         },
+//       },
+//     })
+//     .then((result) => {
+//       file = result;
+//     });
+//   return file;
+// };
 
 const updateStoryMethod = async (
   id: string,
@@ -482,7 +474,6 @@ const updateStoryMethod = async (
           update: {
             node: {
               status,
-              sprint,
               dueDate,
               description,
               assignedTo,
@@ -506,7 +497,7 @@ const updateStoryMethod = async (
               {
                 node: {
                   message: discussion,
-                  userHas: {
+                  createdBy: {
                     connect: {
                       where: {
                         node: {
@@ -531,7 +522,7 @@ export {
   deleteFileBackend,
   updateFileBackend,
   moveFileBackend,
-  getFileByNode,
+  // getFileByNode,
   getTreeNodeByUser,
   updateStoryMethod,
   createFile,

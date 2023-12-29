@@ -1,7 +1,8 @@
 export interface File {
   name: string;
   id: string;
-  hasFlowchart: any;
+  hasNodes: any;
+  hasEdges:any;
   flowchart: any;
   type: "file";
   __typename: "file";
@@ -20,6 +21,7 @@ export interface Folder {
 }
 
 export interface Project {
+  usersInProjects: any;
   name: string;
   isOpen: boolean;
   id: string;
@@ -27,7 +29,7 @@ export interface Project {
   hasContainsFolder: Folder[];
   children: (Folder | File)[];
   __typename: "project";
-  userHas: File[];
+ // usersInProjects: File[];
   description: string;
 }
 
@@ -70,7 +72,8 @@ export function transformObject(root: RootObject): RootObject {
       if (item.type === "file") {
         return {
           ...item,
-          flowchart: item.hasFlowchart,
+          nodes: item.hasNodes,
+          edges:item.hasEdges
         };
       }
       return transformFolder(item);

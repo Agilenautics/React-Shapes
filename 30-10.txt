@@ -1,0 +1,66 @@
+User Registration:
+
+The user provides their email and password to register.
+The handleSignup function handles this by calling createUserWithEmailAndPassword from Firebase.
+
+Upon successful registration:
+
+Firebase generates a token for the user, which is retrieved via user.getIdTokenResult().
+The access token (and optionally, the refresh token) is stored in browser cookies using the document.cookie method.
+Token Storage:
+
+Tokens are stored in the browser's cookies.
+You've set up the cookies with considerations for security using flags like Secure, HttpOnly, and SameSite.
+Apollo Client Setup:
+
+The Apollo Client is set up to communicate with your GraphQL API.
+Before making requests to the API, the Apollo Client fetches the access token from the cookies.
+This token is attached to the request headers, specifically the authorization header, in the format Bearer <token>.
+API Middleware - Authentication:
+
+When a request reaches your GraphQL API endpoint, it first goes through the authMiddleware.
+This middleware extracts the token from the authorization header.
+The token is then passed to Firebase's verifyIdToken method for validation.
+If valid, the decoded token information is attached to the req object for potential use in the GraphQL resolvers or elsewhere in the application.
+If invalid, a 403 Unauthorized response is sent back.
+GraphQL Endpoint:
+
+After the middleware validation, if the token is valid, the request reaches the Apollo GraphQL server.
+The context of the Apollo server is set up to contain the decoded token, allowing the resolvers to have access to it.
+The server then processes the GraphQL query or mutation and sends back the appropriate response.
+Error Handling:
+
+Any error in the process, be it token validation, mismatched passwords during registration, etc., results in appropriate error messages sent back to the client.
+Specific error details, such as issues with token decoding or validation, are logged for debugging purposes.
+Security Measures:
+
+
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCxmf5zKTgoKnMq
+tjph4FhdUReBkG4mXFnb9mDJcIURJ8IseDekFhaI5jRMyIVTnwZ+CNlm3g3+qVa+
+aUSMlf1SuXE1ISCpk3Add2QjW8F58w9UtaG0YYan+3qVyZO/YAHwsHOQtgqXJVdC
+i3VH5RYaZsCF/80g5uqlceimCS4AQL1LEhICRH3uLTfJXAGiW5lIr1iOUePleMKk
+1aEtsu7oRLwEnBsR+zKGAYwpt7QoJaKrTOh3G2YhqcZpLr8X/KenN1EuKwqRXSDL
+30cpnAtnboadPgiiYa1TyFOWINkfDgo0i6XjmAfCqre4UOOkGfYZwWtC4VgG4jmW
+1xqYtYV5AgMBAAECggEAARwWuG5+ANY/EPnBhKILu02J6Y/W+FtkXlj8QtX2puRK
+NM/tfRN8QY+6rO4l0x9vwXLZtOhXSwuQ1LDAsmYvhohNGkliNF0M+sonsIbevx3T
+LzLRV1iyqDMMkYoIZ844ROI9Xp6ck1Qy5uILMg9O44xX0J6IEBgRSEZdb0goZuz9
+9v6epmZBh9jsDspKR66oG/8NKE65avZmVTopKGBbBDJxmMO1EGVHuZxJjGfM3Xk6
+AmXe38X+0LhQqgg5Q4R1T5h1jkHpclHrnB/GHrTbNn9ipTj1Sc+1w+lEwRDuq6xY
+pm9VZEw9RYz4r316mjtd2W8TjszIhEiEQEjtG0KmWQKBgQDet/XPJ2mX9Zv2dqVu
+Haz25hXKybIOTELol2RyPEyACAIaj48EH69aoWJo7Mu90eeezYRk2TfJeqPNFJ8U
+QhwU54hFOujFwSvwLz0W6GkvEnaER3zrI2f/Oqu8prUjw5kYuWw5UUh4flaEYSse
+JG4Gsmm17m4sB0CNN3Gcn14IlQKBgQDMJBfLcFNIrjQqr1SyKwMpAonUL5lxJQvI
+KAPahi2cerKpdDxlVrsLiVd1UzWPpAQy/M2oaSUyje+KdhOzv9ut6MZlNiuiwPWI
+Gvyu3EBaFDQ/OE60nUvW+EUfAl8OsCeI55jP43+nJ2t/AgYks+Ql6qvL6aXsgQRt
+CzPcQWL8VQKBgBUpX4a+VO8mXBpP7aoH0c5n0DxDa9Kl9lmJQPcFubMUj7acW1dl
+91BiMyqLDVTM4/gXyPOYHA/dwkCTLAZNvcNSuITzcviPQTCCHIjXrl7Vn0M0U683
+3wLGPVkgceejByHtRFYx3fPs9SWA4grsJTQnsZmivP8b9Us1sGrUTaf9AoGAWNvR
+G7XOGtHxVS8yj8dXPc+kDR+XDAATK9H3M3S6f+WMxWQaMgZZrsDet+w7YUYEqekO
+4CK8lU/hGAUjuFdoGUA8s6urvNF/TvpoSPkIbe1jfK1W3Rmm/HDfLYtLs0oMO3SM
+ONmPJERtb0CDShCf271VgJI4rkTOl2SL83Dm1G0CgYEA2LtiUee5LVcGGYJ0+wDs
+4+/i6gD1RxE4hf45w7K4ubesQegy1Pmx2yDa3ii5RNA1XGUjVORNibEwrxU/qmIZ
+FCy69GQJJ37ikwQ7plVorAOiI+rrhI/TJsQr4R5WXsnskhZYmwvEPkilpzjggC1z
+wswyzgp0npXtD8iysYIeErw=
+-----END PRIVATE KEY-----
+
