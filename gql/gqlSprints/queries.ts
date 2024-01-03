@@ -1,14 +1,58 @@
 import {
     gql
   } from "@apollo/client";
-  import { Sprint_Fragment } from "./fragments";
+ 
   
 //get sprint by the project id
 export const GET_SPRINTS = gql`
-  ${Sprint_Fragment}
+ 
   query Sprints($where: SprintWhere) {
     sprints(where: $where) {
-      ...SprintFragment
+      id
+    name
+    description
+    timeStamp
+    startDate
+    endDate
+    folderHas {
+      id
+      name
+      type
+      hasInfo {
+        description
+        assignedTo
+        status
+        dueDate
+      }
+    }
+    fileHas {
+      id
+      name
+      type
+      hasInfo {
+        description
+        assignedTo
+        status
+        dueDate
+      }
+    }
+    flownodeHas {
+      id
+      type
+      hasInfo {
+        description
+        assignedTo
+        status
+        dueDate
+      }
+      data {
+        label
+        description
+      }
+    }
+    hasProjects {
+      name
+    }
     }
   }
 `;

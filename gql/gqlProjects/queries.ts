@@ -1,7 +1,4 @@
 import { gql } from "@apollo/client";
-import { Project_Fragment } from "./fragments";
-
-
 
 export const GET_PROJECTS = gql`
   query getProjets {
@@ -41,7 +38,6 @@ export const UserSheme = gql`
 `;
 
 export const GET_USER = gql`
-  ${Project_Fragment}
   query getUser($where: UserWhere) {
     users(where: $where) {
       active
@@ -50,7 +46,17 @@ export const GET_USER = gql`
       userType
       emailId
       hasProjects {
-        ...ProjectFragment
+        id
+        timeStamp
+        description
+        name
+        recycleBin
+        recentProject
+        deletedAT
+        usersInProjects {
+          emailId
+          userType
+        }
       }
     }
   }

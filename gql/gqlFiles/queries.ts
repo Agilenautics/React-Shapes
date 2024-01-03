@@ -1,13 +1,7 @@
-import {
-  gql
-} from "@apollo/client";
-import { File_Fragment } from "./fragments";
-import { Node_Fragment,Info_Fragment } from "../gqlNodes";
+import { gql } from "@apollo/client";
 
 //Get root using unique userName(UID)
 export const getProjectById = gql`
-  ${File_Fragment}
-  ${Info_Fragment}
   query getprojectById($where: ProjectWhere) {
     projects(where: $where) {
       name
@@ -15,7 +9,105 @@ export const getProjectById = gql`
       isOpen
       id
       hasContainsFile {
-        ...FileFragment
+        type
+        id
+        name
+        uid
+        hasSprint {
+          id
+          name
+        }
+        projectHas {
+          id
+          name
+        }
+        hasComments {
+          id
+          message
+          timeStamp
+          createdBy {
+            emailId
+          }
+        }
+        folderHas {
+          id
+          name
+        }
+        hasInfo {
+          description
+          assignedTo
+          status
+          dueDate
+        }
+        hasNodes {
+          id
+          draggable
+          flowchart
+          type
+          timeStamp
+          uid
+          label
+          shape
+          x
+          y
+          flowEdge {
+            id
+            label
+            bidirectional
+            boxCSS
+            pathCSS
+            selected
+            createdBy {
+              id
+              emailId
+            }
+
+            flowNodeConnection {
+              edges {
+                handle
+                node {
+                  id
+                }
+              }
+            }
+          }
+          isLinked {
+            id
+            label
+            isLinkedConnection {
+              edges {
+                from
+              }
+            }
+            hasFile {
+              id
+            }
+          }
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          hasComments {
+            message
+            createdBy {
+              emailId
+            }
+          }
+          hasSprint {
+            id
+            name
+          }
+          hasFile {
+            id
+            name
+            folderHas {
+              id
+              name
+            }
+          }
+        }
       }
       hasContainsFolder {
         id
@@ -24,14 +116,115 @@ export const getProjectById = gql`
         name
         uid
         hasSprint {
-         id
-         name
-        }   
-        hasInfo{
-         ...InfoFragment
+          id
+          name
+        }
+        hasInfo {
+          description
+          assignedTo
+          status
+          dueDate
         }
         hasFile {
-          ...FileFragment
+          type
+          id
+          name
+          uid
+          hasSprint {
+            id
+            name
+          }
+          projectHas {
+            id
+            name
+          }
+          hasComments {
+            id
+            message
+            timeStamp
+            createdBy {
+              emailId
+            }
+          }
+          folderHas {
+            id
+            name
+          }
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          hasNodes {
+            id
+            draggable
+            flowchart
+            type
+            timeStamp
+            uid
+            label
+            shape
+            x
+            y
+            flowEdge {
+              id
+              label
+              bidirectional
+              boxCSS
+              pathCSS
+              selected
+              createdBy {
+                id
+                emailId
+              }
+
+              flowNodeConnection {
+                edges {
+                  handle
+                  node {
+                    id
+                  }
+                }
+              }
+            }
+            isLinked {
+              id
+              label
+              isLinkedConnection {
+                edges {
+                  from
+                }
+              }
+              hasFile {
+                id
+              }
+            }
+            hasInfo {
+              description
+              assignedTo
+              status
+              dueDate
+            }
+            hasComments {
+              message
+              createdBy {
+                emailId
+              }
+            }
+            hasSprint {
+              id
+              name
+            }
+            hasFile {
+              id
+              name
+              folderHas {
+                id
+                name
+              }
+            }
+          }
         }
       }
       usersInProjects {
@@ -42,14 +235,79 @@ export const getProjectById = gql`
   }
 `;
 export const getFile = gql`
-  ${Node_Fragment}
   query Query($where: FileWhere) {
     files(where: $where) {
       name
       id
       type
       hasNodes {
-        ...NodeFragment
+        id
+        draggable
+        flowchart
+        type
+        timeStamp
+        uid
+        label
+        shape
+        x
+        y
+        flowEdge {
+          id
+          label
+          bidirectional
+          boxCSS
+          pathCSS
+          selected
+          createdBy {
+            id
+            emailId
+          }
+
+          flowNodeConnection {
+            edges {
+              handle
+              node {
+                id
+              }
+            }
+          }
+        }
+        isLinked {
+          id
+          label
+          isLinkedConnection {
+            edges {
+              from
+            }
+          }
+          hasFile {
+            id
+          }
+        }
+        hasInfo {
+          description
+          assignedTo
+          status
+          dueDate
+        }
+        hasComments {
+          message
+          createdBy {
+            emailId
+          }
+        }
+        hasSprint {
+          id
+          name
+        }
+        hasFile {
+          id
+          name
+          folderHas {
+            id
+            name
+          }
+        }
       }
     }
   }

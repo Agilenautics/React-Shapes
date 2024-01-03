@@ -1,14 +1,30 @@
 import { gql } from "@apollo/client";
-import { Edge_Fragment } from "./fragments";
 
 // create Edge mutation
 
 export const createEdgeMutation = gql`
-  ${Edge_Fragment}
   mutation CreateFlowEdges($input: [FlowEdgeCreateInput!]!) {
     createFlowEdges(input: $input) {
       flowEdges {
-        ...EdgeFragment
+        id
+        label
+        bidirectional
+        boxCSS
+        pathCSS
+        selected
+        createdBy {
+          id
+          emailId
+        }
+
+        flowNodeConnection {
+          edges {
+            handle
+            node {
+              id
+            }
+          }
+        }
       }
     }
   }
@@ -22,15 +38,18 @@ export const deleteEdgeMutation = gql`
   }
 `;
 export const updateEdgeMutation = gql`
-  mutation UpdateFlowEdges($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
-  updateFlowEdges(where: $where, update: $update) {
-    flowEdges {
-      id
-      bidirectional
-      boxCSS
-      label
-      pathCSS
+  mutation UpdateFlowEdges(
+    $where: FlowEdgeWhere
+    $update: FlowEdgeUpdateInput
+  ) {
+    updateFlowEdges(where: $where, update: $update) {
+      flowEdges {
+        id
+        bidirectional
+        boxCSS
+        label
+        pathCSS
+      }
     }
   }
-}
 `;
