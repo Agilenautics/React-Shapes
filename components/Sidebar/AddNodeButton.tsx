@@ -28,10 +28,10 @@ function AddNodeButton() {
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isExpandedAdd, setIsExpandedAdd] = useState(false);
-  const {uid,idofUid,updateUid,Id:fileId} = fileStore()
+  const { uid, idofUid, updateUid, Id: fileId } = fileStore();
   const userEmail = userStore((state) => state.userEmail);
-  const router = useRouter()
-  const projectId = router.query.projectId as string
+  const router = useRouter();
+  const projectId = router.query.projectId as string;
 
   const handleAddNode = async (symbol: string) => {
     setIsExpandedAdd(!isExpandedAdd);
@@ -46,7 +46,13 @@ function AddNodeButton() {
       uid,
     };
     try {
-      const createNodeResponse = await createNode(newNode, data, userEmail,allNodes,fileId);
+      const createNodeResponse = await createNode(
+        newNode,
+        data,
+        userEmail,
+        allNodes,
+        fileId
+      );
       addNode(createNodeResponse?.data.createFlowNodes.flowNodes);
       const updateUidResponse = (await updateUidMethode(
         idofUid,
@@ -73,7 +79,7 @@ function AddNodeButton() {
       uid,
     };
     try {
-      await createNode(newNode, data, userEmail,allNodes,fileId);
+      await createNode(newNode, data, userEmail, allNodes, fileId);
       const updateUidResponse = updateUidMethode(
         idofUid,
         updateUidMutation
@@ -89,10 +95,26 @@ function AddNodeButton() {
   };
 
   return (
-    <div className="absolute bottom-44 right-6">
-      <div className="flex flex-col items-center space-y-4">
+    <div className="absolute left-80 top-20">
+      <div className="relative space-x-3">
+        <button
+          type="button"
+          className="items-center rounded-3xl bg-blue-600 p-2.5 text-center text-sm
+   text-white shadow-lg shadow-blue-300  hover:bg-blue-700 focus:outline-none dark:shadow-blue-800"
+          disabled={isLoading}
+          onClick={() => setIsExpandedAdd(!isExpandedAdd)}
+        >
+          {isLoading ? (
+            //<LoadingIcon color="white" />
+            <MdOutlineAdd className="h-6 w-6" style={{ color: "white" }} />
+          ) : (
+            <>
+              <MdOutlineAdd className="h-6 w-6" style={{ color: "white" }} />
+            </>
+          )}
+        </button>
         {isExpandedAdd && (
-          <div className="max-h-40 overflow-y-auto rounded-lg bg-white p-4 shadow">
+          <div className="relative -top-16 left-10 max-h-40 overflow-y-auto rounded-lg bg-white p-4 shadow">
             <div className="grid grid-cols-4 gap-1">
               <div className="col-span-4">
                 <span className="font-sm">Shapes</span>
@@ -132,23 +154,6 @@ function AddNodeButton() {
             </div>
           </div>
         )}
-
-        <button
-          type="button"
-          className="inline-flex flex-col items-center rounded-3xl bg-blue-600 p-2.5 text-center text-sm
-   text-white shadow-lg shadow-blue-300 transition-all hover:bg-blue-700 focus:outline-none dark:shadow-blue-800"
-          disabled={isLoading}
-          onClick={() => setIsExpandedAdd(!isExpandedAdd)}
-        >
-          {isLoading ? (
-            //<LoadingIcon color="white" />
-            <MdOutlineAdd className="h-6 w-6" style={{ color: "white" }} />
-          ) : (
-            <>
-              <MdOutlineAdd className="h-6 w-6" style={{ color: "white" }} />
-            </>
-          )}
-        </button>
       </div>
     </div>
   );
