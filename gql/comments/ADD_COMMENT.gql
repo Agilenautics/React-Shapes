@@ -1,0 +1,12 @@
+mutation CreateComments($input: [CommentCreateInput!]!) {
+  createComments(input: $input) {
+    comments {
+      id
+      message
+      createdBy {
+        id
+        emailId
+      }
+    }
+  }
+}

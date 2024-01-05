@@ -1,0 +1,7 @@
+mutation UpdateUsers($where: UserWhere, $disconnect: UserDisconnectInput) {
+  updateUsers(where: $where, disconnect: $disconnect) {
+    info {
+      relationshipsDeleted
+    }
+  }
+}

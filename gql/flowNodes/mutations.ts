@@ -92,11 +92,12 @@ export const linkNodeToAnotherNodeMutation = gql`
   ) {
     updateFlowNodes(where: $where, connect: $connect) {
       flowNodes {
-        id
-        label
         isLinked {
           id
           label
+          hasFile {
+            id
+          }
         }
       }
     }

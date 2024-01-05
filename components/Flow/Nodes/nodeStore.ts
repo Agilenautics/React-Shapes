@@ -30,7 +30,7 @@ export interface NodeState {
   updateNodePosition: (node: Node) => void;
   deleteLinkeNode: (id: string, nodeId: string) => void;
   fileId: string;
-  addLinkNode: (id: string, nodeData: Node) => void;
+  addLinkNode: (id: string, nodeData: Node, anotherNodeId: string) => void;
 }
 
 const nodeStore = create<NodeState>((set) => ({
@@ -76,10 +76,11 @@ const nodeStore = create<NodeState>((set) => ({
     set((state) => {
       const updatedNode = newNode.map((item: any) => {
         const description = item.hasInfo.description;
-        const { x, y, label, shape, ...rest } = item;
+        const { x, y, label, shape, isLinked, ...rest } = item;
+
         return {
           ...rest,
-          data: { label, shape, description },
+          data: { label, shape, description, isLinked },
           position: { x, y },
         };
       });
@@ -188,7 +189,6 @@ const nodeStore = create<NodeState>((set) => ({
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      //@ts-ignore
       const updated_node = { ...old_node, type: newType };
       updateNodeData(updated_node, updateNodesMutation, allNodes, state.fileId);
       return { nodes: [...to_be_updated, updated_node] };
@@ -197,25 +197,33 @@ const nodeStore = create<NodeState>((set) => ({
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      //@ts-ignore
       const updated_node = { ...old_node, draggable: draggable };
       return { nodes: [...to_be_updated, updated_node] };
     }),
-  addLinkNode: (nodeId: string, node: Node) =>
+  addLinkNode: (nodeId: string, node: Node, anotherNodeId: string) =>
     set((state) => {
+      const getNode = state.nodes.find((nodeItem) => nodeItem.id === nodeId);
+      const isNodeExist = getNode.data.isLinked.some(
+        (item: Node) => item.id === anotherNodeId
+      );
+      const to_be_updated = isNodeExist
+        ? getNode
+        : {
+            ...getNode,
+            data: {
+              ...getNode.data,
+              isLinked: [...node.isLinked],
+            },
+          };
       const updatedNodes = state.nodes.map((item: Node) => {
         if (item.id === nodeId) {
           return {
-            ...item,
-            data: {
-              ...item.data,
-              isLinked: [...item.data.isLinked, node],
-            },
+            ...to_be_updated,
           };
         }
         return {
-          ...item
-        }
+          ...item,
+        };
       });
       return { nodes: updatedNodes };
     }),

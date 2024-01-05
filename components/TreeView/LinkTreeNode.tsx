@@ -5,6 +5,8 @@ import classNames from "classnames";
 import MaybeToggleButton from "./toggleArrowbuttons";
 import Icon from "./IconsForFolderAndFile";
 import RenameFormForTreeStructur from "./renameForm";
+import { allNodes, getNodes } from "../../gql";
+import { ApolloQueryResult } from "@apollo/client";
 
 const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
   const folder = Array.isArray(data.children);
@@ -17,19 +19,26 @@ const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
   }
 
   const { fileId } = nodeStore();
-  const currentFileId = fileId;  // Replace with the actual current file's ID
+  const currentFileId = fileId; // Replace with the actual current file's ID
 
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
 
   function loadFlowNodes(handlers: any, data: any) {
-    return (e: SyntheticEvent) => {
-      if (data.id === currentFileId) {
+    return async (e: SyntheticEvent) => {
+      const getFileResponse: ApolloQueryResult<any> | undefined =
+        await getNodes(allNodes, id);
+
+      if (id === currentFileId) {
         e.stopPropagation(); // Prevent event propagation for the current file's node
         return; // Disable click for the current file's node
       }
+
       handlers.select(e);
-      if (data.hasNodes && data.hasNodes.length) {
-        return updateLinkNodes(data.hasNodes, data.id);
+      if (
+        getFileResponse?.data.files[0].hasNodes &&
+        getFileResponse?.data.files[0].hasNodes.length
+      ) {
+        return updateLinkNodes(data.hasNodes, id);
       } else {
         return updateLinkNodes(
           [
@@ -87,4 +96,4 @@ const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
   );
 };
 
-export default memo(TreeNode2);
+export default TreeNode2;

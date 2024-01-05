@@ -8,7 +8,6 @@ import { FiChevronRight } from "react-icons/fi";
 import { nodeShapeMap } from "./Nodes/nodeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
-import { LinkTree } from "../TreeView/fileRenderer";
 import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
 import useStore from "../Sidebar/SidebarContext";
@@ -23,6 +22,7 @@ import {
   linkNodeAnotherNodeMethod,
   linkNodeToAnotherNodeMutation,
 } from "../../gql";
+import LinkTree from "../TreeView/FileTreeRenderer";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter
 /**
@@ -49,7 +49,7 @@ function ExpandableChip({
   return (
     <div
       className={`absolute overflow-hidden ${
-        !isCollapsed && "overflow-y-auto"
+        !isCollapsed && !(title === "Add Link") ? "overflow-y-auto" : ""
       } rounded-lg border-[1px] border-neutral-500 bg-white shadow transition-all duration-100 ease-in-out ${
         isCollapsed ? expTrue : expFalse
       } ${positioningCSS} dark:bg-neutral-900 `}
@@ -117,6 +117,7 @@ function Editing({
   const updateArrows = edgeStore((state) => state.updateArrows);
   const linkNodes = fileStore((state) => state.linkNodes);
   const updateLinkNodes = fileStore((state) => state.updateLinkNodes);
+  const addLinkNode = nodeStore((state) => state.addLinkNode);
   const Id = fileStore((state) => state.Id);
   const { isSideBarOpen, setIsSideBarOpen } = useStore();
   const addLinkMethod = async (
@@ -130,13 +131,13 @@ function Editing({
       allNodes,
       Id
     );
-    // const {
-    //   data: {
-    //     updateFlowNodes: { flowNodes },
-    //   },
-    // } = response;
-    // console.log(response);
+    addLinkNode(
+      currentNodeId,
+      response?.data.updateFlowNodes.flowNodes[0],
+      anotherNodeId
+    );
     setEditing(false);
+    toggleDraggable(currentNodeId, true);
   };
 
   const handleSubmit = (event: any) => {
@@ -310,14 +311,13 @@ function Editing({
                     onClick={() => {
                       updateLinkNodes([], linkNodes.fileID);
                     }}
-                    
                   >
                     <BsArrowLeft className="h-4 w-4 pt-0" />
                     Back
                   </button>
                   {linkNodes.nodes &&
                   Object.keys(linkNodes.nodes).length !== 0 ? (
-                    <div className="h-32 overflow-y-scroll">
+                    <div className="h-32 overflow-y-scroll" key={id}>
                       {
                         // ? Loop to generate tiles for the nodes
                         Object.keys(linkNodes.nodes).map((key, _) => {
@@ -325,7 +325,7 @@ function Editing({
                           return (
                             <>
                               {flag ? (
-                                <div className="flex h-full items-center justify-center p-1 text-red-500 ">
+                                <div className="flex h-full items-center justify-center p-1 text-red-500 " key={key}>
                                   {linkNodes.nodes[key].message}
                                 </div>
                               ) : (
@@ -350,10 +350,8 @@ function Editing({
                       }
                     </div>
                   ) : (
-                    <div className=" -translate-x-10 -translate-y-5 scale-75 overflow-visible text-black">
-                      <div className="h-40 w-60">
-                        <LinkTree />
-                      </div>
+                    <div className="h-60 w-60 -translate-x-11 -translate-y-12  scale-[0.6] overflow-auto overflow-visible text-black">
+                      <LinkTree />
                     </div>
                   )}
                 </div>
@@ -365,7 +363,6 @@ function Editing({
       <form
         onSubmit={(event: React.ChangeEvent<HTMLFormElement>) => {
           event.preventDefault();
-          console.log("hi iam in form");
           setEditing(false);
           toggleDraggable(id, true);
           updateLabel(id, event.target.label.value);
@@ -384,6 +381,3 @@ function Editing({
 }
 
 export default memo(Editing);
-
-// hasLinkedTo.flag
-// hasLinkedBy

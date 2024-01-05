@@ -1,0 +1,13 @@
+mutation addLinkNode($where: FlowNodeWhere, $connect: FlowNodeConnectInput) {
+  updateFlowNodes(where: $where, connect: $connect) {
+    flowNodes {
+      isLinked {
+        id
+        label
+        hasFile {
+          id
+        }
+      }
+    }
+  }
+}

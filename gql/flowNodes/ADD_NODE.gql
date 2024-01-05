@@ -1,0 +1,20 @@
+mutation CreateFlowNodes($input: [FlowNodeCreateInput!]!) {
+  createFlowNodes(input: $input) {
+    flowNodes {
+      id
+      label
+      type
+      shape
+      x
+      y
+      uid
+      hasInfo {
+        description
+      }
+      hasFile {
+        id
+        name
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+mutation assignProjectToUser($where: UserWhere, $connect: UserConnectInput) {
+  updateUsers(where: $where, connect: $connect) {
+    users {
+      emailId
+      hasProjects {
+        id
+        name
+      }
+    }
+  }
+}

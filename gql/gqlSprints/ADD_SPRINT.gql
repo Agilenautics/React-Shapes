@@ -1,0 +1,11 @@
+mutation CreateSprints($input: [SprintCreateInput!]!) {
+  createSprints(input: $input) {
+    sprints {
+      id
+      name
+      startDate
+      endDate
+      description
+    }
+  }
+}

@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { FileTree } from "../TreeView/fileRenderer";
+import FileTree from "../TreeView/fileRenderer";
 import {
   AiFillFolderAdd,
   AiFillFileAdd,
-  AiTwotoneHome,
   AiOutlineSearch,
 } from "react-icons/ai";
 import { CgInsights } from "react-icons/cg";
@@ -43,7 +42,6 @@ import { FetchResult } from "@apollo/client";
 import { Tooltip } from "react-tooltip";
 import { findById } from "../TreeView/backend";
 import TreeModel from "tree-model-improved";
-import Edit from "../../pages/projects/[projectId]/business-process/edit";
 import { useTranslation } from "react-i18next";
 
 interface SideBar {
@@ -101,7 +99,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     }
   };
 
- const verificationToken = async () => {
+  const verificationToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
         setUserEmail(user.email);
@@ -152,7 +150,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     localStorage.setItem("recentPid", id);
     // update_recentProject(id,recentProject_mutation);
   };
- 
+
   useEffect(() => {
     if (
       projectId &&
@@ -163,7 +161,6 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     fetchRecentProject(allProjects);
     verificationToken();
   }, [allProjects]);
-
 
   const handleUidUpdates = async () => {
     const uidResponse = (await updateUidMethode(
@@ -191,7 +188,6 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
     add_folder(addFolderResponse?.data.createFolders.folders[0]);
     handleUidUpdates();
   };
-
 
   const handleAddFile = async () => {
     let data = {
@@ -452,7 +448,7 @@ const Sidebar = ({ isOpen, toggleSideBar }: SideBar) => {
                         <span>{t("add_file")}</span>
                       </button>
                     </div>
-                    <div className="h-36 overflow-auto overflow-x-hidden hover:min-h-full">
+                    <div className="h-36 overflow-auto overflow-x-hidden ">
                       <FileTree />
                     </div>
                   </div>

@@ -1,0 +1,12 @@
+mutation CreateFile($input: [FileCreateInput!]!) {
+  createFiles(input: $input) {
+    files {
+      id
+      name
+      type
+      createdBy {
+        emailId
+      }
+    }
+  }
+}

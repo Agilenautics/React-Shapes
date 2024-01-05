@@ -1,0 +1,16 @@
+mutation CreateUsers($input: [UserCreateInput!]!) {
+  createUsers(input: $input) {
+    users {
+      id
+      active
+      emailId
+      timeStamp
+      userType
+      userName
+      hasProjects {
+        id
+        name
+      }
+    }
+  }
+}

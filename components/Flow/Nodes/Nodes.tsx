@@ -95,9 +95,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
           <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>
             {editing ? (
               <div
-              // className={`relative h-auto flex-row text-center ${
-              //   data.hasLinkedTo.flag && "mt-7"
-              // }`}
+              className={`relative h-auto flex-row text-center  `}
+              key={id}
               >
                 <Editing
                   isEdge={false}
@@ -132,7 +131,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             </span>
             {isLinkFlag && (
               <>
-                {data.isLinked.map((value: any) => {
+                {data.isLinked.map((value: any,index:number) => {
                   const {
                     label,
                     id: nodeId,
@@ -141,7 +140,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                   
                   return (
                     <div
-                      key={nodeId}
+                      key={index}
                       className="flex cursor-pointer justify-between gap-1"
                     >
                       <div

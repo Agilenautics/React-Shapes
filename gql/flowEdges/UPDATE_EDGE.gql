@@ -1,0 +1,11 @@
+mutation UpdateFlowEdges($where: FlowEdgeWhere, $update: FlowEdgeUpdateInput) {
+  updateFlowEdges(where: $where, update: $update) {
+    flowEdges {
+      id
+      bidirectional
+      boxCSS
+      label
+      pathCSS
+    }
+  }
+}
