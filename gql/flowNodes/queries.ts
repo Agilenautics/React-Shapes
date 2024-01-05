@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { Node_Fragment } from "./fragments";
-import { Edge_Fragment } from "../gqlEdges/fragments";
+import { Edge_Fragment } from "../flowEdges/fragments";
 
 export const allNodes = gql`
   ${Node_Fragment}

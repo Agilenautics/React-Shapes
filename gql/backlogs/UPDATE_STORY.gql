@@ -1,0 +1,14 @@
+mutation UpdateFiles($where: FileWhere, $update: FileUpdateInput) {
+  updateFiles(where: $where, update: $update) {
+    files {
+      id
+      name
+      hasInfo {
+        description
+        dueDate
+        status
+        assignedTo
+      }
+    }
+  }
+}

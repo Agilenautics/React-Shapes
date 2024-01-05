@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { Node_Fragment, Info_Fragment } from "./fragments";
-import { Edge_Fragment } from "../gqlEdges/fragments";
+import { Edge_Fragment } from "../flowEdges/fragments";
 
 //createNode
 
@@ -29,11 +29,12 @@ export const linkNodeToAnotherNodeMutation = gql`
   ) {
     updateFlowNodes(where: $where, connect: $connect) {
       flowNodes {
-        id
-        label
         isLinked {
           id
           label
+          hasFile {
+            id
+          }
         }
       }
     }

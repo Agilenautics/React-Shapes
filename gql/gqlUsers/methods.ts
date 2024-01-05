@@ -41,11 +41,9 @@ const handleUpdate_User = async (
     mutation,
     variables: {
       where: {
-        // @ts-ignore
         id,
       },
       update: {
-        // @ts-ignore
         userType,
       },
     },

@@ -1,0 +1,5 @@
+mutation DeleteComments($where: CommentWhere) {
+  deleteComments(where: $where) {
+    nodesDeleted
+  }
+}

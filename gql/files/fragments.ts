@@ -1,4 +1,4 @@
-import { Node_Fragment, Info_Fragment } from "../gqlNodes";
+import { Node_Fragment, Info_Fragment } from "../flowNodes";
 //import { Edge_Fragment } from "../gqlEdges";
 
 import { gql } from "@apollo/client";

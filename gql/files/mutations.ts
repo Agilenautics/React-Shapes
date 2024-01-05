@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import { File_Fragment } from "./fragments";
-import { Node_Fragment, Info_Fragment } from "../gqlNodes";
+import { Node_Fragment, Info_Fragment } from "../flowNodes";
 
 export const createFileMutation = gql`
   ${File_Fragment}
@@ -91,19 +91,24 @@ export const updateFoldersMutation = gql`
 //   }
 // `;
 export const moveFileMutation = gql`
-mutation Mutation($where: FileWhere, $disconnect: FileDisconnectInput, $connect: FileConnectInput) {
-  updateFiles(where: $where, disconnect: $disconnect, connect: $connect) {
-   files {
-     name
-     folderHas {
-       name
-           }
-     projectHas {
-       name
-     }
-   } 
+  mutation Mutation(
+    $where: FileWhere
+    $disconnect: FileDisconnectInput
+    $connect: FileConnectInput
+  ) {
+    updateFiles(where: $where, disconnect: $disconnect, connect: $connect) {
+      files {
+        name
+        folderHas {
+          name
+        }
+        projectHas {
+          name
+        }
+      }
+    }
   }
-}`
+`;
 export const updateFilesMutation = gql`
   mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {

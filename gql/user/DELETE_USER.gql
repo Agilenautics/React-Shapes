@@ -1,0 +1,5 @@
+mutation DeleteUsers($where: UserWhere) {
+  deleteUsers(where: $where) {
+    nodesDeleted
+  }
+}

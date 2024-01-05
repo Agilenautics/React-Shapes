@@ -1,0 +1,6 @@
+mutation DeleteSprints($where: SprintWhere) {
+  deleteSprints(where: $where) {
+    nodesDeleted
+    relationshipsDeleted
+  }
+}

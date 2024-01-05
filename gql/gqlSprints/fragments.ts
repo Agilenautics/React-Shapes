@@ -1,5 +1,5 @@
 import {gql} from "@apollo/client";
-import { Info_Fragment } from "../gqlNodes";
+import { Info_Fragment } from "../flowNodes";
 //  Epic fragment for Sprints
 export const EpicSprint_Fragment = gql`
   ${Info_Fragment}
@@ -30,13 +30,11 @@ export const TaskSprint_Fragment = gql`
   fragment TaskSprintFragment on FlowNode {
     id
     type
+    label
     hasInfo {
       ...InfoFragment
     }
-    data {
-      label
-      description
-    }
+    
   }
 `;
 export const Sprint_Fragment = gql`

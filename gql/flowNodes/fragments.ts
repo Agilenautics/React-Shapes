@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { Edge_Fragment } from "../gqlEdges";
+import { Edge_Fragment } from "../flowEdges";
 
 export const Info_Fragment = gql`
   fragment InfoFragment on Info {

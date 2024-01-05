@@ -1,0 +1,34 @@
+mutation AddStory($input: [FileCreateInput!]!) {
+  createFiles(input: $input) {
+    files {
+      id
+      name
+      type
+      folderHas {
+        id
+        name
+      }
+      projectHas {
+        id
+        name
+      }
+      hasInfo {
+        assignedTo
+        dueDate
+        description
+        status
+      }
+      hasComments {
+        id
+        message
+        createdBy {
+          emailId
+        }
+      }
+      hasSprint {
+        id
+        name
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+mutation deleteLink(
+  $where: FlowNodeWhere
+  $disconnect: FlowNodeDisconnectInput
+) {
+  updateFlowNodes(where: $where, disconnect: $disconnect) {
+    flowNodes {
+      id
+      label
+      isLinked {
+        label
+      }
+    }
+  }
+}

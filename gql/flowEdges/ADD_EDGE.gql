@@ -1,0 +1,16 @@
+mutation CreateFlowEdges($input: [FlowEdgeCreateInput!]!) {
+  createFlowEdges(input: $input) {
+    flowEdges {
+      id
+      label
+      bidirectional
+      boxCSS
+      pathCSS
+      selected
+      timeStamp
+      createdBy {
+        emailId
+      }
+    }
+  }
+}

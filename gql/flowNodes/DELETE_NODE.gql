@@ -1,0 +1,6 @@
+mutation DeleteFlowNodes($where: FlowNodeWhere, $delete: FlowNodeDeleteInput) {
+  deleteFlowNodes(where: $where, delete: $delete) {
+    relationshipsDeleted
+    nodesDeleted
+  }
+}

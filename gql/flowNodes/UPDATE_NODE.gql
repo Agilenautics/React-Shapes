@@ -1,0 +1,12 @@
+mutation UpdateFlowNodes($where: FlowNodeWhere) {
+  updateFlowNodes(where: $where) {
+    flowNodes {
+      shape
+      label
+      type
+      hasInfo {
+        description
+      }
+    }
+  }
+}

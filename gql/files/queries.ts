@@ -2,7 +2,7 @@ import {
   gql
 } from "@apollo/client";
 import { File_Fragment } from "./fragments";
-import { Node_Fragment,Info_Fragment } from "../gqlNodes";
+import { Node_Fragment,Info_Fragment } from "../flowNodes";
 
 //Get root using unique userName(UID)
 export const getProjectById = gql`
