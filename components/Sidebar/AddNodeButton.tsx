@@ -95,7 +95,7 @@ function AddNodeButton() {
   };
 
   return (
-    <div className="absolute left-80 top-20">
+    <div className="absolute left-80 top-32">
       <div className="relative space-x-3">
         <button
           type="button"
