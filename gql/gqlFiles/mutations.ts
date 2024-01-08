@@ -1,21 +1,114 @@
 import { gql } from "@apollo/client";
-import { File_Fragment } from "./fragments";
-import { Node_Fragment, Info_Fragment } from "../gqlNodes";
 
 export const createFileMutation = gql`
-  ${File_Fragment}
   mutation CreateFiles($input: [FileCreateInput!]!) {
     createFiles(input: $input) {
       files {
-        ...FileFragment
+        type
+        id
+        name
+        uid
+        hasSprint {
+          id
+          name
+        }
+        projectHas {
+          id
+          name
+        }
+        hasComments {
+          id
+          message
+          timeStamp
+          createdBy {
+            emailId
+          }
+        }
+        folderHas {
+          id
+          name
+        }
+        hasInfo {
+          description
+          assignedTo
+          status
+          dueDate
+        }
+        hasNodes {
+          id
+          draggable
+          flowchart
+          type
+          timeStamp
+          uid
+          label
+          shape
+          x
+          y
+          flowEdge {
+            id
+            label
+            bidirectional
+            boxCSS
+            pathCSS
+            selected
+            createdBy {
+              id
+              emailId
+            }
+
+            flowNodeConnection {
+              edges {
+                handle
+                node {
+                  id
+                }
+              }
+            }
+          }
+          isLinked {
+            id
+            label
+            isLinkedConnection {
+              edges {
+                from
+              }
+            }
+            hasFile {
+              id
+            }
+          }
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          hasComments {
+            message
+            createdBy {
+              emailId
+            }
+          }
+          hasSprint {
+            id
+            name
+          }
+          hasFile {
+            id
+            name
+            folderHas {
+              id
+              name
+            }
+          }
+        }
       }
     }
   }
 `;
 
 export const newFolderInMain = gql`
-  ${Info_Fragment}
-  ${File_Fragment}
   mutation createEpic($input: [FolderCreateInput!]!) {
     createFolders(input: $input) {
       folders {
@@ -25,10 +118,111 @@ export const newFolderInMain = gql`
         type
         uid
         hasInfo {
-          ...InfoFragment
+          description
+          assignedTo
+          status
+          dueDate
         }
         hasFile {
-          ...FileFragment
+          type
+          id
+          name
+          uid
+          hasSprint {
+            id
+            name
+          }
+          projectHas {
+            id
+            name
+          }
+          hasComments {
+            id
+            message
+            timeStamp
+            createdBy {
+              emailId
+            }
+          }
+          folderHas {
+            id
+            name
+          }
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          hasNodes {
+            id
+            draggable
+            flowchart
+            type
+            timeStamp
+            uid
+            label
+            shape
+            x
+            y
+            flowEdge {
+              id
+              label
+              bidirectional
+              boxCSS
+              pathCSS
+              selected
+              createdBy {
+                id
+                emailId
+              }
+
+              flowNodeConnection {
+                edges {
+                  handle
+                  node {
+                    id
+                  }
+                }
+              }
+            }
+            isLinked {
+              id
+              label
+              isLinkedConnection {
+                edges {
+                  from
+                }
+              }
+              hasFile {
+                id
+              }
+            }
+            hasInfo {
+              description
+              assignedTo
+              status
+              dueDate
+            }
+            hasComments {
+              message
+              createdBy {
+                emailId
+              }
+            }
+            hasSprint {
+              id
+              name
+            }
+            hasFile {
+              id
+              name
+              folderHas {
+                id
+                name
+              }
+            }
+          }
         }
         projectHas {
           name
@@ -91,19 +285,24 @@ export const updateFoldersMutation = gql`
 //   }
 // `;
 export const moveFileMutation = gql`
-mutation Mutation($where: FileWhere, $disconnect: FileDisconnectInput, $connect: FileConnectInput) {
-  updateFiles(where: $where, disconnect: $disconnect, connect: $connect) {
-   files {
-     name
-     folderHas {
-       name
-           }
-     projectHas {
-       name
-     }
-   } 
+  mutation Mutation(
+    $where: FileWhere
+    $disconnect: FileDisconnectInput
+    $connect: FileConnectInput
+  ) {
+    updateFiles(where: $where, disconnect: $disconnect, connect: $connect) {
+      files {
+        name
+        folderHas {
+          name
+        }
+        projectHas {
+          name
+        }
+      }
+    }
   }
-}`
+`;
 export const updateFilesMutation = gql`
   mutation updateFiles($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {
@@ -117,13 +316,15 @@ export const updateFilesMutation = gql`
 // updating epic hasInfo data only
 
 export const updateEpicMutation = gql`
-  ${Info_Fragment}
   mutation updateEpic($where: FolderWhere, $update: FolderUpdateInput) {
     updateFolders(where: $where, update: $update) {
       folders {
         name
         hasInfo {
-          ...InfoFragment
+          description
+          assignedTo
+          status
+          dueDate
         }
         hasSprint {
           id
@@ -135,7 +336,6 @@ export const updateEpicMutation = gql`
 `;
 //update story  hasInfo data only
 export const updateStoryMutation = gql`
-  ${Info_Fragment}
   mutation UpdateStory($where: FileWhere, $update: FileUpdateInput) {
     updateFiles(where: $where, update: $update) {
       files {
@@ -149,7 +349,10 @@ export const updateStoryMutation = gql`
           }
         }
         hasInfo {
-          ...InfoFragment
+          description
+          assignedTo
+          status
+          dueDate
         }
         hasSprint {
           id

@@ -13,7 +13,6 @@ import TreeModel from "tree-model-improved";
 import { findById } from "../../components/TreeView/backend";
 import getUpdatedCacheData from "../../components/Flow/middleWares/updatingNodeCache";
 import { File, Project } from "../../lib/appInterfaces";
-import { Node_Fragment } from "./fragments";
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -553,10 +552,9 @@ const linkNodeAnotherNodeMethod = async (
         //   if(node.id === id){
         //     return{
         //       ...node,
-              
         //     }
         //   }
-        // }) 
+        // })
         // const getId: string | undefined = cache.identify(flowNodes[0]);
         // cache.modify({
         //   id: getId,
@@ -568,7 +566,6 @@ const linkNodeAnotherNodeMethod = async (
         //       if (existanceNode) {
         //         return existingData;
         //       }
-
         //       return [...existingData.isLinked, ...flowNodes];
         //     },
         //   },

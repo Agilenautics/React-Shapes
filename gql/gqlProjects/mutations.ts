@@ -1,22 +1,39 @@
 import { gql } from "@apollo/client";
-import { Project_Fragment } from "./fragments";
 
 export const ADD_PROJECT = gql`
-  ${Project_Fragment}
   mutation createProject($input: [ProjectCreateInput!]!) {
     createProjects(input: $input) {
       projects {
-        ...ProjectFragment
+        id
+        timeStamp
+        description
+        name
+        recycleBin
+        recentProject
+        deletedAT
+        usersInProjects {
+          emailId
+          userType
+        }
       }
     }
   }
 `;
 export const DELETE_PROJECT = gql`
-  ${Project_Fragment}
   mutation deleteProject($where: ProjectWhere, $update: ProjectUpdateInput) {
     updateProjects(where: $where, update: $update) {
       projects {
-        ...ProjectFragment
+        id
+        timeStamp
+        description
+        name
+        recycleBin
+        recentProject
+        deletedAT
+        usersInProjects {
+          emailId
+          userType
+        }
       }
     }
   }
@@ -34,14 +51,23 @@ export const EDIT_PROJECT = gql`
 `;
 
 export const recentProject_mutation = gql`
-  ${Project_Fragment}
   mutation updateRecentProject(
     $where: ProjectWhere
     $update: ProjectUpdateInput
   ) {
     updateProjects(where: $where, update: $update) {
       projects {
-        ...ProjectFragment
+        id
+        timeStamp
+        description
+        name
+        recycleBin
+        recentProject
+        deletedAT
+        usersInProjects {
+          emailId
+          userType
+        }
       }
     }
   }

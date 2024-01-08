@@ -1,17 +1,54 @@
-
-import {
-  gql
-} from "@apollo/client";
-import { Sprint_Fragment } from "./fragments";
-
-
+import { gql } from "@apollo/client";
 
 export const CREATE_SPRINT_MUTATION = gql`
-  ${Sprint_Fragment}
   mutation CreateSprints($input: [SprintCreateInput!]!) {
     createSprints(input: $input) {
       sprints {
-        ...SprintFragment
+        id
+        name
+        description
+        timeStamp
+        startDate
+        endDate
+        folderHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        fileHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        flownodeHas {
+          id
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          data {
+            label
+            description
+          }
+        }
+        hasProjects {
+          name
+        }
       }
     }
   }
@@ -20,7 +57,51 @@ export const UPDATE_SPRINT_MUTATION = gql`
   mutation updateSprint($where: SprintWhere, $update: SprintUpdateInput) {
     updateSprints(where: $where, update: $update) {
       sprints {
-        ...SprintFragment
+        id
+        name
+        description
+        timeStamp
+        startDate
+        endDate
+        folderHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        fileHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        flownodeHas {
+          id
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          data {
+            label
+            description
+          }
+        }
+        hasProjects {
+          name
+        }
       }
     }
   }
@@ -34,31 +115,160 @@ export const DELETE_SPRINT = gql`
   }
 `;
 export const CONNECT_TO_STORY = gql`
-  ${Sprint_Fragment}
   mutation connectToStory($where: SprintWhere, $connect: SprintConnectInput) {
     updateSprints(where: $where, connect: $connect) {
       sprints {
-        ...SprintFragment
+        id
+        name
+        description
+        timeStamp
+        startDate
+        endDate
+        folderHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        fileHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        flownodeHas {
+          id
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          data {
+            label
+            description
+          }
+        }
+        hasProjects {
+          name
+        }
       }
     }
   }
 `;
 export const CONNECT_TO_EPIC = gql`
-  ${Sprint_Fragment}
   mutation connectToEpic($where: SprintWhere, $connect: SprintConnectInput) {
     updateSprints(where: $where, connect: $connect) {
       sprints {
-        ...SprintFragment
+        id
+        name
+        description
+        timeStamp
+        startDate
+        endDate
+        folderHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        fileHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        flownodeHas {
+          id
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          data {
+            label
+            description
+          }
+        }
+        hasProjects {
+          name
+        }
       }
     }
   }
 `;
 export const CONNECT_TO_TASK = gql`
-  ${Sprint_Fragment}
   mutation connectToTask($where: SprintWhere, $connect: SprintConnectInput) {
     updateSprints(where: $where, connect: $connect) {
       Sprints {
-        ...SprintFragment
+        id
+        name
+        description
+        timeStamp
+        startDate
+        endDate
+        folderHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        fileHas {
+          id
+          name
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+        }
+        flownodeHas {
+          id
+          type
+          hasInfo {
+            description
+            assignedTo
+            status
+            dueDate
+          }
+          data {
+            label
+            description
+          }
+        }
+        hasProjects {
+          name
+        }
       }
     }
   }

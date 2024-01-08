@@ -1,25 +1,153 @@
 import { gql } from "@apollo/client";
-import { Node_Fragment } from "./fragments";
-import { Edge_Fragment } from "../gqlEdges/fragments";
 
 export const allNodes = gql`
-  ${Node_Fragment}
   query getAllNodes($where: FileWhere) {
     files(where: $where) {
       id
       name
       hasNodes {
-        ...NodeFragment
+        id
+        draggable
+        flowchart
+        type
+        timeStamp
+        uid
+        label
+        shape
+        x
+        y
+        flowEdge {
+          id
+          label
+          bidirectional
+          boxCSS
+          pathCSS
+          selected
+          createdBy {
+            id
+            emailId
+          }
+
+          flowNodeConnection {
+            edges {
+              handle
+              node {
+                id
+              }
+            }
+          }
+        }
+        isLinked {
+          id
+          label
+          isLinkedConnection {
+            edges {
+              from
+            }
+          }
+          hasFile {
+            id
+          }
+        }
+        hasInfo {
+          description
+          assignedTo
+          status
+          dueDate
+        }
+        hasComments {
+          message
+          createdBy {
+            emailId
+          }
+        }
+        hasSprint {
+          id
+          name
+        }
+        hasFile {
+          id
+          name
+          folderHas {
+            id
+            name
+          }
+        }
       }
     }
   }
 `;
 
 export const getFlowNode = gql`
-  ${Node_Fragment}
   query FlowNodes($where: FlowNodeWhere) {
     flowNodes(where: $where) {
-      ...NodeFragment
+      id
+      draggable
+      flowchart
+      type
+      timeStamp
+      uid
+      label
+      shape
+      x
+      y
+      flowEdge {
+        id
+        label
+        bidirectional
+        boxCSS
+        pathCSS
+        selected
+        createdBy {
+          id
+          emailId
+        }
+
+        flowNodeConnection {
+          edges {
+            handle
+            node {
+              id
+            }
+          }
+        }
+      }
+      isLinked {
+        id
+        label
+        isLinkedConnection {
+          edges {
+            from
+          }
+        }
+        hasFile {
+          id
+        }
+      }
+      hasInfo {
+        description
+        assignedTo
+        status
+        dueDate
+      }
+      hasComments {
+        message
+        createdBy {
+          emailId
+        }
+      }
+      hasSprint {
+        id
+        name
+      }
+      hasFile {
+        id
+        name
+        folderHas {
+          id
+          name
+        }
+      }
     }
   }
 `;

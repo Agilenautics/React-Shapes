@@ -1,15 +1,78 @@
 import { gql } from "@apollo/client";
-import { Node_Fragment, Info_Fragment } from "./fragments";
-import { Edge_Fragment } from "../gqlEdges/fragments";
 
 //createNode
 
 export const newNode = gql`
-  ${Node_Fragment}
   mutation CreateFlowNodes($input: [FlowNodeCreateInput!]!) {
     createFlowNodes(input: $input) {
       flowNodes {
-        ...NodeFragment
+        id
+        draggable
+        flowchart
+        type
+        timeStamp
+        uid
+        label
+        shape
+        x
+        y
+        flowEdge {
+          id
+          label
+          bidirectional
+          boxCSS
+          pathCSS
+          selected
+          createdBy {
+            id
+            emailId
+          }
+
+          flowNodeConnection {
+            edges {
+              handle
+              node {
+                id
+              }
+            }
+          }
+        }
+        isLinked {
+          id
+          label
+          isLinkedConnection {
+            edges {
+              from
+            }
+          }
+          hasFile {
+            id
+          }
+        }
+        hasInfo {
+          description
+          assignedTo
+          status
+          dueDate
+        }
+        hasComments {
+          message
+          createdBy {
+            emailId
+          }
+        }
+        hasSprint {
+          id
+          name
+        }
+        hasFile {
+          id
+          name
+          folderHas {
+            id
+            name
+          }
+        }
       }
     }
   }
@@ -69,11 +132,76 @@ export const linkNodeToAnotherNodeMutation = gql`
 //   }
 // `;
 export const updateNodesMutation = gql`
-  ${Node_Fragment}
   mutation updateFlowNode($where: FlowNodeWhere, $update: FlowNodeUpdateInput) {
     updateFlowNodes(where: $where, update: $update) {
       flowNodes {
-        ...NodeFragment
+        id
+        draggable
+        flowchart
+        type
+        timeStamp
+        uid
+        label
+        shape
+        x
+        y
+        flowEdge {
+          id
+          label
+          bidirectional
+          boxCSS
+          pathCSS
+          selected
+          createdBy {
+            id
+            emailId
+          }
+
+          flowNodeConnection {
+            edges {
+              handle
+              node {
+                id
+              }
+            }
+          }
+        }
+        isLinked {
+          id
+          label
+          isLinkedConnection {
+            edges {
+              from
+            }
+          }
+          hasFile {
+            id
+          }
+        }
+        hasInfo {
+          description
+          assignedTo
+          status
+          dueDate
+        }
+        hasComments {
+          message
+          createdBy {
+            emailId
+          }
+        }
+        hasSprint {
+          id
+          name
+        }
+        hasFile {
+          id
+          name
+          folderHas {
+            id
+            name
+          }
+        }
       }
     }
   }
@@ -115,7 +243,10 @@ export const updateTasksMutation = gql`
         id
         type
         hasInfo {
-          ...InfoFragment
+          description
+          assignedTo
+          status
+          dueDate
         }
         hasSprint {
           name
