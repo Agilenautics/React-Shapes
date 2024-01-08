@@ -4,10 +4,10 @@ import { FaTrashRestoreAlt } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 import { AiOutlineArrowDown } from "react-icons/ai";
 import {
-  CLEAR_RECYCLE_BIN,
+  CLEAR_ALL_PROJECT,
   DELETE_PROJECT,
-  GET_USER,
-  PARMENANT_DELETE,
+  GET_PROJECTS,
+  PARMANENT_DELETE,
   clearRecycleBin,
   delete_Project,
   getUserByEmail,
@@ -44,7 +44,7 @@ function Projects() {
     try {
       const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
         email,
-        GET_USER
+        GET_PROJECTS
       );
       const { hasProjects, ...userData } = response?.data.users[0];
       updateProjects(hasProjects, response?.loading, response?.error);
@@ -84,7 +84,12 @@ function Projects() {
 
   const handleParmenantDelete = async (projectId: string) => {
     try {
-      await parmenantDelete(projectId, PARMENANT_DELETE, GET_USER,userEmail);
+      await parmenantDelete(
+        projectId,
+        PARMANENT_DELETE,
+        GET_PROJECTS,
+        userEmail
+      );
       removeFromRecycleBin(projectId);
     } catch (error) {
       console.log(error);
@@ -93,7 +98,7 @@ function Projects() {
 
   const handleRestoreFromRecycleBin = async (id: string) => {
     try {
-      await restoreFromRecycleBin(id, DELETE_PROJECT, GET_USER, userEmail);
+      await restoreFromRecycleBin(id, DELETE_PROJECT, GET_PROJECTS, userEmail);
       removeFromRecycleBin(id);
     } catch (error) {
       console.log("Error in restoring from recycle bin", error);
@@ -102,7 +107,7 @@ function Projects() {
 
   const handleClearRecycleBin = async () => {
     try {
-      await clearRecycleBin(CLEAR_RECYCLE_BIN, GET_USER, userEmail);
+      await clearRecycleBin(CLEAR_ALL_PROJECT, GET_PROJECTS, userEmail);
       clearRecycle_Bin();
     } catch (error) {
       console.log("Error in clearing the recycle bin", error);

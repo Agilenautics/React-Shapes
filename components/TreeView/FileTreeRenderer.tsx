@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import AutoSize from "react-virtualized-auto-sizer";
-import { Tree, TreeApi } from "react-arborist";
+import { Tree, TreeApi, } from "react-arborist";
 import useBackend from "./backend";
 import LinkTreeNode from "./LinkTreeNode";
 
@@ -10,11 +10,6 @@ const LinkTree = () => {
     <AutoSize>
       {(props: any) => (
         <Tree
-          //@ts-ignore
-          ref={(tree: TreeApi) => {
-            //@ts-ignore
-            global.tree = tree;
-          }}
           data={backend.data}
           getChildren="children"
           isOpen="isOpen"

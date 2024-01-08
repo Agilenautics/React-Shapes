@@ -3,9 +3,9 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import { getUidQuery } from "./queries";
 import client from "../../apollo-client";
 import { NextApiResponse } from "next";
+import { GET_UID } from "./GET_UID";
 
 const getUidMethode = (
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -57,14 +57,14 @@ const updateUidMethode = (
       },
       update: (cache, { data }) => {
         const existinUid = cache.readQuery({
-          query: getUidQuery,
+          query: GET_UID,
         });
         // @ts-ignore
         const updatedData = { ...existinUid.uids[0],
           uid: data.updateUids.uids[0].uid,
         };
         cache.writeQuery({
-          query: getUidQuery,
+          query: GET_UID,
           data: { uids: [updatedData] },
         });
       },

@@ -20,21 +20,22 @@ import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
 import edgeStore from "./Edges/edgeStore";
 import {
-  allNodes,
-  delNodeMutation,
+  GET_NODES,
+  DELETE_NODE,
   deleteNodeBackend,
   findNode,
-  getFlowNode,
+  GET_NODE_BY_ID,
   //updateNodeBackend,
   updatePosition,
-  updatePositionMutation,
+  UPDATE_NODE_POSITION,
   createFlowEdge,
   deleteEdgeBackend,
   updateEdgeBackend,
-  updateEdgeMutation,
-  getProjectById,
-  createEdgeMutation,
-  deleteEdgeMutation,
+  UPDATE_EDGE,
+  GET_FILES_FOLDERS_BY_PROJECT_ID,
+  ADD_EDGE,
+  DELETE_EDGE,
+  getTreeNodeByUser,
 } from "../../gql";
 import fileStore from "../TreeView/fileStore";
 import userStore from "../AdminPage/Users/userStore";
@@ -75,11 +76,25 @@ function Flow() {
   } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
-  const { currentFlowchart, Id: fileId, updateLinkNodeId } = fileStore();
+  const { currentFlowchart, Id: fileId, updateLinkNodeId ,setLoading,updateInitData} = fileStore();
   const [nodeId, setNodeId] = useState([]);
   const { userEmail } = userStore();
 
   const dragged = useRef(false);
+
+  const getProjectId = async (id: string) => {
+    const initData = await getTreeNodeByUser(GET_FILES_FOLDERS_BY_PROJECT_ID, id, setLoading);
+    const data = initData[0];
+    //@ts-ignore
+    updateInitData(data);
+    return initData;
+  };
+
+  useEffect(()=>{
+    if(projectId){
+      getProjectId(projectId);
+    }
+  },[projectId])
 
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
@@ -88,7 +103,7 @@ function Flow() {
     edge.map(async (curEle: any) => {
       // await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
-      deleteEdgeBackend(curEle.id, deleteEdgeMutation, allNodes, fileId);
+      deleteEdgeBackend(curEle.id, DELETE_EDGE, GET_NODES, fileId);
     });
   };
   const handleConfirm = useCallback(() => {
@@ -137,7 +152,7 @@ function Flow() {
       );
       newEdgeData.map((curEle) => {
         if (fileId) {
-          updateEdgeBackend(updateEdgeMutation, curEle, allNodes, fileId);
+          updateEdgeBackend(UPDATE_EDGE, curEle, GET_NODES, fileId);
         }
       });
     }
@@ -156,10 +171,12 @@ function Flow() {
       const edgeResponse = await createFlowEdge(
         newEdge,
         userEmail,
-        createEdgeMutation,allNodes,fileId
+        ADD_EDGE,
+        GET_NODES,
+        fileId
       );
       // console.log(userEmail);
-      addNewEdge(edgeResponse?.data.createFlowEdges.flowEdges)
+      addNewEdge(edgeResponse?.data.createFlowEdges.flowEdges);
       setEdges((eds) => {
         return addEdge(newEdge, eds);
       });
@@ -182,13 +199,12 @@ function Flow() {
         //@ts-ignore
         const selectedEdges = getEdges().filter((edge) => edge.selected);
         if (selectedNodes.length > 0) {
-          const node = await findNode(getFlowNode, selectedNodes[0].id);
+          const node = await findNode(GET_NODE_BY_ID, selectedNodes[0].id);
+          //@ts-ignore
+          const linkA = node.data.flowNodes[0].isLinked;
           //@ts-ignore
 
-          const linkA = node[0].data.hasLinkedBy.flag;
-          //@ts-ignore
-
-          const linkB = node[0].data.hasLinkedTo.flag;
+          const linkB = "";
           //.flowNode.nodeData.linked
           if (linkA || linkB) {
             setShowConfirmation({
@@ -213,22 +229,22 @@ function Flow() {
         }
         //}
         //else if (selectedEdges.length > 0) {
-        setShowConfirmation({
-          type: "edge",
-          show: true,
-          selectedItems: selectedEdges,
-        });
+        // setShowConfirmation({
+        //   type: "edge",
+        //   show: true,
+        //   selectedItems: selectedEdges,
+        // });
         // }
         // else {
-        setShowConfirmation(defaultShowConfirmation);
+        // setShowConfirmation(defaultShowConfirmation);
       }
     };
     // };
 
-      document.addEventListener("keydown", handleBackspace);
-      return () => {
-        document.removeEventListener("keydown", handleBackspace);
-      };
+    document.addEventListener("keydown", handleBackspace);
+    return () => {
+      document.removeEventListener("keydown", handleBackspace);
+    };
   }, [getNodes, getEdges]);
   async function onNodesDelete(nodes: Array<Node>) {
     for (let index = 0; index < nodes.length; index++) {
@@ -236,11 +252,11 @@ function Flow() {
       try {
         await deleteNodeBackend(
           element.id,
-          delNodeMutation,
-          allNodes,
+          DELETE_NODE,
+          GET_NODES,
           fileId,
           projectId,
-          getProjectById
+          GET_FILES_FOLDERS_BY_PROJECT_ID
         );
         deleteNode(element);
       } catch (error) {
@@ -257,7 +273,7 @@ function Flow() {
     async (event: React.MouseEvent, node: Node) => {
       try {
         if (dragged.current) {
-          await updatePosition(node, updatePositionMutation, allNodes, fileId);
+          await updatePosition(node, UPDATE_NODE_POSITION, GET_NODES, fileId);
           updateNodePosition(node);
         }
         dragged.current = false;
@@ -326,7 +342,7 @@ function Flow() {
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
           onEdgeClick={onEdgeClick}
           onNodeClick={onNodeClick}
-          // deleteKeyCode={[]}
+          deleteKeyCode={[]}
         >
           <MiniMap
             //nodeComponent={MiniMapNode}

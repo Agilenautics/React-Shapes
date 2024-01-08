@@ -8,11 +8,11 @@ import {
   deleteFileBackend,
   deleteFolderBackend,
   Folder,
-  getProjectById,
-  updateFoldersMutation,
-  updateFilesMutation,
-  deleteFoldersMutation,
-  deleteFilesMutation,
+  GET_FILES_FOLDERS_BY_PROJECT_ID,
+  UPDATE_FOLDER,
+  UPDATE_FILE,
+  DELETE_FOLDER,
+  DELETE_FILE,
   getTreeNodeByUser,
 } from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
@@ -82,8 +82,15 @@ const useBackend = () => {
         if (!src || !dstParent) return;
         const newItem = new TreeModel().parse(src.model);
         dstParent.addChildAtIndex(newItem, dstIndex);
-        console.log("fileid", srcId, "folderid", dstParentId, "index", dstIndex);
-       
+        console.log(
+          "fileid",
+          srcId,
+          "folderid",
+          dstParentId,
+          "index",
+          dstIndex
+        );
+
         moveFileBackend(dstParentId, srcId);
         src.drop();
       }
@@ -140,16 +147,16 @@ const useBackend = () => {
       if (type === "folder") {
         await updateFolderBackend(
           editedData,
-          updateFoldersMutation,
-          getProjectById
+          UPDATE_FOLDER,
+          GET_FILES_FOLDERS_BY_PROJECT_ID
         );
         // updateNodes(nodeData);
       }
       if (type === "file") {
         await updateFileBackend(
           editedData,
-          updateFilesMutation,
-          getProjectById
+          UPDATE_FILE,
+          GET_FILES_FOLDERS_BY_PROJECT_ID
         );
         updateFile(id, initData);
         // updateNodes(nodeData);
@@ -176,12 +183,16 @@ const useBackend = () => {
       if (type === "folder") {
         await deleteFolderBackend(
           deleteIds,
-          deleteFoldersMutation,
-          getProjectById
+          DELETE_FOLDER,
+          GET_FILES_FOLDERS_BY_PROJECT_ID
         );
         delete_item(id);
       } else {
-        await deleteFileBackend(deleteIds, deleteFilesMutation, getProjectById);
+        await deleteFileBackend(
+          deleteIds,
+          DELETE_FILE,
+          GET_FILES_FOLDERS_BY_PROJECT_ID
+        );
         delete_item(id);
       }
     },

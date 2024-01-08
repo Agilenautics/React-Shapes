@@ -1,6 +1,0 @@
-mutation DeleteFolder($delete: FolderDeleteInput, $where: FolderWhere) {
-  deleteFolders(delete: $delete, where: $where) {
-    nodesDeleted
-    relationshipsDeleted
-  }
-}

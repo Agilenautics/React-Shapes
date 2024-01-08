@@ -1,6 +1,0 @@
-mutation DeleteFlowEdges($where: FlowEdgeWhere) {
-  deleteFlowEdges(where: $where) {
-    nodesDeleted
-    relationshipsDeleted
-  }
-}

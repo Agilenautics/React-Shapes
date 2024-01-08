@@ -7,7 +7,7 @@ import projectStore from "../../../components/AdminPage/Projects/projectStore";
 import userStore from "../../../components/AdminPage/Users/userStore";
 import { auth } from "../../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { GET_USER, getUserByEmail } from "../../../gql";
+import { GET_PROJECTS, getUserByEmail } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
 import fileStore from "../../../components/TreeView/fileStore";
 import backlogStore from "../../../components/Backlogs/backlogStore";
@@ -27,7 +27,7 @@ const BusinessPlan = () => {
     try {
       const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
         email,
-        GET_USER
+        GET_PROJECTS
       );
       const { hasProjects, ...userData } = response?.data.users[0];
       updateProjects(hasProjects, response?.loading, response?.error);

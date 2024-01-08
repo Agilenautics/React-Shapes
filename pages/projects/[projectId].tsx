@@ -1,12 +1,10 @@
 import React,{ useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import {
-  getProjectById,
+  GET_PROJECT_BY_ID,
   getTreeNodeByUser,
 } from "../../gql";
-// import SummarySidebar from "../../components/AdminPage/Projects/SummarySidebar";
 import LoadingIcon from "../../components/LoadingIcon";
-// import MembersTable from "../../components/AdminPage/Projects/MembersTable";
 import ProjectOverview from "../../components/AdminPage/Projects/ProjectOverview";
 import fileStore from "../../components/TreeView/fileStore";
 
@@ -29,7 +27,7 @@ function SideBar() {
   async function fetchData() {
     if (projectId) {
       const initData = await getTreeNodeByUser(
-        getProjectById,
+        GET_PROJECT_BY_ID,
         projectId.toString(),
         setLoading
       );

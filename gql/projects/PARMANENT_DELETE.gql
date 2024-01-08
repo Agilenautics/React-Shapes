@@ -1,7 +1,0 @@
-# Parmenent delete
-mutation DeleteProjects($where: ProjectWhere, $delete: ProjectDeleteInput) {
-  deleteProjects(where: $where, delete: $delete) {
-    nodesDeleted
-    relationshipsDeleted
-  }
-}

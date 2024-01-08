@@ -1,9 +1,0 @@
-mutation UpdateNodePosition($where: FlowNodeWhere) {
-  updateFlowNodes(where: $where) {
-    flowNodes {
-      id
-      x
-      y
-    }
-  }
-}
