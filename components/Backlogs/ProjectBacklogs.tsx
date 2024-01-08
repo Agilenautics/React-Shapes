@@ -8,7 +8,7 @@ import {
 } from "../AdminPage/Projects/staticData/basicFunctions";
 import { auth } from "../../auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { getUserByEmail, GET_USER } from "../../gql";
+import { getUserByEmail, GET_PROJECTS } from "../../gql";
 import projectStore from "../AdminPage/Projects/projectStore";
 import userStore from "../AdminPage/Users/userStore";
 import backlogStore from "./backlogStore";
@@ -48,7 +48,7 @@ function ProjectBacklogs() {
     try {
       const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
         email,
-        GET_USER
+        GET_PROJECTS
       );
       const { hasProjects, ...userData } = response?.data.users[0];
       updateProjects(hasProjects, response?.loading, response?.error);
@@ -64,6 +64,7 @@ function ProjectBacklogs() {
       getProjects(userEmail);
     }
   }, [userEmail]);
+
   useEffect(() => {
     setItems(backlogs);
   }, [backlogs]);

@@ -10,8 +10,10 @@ import getNodeAndEdges from "../middleWares/getNodesAndEdges";
 import { BiArrowToRight } from "react-icons/bi";
 import { RxCross2 } from "react-icons/rx";
 import {
-  deleteIsLinkedNodeMutation,
+  DELETE_LINK,
+  GET_NODES,
   deleteLinkedNodeMethod,
+  getNodes,
 } from "../../../gql";
 
 /* This is the custom node component that is used */
@@ -41,18 +43,18 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   // let getBpmn = shapeCSS[1]?.split("-")[0];
   // console.log(shapeCSS[1],getBpmn)
   // const flag = getBpmn === "bpmn";
-  const linkedTo = (fileId: string) => {
-    const x = findFile(fileId);
-    const { edges, nodes } = getNodeAndEdges(x);
-    if (x.children == null) {
+  const linkedTo = async (fileId: string) => {
+    const x = await getNodes(GET_NODES, fileId);
+    const { edges, nodes } = getNodeAndEdges(x?.data.files[0]);
+    if (x?.data.files && x?.data.files.length) {
       updateNodes(nodes);
       updateEdges(edges);
     }
-    updateBreadCrumbs(x, x.id, "push");
+    updateBreadCrumbs(x?.data.files[0], x?.data.files[0].id, "push");
   };
 
   const delete_link_node = async (id: string, nodeId: string) => {
-    await deleteLinkedNodeMethod(id, deleteIsLinkedNodeMutation, nodeId);
+    await deleteLinkedNodeMethod(id, DELETE_LINK, nodeId);
     deleteLinkeNode(id, nodeId);
     setIsLinkFlag(false);
   };
@@ -95,8 +97,8 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
           <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>
             {editing ? (
               <div
-              className={`relative h-auto flex-row text-center  `}
-              key={id}
+                className={`relative h-auto flex-row text-center  `}
+                key={id}
               >
                 <Editing
                   isEdge={false}
@@ -131,13 +133,13 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
             </span>
             {isLinkFlag && (
               <>
-                {data.isLinked.map((value: any,index:number) => {
+                {data.isLinked.map((value: any, index: number) => {
                   const {
                     label,
                     id: nodeId,
                     hasFile: { id: fileId },
                   } = value;
-                  
+
                   return (
                     <div
                       key={index}

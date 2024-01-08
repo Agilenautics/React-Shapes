@@ -1,6 +1,0 @@
-mutation DeleteFile($where: FileWhere, $delete: FileDeleteInput) {
-  deleteFiles(where: $where, delete: $delete) {
-    nodesDeleted
-    relationshipsDeleted
-  }
-}

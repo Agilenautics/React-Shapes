@@ -5,7 +5,7 @@ import classNames from "classnames";
 import MaybeToggleButton from "./toggleArrowbuttons";
 import Icon from "./IconsForFolderAndFile";
 import RenameFormForTreeStructur from "./renameForm";
-import { allNodes, getNodes } from "../../gql";
+import { GET_NODES, getNodes } from "../../gql";
 import { ApolloQueryResult } from "@apollo/client";
 
 const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
@@ -26,7 +26,7 @@ const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
   function loadFlowNodes(handlers: any, data: any) {
     return async (e: SyntheticEvent) => {
       const getFileResponse: ApolloQueryResult<any> | undefined =
-        await getNodes(allNodes, id);
+        await getNodes(GET_NODES, id);
 
       if (id === currentFileId) {
         e.stopPropagation(); // Prevent event propagation for the current file's node
@@ -38,7 +38,7 @@ const TreeNode2 = ({ innerRef, data, styles, state, handlers, tree }: any) => {
         getFileResponse?.data.files[0].hasNodes &&
         getFileResponse?.data.files[0].hasNodes.length
       ) {
-        return updateLinkNodes(data.hasNodes, id);
+        return updateLinkNodes(getFileResponse?.data.files[0].hasNodes, id);
       } else {
         return updateLinkNodes(
           [

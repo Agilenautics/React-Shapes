@@ -3,10 +3,10 @@ import {
   TypedDocumentNode,
   OperationVariables,
 } from "@apollo/client";
-import { moveFileMutation } from "./mutations";
 import { Project, transformObject } from "./interfaces";
 import client from "../../apollo-client";
 import { File, Folder } from "../../lib/appInterfaces";
+import { MOVE_FILE } from "./MOVE_FILE";
 
 // create File (story)
 
@@ -313,7 +313,7 @@ async function deleteFileBackend(
 // };
 const moveFileBackend = async (targetId:any,fileId:string)=> {
   await client.mutate({
-    mutation:moveFileMutation,
+    mutation:MOVE_FILE,
     variables:{
       
         "where": {

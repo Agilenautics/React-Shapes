@@ -4,7 +4,7 @@ import { auth } from "../../../auth";
 import React,{ useEffect } from "react";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
-import { GET_USER, getUserByEmail } from "../../../gql";
+import { GET_PROJECTS, getUserByEmail } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +33,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     try {
       const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
         email,
-        GET_USER
+        GET_PROJECTS
       );
       const { hasProjects, ...userData } = response?.data.users[0];
       updateProjects(hasProjects, response?.loading, response?.error);
@@ -67,7 +67,6 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       <div className="mt-2 flex items-center">
         <h4 className="">{t("total")}</h4>
         <p className="ml-4 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs dark:bg-slate-500">
-          {" "}
           {total}
         </p>
       </div>

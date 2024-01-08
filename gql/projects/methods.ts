@@ -5,9 +5,8 @@ import {
   TypedDocumentNode,
 } from "@apollo/client";
 import client from "../../apollo-client";
-import { GET_USER } from "./queries";
-import { Project, User } from "../..//lib/appInterfaces";
-
+import { Project, User } from "../../lib/appInterfaces";
+import { GET_PROJECTS } from "./GET_PROJECTS";
 const getUserByEmail = async (
   email: String,
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
@@ -92,7 +91,10 @@ const delete_Project = async (
         const { hasProjects, ...userData } = existingUser.users[0];
         const updated_projects = hasProjects.map((project: Project) => {
           if (project.id === id) {
-            return { ...projects[0] };
+            return {
+              ...project,
+              ...projects[0]
+            };
           }
           return project;
         });
@@ -132,7 +134,7 @@ const update_recentProject = async (
       },
       update: (cache, { data }) => {
         const existanceData = cache.readQuery({
-          query: GET_USER,
+          query: GET_PROJECTS,
           variables: {
             where: {
               emailId: "irfan123@gmail.com",
@@ -183,6 +185,7 @@ const restoreFromRecycleBin = async (
         const updated_projects = hasProjects.map((project: Project) => {
           if (project.id === id) {
             return {
+              ...project,
               ...projects[0],
             };
           }

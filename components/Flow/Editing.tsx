@@ -12,15 +12,9 @@ import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
 import useStore from "../Sidebar/SidebarContext";
 import {
-  // getNode,
-  findNode,
-  getFile,
-  // getFileByNode,
-  updateEdgeBackend,
-  updateEdgeMutation,
-  allNodes,
+  GET_NODES,
   linkNodeAnotherNodeMethod,
-  linkNodeToAnotherNodeMutation,
+  ADD_LINK,
 } from "../../gql";
 import LinkTree from "../TreeView/FileTreeRenderer";
 
@@ -126,9 +120,9 @@ function Editing({
   ) => {
     const response = await linkNodeAnotherNodeMethod(
       currentNodeId,
-      linkNodeToAnotherNodeMutation,
+      ADD_LINK,
       anotherNodeId,
-      allNodes,
+      GET_NODES,
       Id
     );
     addLinkNode(

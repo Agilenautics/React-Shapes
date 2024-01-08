@@ -8,9 +8,9 @@ import {
   // updateLinkedBy,
   //updateLinkedToMutation,
   //getFileByNode,
-  allNodes,
-  updateNodesMutation,
-  getFlowNode,
+  GET_NODES,
+  UPDATE_NODE,
+  GET_NODE_BY_ID,
 } from "../../../gql";
 
 /* This is the store for managing the state of the nodes in the present flowchart. */
@@ -137,7 +137,7 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-      updateNodeData(updated_node, updateNodesMutation, allNodes, state.fileId);
+      updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
       return { nodes: [...to_be_updated, updated_node] };
     });
   },
@@ -150,12 +150,7 @@ const nodeStore = create<NodeState>((set) => ({
         data: { ...old_node.data, label: newLabel },
       };
       if (!old_node.data?.label || old_node.data.label !== newLabel) {
-        updateNodeData(
-          updated_node,
-          updateNodesMutation,
-          allNodes,
-          state.fileId
-        );
+        updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
       }
 
       return { nodes: [...to_be_updated, updated_node] };
@@ -176,12 +171,7 @@ const nodeStore = create<NodeState>((set) => ({
         (!old_node.data?.shape && newShape) ||
         old_node.data?.shape !== newShape
       ) {
-        updateNodeData(
-          updated_node,
-          updateNodesMutation,
-          allNodes,
-          state.fileId
-        );
+        updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
       }
       return { nodes: [...to_be_updated, updated_node] };
     }),
@@ -190,7 +180,7 @@ const nodeStore = create<NodeState>((set) => ({
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
       const updated_node = { ...old_node, type: newType };
-      updateNodeData(updated_node, updateNodesMutation, allNodes, state.fileId);
+      updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
       return { nodes: [...to_be_updated, updated_node] };
     }),
   toggleDraggable: (id: string, draggable: boolean) =>

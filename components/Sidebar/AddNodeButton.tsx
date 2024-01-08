@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import userStore from "../AdminPage/Users/userStore";
 import { MdOutlineAdd } from "react-icons/md";
 import {
-  allNodes,
+  GET_NODES,
   createNode,
-  getProjectById,
   newNode,
   updateUidMethode,
-  updateUidMutation,
+  UPDATED_UID,
 } from "../../gql";
 import nodeStore from "../Flow/Nodes/nodeStore";
 import fileStore from "../TreeView/fileStore";
@@ -46,11 +45,11 @@ function AddNodeButton() {
       uid,
     };
     try {
-      const createNodeResponse = await createNode(newNode, data, userEmail,allNodes,fileId);
+      const createNodeResponse = await createNode(newNode, data, userEmail,GET_NODES,fileId);
       addNode(createNodeResponse?.data.createFlowNodes.flowNodes);
       const updateUidResponse = (await updateUidMethode(
         idofUid,
-        updateUidMutation
+        UPDATED_UID
       )) as any;
       updateUid(updateUidResponse.data.updateUids.uids);
     } catch (err) {
@@ -73,10 +72,10 @@ function AddNodeButton() {
       uid,
     };
     try {
-      await createNode(newNode, data, userEmail,allNodes,fileId);
+      await createNode(newNode, data, userEmail,GET_NODES,fileId);
       const updateUidResponse = updateUidMethode(
         idofUid,
-        updateUidMutation
+        UPDATED_UID
       ) as any;
       if (!updateUidResponse?.errors && !updateUidResponse?.data) {
         return null;

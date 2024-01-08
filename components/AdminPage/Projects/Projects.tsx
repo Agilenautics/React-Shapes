@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import ProjectOverlay from "./ProjectOverlay";
-import { auth } from "../../../auth";
 import {
-  GET_USER,
+  GET_PROJECTS,
   DELETE_PROJECT,
   delete_Project,
   getUserByEmail,
@@ -24,9 +23,12 @@ import { useRouter } from "next/router";
 import { ApolloQueryResult } from "@apollo/client";
 import { Project, User } from "../../../lib/appInterfaces";
 import { useTranslation } from "react-i18next";
+import { loader } from 'graphql.macro';
 
 function Projects() {
   const { t } = useTranslation(); // useTranslation hook
+
+
 
   // Access Level controlled by the server-side or additional validation
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -67,7 +69,7 @@ function Projects() {
     try {
       const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
         email,
-        GET_USER
+        GET_PROJECTS
       );
       if (response?.data && response.data.users.length) {
         const { hasProjects, ...userData } = response?.data.users[0];
@@ -105,7 +107,7 @@ function Projects() {
   };
 
   const handleDelete_Project = async (id: string) => {
-    await delete_Project(id, DELETE_PROJECT, GET_USER, userEmail);
+    await delete_Project(id, DELETE_PROJECT, GET_PROJECTS, userEmail);
     // adding a project to recycle bin
     MovetoRecycleBin(id);
     setProjectTrackChanges(!projectTrackChanges);

@@ -2,17 +2,11 @@ import {
   DocumentNode,
   TypedDocumentNode,
   OperationVariables,
-  ApolloCache,
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { Node } from "reactflow";
-import { Edge } from "reactflow";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-import { allNodes } from "./queries";
-import TreeModel from "tree-model-improved";
-import { findById } from "../../components/TreeView/backend";
-import getUpdatedCacheData from "../../components/Flow/middleWares/updatingNodeCache";
-import { File, Project } from "../../lib/appInterfaces";
+import { GET_NODES } from "./GET_NODES";
 
 async function findNode(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -179,7 +173,7 @@ async function createNode(
             hasNodes: [...hasNodes, ...flowNodes],
           };
           cache.writeQuery({
-            query: allNodes,
+            query: GET_NODES,
             variables: {
               where: {
                 id: data.story,

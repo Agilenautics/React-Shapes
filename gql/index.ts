@@ -3,6 +3,7 @@ export * from "./flowEdges";
 export * from "./projects";
 export * from "./gqlUsers";
 export * from "./backlogs";
-export * from "./gqlSprints";
+export * from "./sprints";
 export * from "./files";
+export * from './folders'
 export * from "./user";

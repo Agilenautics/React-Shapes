@@ -1,8 +1,0 @@
-query getNodeById($where: FlowNodeWhere) {
-  flowNodes(where: $where) {
-    id
-    label
-    type
-    shape
-  }
-}

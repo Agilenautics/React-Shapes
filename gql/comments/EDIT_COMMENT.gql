@@ -1,8 +1,0 @@
-mutation UpdateComments($where: CommentWhere, $update: CommentUpdateInput) {
-  updateComments(where: $where, update: $update) {
-    comments {
-      id
-      message
-    }
-  }
-}
