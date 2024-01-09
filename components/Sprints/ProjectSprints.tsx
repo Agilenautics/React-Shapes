@@ -8,7 +8,7 @@ import { auth } from "../../auth";
 import { onAuthStateChanged } from "firebase/auth";
 import {
   getUserByEmail,
-  GET_USER,
+  GET_PROJECTS,
   GET_SPRINTS,
   getSprintByProjectId,
 } from "../../gql";
@@ -41,7 +41,7 @@ function ProjectSprints() {
     try {
       const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
         email,
-        GET_USER
+        GET_PROJECTS
       );
       const { hasProjects, ...userData } = response?.data.users[0];
       updateProjects(hasProjects, response?.loading, response?.error);

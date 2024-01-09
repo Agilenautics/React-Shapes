@@ -7,7 +7,6 @@ import {
 } from "@apollo/client";
 
 import { FetchError } from "node-fetch";
-import { GET_SPRINTS } from "./queries";
 export interface Sprint {
   id: string;
   name?: string | null;
@@ -74,74 +73,72 @@ const createSPrintBackend = (
   projectId: string,
   mutation: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   inputVariables: Sprint,
-  addSprint: any,
-  handleError: any,
-  sprintCreateMessage: any,
-  hidePopUp: any
+  cahceQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) => {
   try {
-    client
-      .mutate({
-        mutation: mutation,
-        variables: {
-          input: [
-            {
-              hasProjects: {
-                connect: {
-                  where: {
-                    node: {
-                      id: projectId,
-                    },
+   return client.mutate({
+      mutation: mutation,
+      variables: {
+        input: [
+          {
+            hasProjects: {
+              connect: {
+                where: {
+                  node: {
+                    id: projectId,
                   },
                 },
               },
-              name: inputVariables.name,
-              description: inputVariables.description || "",
-              startDate: inputVariables.startDate,
-              endDate: inputVariables.endDate,
             },
-          ],
-        },
-        update: (cache, { data: { createSprints: { sprints } } }) => {
-          const existanceSprints = cache.readQuery(
-            {
-              query: GET_SPRINTS,
-              variables: {
-                where: {
-                  hasProjects: {
-                    id: projectId,
-                  }
-                }
-              }
-            }
-          );
-          cache.writeQuery(
-            {
-              query: GET_SPRINTS,
-              variables: {
-                where: {
-                  hasProjects: {
-                    id: projectId,
-                  }
-                }
-              },
-              data: {
-                // @ts-ignore
-                sprints: [...existanceSprints.sprints, ...sprints]
-              }
-            }
-          )
+            name: inputVariables.name,
+            description: inputVariables.description || "",
+            startDate: inputVariables.startDate,
+            endDate: inputVariables.endDate,
+          },
+        ],
+      },
+      update: (
+        cache,
+        {
+          data: {
+            createSprints: { sprints },
+          },
         }
-      })
-      .then((response: FetchResult<any>) => {
-        addSprint(response.data.createSprints.sprints[0], response.errors);
-        sprintCreateMessage();
-        hidePopUp(false);
-      })
-  } catch (error) {
-    handleError(error)
+      ) => {
+        const structuredSprint = {
+          ...sprints[0], // we assume that the array only contains one item
+          fileHas:[],
+          folderHas:[],
+          flownodeHas:[]
+        }
+        const existanceSprints = cache.readQuery({
+          query: cahceQuery,
+          variables: {
+            where: {
+              hasProjects: {
+                id: projectId,
+              },
+            },
+          },
+        });
 
-  }
+        cache.writeQuery({
+          query: cahceQuery,
+          variables: {
+            where: {
+              hasProjects: {
+                id: projectId,
+              },
+            },
+          },
+          data: {
+            // @ts-ignore
+            sprints: [...existanceSprints.sprints, structuredSprint],
+          },
+        });
+      },
+    });
+  } catch (error) {}
 };
 const updateSprintBackend = async (
   sprintId: string,

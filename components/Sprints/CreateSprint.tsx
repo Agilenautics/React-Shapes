@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { sprintValidationSchema } from "../AdminPage/Projects/staticData/validationSchema";
 import { useRouter } from "next/router";
 import sprintStore from "./sprintStore";
-import { CREATE_SPRINT_MUTATION, createSPrintBackend } from "../../gql";
+import { ADD_SPRINT, createSPrintBackend, GET_SPRINTS } from "../../gql";
 
 export default function CreateSprint({
   setShowForm,
@@ -13,15 +13,15 @@ export default function CreateSprint({
   const { addSprint, updateError } = sprintStore();
   const projectId = router.query.projectId as string | "";
   const handleSubmit = async (values: any) => {
-    await createSPrintBackend(
+    const resopnse = await createSPrintBackend(
       projectId,
-      CREATE_SPRINT_MUTATION,
+      ADD_SPRINT,
       values,
-      addSprint,
-      updateError,
-      sprintCreateMessage,
-      setShowForm
+      GET_SPRINTS
     );
+    addSprint(resopnse?.data.createSprints.sprints[0]);
+    setShowForm(false);
+    sprintCreateMessage();
   };
 
   const handleCancel = () => {

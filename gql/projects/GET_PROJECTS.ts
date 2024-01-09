@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 export const GET_PROJECTS = gql`
-  query Users($where: UserWhere) {
+  query getProjects($where: UserWhere) {
     users(where: $where) {
       id
       userType

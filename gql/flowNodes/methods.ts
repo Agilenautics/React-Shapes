@@ -166,11 +166,17 @@ async function createNode(
             },
           },
         });
+        const updatedFlowNode = {
+          ...flowNodes[0],
+          flowEdge:[],
+          isLinked:[]
+        }
         if (files && files.length) {
           const { hasNodes } = files[0];
+          
           const updaedFlowchart = {
             ...files[0],
-            hasNodes: [...hasNodes, ...flowNodes],
+            hasNodes: [...hasNodes, updatedFlowNode],
           };
           cache.writeQuery({
             query: GET_NODES,
@@ -205,6 +211,14 @@ async function deleteNodeBackend(
         where: {
           id: nodeID,
         },
+        delete: {
+          flowEdge: [
+            {
+              delete: {},
+            },
+          ],
+          hasInfo: {},
+        },
       },
       update: (cache, { data }) => {
         const { files } = cache.readQuery({
@@ -212,14 +226,6 @@ async function deleteNodeBackend(
           variables: {
             where: {
               id: fileId,
-            },
-            delete: {
-              flowEdge: [
-                {
-                  delete: {},
-                },
-              ],
-              hasInfo: {},
             },
           },
         });

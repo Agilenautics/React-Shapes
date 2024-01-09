@@ -26,7 +26,7 @@ const getUserByEmail = async (
 };
 
 const get_user_method = async (
-  email: String,
+  email: string,
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>
 ) => {
   let admin = {};

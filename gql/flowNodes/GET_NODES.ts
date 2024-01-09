@@ -7,7 +7,6 @@ export const GET_NODES = gql`query getAllNodes($where: FileWhere) {
     name
     hasNodes {
       id
-      timeStamp
       label
       type
       draggable

@@ -5,10 +5,6 @@ import {
 } from "@apollo/client";
 import client from "../../apollo-client";
 import { Edge } from "reactflow";
-import { createEdgeMutation, deleteEdgeMutation } from "./mutations";
-import getEdgesMiddleWare from "../../components/Flow/middleWares/getEdgesMiddleware";
-import { gql } from "apollo-server-core";
-//import { allEdges } from "./queries";
 
 async function getEdges(
   customQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
@@ -193,14 +189,9 @@ const deleteEdgeBackend = async (
     mutation,
     variables: {
       where: {
-        id: '',
+        id: edgeId,
       },
     },
-    // update: (cache, { data }) => {
-    //   console.log(cache.identify())
-    
-    // },
-    
      refetchQueries:[
       {
         query:cacheQuery,

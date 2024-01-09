@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { usersList } from "./UsersList";
 import { useMutation } from "@apollo/client";
-import { ADD_USER, ALL_USERS } from "../../../gql";
+import { ADD_USER, GET_USERS } from "../../../gql";
 import { sendLink } from "../../Authentication/SignInLink/sendLink";
 
 interface Project {
@@ -63,8 +62,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
     if (name === "email") {
       // Check if the entered email is valid and not already in the users list
       const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-      const isExistingEmail = usersList.some((user) => user.name === value);
-      setIsEmailValid(isValid && !isExistingEmail);
+      setIsEmailValid(isValid);
     }
   };
 
@@ -115,7 +113,7 @@ const UserOverlay: React.FC<UserOverlayProps> = ({
                 },
               ],
             },
-            refetchQueries: [{ query: ALL_USERS }],
+            refetchQueries: [{ query: GET_USERS }],
           });
 
           onClose();

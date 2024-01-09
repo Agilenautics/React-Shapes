@@ -3,9 +3,9 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import {
   allocateProjectToUserMethod,
-  allocateProjectToUserMutation,
+  ADD_PROJECT_TO_USER,
   deAllocateProjectToUserMethod,
-  deAllocateProjectToUserMutation,
+  REMOVE_PROJECT_TO_USER,
 } from "../../../gql";
 import { User } from "../../../lib/appInterfaces";
 
@@ -80,16 +80,12 @@ const ManageAccountOverlay: React.FC<ManageAccountOverlayProps> = ({
 
     for (let i = 0; i < addedProjects.length; i++) {
       const id = addedProjects[i]?.id || "";
-      allocateProjectToUserMethod(id, user.id, allocateProjectToUserMutation);
+      allocateProjectToUserMethod(id, user.id, ADD_PROJECT_TO_USER);
     }
 
     for (let i = 0; i < deletedProjects.length; i++) {
       const id = deletedProjects[i].id;
-      deAllocateProjectToUserMethod(
-        id,
-        user.id,
-        deAllocateProjectToUserMutation
-      );
+      deAllocateProjectToUserMethod(id, user.id, REMOVE_PROJECT_TO_USER);
     }
 
     const editedUser = {

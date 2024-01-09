@@ -1,18 +1,13 @@
 import { gql } from "@apollo/client";
 
 export const DELETE_NODE = gql`
-  mutation UpdateFlowEdges(
-    $where: FlowEdgeWhere
-    $update: FlowEdgeUpdateInput
+  mutation DeleteFlowNodes(
+    $where: FlowNodeWhere
+    $delete: FlowNodeDeleteInput
   ) {
-    updateFlowEdges(where: $where, update: $update) {
-      flowEdges {
-        id
-        bidirectional
-        boxCSS
-        label
-        pathCSS
-      }
+    deleteFlowNodes(where: $where, delete: $delete) {
+      nodesDeleted
+      relationshipsDeleted
     }
   }
 `;

@@ -4,7 +4,7 @@ import { MdOutlineAdd } from "react-icons/md";
 import {
   GET_NODES,
   createNode,
-  newNode,
+  ADD_NODE,
   updateUidMethode,
   UPDATED_UID,
 } from "../../gql";
@@ -45,7 +45,7 @@ function AddNodeButton() {
       uid,
     };
     try {
-      const createNodeResponse = await createNode(newNode, data, userEmail,GET_NODES,fileId);
+      const createNodeResponse = await createNode(ADD_NODE, data, userEmail,GET_NODES,fileId);
       addNode(createNodeResponse?.data.createFlowNodes.flowNodes);
       const updateUidResponse = (await updateUidMethode(
         idofUid,
@@ -72,7 +72,7 @@ function AddNodeButton() {
       uid,
     };
     try {
-      await createNode(newNode, data, userEmail,GET_NODES,fileId);
+      await createNode(ADD_NODE, data, userEmail,GET_NODES,fileId);
       const updateUidResponse = updateUidMethode(
         idofUid,
         UPDATED_UID

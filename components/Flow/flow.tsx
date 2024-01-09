@@ -103,6 +103,7 @@ function Flow() {
     edge.map(async (curEle: any) => {
       // await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
+      console.log(curEle)
       deleteEdgeBackend(curEle.id, DELETE_EDGE, GET_NODES, fileId);
     });
   };
@@ -342,7 +343,7 @@ function Flow() {
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
           onEdgeClick={onEdgeClick}
           onNodeClick={onNodeClick}
-          deleteKeyCode={[]}
+          // deleteKeyCode={[]}
         >
           <MiniMap
             //nodeComponent={MiniMapNode}
