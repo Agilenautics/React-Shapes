@@ -193,18 +193,13 @@ const nodeStore = create<NodeState>((set) => ({
   addLinkNode: (nodeId: string, node: Node, anotherNodeId: string) =>
     set((state) => {
       const getNode = state.nodes.find((nodeItem) => nodeItem.id === nodeId);
-      const isNodeExist = getNode.data.isLinked.some(
-        (item: Node) => item.id === anotherNodeId
-      );
-      const to_be_updated = isNodeExist
-        ? getNode
-        : {
-            ...getNode,
-            data: {
-              ...getNode.data,
-              isLinked: [...node.isLinked],
-            },
-          };
+      const to_be_updated = {
+        ...getNode,
+        data: {
+          ...getNode.data,
+          isLinked: [...node.isLinked],
+        },
+      };
       const updatedNodes = state.nodes.map((item: Node) => {
         if (item.id === nodeId) {
           return {

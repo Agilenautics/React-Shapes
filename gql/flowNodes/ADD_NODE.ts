@@ -13,33 +13,8 @@ export const ADD_NODE = gql`
         x
         y
         uid
-        isLinked {
-          id
-          label
-          hasFile {
-            name
-          }
-        }
-        flowEdge {
-          id
-          label
-          bidirectional
-          boxCSS
-          pathCSS
-          selected
-          createdBy {
-            id
-            emailId
-          }
-
-          flowNodeConnection {
-            edges {
-              handle
-              node {
-                id
-              }
-            }
-          }
+        hasInfo {
+          description
         }
         createdBy {
           emailId

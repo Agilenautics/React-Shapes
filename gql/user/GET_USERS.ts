@@ -5,9 +5,7 @@ export const GET_USERS = gql`
     users(where: $where) {
       id
       emailId
-      active
       timeStamp
-      userName
       userType
       hasProjects {
         id

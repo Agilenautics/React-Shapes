@@ -31,7 +31,13 @@ const sprintStore = create<SprintState>((set) => ({
     }),
   addSprint: (newSprint: Sprints) =>
     set((state) => {
-      const updatedSprint = [...state.sprints, newSprint];
+      const newSprintData = {
+        ...newSprint,
+        folderHas: [],
+        fileHas: [],
+        flownodeHas: [],
+      };
+      const updatedSprint = [...state.sprints, newSprintData];
       return { sprints: updatedSprint };
     }),
   deleteSprint: (id: string) =>

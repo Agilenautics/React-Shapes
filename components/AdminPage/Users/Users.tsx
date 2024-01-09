@@ -5,12 +5,12 @@ import UserOverlay from "./UserOverlay";
 import LoadingIcon from "../../LoadingIcon";
 
 import {
-  ALL_USERS,
+  GET_USERS,
   DELETE_USER,
   UPDATE_USER,
   handleUpdate_User,
   handleUser_Delete,
-  GET_USER,
+  GET_PROJECTS,
   get_user_method,
 } from "../../../gql";
 import { useQuery } from "@apollo/client";
@@ -60,7 +60,7 @@ function Users() {
   const verfiyAuthToken = async () => {
     onAuthStateChanged(auth, (user) => {
       if (user && user.email) {
-        get_user_method(user.email, GET_USER).then((res: any) => {
+        get_user_method(user.email, GET_PROJECTS).then((res: any) => {
           const { hasProjects, ...userData } = res[0];
           const userType = userData.userType;
           updateUserType(userType);
@@ -108,7 +108,7 @@ function Users() {
     }, 5000);
   };
 
-  const { data, error, loading } = useQuery(ALL_USERS);
+  const { data, error, loading } = useQuery(GET_USERS);
 
   const handleEditClick = (userId: string) => {
     setEditedUser(userId);
@@ -130,7 +130,7 @@ function Users() {
 
   const handleSaveClick = () => {
     if (editedUser) {
-      handleUpdate_User(editedUser, accessLevel, UPDATE_USER, ALL_USERS);
+      handleUpdate_User(editedUser, accessLevel, UPDATE_USER, GET_USERS);
       updateUser(editedUser, accessLevel);
       setEditedUser(null);
     }
@@ -153,7 +153,7 @@ function Users() {
 
   const handleConfirmDelete = (userId: string) => {
     deleteUserById(userId);
-    handleUser_Delete(userId, DELETE_USER, ALL_USERS);
+    handleUser_Delete(userId, DELETE_USER, GET_USERS);
     setConfirmDeleteId(null);
   };
 
@@ -177,7 +177,7 @@ function Users() {
       </div>
     );
   if (error) {
-    return error && <div>{error.message}</div>;//{error.message}
+    return error && <div>{error.message}</div>;
   }
 
   const handleManageAccountClick = (user: User) => {
