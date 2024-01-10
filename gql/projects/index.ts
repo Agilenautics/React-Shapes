@@ -1,6 +1,5 @@
 export * from "./methods";
 // export * from "./mutations";
-export * from "./fragments";
 export * from "./GET_PROJECTS";
 export * from "./ADD_PROJECT";
 export * from "./DELETE_PROJECT";

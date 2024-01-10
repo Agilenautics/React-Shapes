@@ -1,5 +1,4 @@
 export * from "./methods";
-export * from "./fragments";
 export * from "./ADD_NODE";
 export * from "./ADD_LINK";
 export * from "./DELETE_LINK";

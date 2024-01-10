@@ -13,8 +13,9 @@ import ReactFlow, {
   ConnectionMode,
   useReactFlow,
   Controls,
+  Panel,
 } from "reactflow";
-import { nodeTypeMap } from "./Nodes/nodeTypes";
+import { nodeCSSMap, nodeShapeMap, nodeTypeMap } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
@@ -40,6 +41,7 @@ import {
 import fileStore from "../TreeView/fileStore";
 import userStore from "../AdminPage/Users/userStore";
 import { ApolloQueryResult } from "@apollo/client";
+import CustomMiniMap from "./CustomMiniMap";
 
 const defaultEdgeOptions = {
   type: "customEdge",
@@ -76,25 +78,35 @@ function Flow() {
   } = edgeStore();
   const [nodes, setNodes] = useState<Node[]>(defaultNodes);
   const [edges, setEdges] = useState<Edge[]>(defaultEdges);
-  const { currentFlowchart, Id: fileId, updateLinkNodeId ,setLoading,updateInitData} = fileStore();
+  const {
+    currentFlowchart,
+    Id: fileId,
+    updateLinkNodeId,
+    setLoading,
+    updateInitData,
+  } = fileStore();
   const [nodeId, setNodeId] = useState([]);
   const { userEmail } = userStore();
 
   const dragged = useRef(false);
 
   const getProjectId = async (id: string) => {
-    const initData = await getTreeNodeByUser(GET_FILES_FOLDERS_BY_PROJECT_ID, id, setLoading);
+    const initData = await getTreeNodeByUser(
+      GET_FILES_FOLDERS_BY_PROJECT_ID,
+      id,
+      setLoading
+    );
     const data = initData[0];
     //@ts-ignore
     updateInitData(data);
     return initData;
   };
 
-  useEffect(()=>{
-    if(projectId){
+  useEffect(() => {
+    if (projectId) {
       getProjectId(projectId);
     }
-  },[projectId])
+  }, [projectId]);
 
   const [showConfirmation, setShowConfirmation] = useState<any>(
     defaultShowConfirmation
@@ -103,7 +115,7 @@ function Flow() {
     edge.map(async (curEle: any) => {
       // await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
-      console.log(curEle)
+      console.log(curEle);
       deleteEdgeBackend(curEle.id, DELETE_EDGE, GET_NODES, fileId);
     });
   };
@@ -345,12 +357,27 @@ function Flow() {
           onNodeClick={onNodeClick}
           // deleteKeyCode={[]}
         >
+          {/* <Panel position="bottom-right" color="red">
+            <MiniMap />
+          </Panel> */}
           <MiniMap
-            //nodeComponent={MiniMapNode}
-            zoomable
+            // nodeColor={'red'}
+            // nodeStrokeColor={"red"}
+            // nodeComponent={CustomMiniMap}
+            // nodeBorderRadius={12}
+            // pannable={true}
+            // inversePan= {true}
+            // maskStrokeWidth={0}
+            // offsetScale={0}
+            // nodeColor={(node)=>{
+            //   console.log(node.data.shape)
+            //   return `${nodeCSSMap[node.type]}`;
+            // }}
+            // nodeClassName={(node: Node) => {
+            //   return 'bg-white'
+            // }}
           />
           <Controls className="" />
-          {/* <CustomControls /> */}
         </ReactFlow>
 
         {showConfirmation.show && (

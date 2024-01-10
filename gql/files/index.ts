@@ -1,5 +1,4 @@
 export * from "./methodsFiles";
-export * from "./fragments";
 export * from "./interfaces";
 export * from "./methodsUid";
 export * from './GET_FILES_FOLDERS_BY_PROJECT_ID'

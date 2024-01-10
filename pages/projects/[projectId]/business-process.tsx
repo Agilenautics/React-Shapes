@@ -46,9 +46,7 @@ const BusinessPlan = () => {
     // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
   }, [userEmail]);
 
-  useEffect(()=>{
-    updateBacklogsData(data.children as any)
-  },[])
+  
 
 
   return (
