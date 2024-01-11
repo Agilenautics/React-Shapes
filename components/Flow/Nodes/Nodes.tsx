@@ -1,5 +1,5 @@
-import Editing from "../Editing";
-import React, { useState } from "react";
+//import Editing from "../Editing";
+import React, { useState, useRef, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 import nodeStore from "./nodeStore";
 import { nodeCSSMap, nodeShapeMap } from "./nodeTypes";
@@ -13,7 +13,7 @@ import {
   deleteIsLinkedNodeMutation,
   deleteLinkedNodeMethod,
 } from "../../../gql";
-
+import Editing from "./NodesEditing";
 /* This is the custom node component that is used */
 function PrototypicalNode(css_props: string, data: any, id: string) {
   const [editing, setEditing] = useState(false);
@@ -34,6 +34,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
   const { deleteLinkeNode } = nodeStore();
 
   const [isLinkFlag, setIsLinkFlag] = useState<Boolean>(false);
+  const [editingNodeId, setEditingNodeId] = useState<string | null>(null);
 
   const label = data.label;
   const shapeCSS = nodeShapeMap[data.shape];
@@ -56,11 +57,19 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
     deleteLinkeNode(id, nodeId);
     setIsLinkFlag(false);
   };
+  const shapeRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // Close the Editing component for the current node if another node is being edited
+    if (editingNodeId && editingNodeId !== id) {
+      setEditing(false);
+    }
+  }, [editingNodeId, id]);
 
   return (
-    <div>
+    <div className="relative">
       <div
         className={`rounded bg-transparent p-1 py-2 ${shapeCSS[0]} group relative`}
+        ref={shapeRef}
       >
         {Object.keys(handlePositions).map((key) => (
           <Handle
@@ -74,56 +83,52 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
 
         {/* here iam performing toolTip of description */}
         {description ? (
-          <div className="invisible absolute top-full  z-10 mt-2 whitespace-nowrap rounded border bg-slate-50 p-1 text-xs font-extralight transition  group-hover:visible dark:text-black">
+          <div className="invisible absolute top-full z-10 mt-2 whitespace-nowrap rounded border bg-slate-50 p-1 text-xs font-extralight transition group-hover:visible dark:text-black">
             {description}
           </div>
         ) : null}
 
         <div
-          className={`${css_props} h-auto font-sans ${
+          className={`${css_props} h-auto py-1 font-sans ${
             shapeCSS[1]
-          }   mx-1 flex  items-center justify-center border-b-2 text-xs font-normal shadow-md ${
+          } mx-1 flex items-center justify-center border-b-2 text-xs font-normal shadow-md ${
             editing ? "cursor-default" : ""
           }`}
           onDoubleClick={() => {
             if (!(shapeCSS[1].substring(0, 4) === "bpmn")) {
-              setEditing(true);
-              toggleDraggable(id, false);
+              setEditing((prevEditing) => !prevEditing);
+              toggleDraggable(id, !editing);
             }
           }}
         >
-          <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>
-            {editing ? (
-              <div
-              // className={`relative h-auto flex-row text-center ${
-              //   data.hasLinkedTo.flag && "mt-7"
-              // }`}
-              >
-                <Editing
-                  isEdge={false}
-                  toggleDraggable={toggleDraggable}
-                  id={id}
-                  updateNodeType={updateNodeType}
-                  setEditing={setEditing}
-                  updateLabel={updateLabel}
-                  label={label}
-                  CSSMap={nodeCSSMap}
-                  description={description}
-                  updateDescription={updateDescription}
-                  bidirectionalArrows={false}
-                />
-              </div>
-            ) : (
-              <p className="py-1 text-center text-[0.6rem]">{label}</p>
-            )}
-          </div>
+          <div className={`${shapeCSS[2]} ${label ? "" : "h-6"}`}>{label}</div>
         </div>
       </div>
-      {/* <Tags /> */}
-      {/* <Progress progress={11} /> */}
+
+      {editing && shapeRef.current && (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: shapeRef.current.offsetHeight + 12,
+            transform: "translateX(-50%)",
+          }}
+        >
+          <div className="rounded-sm border border-blue-300 bg-white px-2 py-1 shadow-md">
+            <Editing
+              //updateNodeType={updateNodeType}
+              //updateColor={/* pass the appropriate function for updating color */}
+              //updateDescription={updateDescription}
+              isLinked={data.isLinked && data.isLinked.length !== 0}
+              setIsLinkFlag={setIsLinkFlag}
+            />
+          </div>
+        </div>
+      )}
+
       {data.isLinked && data.isLinked.length !== 0 && (
         <div className="flex justify-end">
-          <div className="w-auto rounded border px-1  text-[0.5rem]">
+          <div className="w-auto rounded border px-1 text-[0.5rem]">
             <span
               className="cursor-pointer"
               onClick={() => setIsLinkFlag(!isLinkFlag)}
@@ -138,7 +143,7 @@ function PrototypicalNode(css_props: string, data: any, id: string) {
                     id: nodeId,
                     hasFile: { id: fileId },
                   } = value;
-                  
+
                   return (
                     <div
                       key={nodeId}
