@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import nodeStore from "../Flow/Nodes/nodeStore";
 
@@ -10,13 +10,11 @@ import nodeStore from "../Flow/Nodes/nodeStore";
  */
 function BCTile(name: string, isFirst: boolean = false) {
   return (
-    <li >
+    <li>
       <div className="flex items-center">
         {isFirst ? null : <MdOutlineArrowForwardIos />}
-        <div className="mx-1 flex items-center font-sans text-sm justify-center bg-purple-100 p-2 text-lg font-normal text-black-400 rounded-tl-lg rounded-tr-lg shadow-md dark:text-gray-400 dark:hover:text-white breadcrumb-trapezoid-purple dark:text-white">
-          {
-            name.length >=10?name.slice(0,12).concat('...'):name 
-          }
+        <div className="text-black-400 breadcrumb-trapezoid-purple mx-1 flex items-center justify-center rounded-tl-lg rounded-tr-lg bg-purple-100 p-2 font-sans text-sm font-normal shadow-md dark:text-gray-400 dark:text-white dark:hover:text-white">
+          {name.length >= 10 ? name.slice(0, 12).concat("...") : name}
           {/* <div className="breadcrumb-triangle" /> */}
         </div>
       </div>
@@ -28,13 +26,11 @@ function BCTile(name: string, isFirst: boolean = false) {
 function BreadCrumbs() {
   const breadCrumbs = nodeStore((state) => state.breadCrumbs);
   return (
-    <div >
-      <nav className="flex fixed top-24" aria-label="Breadcrumb">
+    <div>
+      <nav className="fixed top-16 flex" aria-label="Breadcrumb">
         <ol className="flex space-x-1 px-2">
           {breadCrumbs.map((value: any, index) => {
-            return (
-              <div key={index}> {BCTile(value, index === 0)} </div>
-            );
+            return <div key={index}> {BCTile(value, index === 0)} </div>;
           })}
         </ol>
       </nav>

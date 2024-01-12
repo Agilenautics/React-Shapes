@@ -1,6 +1,6 @@
 import CustomEdge from "./Edge";
 /* This file contains a list of types of edges */
-const edgeTypeMap:any = {
+const edgeTypeMap: any = {
   customEdge: CustomEdge,
 };
 
@@ -38,5 +38,7 @@ const edgeCSS = [
 const edgeCSSMap: any = Object.fromEntries(
   edgeTypes.map((_, i) => [edgeTypes[i], edgeCSS[i]])
 );
+
+
 
 export { edgeCSSMap, edgeTypeMap };

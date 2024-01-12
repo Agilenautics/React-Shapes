@@ -125,7 +125,7 @@ const updateEdgeBackend = async (
   cahchQuery: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   selectedFileId: string
 ) => {
-  const { data, id } = edgeData;
+  const { id, label, boxCSS, pathCSS, bidirectional } = edgeData;
   try {
     return await client.mutate({
       mutation: mutation,
@@ -134,10 +134,10 @@ const updateEdgeBackend = async (
           id,
         },
         update: {
-          label: data.label,
-          bidirectional: data.bidirectional,
-          boxCSS: data.boxCSS,
-          pathCSS: data.pathCSS,
+          label,
+          bidirectional,
+          boxCSS,
+          pathCSS,
         },
       },
       // update: (
@@ -160,16 +160,16 @@ const updateEdgeBackend = async (
       //   });
       // },
 
-      // refetchQueries: [
-      //   {
-      //     query: cahchQuery,
-      //     variables: {
-      //       where: {
-      //         id: selectedFileId,
-      //       },
-      //     },
-      //   },
-      // ],
+      refetchQueries: [
+        {
+          query: cahchQuery,
+          variables: {
+            where: {
+              id: selectedFileId,
+            },
+          },
+        },
+      ],
     });
   } catch (error) {
     console.log(error, "while updating edge");
@@ -192,16 +192,16 @@ const deleteEdgeBackend = async (
         id: edgeId,
       },
     },
-     refetchQueries:[
+    refetchQueries: [
       {
-        query:cacheQuery,
-        variables:{
-          where:{
-            id:cacheQueryId
-          }
-        }
-      }
-     ]
+        query: cacheQuery,
+        variables: {
+          where: {
+            id: cacheQueryId,
+          },
+        },
+      },
+    ],
   });
 
   //await client.resetStore()

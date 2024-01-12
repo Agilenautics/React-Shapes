@@ -26,7 +26,6 @@ import {
   deleteNodeBackend,
   findNode,
   GET_NODE_BY_ID,
-  //updateNodeBackend,
   updatePosition,
   UPDATE_NODE_POSITION,
   createFlowEdge,
@@ -158,18 +157,19 @@ function Flow() {
     setEdgeId(edge.id);
   };
 
-  useEffect(() => {
-    if (edgeId && edgeId.length !== 0) {
-      const newEdgeData = defaultEdges.filter(
-        (value: any) => value.id === edgeId
-      );
-      newEdgeData.map((curEle) => {
-        if (fileId) {
-          updateEdgeBackend(UPDATE_EDGE, curEle, GET_NODES, fileId);
-        }
-      });
-    }
-  }, [defaultEdges, edgeId]);
+  // useEffect(() => {
+  //   if (edgeId && edgeId.length !== 0) {
+  //     const newEdgeData = defaultEdges.filter(
+  //       (value: any) => value.id === edgeId
+  //     );
+  //     newEdgeData.map((curEle) => {
+  //       if (fileId) {
+  //         console.log(fileId,"flow")
+  //         updateEdgeBackend(UPDATE_EDGE, curEle, GET_NODES, fileId);
+  //       }
+  //     });
+  //   }
+  // }, [defaultEdges, edgeId]);
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
@@ -321,6 +321,7 @@ function Flow() {
   //   console.log(e,edge)
 
   // }
+
 
   return (
     <>

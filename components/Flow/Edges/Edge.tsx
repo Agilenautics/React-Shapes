@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Editing from "../Editing";
-import { getSmoothStepPath, getBezierPath, Position } from "reactflow";
+import {
+  getSmoothStepPath,
+  getBezierPath,
+  Position,
+  EdgeLabelRenderer,
+  EdgeProps,
+} from "reactflow";
 import edgeStore from "./edgeStore";
 const fO = 144;
 const fOHeight = fO;
@@ -9,8 +15,9 @@ import "reactflow/dist/style.css";
 import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
 import { lineColors } from "../constants";
+import EdgeEditing from "./EdgeEditing";
 
-export default function CustomEdge({
+const CustomEdge: React.ComponentType<EdgeProps> = ({
   id,
   sourceX,
   sourceY,
@@ -20,24 +27,7 @@ export default function CustomEdge({
   targetPosition,
   data,
   style = {},
-}: {
-  id: any;
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
-  sourcePosition: Position;
-  targetPosition: Position;
-  data: {
-    id: string;
-    label: string;
-    pathCSS: string;
-    boxCSS: string;
-    bidirectional: boolean;
-    tempLabel: string;
-  };
-  style: Object;
-}) {
+}) => {
   const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
@@ -47,34 +37,39 @@ export default function CustomEdge({
     targetPosition,
   });
 
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState({
+    active: false,
+    type: "",
+  });
+  const [edgeData, setEdgeData] = useState(data);
   const [selected, setSelected] = useState(false);
   const { updateLabel, updateEdgeCSS: updateEdgeType } = edgeStore();
   const { updateDescription } = nodeStore();
-  const [lineColor, setLineColor] = useState("green");
-  const markerStartCheck = data.bidirectional
+  // const [lineColor, setLineColor] = useState("green");
+  const markerStartCheck = edgeData.bidirectional
     ? `url(#marker-end-${id})`
     : `url(#marker-start-${id})`;
-  useEffect(() => {
-    const lineColorPath = data.pathCSS.split(" ").slice(-1)[0];
-    const fillPath = lineColorPath.split("-").slice(0, 3).join("-");
-    const strokeWidth = lineColorPath.split("-").slice(-1)[0];
-    setLineColor(lineColors[fillPath][strokeWidth]);
-  }, [data.pathCSS]);
+  // useEffect(() => {
+  //   const lineColorPath = data.pathCSS.split(" ").slice(-1)[0];
+  //   const fillPath = lineColorPath.split("-").slice(0, 3).join("-");
+  //   const strokeWidth = lineColorPath.split("-").slice(-1)[0];
+  //   setLineColor(lineColors[fillPath][strokeWidth]);
+  // }, [data.pathCSS]);
 
   const markerSize = 6; // Adjust the size of the markers here
 
-  const onhandleEdgeLine = () => {
-    setEditing(true);
-  };
+  // const onhandleEdgeLine = () => {
+  //   setEditing(true);
+  // };
+
 
   return (
     <>
       <defs>
         <marker
-          key={`circle-${data.id}`}
-          id={`circle-${data.id}`}
-          fill={lineColor} // Use lineColor variable as fill color
+          key={`circle-${edgeData.id}`}
+          id={`circle-${edgeData.id}`}
+          fill={edgeData.pathCSS} // Use lineColor variable as fill color
           viewBox="0 0 10 10"
           refX="5"
           refY="5"
@@ -84,9 +79,9 @@ export default function CustomEdge({
           <circle cx="5" cy="5" r="5" />
         </marker>
         <marker
-          key={`arrow-${data.id}`}
-          id={`arrow-${data.id}`}
-          fill={lineColor} // Use lineColor variable as fill color
+          key={`arrow-${edgeData.id}`}
+          id={`arrow-${edgeData.id}`}
+          fill={edgeData.pathCSS} // Use lineColor variable as fill color
           viewBox="0 -5 10 10"
           refX="5"
           refY="0"
@@ -94,7 +89,7 @@ export default function CustomEdge({
           markerHeight="5"
           orient="auto-start-reverse"
         >
-          <path d="M0,-5L10,0L0,5" fill={lineColor}></path>
+          <path d="M0,-5L10,0L0,5" fill={edgeData.pathCSS}></path>
         </marker>
       </defs>
 
@@ -106,7 +101,7 @@ export default function CustomEdge({
         refX={markerSize / 2}
         refY={markerSize / 2}
         orient="auto-start-reverse"
-        fill={lineColor} // Set the same color for the marker
+        fill={edgeData.pathCSS} // Set the same color for the marker
       >
         <path
           d={`M0,0 L0,${markerSize} L${markerSize},${markerSize / 2} z`}
@@ -121,7 +116,7 @@ export default function CustomEdge({
         markerHeight={markerSize}
         refX={markerSize / 2}
         refY={markerSize / 2} // Orient the marker at the start of the edge
-        fill={lineColor} // Set the same color for the marker
+        fill={edgeData.pathCSS} // Set the same color for the marker
       >
         <circle cx={markerSize / 2} cy={markerSize / 2} r={markerSize / 3} />{" "}
         {/* Smaller circle */}
@@ -131,8 +126,8 @@ export default function CustomEdge({
       <path
         key={id}
         id={id}
-        style={style}
-        className={`react-flow__edge-path ${data.pathCSS} ${
+        style={{ stroke: `${edgeData.pathCSS}` }}
+        className={`react-flow__edge-path ${edgeData.pathCSS} ${
           selected ? "!stroke-[5]" : ""
         }`}
         d={edgePath}
@@ -142,50 +137,135 @@ export default function CustomEdge({
           setSelected(!selected);
         }}
         onDoubleClick={() => {
-          setEditing(true);
+          setEditing({
+            ...editing,
+            active: true,
+            type: "",
+          });
         }}
       />
-
-      <foreignObject
-        width={fOWidth}
-        height={fOHeight}
-        x={labelX - fOWidth / 2}
-        y={labelY - 145 / 2}
-        requiredExtensions="http://www.w3.org/1999/xhtml"
-      >
+      <EdgeLabelRenderer>
         <div
-          className="flex h-full items-center justify-center "
-          onDoubleClick={onhandleEdgeLine}
+          style={{
+            pointerEvents: "all",
+          }}
         >
-          <div
-            className={`!bg-slate rounded-lg px-1 text-[0.5rem] dark:!bg-neutral-900 ${data.boxCSS}`}
-            onDoubleClick={() => {
-              setEditing(true);
-            }}
-          >
-            {editing ? (
-              <div className="text-xs">
-                <Editing
-                  key={id}
-                  isEdge={true}
-                  toggleDraggable={() => {}}
+          {editing.active ? (
+            <>
+              <div
+                style={{
+                  position: "absolute",
+                  transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                }}
+                className="flex flex-col items-center"
+              >
+                <EdgeEditing
                   id={id}
-                  updateNodeType={updateEdgeType}
+                  labelX={labelX}
+                  labelY={labelY}
+                  data={edgeData}
+                  setEdgeData={setEdgeData}
+                  editing={editing}
                   setEditing={setEditing}
-                  updateLabel={updateLabel}
-                  updateDescription={updateDescription}
-                  label={data.label}
-                  CSSMap={edgeCSSMap}
-                  description=""
-                  bidirectionalArrows={data.bidirectional}
                 />
               </div>
-            ) : (
-              <p>{data.label}</p>
-            )}
-          </div>
+              <div
+                style={{
+                  position: "absolute",
+                  transform: `translate(-50%, -50%) translate(${labelX}px,${
+                    labelY + 30
+                  }px)`,
+                }}
+                className="flex w-14 translate-y-4 items-center justify-around rounded border border-[#C0D5E7] bg-white py-1 shadow-md"
+              >
+                <button
+                  className="h-3 w-3"
+                  onClick={() =>
+                    setEditing({
+                      type: "arrows",
+                      active: true,
+                    })
+                  }
+                >
+                  <img
+                    src="/assets/editingEdgeIcons/RightGreen.svg"
+                    alt="edgedirection"
+                  />
+                </button>
+                <button
+                  onClick={() =>
+                    setEditing({
+                      type: "colors",
+                      active: true,
+                    })
+                  }
+                  style={{ backgroundColor: `${edgeData.pathCSS}` }}
+                  className={`h-3 w-3 cursor-pointer rounded-full`}
+                ></button>
+                <button
+                  className="h-3 w-3"
+                  onClick={() =>
+                    setEditing({
+                      type: "label",
+                      active: true,
+                    })
+                  }
+                >
+                  <img
+                    src="/assets/editingEdgeIcons/Text.svg"
+                    alt="edgedirection"
+                  />
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              {edgeData.label ? (
+                <div
+                  onClick={(e) => {
+                    setEditing({
+                      type: "label",
+                      active: true,
+                    });
+                  }}
+                  style={{
+                    position: "absolute",
+                    transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                    borderColor: `${edgeData.pathCSS}`,
+                    color:`${edgeData.pathCSS}`
+                  }}
+                  className={`w-11 rounded-[30px] border bg-white text-center text-[7px] outline-0`}
+                >
+                  {edgeData.label}
+                </div>
+              ) : (
+                <div
+                  style={{
+                    position: "absolute",
+                    transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                  }}
+                  className="cursor-pointer"
+                  onClick={(e) => {
+                    setEditing({
+                      type: "",
+                      active: true,
+                    });
+                  }}
+                >
+                  <img
+                    className="h-3 w-3"
+                    src="/assets/editingEdgeIcons/add-square.svg"
+                    alt="Edit_Edge"
+                  />
+                </div>
+              )}
+            </>
+          )}
         </div>
-      </foreignObject>
+      </EdgeLabelRenderer>
     </>
   );
-}
+};
+
+
+export default CustomEdge

@@ -4,9 +4,9 @@
 @import "treeview.css";
 
 /* styles.css */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
@@ -34,7 +34,7 @@ a {
 }
 
 .add-buttons {
-  @apply  inline-flex items-center rounded-lg bg-blue-600
+  @apply inline-flex items-center rounded-lg bg-blue-600
   px-2 py-2 text-center text-sm font-medium text-white transition-all duration-300 ease-in-out hover:bg-blue-700 focus:outline-none;
 }
 .add-buttons-icon {
@@ -85,12 +85,12 @@ input:checked ~ .dot {
 }
 
 path.react-flow__edge-path:hover {
-  stroke-width: 5;
+  stroke-width: 2;
 }
 
 path.react-flow__edge-path {
   transition: all 20ms ease-in-out 20ms;
-  @apply stroke-2;
+  @apply stroke-1;
 }
 
 .handle {
@@ -183,7 +183,6 @@ path.react-flow__edge-path {
   font-size: 18px;
 }
 
-
 .expand-content {
   position: absolute;
   top: 100%;
@@ -214,4 +213,3 @@ path.react-flow__edge-path {
   vertical-align: middle;
   margin-left: 4px;
 }
-
