@@ -39,7 +39,7 @@ function AddNodeButton() {
       story: currentId,
       symbol,
       label: "New Node",
-      type: "blueNode",
+      type: "customNode",
       description: "",
       assignedTo: "",
       uid,

@@ -69,6 +69,12 @@ a {
 .react-flow__handle {
   position: absolute;
   @apply opacity-0 transition-opacity duration-200 group-hover:opacity-100;
+  background-color: transparent !important;
+  width: 8px !important;
+  height: 8px !important;
+  border: none !important;
+  background-image: url('/assets/editingEdgeIcons/add-square.svg') !important;
+  background-size: cover !important;
 }
 
 .react-flow__renderer {
@@ -93,9 +99,7 @@ path.react-flow__edge-path {
   @apply stroke-1;
 }
 
-.handle {
-  @apply !h-2 !w-2 rounded-full !bg-neutral-700;
-}
+
 
 .popup-container {
   position: fixed;

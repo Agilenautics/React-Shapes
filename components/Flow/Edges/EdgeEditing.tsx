@@ -85,7 +85,7 @@ const EdgeEditing: React.FC<EdgeEditingProps> = ({
                 <div
                   onClick={(e) => handleUpdateEdge(e, id, color)}
                   key={index}
-                  style={{ backgroundColor: `${color}` }}
+                  style={{ backgroundColor: color }}
                   className={`flex h-4 w-4 cursor-pointer items-center justify-center rounded-full`}
                 >
                   {data.pathCSS === color && (

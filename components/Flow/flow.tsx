@@ -13,9 +13,8 @@ import ReactFlow, {
   ConnectionMode,
   useReactFlow,
   Controls,
-  Panel,
 } from "reactflow";
-import { nodeCSSMap, nodeShapeMap, nodeTypeMap } from "./Nodes/nodeTypes";
+import {nodeType } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
@@ -30,8 +29,6 @@ import {
   UPDATE_NODE_POSITION,
   createFlowEdge,
   deleteEdgeBackend,
-  updateEdgeBackend,
-  UPDATE_EDGE,
   GET_FILES_FOLDERS_BY_PROJECT_ID,
   ADD_EDGE,
   DELETE_EDGE,
@@ -84,7 +81,6 @@ function Flow() {
     setLoading,
     updateInitData,
   } = fileStore();
-  const [nodeId, setNodeId] = useState([]);
   const { userEmail } = userStore();
 
   const dragged = useRef(false);
@@ -112,9 +108,7 @@ function Flow() {
   );
   const onDeleteEdge = (edge: Array<Edge>) => {
     edge.map(async (curEle: any) => {
-      // await deleteEdgeBackend(curEle.id, curEle.data.label);
       deleteEdge(curEle);
-      console.log(curEle);
       deleteEdgeBackend(curEle.id, DELETE_EDGE, GET_NODES, fileId);
     });
   };
@@ -151,11 +145,7 @@ function Flow() {
     [defaultNodes, setNodes, updateNodes, currentFlowchart]
   );
 
-  const [edgeId, setEdgeId] = useState([]);
-
-  const onEdgeClick = (event: React.MouseEvent, edge: any) => {
-    setEdgeId(edge.id);
-  };
+ 
 
   // useEffect(() => {
   //   if (edgeId && edgeId.length !== 0) {
@@ -297,9 +287,7 @@ function Flow() {
     [fileId]
   );
 
-  const onSelectionChange = useCallback(() => {
-    console.count("onSelectionChange");
-  }, []);
+ 
 
   // const onDrag = (event: any, node: Object) => {
   //   updatePosition(node);
@@ -345,7 +333,7 @@ function Flow() {
           snapGrid={snapGrid}
           zoomOnDoubleClick={false}
           edgeTypes={edgeTypeMap}
-          nodeTypes={nodeTypeMap}
+          nodeTypes={nodeType}
           connectionMode={ConnectionMode.Loose}
           onNodeDragStop={(event, node) => {
             // updateNodes(getNodes());
@@ -354,7 +342,6 @@ function Flow() {
           onNodeDrag={onNodeDrag} //this event we dont want
           onNodesDelete={(selectedNode) => onNodesDelete(selectedNode)}
           onEdgesDelete={(selectedEdge) => onDeleteEdge(selectedEdge)}
-          onEdgeClick={onEdgeClick}
           onNodeClick={onNodeClick}
           // deleteKeyCode={[]}
         >

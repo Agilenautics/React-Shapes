@@ -10,6 +10,7 @@ export const ADD_NODE = gql`
         shape
         timeStamp
         type
+        nodeColor
         x
         y
         uid

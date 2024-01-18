@@ -1,20 +1,8 @@
-import React, { useEffect, useState } from "react";
-import Editing from "../Editing";
-import {
-  getSmoothStepPath,
-  getBezierPath,
-  Position,
-  EdgeLabelRenderer,
-  EdgeProps,
-} from "reactflow";
+import React, { useState } from "react";
+import { getSmoothStepPath, EdgeLabelRenderer, EdgeProps } from "reactflow";
 import edgeStore from "./edgeStore";
-const fO = 144;
-const fOHeight = fO;
-const fOWidth = fO + 100;
 import "reactflow/dist/style.css";
-import { edgeCSSMap } from "./edgeTypes";
 import nodeStore from "../Nodes/nodeStore";
-import { lineColors } from "../constants";
 import EdgeEditing from "./EdgeEditing";
 
 const CustomEdge: React.ComponentType<EdgeProps> = ({
@@ -61,11 +49,16 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
   // const onhandleEdgeLine = () => {
   //   setEditing(true);
   // };
-
+  const handleToggleEditing = (type: string) => {
+    setEditing((prevEditing) => ({
+      ...prevEditing,
+      type: prevEditing.type === type ? "" : type,
+    }));
+  };
 
   return (
     <>
-      <defs>
+      {/* <defs>
         <marker
           key={`circle-${edgeData.id}`}
           id={`circle-${edgeData.id}`}
@@ -91,7 +84,7 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
         >
           <path d="M0,-5L10,0L0,5" fill={edgeData.pathCSS}></path>
         </marker>
-      </defs>
+      </defs> */}
 
       {/* Edge marker at the end */}
       <marker
@@ -127,8 +120,8 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
         key={id}
         id={id}
         style={{ stroke: `${edgeData.pathCSS}` }}
-        className={`react-flow__edge-path ${edgeData.pathCSS} ${
-          selected ? "!stroke-[5]" : ""
+        className={`react-flow__edge-path border ${edgeData.pathCSS} ${
+          selected ? "!stroke-[2]" : ""
         }`}
         d={edgePath}
         markerStart={markerStartCheck} // Add the start marker
@@ -137,11 +130,10 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
           setSelected(!selected);
         }}
         onDoubleClick={() => {
-          setEditing({
-            ...editing,
-            active: true,
-            type: "",
-          });
+          setEditing((prevEditing) => ({
+            ...prevEditing,
+            active: !prevEditing.active 
+          }));
         }}
       />
       <EdgeLabelRenderer>
@@ -180,12 +172,7 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
               >
                 <button
                   className="h-3 w-3"
-                  onClick={() =>
-                    setEditing({
-                      type: "arrows",
-                      active: true,
-                    })
-                  }
+                  onClick={() => handleToggleEditing("arrows")}
                 >
                   <img
                     src="/assets/editingEdgeIcons/RightGreen.svg"
@@ -193,23 +180,13 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
                   />
                 </button>
                 <button
-                  onClick={() =>
-                    setEditing({
-                      type: "colors",
-                      active: true,
-                    })
-                  }
+                  onClick={() => handleToggleEditing("colors")}
                   style={{ backgroundColor: `${edgeData.pathCSS}` }}
                   className={`h-3 w-3 cursor-pointer rounded-full`}
                 ></button>
                 <button
                   className="h-3 w-3"
-                  onClick={() =>
-                    setEditing({
-                      type: "label",
-                      active: true,
-                    })
-                  }
+                  onClick={() => handleToggleEditing("label")}
                 >
                   <img
                     src="/assets/editingEdgeIcons/Text.svg"
@@ -223,16 +200,17 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
               {edgeData.label ? (
                 <div
                   onClick={(e) => {
-                    setEditing({
-                      type: "label",
-                      active: true,
-                    });
+                    setEditing((prevEditing) => ({
+                      ...prevEditing,
+                      active: !prevEditing.active,
+                      type:"label"
+                    }));
                   }}
                   style={{
                     position: "absolute",
                     transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
                     borderColor: `${edgeData.pathCSS}`,
-                    color:`${edgeData.pathCSS}`
+                    color: `${edgeData.pathCSS}`,
                   }}
                   className={`w-11 rounded-[30px] border bg-white text-center text-[7px] outline-0`}
                 >
@@ -246,10 +224,10 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
                   }}
                   className="cursor-pointer"
                   onClick={(e) => {
-                    setEditing({
-                      type: "",
-                      active: true,
-                    });
+                    setEditing((prevEditing) => ({
+                      ...prevEditing,
+                      active: !prevEditing.active 
+                    }));
                   }}
                 >
                   <img
@@ -267,5 +245,4 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
   );
 };
 
-
-export default CustomEdge
+export default CustomEdge;

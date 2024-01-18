@@ -45,8 +45,9 @@ const nodeStore = create<NodeState>((set) => ({
         hasLinkedTo: {},
       },
       position: { x: 0, y: 0 },
-      type: "WelcomeNode",
+      // type: "WelcomeNode",
       draggable: false,
+      selected: false,
     },
   ],
   fileId: "",
@@ -76,11 +77,11 @@ const nodeStore = create<NodeState>((set) => ({
     set((state) => {
       const updatedNode = newNode.map((item: any) => {
         const description = item.hasInfo.description;
-        const { x, y, label, shape, isLinked, ...rest } = item;
+        const { x, y, label, shape,nodeColor, isLinked, ...rest } = item;
 
         return {
           ...rest,
-          data: { label, shape, description, isLinked },
+          data: { label, shape, description,nodeColor, isLinked },
           position: { x, y },
         };
       });
@@ -92,12 +93,14 @@ const nodeStore = create<NodeState>((set) => ({
     set((state) => {
       const newData = nodes.map((item: any) => {
         const description = item.hasInfo.description;
-        const { x, y, label, shape, isLinked, flowEdge, ...rest } = item;
+        const { x, y, label, nodeColor, shape, isLinked, flowEdge, ...rest } =
+          item;
         return {
           ...rest,
           data: {
             label,
             shape,
+            nodeColor,
             description,
             isLinked,
           },
@@ -137,7 +140,6 @@ const nodeStore = create<NodeState>((set) => ({
         ...old_node,
         data: { ...old_node.data, description: newDescription },
       };
-      updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
       return { nodes: [...to_be_updated, updated_node] };
     });
   },
@@ -175,13 +177,16 @@ const nodeStore = create<NodeState>((set) => ({
       }
       return { nodes: [...to_be_updated, updated_node] };
     }),
-  updateNodeType: (id: string, newType: string) =>
+  updateNodeType: (id: string, nodeColor: string) =>
     set((state) => {
       const old_node = state.nodes.filter((item) => item.id === id)[0];
       const to_be_updated = state.nodes.filter((item) => item.id !== id);
-      const updated_node = { ...old_node, type: newType };
-      updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
-      return { nodes: [...to_be_updated, updated_node] };
+      const updated_node = {
+        ...old_node,
+        data: { ...old_node.data, nodeColor },
+      };
+      // updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
+      return { nodes: [...to_be_updated,updated_node] };
     }),
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {

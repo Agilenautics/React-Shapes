@@ -12,6 +12,15 @@ interface User {
   hasProjects: Array<Project>;
 }
 
+interface  NodeData {
+  label:string;
+  description:string;
+  isLinked:Array<Node>;
+  nodeColor:string;
+  uid:number;
+  shape:string;
+}
+
 //project type interface
 interface Project {
   __typename: string;
@@ -136,6 +145,10 @@ interface Backlog {
   parent: Parent;
   projectHas: Project;
 }
+interface EditingProps{
+  flag:boolean;
+  type:string
+}
 
 interface Data {
   projects: Array<Project>;
@@ -157,4 +170,6 @@ export type {
   User,
   Data,
   RootObject,
+  NodeData,
+  EditingProps
 };

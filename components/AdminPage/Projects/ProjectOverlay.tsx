@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GET_USER, addProject_Backend, ADD_PROJECT } from "../../../gql";
+import { GET_PROJECTS, addProject_Backend, ADD_PROJECT } from "../../../gql";
 
 import LoadingIcon from "../../LoadingIcon";
 import projectStore from "./projectStore";
@@ -36,9 +36,8 @@ const AddProjectPopup: React.FC<AddProjectPopupProps> = ({
     if (existanceProject) {
       setError("This Project already exists");
     } else {
-      addProject_Backend(userEmail, formData, ADD_PROJECT, addProject, GET_USER)
+      addProject_Backend(userEmail, formData, ADD_PROJECT, addProject, GET_PROJECTS)
         .then((response) => {
-          // addProject(newProject)
           notify();
           onClose();
           setError(null);

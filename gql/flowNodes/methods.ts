@@ -86,8 +86,9 @@ async function createNode(
             flowchart: "flowchart",
             label: "New Node",
             shape: data.symbol,
-            x: 100,
+            x: 0,
             y: 100,
+            nodeColor: "#6667AB",
             createdBy: {
               connect: {
                 where: {
@@ -168,12 +169,12 @@ async function createNode(
         });
         const updatedFlowNode = {
           ...flowNodes[0],
-          flowEdge:[],
-          isLinked:[]
-        }
+          flowEdge: [],
+          isLinked: [],
+        };
         if (files && files.length) {
           const { hasNodes } = files[0];
-          
+
           const updaedFlowchart = {
             ...files[0],
             hasNodes: [...hasNodes, updatedFlowNode],
@@ -397,7 +398,7 @@ const updateNodeData = async (
   query: DocumentNode | TypedDocumentNode<any, OperationVariables>,
   fileId: string
 ) => {
-  const { id, data, type, hasInfo } = nodeData;
+  const { id, label, shape, nodeColor, description } = nodeData;
   try {
     return await client.mutate({
       mutation: mutations,
@@ -406,20 +407,69 @@ const updateNodeData = async (
           id,
         },
         update: {
-          label: data.label,
-          shape: data.shape,
-          type: type,
+          label,
+          shape,
+          nodeColor,
           hasInfo: {
             update: {
               node: {
-                assignedTo: hasInfo.assignedTo,
-                description: data.description,
-                dueDate: hasInfo.dueDate,
-                status: hasInfo.status,
+                description,
               },
             },
           },
         },
+      },
+      update: (
+        cache,
+        {
+          data: {
+            updateFlowNodes: { flowNodes },
+          },
+        }
+      ) => {
+        const { files } = cache.readQuery({
+          query,
+          variables: {
+            where: {
+              id: fileId,
+            },
+          },
+        });
+        const { hasNodes, ...fileData } = files[0];
+        const updatedNode = hasNodes.map((node: Node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              shape: flowNodes[0].shape,
+              nodeColor: flowNodes[0].nodeColor,
+              label: flowNodes[0].label,
+              hasInfo: {
+                ...node.hasInfo,
+                description,
+              },
+            };
+          }
+          return {
+            ...node
+          }
+        });
+        cache.writeQuery(
+          {
+            query,
+            variables:{
+              where:{
+                id:fileId
+              }
+            },
+            data:{
+              files:[
+                {
+                  ...fileData,hasNodes:updatedNode
+                }
+              ]
+            }
+          }
+        )
       },
     });
   } catch (error) {

@@ -13,6 +13,7 @@ export const GET_NODES = gql`query getAllNodes($where: FileWhere) {
       shape
       x
       y
+      nodeColor
       hasInfo {
         description
       }

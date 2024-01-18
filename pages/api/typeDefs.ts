@@ -118,6 +118,7 @@ const typeDefs = gql`
     draggable: Boolean!
     flowchart: String!
     type: String!
+    nodeColor:String!
     uid: Int!
     label: String!
     shape: String!

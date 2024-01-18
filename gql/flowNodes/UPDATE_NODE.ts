@@ -7,6 +7,7 @@ export const UPDATE_NODE = gql`
         shape
         label
         type
+        nodeColor
         hasInfo {
           description
         }
