@@ -1,13 +1,12 @@
 import { onAuthStateChanged } from "firebase/auth";
 import MembersTable from "./MembersTable";
 import { auth } from "../../../auth";
-import React,{ useEffect } from "react";
+import React, { useEffect } from "react";
 import projectStore from "./projectStore";
 import userStore from "../Users/userStore";
 import { GET_PROJECTS, getUserByEmail } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
 import { useTranslation } from "react-i18next";
-
 
 interface ProjectOverviewProps {
   projectName: string;
@@ -51,10 +50,11 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     // setIsButtonDisabled(userType.toLowerCase() === "user");
     // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
   }, [userEmail]);
+
   return (
     <div className="pl-4">
       <div className="mt-8 flex w-full items-center">
-        <div className="min-h-10 min-w-10 flex items-center justify-center rounded-xl bg-blue-500 p-2 text-xl font-semibold text-white">
+        <div className="flex min-h-10 min-w-10 items-center justify-center rounded-xl bg-blue-500 p-2 text-xl font-semibold text-white">
           {getInitials(projectName)}
         </div>
         <h1 className="ml-4 text-2xl font-bold ">{projectName}</h1>
@@ -63,7 +63,9 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         <h3 className="pl-1 text-lg font-semibold">{t("description")}</h3>
         <p className="mt-2">{projectDesc}</p>
       </div>
-      <h2 className="mt-10 pl-1 text-lg font-semibold">{t("project_members")}</h2>
+      <h2 className="mt-10 pl-1 text-lg font-semibold">
+        {t("project_members")}
+      </h2>
       <div className="mt-2 flex items-center">
         <h4 className="">{t("total")}</h4>
         <p className="ml-4 flex h-5 w-5 items-center justify-center rounded-full bg-gray-300 text-xs dark:bg-slate-500">

@@ -1,22 +1,28 @@
 import React, { useState, useRef, useEffect } from "react";
 import { IoIosClose } from "react-icons/io";
 import { useDescSidebarStore } from "./SidebarStore";
+import nodeStore from "../nodeStore";
+import { useEditingNodeId } from "../../NodeEditingStore";
+import { EditingProps } from "../../../../lib/appInterfaces";
 
 interface DescriptionProps {
   descriptionText: string;
   onDescriptionChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onCloseDescription: any;
+  editing: EditingProps;
+  updateNode: (nodeData: string, type: string) => Promise<null | undefined>;
 }
 
 const Description: React.FunctionComponent<DescriptionProps> = ({
   descriptionText,
   onDescriptionChange,
-  editing,
-  updateNode,
+  onCloseDescription,
 }) => {
   const openSidebar = useDescSidebarStore((state) => state.openDescSidebar);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isSaveButtonVisible, setIsSaveButtonVisible] = useState(false);
+  const { updateDescription } = nodeStore();
+  const { editingNodeId } = useEditingNodeId();
 
   const handleTextareaResize = () => {
     if (textareaRef.current) {
@@ -65,7 +71,15 @@ const Description: React.FunctionComponent<DescriptionProps> = ({
           />
         </div>
         {isSaveButtonVisible && (
-          <button className="w-full rounded-b-lg bg-[#3B9D55] py-1 text-white">
+          <button
+            className="w-full rounded-b-lg bg-[#3B9D55] py-1 text-white"
+            onClick={() => {
+              if (editingNodeId) {
+                updateDescription(editingNodeId, descriptionText);
+                onCloseDescription();
+              }
+            }}
+          >
             Save
           </button>
         )}

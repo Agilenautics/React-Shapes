@@ -34,8 +34,6 @@ export default function Edit() {
         }
       });
       setSelectedElement(updatedData);
-
-      // console.log(selectedData)
     }
   }, [elementId, data]);
 

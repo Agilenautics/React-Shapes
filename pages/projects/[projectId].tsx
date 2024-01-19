@@ -1,13 +1,9 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import {
-  GET_PROJECT_BY_ID,
-  getTreeNodeByUser,
-} from "../../gql";
+import { GET_PROJECT_BY_ID, getTreeNodeByUser } from "../../gql";
 import LoadingIcon from "../../components/LoadingIcon";
 import ProjectOverview from "../../components/AdminPage/Projects/ProjectOverview";
 import fileStore from "../../components/TreeView/fileStore";
-
 
 interface User {
   email: string;
@@ -44,27 +40,24 @@ function SideBar() {
     }
   }
 
-  
-
   useEffect(() => {
     fetchData();
   }, [router.query.projectId]);
 
   return (
     <div className="h-screen">
-      {isLoading ?
-        <div className="h-screen flex items-center justify-center">
+      {isLoading ? (
+        <div className="flex h-screen items-center justify-center">
           <LoadingIcon />
         </div>
-        :
+      ) : (
         <ProjectOverview
           projectName={projectName}
           projectDesc={projectDesc}
           total={total}
           details={details}
         />
-      }
-
+      )}
     </div>
   );
 }
