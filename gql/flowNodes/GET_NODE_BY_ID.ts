@@ -5,7 +5,7 @@ export const GET_NODE_BY_ID = gql`
     flowNodes(where: $where) {
       id
       label
-      type
+     
       shape
     }
   }

@@ -80,7 +80,7 @@ async function createNode(
       variables: {
         input: [
           {
-            type: data.type,
+           
             uid: data.uid,
             draggable: true,
             flowchart: "flowchart",

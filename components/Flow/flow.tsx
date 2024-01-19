@@ -52,6 +52,14 @@ const defaultEdgeOptions = {
     bidirectional: false,
   },
 };
+const defaultNodeOptions = {
+  type: "customNode",
+  data: {
+    label: "New Node",
+    shape:"rectangle",
+    nodeColor:"#1F2937"
+     },
+};
 
 const defaultShowConfirmation = {
   type: "",
@@ -324,6 +332,8 @@ function Flow() {
           nodes={defaultNodes}
           edges={defaultEdges}
           defaultEdgeOptions={defaultEdgeOptions}
+          //defaultNodeOptions={defaultNodeOptions}
+
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}

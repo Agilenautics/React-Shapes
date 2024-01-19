@@ -8,7 +8,7 @@ export const GET_NODES = gql`query getAllNodes($where: FileWhere) {
     hasNodes {
       id
       label
-      type
+     
       draggable
       shape
       x

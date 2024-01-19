@@ -45,7 +45,7 @@ const nodeStore = create<NodeState>((set) => ({
         hasLinkedTo: {},
       },
       position: { x: 0, y: 0 },
-      // type: "WelcomeNode",
+      type: "customNode",
       draggable: false,
       selected: false,
     },
@@ -77,12 +77,13 @@ const nodeStore = create<NodeState>((set) => ({
     set((state) => {
       const updatedNode = newNode.map((item: any) => {
         const description = item.hasInfo.description;
-        const { x, y, label, shape,nodeColor, isLinked, ...rest } = item;
+        const { x, y, label, shape, nodeColor, isLinked, ...rest } = item;
 
         return {
           ...rest,
-          data: { label, shape, description,nodeColor, isLinked },
+          data: { label, shape, description, nodeColor, isLinked },
           position: { x, y },
+          type: "customNode",
         };
       });
       return {
@@ -105,6 +106,7 @@ const nodeStore = create<NodeState>((set) => ({
             isLinked,
           },
           position: { x, y },
+          type: "customNode",
         };
       });
       return { nodes: newData };
@@ -186,7 +188,7 @@ const nodeStore = create<NodeState>((set) => ({
         data: { ...old_node.data, nodeColor },
       };
       // updateNodeData(updated_node, UPDATE_NODE, GET_NODES, state.fileId);
-      return { nodes: [...to_be_updated,updated_node] };
+      return { nodes: [...to_be_updated, updated_node] };
     }),
   toggleDraggable: (id: string, draggable: boolean) =>
     set((state) => {

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 export const GET_PROJECT_BY_ID = gql`
-  query getProjectById {
-    projects {
+  query Projects($where: ProjectWhere) {
+    projects(where: $where) {
       id
       name
       recycleBin
@@ -22,22 +22,12 @@ export const GET_PROJECT_BY_ID = gql`
           id
           type
           name
-          hasNodes {
-            id
-            label
-            type
-          }
         }
       }
       hasContainsFile {
         id
         name
         type
-        hasNodes {
-          id
-          label
-          type
-        }
       }
     }
   }

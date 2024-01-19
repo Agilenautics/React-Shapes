@@ -6,7 +6,7 @@ export const UPDATE_NODE = gql`
       flowNodes {
         shape
         label
-        type
+       
         nodeColor
         hasInfo {
           description
