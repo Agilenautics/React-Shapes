@@ -11,9 +11,13 @@ import nodeStore from "../Flow/Nodes/nodeStore";
 function BCTile(name: string, isFirst: boolean = false) {
   return (
     <li>
-      <div className="flex items-center">
+      <div className="flex items-center rounded-md border-[#C0D5E7] bg-white p-2 shadow-sm shadow-[#C0D5E7]">
         {isFirst ? null : <MdOutlineArrowForwardIos />}
-        <div className="text-black-400 breadcrumb-trapezoid-purple mx-1 flex items-center justify-center rounded-tl-lg rounded-tr-lg bg-purple-100 p-2 font-sans text-sm font-normal shadow-md dark:text-gray-400 dark:text-white dark:hover:text-white">
+        <div
+          className={`${
+            isFirst ? "font-semibold" : "font-normal"
+          } text-black-400 `}
+        >
           {name.length >= 10 ? name.slice(0, 12).concat("...") : name}
           {/* <div className="breadcrumb-triangle" /> */}
         </div>
@@ -25,9 +29,10 @@ function BCTile(name: string, isFirst: boolean = false) {
 /* This function manages the actual breadcrumb tiles */
 function BreadCrumbs() {
   const breadCrumbs = nodeStore((state) => state.breadCrumbs);
+
   return (
     <div>
-      <nav className="fixed top-16 flex" aria-label="Breadcrumb">
+      <nav className="fixed top-16 ml-2 flex text-sm" aria-label="Breadcrumb">
         <ol className="flex space-x-1 px-2">
           {breadCrumbs.map((value: any, index) => {
             return <div key={index}> {BCTile(value, index === 0)} </div>;

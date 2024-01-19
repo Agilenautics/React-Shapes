@@ -11,11 +11,7 @@ import edgeStore from "./Edges/edgeStore";
 import fileStore from "../TreeView/fileStore";
 import { BsArrowLeft } from "react-icons/bs";
 import useStore from "../Sidebar/SidebarContext";
-import {
-  GET_NODES,
-  linkNodeAnotherNodeMethod,
-  ADD_LINK,
-} from "../../gql";
+import { GET_NODES, linkNodeAnotherNodeMethod, ADD_LINK } from "../../gql";
 import LinkTree from "../TreeView/FileTreeRenderer";
 
 // ! This file and component structure can be cleaned up a bit to reduce prop drilling and clutter
@@ -319,7 +315,10 @@ function Editing({
                           return (
                             <>
                               {flag ? (
-                                <div className="flex h-full items-center justify-center p-1 text-red-500 " key={key}>
+                                <div
+                                  className="flex h-full items-center justify-center p-1 text-red-500 "
+                                  key={key}
+                                >
                                   {linkNodes.nodes[key].message}
                                 </div>
                               ) : (

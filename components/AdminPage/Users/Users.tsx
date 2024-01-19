@@ -67,7 +67,7 @@ function Users() {
           const userProjects = res[0].hasProjects.filter(
             (project: any) => project.recycleBin === false
           );
-          updateProject(userProjects, loading,null);
+          updateProject(userProjects, loading, null);
         });
       }
     });
@@ -172,7 +172,10 @@ function Users() {
 
   if (loading || isLoading)
     return (
-      <div className="flex h-screen items-center justify-center" data-test-id="Icontest1">
+      <div
+        className="flex h-screen items-center justify-center"
+        data-test-id="Icontest1"
+      >
         <LoadingIcon />
       </div>
     );
@@ -189,7 +192,7 @@ function Users() {
     <div className=" p-6" data-test-id="testUser">
       {/* heading of the table */}
       <div className="flex h-full items-center">
-        <button className="text-md   rounded bg-sky-500/75 p-2 font-semibold text-white" >
+        <button className="text-md   rounded bg-sky-500/75 p-2 font-semibold text-white">
           Team Agile
         </button>
       </div>
@@ -310,7 +313,7 @@ function Users() {
                           onClick={() => handleConfirmDelete(user.id)}
                           disabled={isButtonDisabled}
                           data-test-id="delTestIcon"
-                                                >
+                        >
                           <MdDelete />
                         </button>
                         <button
@@ -401,9 +404,17 @@ export function getInitials(name: string) {
 }
 
 export const getNameFromEmail = (email: string) => {
-  let regex = /[^a-z]/gi;
-  const name = email.split("@")[0].toLocaleUpperCase();
-  return name.replace(regex, "");
+  const name = email.split("@")[0];
+  const words = name.split(" ");
+
+  const userNames = words.map((word) => {
+    // Remove non-alphabetic characters
+    const userName = word.replace(/[^a-zA-Z]/g, "");
+    // Capitalize the first letter of each sanitized word
+    return userName.charAt(0).toUpperCase() + userName.slice(1);
+  });
+
+  return userNames.join(" ");
 };
 
 const formatDate = (date: string) => {

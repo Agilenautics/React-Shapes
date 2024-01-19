@@ -1,16 +1,11 @@
 /* This is the custom connection line that is used when connecting two nodes. */
-import React from 'react';
+import React from "react";
 import { ConnectionLineComponent } from "reactflow";
-import { getSmoothStepPath } from "reactflow";
 const ConnectionLine: ConnectionLineComponent = ({
   fromX,
   fromY,
-  fromPosition,
   toX,
   toY,
-  toPosition,
-  connectionLineType,
-  connectionLineStyle,
 }) => {
   return (
     <g>
@@ -18,6 +13,7 @@ const ConnectionLine: ConnectionLineComponent = ({
         fill="none"
         stroke="#222"
         strokeWidth={1.5}
+        className="animated"
         d={`M${fromX},${fromY} C ${fromX} ${toY} ${fromX} ${toY} ${toX},${toY}`}
       />
       <circle

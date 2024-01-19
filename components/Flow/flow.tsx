@@ -13,8 +13,11 @@ import ReactFlow, {
   ConnectionMode,
   useReactFlow,
   Controls,
+  Panel,
+  Background,
+  BackgroundVariant,
 } from "reactflow";
-import {nodeType } from "./Nodes/nodeTypes";
+import { nodeType } from "./Nodes/nodeTypes";
 import ConnectionLine from "./ConnectionLine";
 import { edgeTypeMap } from "./Edges/edgeTypes";
 import nodeStore from "./Nodes/nodeStore";
@@ -39,11 +42,12 @@ import userStore from "../AdminPage/Users/userStore";
 import { ApolloQueryResult } from "@apollo/client";
 import CustomMiniMap from "./CustomMiniMap";
 
+import CustomControls from "./CustomControls";
 const defaultEdgeOptions = {
   type: "customEdge",
   data: {
     label: "",
-    pathCSS: "!stroke-node-green-200 fill-node-green-200",
+    pathCSS: "#1F2937",
     boxCSS: "border-node-green-100 bg-node-green-50 text-node-green-200",
     bidirectional: false,
   },
@@ -144,8 +148,6 @@ function Flow() {
       }),
     [defaultNodes, setNodes, updateNodes, currentFlowchart]
   );
-
- 
 
   // useEffect(() => {
   //   if (edgeId && edgeId.length !== 0) {
@@ -287,8 +289,6 @@ function Flow() {
     [fileId]
   );
 
- 
-
   // const onDrag = (event: any, node: Object) => {
   //   updatePosition(node);
   //   console.log(node);
@@ -309,7 +309,6 @@ function Flow() {
   //   console.log(e,edge)
 
   // }
-
 
   return (
     <>
@@ -345,27 +344,11 @@ function Flow() {
           onNodeClick={onNodeClick}
           // deleteKeyCode={[]}
         >
-          {/* <Panel position="bottom-right" color="red">
-            <MiniMap />
-          </Panel> */}
-          <MiniMap
-            // nodeColor={'red'}
-            // nodeStrokeColor={"red"}
-            // nodeComponent={CustomMiniMap}
-            // nodeBorderRadius={12}
-            // pannable={true}
-            // inversePan= {true}
-            // maskStrokeWidth={0}
-            // offsetScale={0}
-            // nodeColor={(node)=>{
-            //   console.log(node.data.shape)
-            //   return `${nodeCSSMap[node.type]}`;
-            // }}
-            // nodeClassName={(node: Node) => {
-            //   return 'bg-white'
-            // }}
-          />
-          <Controls className="" />
+          {/* <Controls className="" />
+          <MiniMap zoomable position="right-bottom" /> */}
+          {/* <Controls className="" /> */}
+          {/* <CustomControls /> */}
+          <Background variant={BackgroundVariant.Dots} gap={16} />
         </ReactFlow>
 
         {showConfirmation.show && (
@@ -398,6 +381,3 @@ function Flow() {
 }
 
 export default Flow;
-function setUserEmail(email: any) {
-  throw new Error("Function not implemented.");
-}

@@ -11,6 +11,14 @@ import { GET_PROJECTS, getUserByEmail } from "../../../gql";
 import { ApolloQueryResult } from "@apollo/client";
 import fileStore from "../../../components/TreeView/fileStore";
 import backlogStore from "../../../components/Backlogs/backlogStore";
+import nodeStore from "../../../components/Flow/Nodes/nodeStore";
+import { useEditingNodeId } from "../../../components/Flow/NodeEditingStore";
+import DescSidebar from "../../../components/Flow/Nodes/Description/DescSidebar";
+import { useDescSidebarStore } from "../../../components/Flow/Nodes/Description/SidebarStore";
+import { dummyComments } from "../../../components/Flow/Nodes/Description/Comments/DummyComments";
+import { MiniMap } from "reactflow";
+import CustomMinimap from "../../../components/Flow/CustomMiniMap";
+import CustomControls from "../../../components/Flow/CustomControls";
 
 const BusinessPlan = () => {
   const { userEmail } = userStore();
@@ -20,9 +28,16 @@ const BusinessPlan = () => {
   );
   const updateUserType = userStore((state) => state.updateUserType);
   const updateLoginUser = userStore((state) => state.updateLoginUser);
-  const { data } = fileStore();
-  const {updateBacklogsData} = backlogStore()
 
+  const { nodes } = nodeStore();
+  const { editingNodeId, setEditingNodeId } = useEditingNodeId();
+  const label = nodes.find((node) => node.id === editingNodeId)?.data.label;
+  const description = nodes.find((node) => node.id === editingNodeId)?.data
+    .description;
+  const isSidebarOpen = useDescSidebarStore((state) => state.isDescSidebarOpen);
+  const openSidebar = useDescSidebarStore((state) => state.openDescSidebar);
+  const closeSidebar = useDescSidebarStore((state) => state.closeDescSidebar);
+  const { Id: fileId } = fileStore();
   const getProjects = async (email: string) => {
     try {
       const response: ApolloQueryResult<any> | undefined = await getUserByEmail(
@@ -46,16 +61,43 @@ const BusinessPlan = () => {
     // setIsNewProjectDisabled(userType.toLowerCase() === "super user");
   }, [userEmail]);
 
-  
-
+  useEffect(() => {
+    // Close the sidebar when the editingNodeId orFile ID changes
+    closeSidebar();
+  }, [editingNodeId, fileId]);
 
   return (
-    <div>
+    <div className="flex">
       <ReactFlowProvider>
         <BreadCrumbs />
-        <Flow />
+        <div className="relative flex-1">
+          <Flow />
+          <div
+            className={`absolute bottom-20 ${
+              isSidebarOpen
+                ? "right-80 translate-x-0 transition-transform"
+                : "right-0"
+            } z-10 p-4`}
+          >
+            <MiniMap
+              zoomable
+              className="rounded-md border-[#C0D5E7] shadow-md"
+              maskColor="#fff"
+            />
+            <CustomControls />
+          </div>
+        </div>
       </ReactFlowProvider>
       <AddNodeButton />
+
+      {isSidebarOpen && (
+        <DescSidebar
+          nodeName={label}
+          descriptionText={description}
+          onCloseSidebar={closeSidebar}
+          comments={dummyComments}
+        />
+      )}
     </div>
   );
 };

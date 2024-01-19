@@ -12,14 +12,14 @@ const NodeColors: React.FC<NodeColorsProps> = ({
   selectedColor,
 }) => {
   return (
-    <div className="absolute -left-10 bottom-7 grid grid-cols-5 gap-2  rounded border border-gray-300 bg-white p-2 shadow-md">
+    <div className="text-blue- absolute -left-10 bottom-7 flex  max-w-xs flex-wrap  items-center justify-between gap-2 rounded border border-blue-300 bg-white px-4 py-2 shadow">
       {colors.map((color, index) => (
         <div
           key={index}
           style={{
             backgroundColor: color,
           }}
-          className="flex h-4 w-4 flex items-center justify-center cursor-pointer rounded-full"
+          className="flex h-4 w-4 cursor-pointer items-center justify-center rounded-full"
           onClick={() => onSelectColor(color)}
         >
           {color === selectedColor && (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getSmoothStepPath, EdgeLabelRenderer, EdgeProps } from "reactflow";
 import edgeStore from "./edgeStore";
 import "reactflow/dist/style.css";
@@ -132,7 +132,7 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
         onDoubleClick={() => {
           setEditing((prevEditing) => ({
             ...prevEditing,
-            active: !prevEditing.active 
+            active: !prevEditing.active,
           }));
         }}
       />
@@ -203,7 +203,7 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
                     setEditing((prevEditing) => ({
                       ...prevEditing,
                       active: !prevEditing.active,
-                      type:"label"
+                      type: "label",
                     }));
                   }}
                   style={{
@@ -226,7 +226,7 @@ const CustomEdge: React.ComponentType<EdgeProps> = ({
                   onClick={(e) => {
                     setEditing((prevEditing) => ({
                       ...prevEditing,
-                      active: !prevEditing.active 
+                      active: !prevEditing.active,
                     }));
                   }}
                 >
