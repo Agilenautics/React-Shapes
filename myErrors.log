@@ -1,0 +1,9 @@
+{"level":"warn","message":"warn","timestamp":"2023-12-05 19:12:68"}
+{"level":"error","message":"error","timestamp":"2023-12-05 19:12:68"}
+{"level":"info","message":"code:INTERNAL_SERVER_ERROR (The client is unauthorized due to authentication failure.)","timestamp":"2023-12-05 19:12:68"}
+{"level":"warn","message":"warn","timestamp":"2023-12-05 19:12:15"}
+{"level":"error","message":"error","timestamp":"2023-12-05 19:12:16"}
+{"level":"info","message":"code:INTERNAL_SERVER_ERROR (The client is unauthorized due to authentication failure.)","timestamp":"2023-12-05 19:12:16"}
+[warn]:2023-12-05 19:12:82 warn 
+[error]:2023-12-05 19:12:83 error 
+[info]:2023-12-05 19:12:83 code:INTERNAL_SERVER_ERROR (The client is unauthorized due to authentication failure.) 
